@@ -96,7 +96,7 @@
     enable = true;
     oh-my-zsh = {
         enable = true;
-        plugins = [ "zsh-autosuggestions" ];
+        plugins = [ "git", "zsh-autosuggestions", "zsh-completions", "zsh-history-substring-search", "zsh-syntax-highlighting" ];
         
       };
 
