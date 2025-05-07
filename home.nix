@@ -60,12 +60,12 @@
     # AppImage
     # flatpak
     # ibus-engines.bamboo
-    xdg-desktop-portal 
-    xdg-desktop-portal-gtk
+    # xdg-desktop-portal 
+    # xdg-desktop-portal-gtk
     # bitwarden
-    bitwarden-cli
+    # bitwarden-cli
     # discord
-    gnome-extension-manager
+    # gnome-extension-manager
     # vscode
     # notion
     # microsoft-edge
