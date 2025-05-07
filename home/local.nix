@@ -70,7 +70,7 @@
     microsoft-edge
     telegram-desktop
     brave
-    kitty-0.32.1
+    kitty
 
     #other
     mesa
