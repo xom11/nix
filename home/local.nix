@@ -69,7 +69,6 @@
     notion
     microsoft-edge
     telegram-desktop
-    drawio
   ];
   home.sessionPath = [
     "/run/current-system/sw/bin"
