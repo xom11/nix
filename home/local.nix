@@ -70,6 +70,7 @@
     microsoft-edge
     telegram-desktop
     brave
+    kitty
   ];
   home.file = {
   ".zshrc".source = ./../dotfiles/zsh/.zshrc;
@@ -91,7 +92,9 @@
     "/run/current-system/sw/bin"
       "$HOME/.nix-profile/bin"
   ];
+
   programs.home-manager.enable = true;
+  # zsh
   programs.zsh =  {
     enable = true;
     oh-my-zsh = {
@@ -103,9 +106,7 @@
           "history-substring-search"
           "zsh-syntax-highlighting"
         ];
-        
       };
-
   };
 
   # git 
@@ -113,6 +114,10 @@
   programs.git.userName = "khanhkhanhlele";
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
+
+  #kitty
+  programs.kitty = {
+  enable = true;
 
 
 }
