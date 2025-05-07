@@ -72,7 +72,7 @@
     brave
   ];
   home.file = {
-  ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
+  ".zshrc".source = ~/dotfiles/zsh/.zshrc;
   # ".config/wezterm".source = ~/dotfiles/wezterm;
   # ".config/skhd".source = ~/dotfiles/skhd;
   # ".config/starship".source = ~/dotfiles/starship;
