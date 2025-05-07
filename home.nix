@@ -107,7 +107,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # Bật Flatpak
-  services.flatpak.enable = true;
+  programs.flatpak.enable = true;
 
   # Thêm repo Flathub
   # services.flatpak.remotes = [
