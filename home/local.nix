@@ -81,7 +81,7 @@
       "$HOME/.nix-profile/bin"
   ];
   programs.home-manager.enable = true;
-  # programs.zsh.enable = true;
+  programs.zsh.enable = true;
 
   # git 
   programs.git.enable = true;
