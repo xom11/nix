@@ -96,7 +96,8 @@
     enable = true;
     oh-my-zsh = {
         enable = true;
-        autosuggestions.enable = true;
+        plugins = [ "zsh-autosuggestions" ];
+        
       };
 
   };
