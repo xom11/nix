@@ -75,12 +75,13 @@
 
   ];
   home.file = {
-    # ".zshrc".source = ./dotfiles/zsh/.zshrc;
+    ".zshrc".source = ./dotfiles/zsh/.zshrc;
     ".config/atuin".source = ./dotfiles/atuin;
     ".config/kitty".source = ./dotfiles/kitty;
     ".config/run-or-raise".source = ./dotfiles/run-or-raise;
     ".config/tmux".source = ./dotfiles/tmux;
     ".config/nvim".source = ./dotfiles/nvim;
+    ".config/nix".source = ./dotfiles/nix;
   };
 
   home.sessionPath = [
