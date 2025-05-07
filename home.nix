@@ -107,6 +107,5 @@
   programs.git.userName = "khanhkhanhlele";
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
-  backupFileExtension = null;
 }
 
