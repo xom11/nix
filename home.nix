@@ -114,6 +114,10 @@
     "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
   ];
 
+  within.neovim.enable = true;
+  within.zsh.enable = true;
+  within.alacritty.enable = true;
+
    # show ui app
   programs.zsh.profileExtra = lib.mkAfter ''
     rm -rf ${config.home.homeDirectory}/.local/share/applications/home-manager
