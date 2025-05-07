@@ -70,23 +70,20 @@
     microsoft-edge
     telegram-desktop
     brave
-    kitty
 
-    #other
-    mesa
-    libGL
-    libglvnd
   ];
   home.file = {
-  ".zshrc".source = ./../dotfiles/zsh/.zshrc;
-  # ".config/wezterm".source = ~/dotfiles/wezterm;
+  ".zshrc".source = ./dotfiles/zsh/.zshrc;
+  ".config/kitty".source = ./dotfiles/kitty;
+  ".config/nix".source = ./dotfiles/nix;
+  ".config/kitty".source = ./dotfiles/kitty;
+  ".config/tmux".source = ./dotfiles/tmux;
+  ".config/nvim".source = ./dotfiles/nvim;
   # ".config/skhd".source = ~/dotfiles/skhd;
   # ".config/starship".source = ~/dotfiles/starship;
   # ".config/zellij".source = ~/dotfiles/zellij;
-  # ".config/nvim".source = ~/dotfiles/nvim;
   # ".config/nix".source = ~/dotfiles/nix;
   # ".config/nix-darwin".source = ~/dotfiles/nix-darwin;
-  # ".config/tmux".source = ~/dotfiles/tmux;
   # ".config/ghostty".source = ~/dotfiles/ghostty;
   # ".config/aerospace".source = ~/dotfiles/aerospace;
   # ".config/sketchybar".source = ~/dotfiles/sketchybar;
