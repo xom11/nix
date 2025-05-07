@@ -76,7 +76,6 @@
   ".zshrc".source = ./dotfiles/zsh/.zshrc;
   # ".config/kitty".source = ./dotfiles/kitty;
   # ".config/atuin".source = ./dotfiles/atuin;
-  ".config/kitty".source = ./dotfiles/kitty;
   ".config/tmux".source = ./dotfiles/tmux;
 };
 
@@ -106,5 +105,22 @@
   programs.git.userName = "khanhkhanhlele";
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
+
+  # Bật Flatpak
+  services.flatpak.enable = true;
+
+  # Thêm repo Flathub
+  # services.flatpak.remotes = [
+  #   {
+  #     name = "flathub";
+  #     location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+  #   }
+  # ];
+
+  # Cài ứng dụng Flatpak (tùy chọn)
+  services.flatpak.packages = [
+    "com.spotify.Client"
+    "org.telegram.desktop"
+  ];
 }
 
