@@ -57,20 +57,20 @@
     fira-code
 
     # AppImage
-    flatpak
-    ibus-engines.bamboo
+    # flatpak
+    # ibus-engines.bamboo
     xdg-desktop-portal 
     xdg-desktop-portal-gtk
-    bitwarden
+    # bitwarden
     bitwarden-cli
-    discord
+    # discord
     gnome-extension-manager
-    vscode
-    notion
-    microsoft-edge
-    telegram-desktop
-    brave
-    google-chrome
+    # vscode
+    # notion
+    # microsoft-edge
+    # telegram-desktop
+    # brave
+    # google-chrome
 
   ];
   home.file = {
@@ -88,20 +88,6 @@
   ];
 
   programs.home-manager.enable = true;
-  # zsh
-  programs.zsh =  {
-    enable = true;
-    oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "git"
-          "zsh-autosuggestions"
-          "zsh-completions"
-          "history-substring-search"
-          "zsh-syntax-highlighting"
-        ];
-      };
-  };
 
   # git 
   programs.git.enable = true;
