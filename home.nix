@@ -74,7 +74,7 @@
   ];
   home.file = {
   ".zshrc".source = ./dotfiles/zsh/.zshrc;
-  ".config/kitty".source = ./dotfiles/kitty;
+  # ".config/kitty".source = ./dotfiles/kitty;
   ".config/nix".source = ./dotfiles/nix;
   ".config/kitty".source = ./dotfiles/kitty;
   ".config/tmux".source = ./dotfiles/tmux;
