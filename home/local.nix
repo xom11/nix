@@ -70,13 +70,12 @@
     microsoft-edge
     telegram-desktop
     brave
-    kitty
+    kitty-0.32.1
 
     #other
     mesa
     libGL
     libglvnd
-    mesa-utils
   ];
   home.file = {
   ".zshrc".source = ./../dotfiles/zsh/.zshrc;
