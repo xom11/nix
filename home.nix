@@ -79,6 +79,7 @@
   ".config/kitty".source = ./dotfiles/kitty;
   ".config/run-or-raise".source = ./dotfiles/run-or-raise;
   ".config/tmux".source = ./dotfiles/tmux;
+  ".config/nvim".source = ./dotfiles/nvim;
 };
 
   home.sessionPath = [
