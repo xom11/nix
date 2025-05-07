@@ -74,7 +74,7 @@
 
   ];
   home.file = {
-    ".zshrc".source = ./dotfiles/zsh/.zshrc;
+    # ".zshrc".source = ./dotfiles/zsh/.zshrc;
     ".config/atuin".source = ./dotfiles/atuin;
     ".config/kitty".source = ./dotfiles/kitty;
     ".config/run-or-raise".source = ./dotfiles/run-or-raise;
