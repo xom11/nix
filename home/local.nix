@@ -69,6 +69,8 @@
     notion
     microsoft-edge
     telegram-desktop
+    brave
+    kitty
   ];
   home.sessionPath = [
     "/run/current-system/sw/bin"
