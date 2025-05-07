@@ -50,6 +50,7 @@
     atuin
     ncdu
     syncthing 
+    pipx
 
     # Fonts
     noto-fonts
