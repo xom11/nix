@@ -2,9 +2,10 @@
 { config, pkgs, ... }:
 
 {
-  import = [
+  imports = [
     ./../modules/zsh.nix                    
   ];
+
   home.username = builtins.getEnv "USER";  
   home.homeDirectory = builtins.getEnv "HOME";  
   home.stateVersion = "23.11"; # Giữ nguyên phiên bản
