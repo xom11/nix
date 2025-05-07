@@ -71,6 +71,9 @@
     telegram-desktop
     brave
     kitty
+
+    #other
+    mesa
   ];
   home.file = {
   ".zshrc".source = ./../dotfiles/zsh/.zshrc;
