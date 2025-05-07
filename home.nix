@@ -117,12 +117,6 @@
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
 
-  #kitty
-  programs.kitty = {
-    enable = true;
-  };
-
-
 
 }
 
