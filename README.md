@@ -9,7 +9,7 @@ cat ~/.ssh/id_rsa.pub
 ```
 # install repo
 ```bash
-git clone git@github.com:kln-os/nix.git ~/.nix -q
+git clone git@github.com:kln-os/nix.git ~/nix -q
 ```
 # install home-manager
 ```bash
