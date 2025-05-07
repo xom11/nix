@@ -78,7 +78,7 @@
   ".config/atuin".source = ./dotfiles/atuin;
   ".config/kitty".source = ./dotfiles/kitty;
   ".config/tmux".source = ./dotfiles/tmux;
-  ".config/nvim".source = ./dotfiles/nvim;
+  # ".config/nvim".source = ./dotfiles/nvim;
   # ".config/skhd".source = ~/dotfiles/skhd;
   # ".config/starship".source = ~/dotfiles/starship;
   # ".config/zellij".source = ~/dotfiles/zellij;
