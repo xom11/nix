@@ -117,7 +117,14 @@
 
   #kitty
   programs.kitty = {
-  enable = true;
+    enable = true;
+    font = {
+      enable = true;
+      name = "Fira Code";
+      size = 12;
+    };
+  };
+
 
 
 }
