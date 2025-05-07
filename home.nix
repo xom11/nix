@@ -75,19 +75,9 @@
   home.file = {
   ".zshrc".source = ./dotfiles/zsh/.zshrc;
   # ".config/kitty".source = ./dotfiles/kitty;
-  ".config/atuin".source = ./dotfiles/atuin;
+  # ".config/atuin".source = ./dotfiles/atuin;
   ".config/kitty".source = ./dotfiles/kitty;
   ".config/tmux".source = ./dotfiles/tmux;
-  # ".config/nvim".source = ./dotfiles/nvim;
-  # ".config/skhd".source = ~/dotfiles/skhd;
-  # ".config/starship".source = ~/dotfiles/starship;
-  # ".config/zellij".source = ~/dotfiles/zellij;
-  # ".config/nix".source = ~/dotfiles/nix;
-  # ".config/nix-darwin".source = ~/dotfiles/nix-darwin;
-  # ".config/ghostty".source = ~/dotfiles/ghostty;
-  # ".config/aerospace".source = ~/dotfiles/aerospace;
-  # ".config/sketchybar".source = ~/dotfiles/sketchybar;
-  # ".config/nushell".source = ~/dotfiles/nushell;
 };
 
   home.sessionPath = [
@@ -116,6 +106,9 @@
   programs.git.userName = "khanhkhanhlele";
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
+  programs.atuin.config = {
+    enter_accept = false;
+  };
 
 
 }
