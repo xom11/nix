@@ -74,13 +74,13 @@
 
   ];
   home.file = {
-  ".zshrc".source = ./dotfiles/zsh/.zshrc;
-  ".config/atuin".source = ./dotfiles/atuin;
-  ".config/kitty".source = ./dotfiles/kitty;
-  ".config/run-or-raise".source = ./dotfiles/run-or-raise;
-  ".config/tmux".source = ./dotfiles/tmux;
-  ".config/nvim".source = ./dotfiles/nvim;
-};
+    ".zshrc".source = ./dotfiles/zsh/.zshrc;
+    ".config/atuin".source = ./dotfiles/atuin;
+    ".config/kitty".source = ./dotfiles/kitty;
+    ".config/run-or-raise".source = ./dotfiles/run-or-raise;
+    ".config/tmux".source = ./dotfiles/tmux;
+    ".config/nvim".source = ./dotfiles/nvim;
+  };
 
   home.sessionPath = [
     "/run/current-system/sw/bin"
@@ -108,5 +108,10 @@
   programs.git.userName = "khanhkhanhlele";
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
+
+    # ibus
+  xsession.windowManager.bspwm.startupPrograms = [
+    "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
+  ];
 }
 
