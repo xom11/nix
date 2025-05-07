@@ -118,9 +118,9 @@
   # ];
 
   # Cài ứng dụng Flatpak (tùy chọn)
-  services.flatpak.packages = [
-    "com.spotify.Client"
-    "org.telegram.desktop"
-  ];
+  # services.flatpak.packages = [
+  #   "com.spotify.Client"
+  #   "org.telegram.desktop"
+  # ];
 }
 
