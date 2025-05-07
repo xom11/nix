@@ -106,8 +106,11 @@
   programs.git.userName = "khanhkhanhlele";
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
-  programs.atuin.config = {
-    enter_accept = false;
+  programs.atuin = {
+    enable = true;
+    config = {
+      enter_accept = false;
+    };
   };
 
 
