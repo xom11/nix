@@ -4,6 +4,7 @@
 {
   imports = [
     ./../modules/zsh.nix                    
+    ./../modules/alacritty.nix                    
   ];
 
   home.username = builtins.getEnv "USER";  
