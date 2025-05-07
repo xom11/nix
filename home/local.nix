@@ -85,7 +85,7 @@
     enable = true;
     ohMyZsh.enable = true;
 
-  }
+  };
 
   # git 
   programs.git.enable = true;
