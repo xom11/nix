@@ -76,6 +76,7 @@
     mesa
     libGL
     libglvnd
+    mesa-utils
   ];
   home.file = {
   ".zshrc".source = ./../dotfiles/zsh/.zshrc;
