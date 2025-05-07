@@ -15,9 +15,14 @@
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {
+    homeConfigurations = {
+      "server" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./home/server.nix ];
+      };
       "local" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./local.nix ];
+        modules = [ ./home/local.nix ];
       };
     };
   };
