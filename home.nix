@@ -70,6 +70,7 @@
     microsoft-edge
     telegram-desktop
     brave
+    google-chrome
 
   ];
   home.file = {
