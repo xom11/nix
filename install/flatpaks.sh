@@ -3,7 +3,7 @@ FLATPAKS=(
   "vlc"
   "simplenote"
   "chrome"
-  "extension-manager"
+  "Caprine"
 )
 
 for pak in "${FLATPAKS[@]}"; do
