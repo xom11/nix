@@ -4,7 +4,9 @@ FLATPAKS=(
   "simplenote"
   "chrome"
   "Caprine"
+  "org.telegram.desktop"
 )
+
 
 for pak in "${FLATPAKS[@]}"; do
   if ! flatpak list | grep -i "$pak" &> /dev/null; then
