@@ -9,7 +9,6 @@ EXTENSIONS=(
   "tactile@lundal.io"
   "just-perfection-desktop@just-perfection"
   "blur-my-shell@aunetx"
-  "space-bar@luchrioh"
   "undecorate@sun.wxg@gmail.com"
   "switcher@landau.fi"
   "run-or-raise@edvard.cz"
