@@ -22,12 +22,11 @@
   environment.systemPackages = with pkgs;
     [
     # AppImage
-    flatpak
+    kitty
     ibus-engines.bamboo
     xdg-desktop-portal 
     xdg-desktop-portal-gtk
     bitwarden
-    bitwarden-cli
     discord
     gnome-extension-manager
     vscode

@@ -51,6 +51,9 @@
     ncdu
     syncthing 
     pipx
+    flatpak
+    bitwarden-cli
+
 
     # Fonts
     noto-fonts
@@ -83,6 +86,22 @@
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
 
-  
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+    ohMyZsh = {
+      enable = true;
+      plugins = [
+        "gitfast"
+        "history"
+        "sudo"
+        "kubectl"
+        "docker"
+        "helm"
+            ];
+          theme = "gentoo";
+    }; 
 }
 
