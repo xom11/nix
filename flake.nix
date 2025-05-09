@@ -16,7 +16,7 @@
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations.kln = nixpkgs.lib.nixosSystem {
-      modules = [ ./configuration.nix ];
+      modules = [ ./nixos/configuration.nix ];
     };
     homeConfigurations = {
       "server" = home-manager.lib.homeManagerConfiguration {
