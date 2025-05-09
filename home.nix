@@ -57,21 +57,7 @@
     noto-fonts-emoji
     fira-code
 
-    # AppImage
-    # flatpak
-    # ibus-engines.bamboo
-    # xdg-desktop-portal 
-    # xdg-desktop-portal-gtk
-    # bitwarden
-    # bitwarden-cli
-    # discord
-    # gnome-extension-manager
-    # vscode
-    # notion
-    # microsoft-edge
-    # telegram-desktop
-    # brave
-    # google-chrome
+
 
   ];
   home.file = {
