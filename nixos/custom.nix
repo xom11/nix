@@ -11,9 +11,6 @@
     "flakes"
   ];
 
-  # Shell Envs
-  programs.zsh.enable = true;
-  users.defaultUserShell = pkgs.zsh;
 
   nixpkgs.config.allowUnfreePredicate = (_: true);
   boot.loader.systemd-boot.configurationLimit = 5;
@@ -21,4 +18,10 @@
   nix.gc.automatic = true;
   nix.gc.dates = "daily";
   nix.gc.options = "--delete-older-than 7d";
+
+  environment.systemPackages = with pkgs;
+    [
+      brave
+    ];
+
 }
