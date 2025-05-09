@@ -22,20 +22,20 @@
   environment.systemPackages = with pkgs;
     [
     # AppImage
-    # flatpak
-    # ibus-engines.bamboo
-    # xdg-desktop-portal 
-    # xdg-desktop-portal-gtk
-    # bitwarden
-    # bitwarden-cli
-    # discord
-    # gnome-extension-manager
-    # vscode
-    # notion
-    # microsoft-edge
-    # telegram-desktop
-    # brave
-    # google-chrome
+    flatpak
+    ibus-engines.bamboo
+    xdg-desktop-portal 
+    xdg-desktop-portal-gtk
+    bitwarden
+    bitwarden-cli
+    discord
+    gnome-extension-manager
+    vscode
+    notion
+    microsoft-edge
+    telegram-desktop
+    brave
+    google-chrome
     ];
 
 }
