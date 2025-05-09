@@ -15,6 +15,9 @@
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {
+    nixosConfigurations.kln = nixpkgs.lib.nixosSystem {
+      modules = [ ./configuration.nix ];
+    };
     homeConfigurations = {
       "server" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
