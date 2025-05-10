@@ -77,12 +77,6 @@
       tree = "exa --tree --icons";
       nd = "nix develop -c $SHELL";
     };
-    dirHashes = {
-      dots = "$HOME/.config/nixos";
-      stuff = "$HOME/stuff";
-      media = "/run/media/$USER";
-      junk = "$HOME/stuff/other";
-    };
   };
 
 }
