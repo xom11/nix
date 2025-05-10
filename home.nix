@@ -6,6 +6,9 @@
   home.homeDirectory = builtins.getEnv "HOME";  
   home.stateVersion = "23.11"; 
 
+  imports = [
+    ./modules
+  ];
   # Các gói bạn muốn cài đặt
   home.packages = with pkgs; [
     # Dev
@@ -23,6 +26,7 @@
     zsh-completions
     zsh-history-substring-search
     zsh-syntax-highlighting
+    zsh-powerlevel10k
     zip
     unzip
     wget
@@ -86,22 +90,6 @@
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
 
-  programs.zsh = {
-    enable = true;
-    autosuggestion.enable = true;
-    historySubstringSearch.enable = true;
-    syntaxHighlighting.enable = true;
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "git"
-        "zsh-autosuggestions"
-        "zsh-completions"
-        "zsh-history-substring-search"
-        "zsh-syntax-highlighting"
-      ];
 
-    };
-  }; 
 }
 

@@ -8,7 +8,7 @@
 autoload -Uz compinitcompinit
 
 ZSH_THEME="robbyrussell"
-plugins=(git web-search extract copyfile copypath zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete )
+plugins=(git web-search extract copyfile copypath  )
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source $ZSH/oh-my-zsh.sh
 
@@ -74,21 +74,21 @@ t() {
   fi
 }
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/.conda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/.conda/etc/profile.d/conda.sh" ]; then
-        . "$HOME/.conda/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/.conda/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-conda config --set auto_activate_base false
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('$HOME/.conda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then        "zsh-syntax-highlighting"
+#     eval "$__conda_setup"
+# else
+#     if [ -f "$HOME/.conda/etc/profile.d/conda.sh" ]; then
+#         . "$HOME/.conda/etc/profile.d/conda.sh"
+#     else
+#         export PATH="$HOME/.conda/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# # <<< conda initialize <<<
+# conda config --set auto_activate_base false
 
 # Set a blazingly fast keyboard repeat rate
 if [[ "$OSTYPE" == "darwin"* ]]; then
