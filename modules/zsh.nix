@@ -8,13 +8,7 @@
     zsh-history-substring-search
     zsh-syntax-highlighting
     zsh-powerlevel10k
-  ]
-  programs.fzf = {
-        enable = true;
-        enableZshIntegration = true; 
-    };
-
-
+  ];
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;

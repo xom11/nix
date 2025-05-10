@@ -1,10 +1,4 @@
-
-
-{ config
-, pkgs
-, inputs
-, ...
-}:
+{ config, pkgs, inputs, ...}:
 {
     home.packages = with pkgs;[
         neovim
@@ -43,7 +37,5 @@
         ncdu
         syncthing 
         pipx
-        flatpak
-        bitwarden-cli
     ];
 }

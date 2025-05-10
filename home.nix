@@ -9,18 +9,7 @@
   imports = [
     ./modules
   ];
-  # Các gói bạn muốn cài đặt
-  home.packages = with pkgs; [
-    # Dev
 
-    # Fonts
-    noto-fonts
-    noto-fonts-emoji
-    fira-code
-
-
-
-  ];
   home.file = {
     ".zshrc".source = ./dotfiles/zsh/.zshrc;
     ".config/atuin".source = ./dotfiles/atuin;
@@ -44,6 +33,12 @@
   programs.git.userEmail = "namkhanh20xx@gmail.com";
   nixpkgs.config.allowUnfree = true;
 
+  # Environment
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    BROWSER = "brave";
+    TERMINAL = "kitty";
+  };
 
 }
 
