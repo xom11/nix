@@ -48,6 +48,7 @@
     syntaxHighlighting.enable = true;
     ohMyZsh.enable = true;
     ohMyZsh.theme = "powerlevel10k/powerlevel10k";
+    dotDir = ".config/zsh";
   };
 
 }
