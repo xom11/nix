@@ -8,7 +8,7 @@
 autoload -Uz compinitcompinit
 
 ZSH_THEME="robbyrussell"
-plugins=(git web-search extract copyfile copypath  )
+plugins=(git web-search extract copyfile copypath )
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source $ZSH/oh-my-zsh.sh
 
