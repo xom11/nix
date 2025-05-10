@@ -15,6 +15,15 @@
   dconf = {
     # enabled = true;
     settings = {
+      "org/gnome/shell" = {
+        enabled-extensions=[
+          "run-or-raise@edvard.cz"
+          "clipboard-history@alexsaveau.dev"
+          "blur-my-shell@aunetx"
+          "dash-to-dock@micxgx.gmail.com"
+          "just-perfection-desktop@just-perfection"
+          ];
+      };
       "org/gnome/shell/extensions/just-perfection" = {
         panel=false;
         animation=0;
