@@ -37,7 +37,7 @@
     google-chrome
 
     oh-my-zsh
-    powerlevel10k
+    zsh-powerlevel10k
     ];
   
    # zsh
