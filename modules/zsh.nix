@@ -1,8 +1,4 @@
-{ lib, config, pkgs, commands, ... }:
-with lib;
-let 
-    cfg = config.within.zsh;
-in
+{config, pkgs, ... }:
 {
   programs.fzf = {
         enable = true;
