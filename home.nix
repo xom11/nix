@@ -88,7 +88,6 @@
 
   programs.zsh = {
     enable = true;
-    theme = "gentoo";
-    }; 
+  }; 
 }
 
