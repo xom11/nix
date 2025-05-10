@@ -40,15 +40,5 @@
     zsh-powerlevel10k
     ];
   
-   # zsh
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    ohMyZsh.enable = true;
-    ohMyZsh.theme = "powerlevel10k/powerlevel10k";
-    dotDir = ".config/zsh";
-  };
 
 }
