@@ -35,6 +35,8 @@
     telegram-desktop
     brave
     google-chrome
+
+    oh-my-zsh
     ];
   
    # zsh
