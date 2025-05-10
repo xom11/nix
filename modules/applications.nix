@@ -20,5 +20,5 @@
         telegram-desktop
         brave
         google-chrome
-    ]
+    ];
 }
