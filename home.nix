@@ -4,7 +4,7 @@
 {
   home.username = builtins.getEnv "USER";  
   home.homeDirectory = builtins.getEnv "HOME";  
-  home.stateVersion = "23.11"; # Giữ nguyên phiên bản
+  home.stateVersion = "23.11"; 
 
   # Các gói bạn muốn cài đặt
   home.packages = with pkgs; [
