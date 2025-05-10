@@ -1,12 +1,11 @@
-export PATH="$PATH:$HOME/.local/bin"
-export ZSH="$HOME/.oh-my-zsh"
-export XDG_CONFIG_HOME="$HOME/.config"
+# export PATH="$PATH:$HOME/.local/bin"
+# export ZSH="$HOME/.oh-my-zsh"
+# export XDG_CONFIG_HOME="$HOME/.config"
 # export NIX_CONF_DIR=$HOME/.config/nix
 # export NIX_PATH="$HOME/gnome/nix"
 
 
-autoload -Uz compinit
-compinit
+autoload -Uz compinitcompinit
 
 ZSH_THEME="robbyrussell"
 plugins=(git web-search extract copyfile copypath zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete )
