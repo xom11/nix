@@ -61,11 +61,6 @@
       edir() { tar -cz $1 | age -p > $1.tar.gz.age && rm -rf $1 &>/dev/null && echo "$1 encrypted" }
       ddir() { age -d $1 | tar -xz && rm -rf $1 &>/dev/null && echo "$1 decrypted" }
     '';
-    history = {
-      save = 1000;
-      size = 1000;
-      path = "$HOME/.cache/zsh_history";
-    };
     shellAliases = {
       c = "clear";
       mkdir = "mkdir -vp";
