@@ -90,6 +90,5 @@
     enable = true;
     theme = "gentoo";
     }; 
-  };
 }
 
