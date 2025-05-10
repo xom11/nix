@@ -13,10 +13,10 @@
       ../modules/default.nix
     ];
 
-  config.modules = {
-        zsh.enable = true;
+  # config.modules = {
+  #       zsh.enable = true;
 
-    };
+  #   };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
