@@ -1,7 +1,6 @@
 { config
 , pkgs
 , inputs
-, lib
 , ...
 }:
 {
@@ -37,17 +36,23 @@
         preferred-monitor=-2;
         intellihide=true;
         intellihide-mode="ALL_WINDOWS";
-        show-delay=0.0;
+        show-delay=0.2;
         preview-size-scale=0.0;
         show-favorites=false;
         show-show-apps-button=false;
         show-trash=false;
         transparency-mode="FIXED";
-        hide-delay=0;
+        hide-delay=0.2;
       };
       "org/gnome/shell/extensions/blur-my-shell" = {
-        "blur-active-windows" = true;
-        "blur-background-windows" = true;
+        blur-active-windows = true;
+        blur-background-windows = true;
+      };
+      "org/gnome/shell/extensions/clipboard-history" = {
+        toggle-menu=["<Super>v"];
+      };
+      "org/gnome/shell/extensions/run-or-raise" = {
+        center-mouse-to-focused-window=true;
       };
     };
   };
