@@ -12,52 +12,6 @@
   # Các gói bạn muốn cài đặt
   home.packages = with pkgs; [
     # Dev
-    neovim
-    neofetch
-    htop
-    git
-    tmux
-    htop
-    lazygit
-    stow
-    zsh
-    oh-my-zsh
-    zsh-autosuggestions
-    zsh-completions
-    zsh-history-substring-search
-    zsh-syntax-highlighting
-    zsh-powerlevel10k
-    zip
-    unzip
-    wget
-    curl
-    tree
-    jq
-    fzf
-    ripgrep
-    fd
-    bat
-    eza
-    gcc
-    python3
-    python3Packages.pip
-    python3Packages.pipx
-    python3Packages.uv
-    nodejs
-    nodejs.pkgs.npm
-    nodejs.pkgs.yarn
-    nodejs.pkgs.nodemon
-    nodejs.pkgs.pm2
-    yazi
-    zoxide
-    python312Packages.conda
-    atuin
-    ncdu
-    syncthing 
-    pipx
-    flatpak
-    bitwarden-cli
-
 
     # Fonts
     noto-fonts

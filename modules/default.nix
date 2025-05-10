@@ -5,5 +5,6 @@
         ./gnome-extensions.nix
         ./gnome-settings.nix
         ./applications.nix
+        ./dev-tool.nix
     ];
 }

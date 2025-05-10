@@ -21,7 +21,6 @@
 
   environment.systemPackages = with pkgs;
     [
-    # AppImage
     kitty
     ibus-engines.bamboo
     xdg-desktop-portal 
@@ -35,7 +34,6 @@
     telegram-desktop
     brave
     google-chrome
-
     oh-my-zsh
     zsh-powerlevel10k
 

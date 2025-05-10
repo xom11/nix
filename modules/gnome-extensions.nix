@@ -4,13 +4,17 @@
 , ...
 }:
 {
-  home.packages = with pkgs;
-    [
-    gnomeExtensions.run-or-raise
+  home.packages = with pkgs;[
+    gnome-extension-manager
+    gnome-shell-extensions
+
+    gnomeExtensions.dash-to-panel
     gnomeExtensions.dash-to-dock
+    gnomeExtensions.run-or-raise
+    gnomeExtensions.clipboard-history
     gnomeExtensions.blur-my-shell
     gnomeExtensions.just-perfection
-    gnomeExtensions.clipboard-history
+    gnomeExtensions.undecorate
     ];
   dconf = {
     # enabled = true;
@@ -22,6 +26,7 @@
           "blur-my-shell@aunetx"
           "dash-to-dock@micxgx.gmail.com"
           "just-perfection-desktop@just-perfection"
+          "undecorate@sun.wxg@gmail.com"
           ];
       };
       "org/gnome/shell/extensions/just-perfection" = {
