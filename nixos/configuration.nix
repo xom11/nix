@@ -10,8 +10,13 @@
       # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ./custom.nix
-      ./../modules/default.nix
+      ../modules/default.nix
     ];
+
+  config.modules = {
+        zsh.enable = true;
+
+    };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
