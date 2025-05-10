@@ -8,16 +8,17 @@
 autoload -Uz compinitcompinit
 
 ZSH_THEME="robbyrussell"
-plugins=(git web-search extract copyfile copypath )
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+plugins=(git web-search extract copyfile copypath fzf z uv)
 source $ZSH/oh-my-zsh.sh
+source $HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-if command -v uv &> /dev/null; then
-  eval "$(uv generate-shell-completion zsh)"
-fi
-if command -v zoxide &> /dev/null; then
-  eval "$(zoxide init zsh)"
-fi
+# if command -v uv &> /dev/null; then
+#   eval "$(uv generate-shell-completion zsh)"
+# fi
+# if command -v zoxide &> /dev/null; then
+#   eval "$(zoxide init zsh)"
+# fi
 if command -v atuin &> /dev/null; then
   eval "$(atuin init zsh)"
 fi

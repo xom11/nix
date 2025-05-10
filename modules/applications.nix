@@ -21,5 +21,6 @@
         google-chrome
         caprine
         localsend
+        notion
     ];
 }

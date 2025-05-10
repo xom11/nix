@@ -14,16 +14,9 @@
     autosuggestion.enable = true;
     historySubstringSearch.enable = true;
     syntaxHighlighting.enable = true;
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "zsh-autosuggestions"
-        "zsh-completions"
-        "zsh-history-substring-search"
-        "zsh-syntax-highlighting"
-        "zsh-powerlevel10k"
-      ];
+    oh-my-zsh.enable = true;
+    
 
-    };
   }; 
+  
 }

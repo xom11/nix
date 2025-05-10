@@ -6,6 +6,8 @@
   home.homeDirectory = builtins.getEnv "HOME";  
   home.stateVersion = "23.11"; 
 
+  # user.shell = pkgs.zsh;
+
   imports = [
     ./modules
   ];

@@ -70,6 +70,13 @@
     pkgs.sway
   ];
 
+  environment.sessionVariables = {
+    EDITOR = "nvim";
+    BROWSER = "firefox";
+    TERMINAL = "kitty";
+  };
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
   services.xserver = {
     xkb.layout = "us,vn";
     # xkbOptions = "ctrl:nocaps";
