@@ -101,7 +101,7 @@
         "docker"
         "helm"
             ];
-          theme = "gentoo";
+      theme = "gentoo";
     }; 
-}
+};
 
