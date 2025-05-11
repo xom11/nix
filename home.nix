@@ -42,5 +42,10 @@
     TERMINAL = "kitty";
   };
 
+  # ibus
+  xsession.windowManager.bspwm.startupPrograms = [
+    "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
+  ];
+
 }
 
