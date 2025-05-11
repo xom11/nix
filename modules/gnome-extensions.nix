@@ -47,7 +47,6 @@
         height-fraction=1.0;
         icon-size-fixed=true;
         isolate-workspaces=true;
-        preferred-monitor=-2;
         intellihide=true;
         intellihide-mode="ALL_WINDOWS";
         show-delay=0.2;
