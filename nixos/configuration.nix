@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ./gnome-ibus.nix
+      ./i3.nix
     ];
 
   # Bootloader.

@@ -20,6 +20,7 @@
     ".config/tmux".source = ./dotfiles/tmux;
     ".config/nvim".source = ./dotfiles/nvim;
     ".config/nix".source = ./dotfiles/nix;
+    ".config/git".source = ./dotfiles/git;
   };
 
   home.sessionPath = [
