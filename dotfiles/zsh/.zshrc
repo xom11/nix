@@ -1,4 +1,5 @@
 # export PATH="$PATH:$HOME/.local/bin"
+# export PATH="/run/wrappers/bin"
 # export ZSH="$HOME/.oh-my-zsh"
 # export XDG_CONFIG_HOME="$HOME/.config"
 # export NIX_CONF_DIR=$HOME/.config/nix
@@ -74,10 +75,3 @@ t() {
     tmux new-window -n "$1"
   fi
 }
-
-# Set a blazingly fast keyboard repeat rate
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    defaults write NSGlobalDomain KeyRepeat -int 1
-    defaults write NSGlobalDomain InitialKeyRepeat -int 15
-    defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-fi

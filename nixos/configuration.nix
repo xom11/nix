@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
+      ./gnome-ibus.nix
     ];
 
   # Bootloader.
@@ -58,8 +59,15 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  nix = {
+    settings = {
+      experimental-features = "nix-command flakes";
+    };
+    package = pkgs.nix;
+   };
+
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -81,15 +89,14 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.kln = {
     isNormalUser = true;
-    description = "kln";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [git vim];
     shell = pkgs.zsh;
   };
-
+  security.sudo.wheelNeedsPassword = false;
+  
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "kln";
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "kln";
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
