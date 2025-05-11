@@ -8,7 +8,6 @@
     home.packages = with pkgs;
     [
         kitty
-        ibus-engines.bamboo
         xdg-desktop-portal 
         xdg-desktop-portal-gtk
         bitwarden

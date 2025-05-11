@@ -13,5 +13,6 @@
       fira-code
 
       ibus
+      ibus-engines.bamboo
     ];
 }
