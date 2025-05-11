@@ -13,6 +13,7 @@
       type = "ibus";
       ibus.engines = with pkgs; [
         # None yet
+        ibus-engines.bamboo
       ];
     };
   };
