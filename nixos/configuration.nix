@@ -9,7 +9,7 @@
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ./gnome-ibus.nix
-      ./sway
+      ./sway/default.nix
     ];
 
   # Bootloader.
