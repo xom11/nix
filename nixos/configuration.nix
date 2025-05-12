@@ -9,8 +9,8 @@
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ./gnome-ibus.nix
-      ./sway/default.nix
     ];
+    
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
