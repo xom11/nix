@@ -6,6 +6,7 @@
         ./gnome-settings.nix
         ./applications.nix
         ./dev-tools.nix
+        ./wm.nix
         ./other.nix
     ];
 }

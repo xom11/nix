@@ -21,6 +21,7 @@
         google-chrome
         caprine
         localsend
-        notion
+        virtualbox
+        vlc
     ];
 }
