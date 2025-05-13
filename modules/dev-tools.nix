@@ -21,6 +21,14 @@
         bat
         eza
         gcc
+        yazi
+        zoxide
+        atuin
+        ncdu
+        syncthing 
+        pipx
+        tailscale
+        docker
 
         # Python
         python3
@@ -36,11 +44,5 @@
         nodejs.pkgs.nodemon
         nodejs.pkgs.pm2
 
-        yazi
-        zoxide
-        atuin
-        ncdu
-        syncthing 
-        pipx
     ];
 }
