@@ -35,7 +35,7 @@
       "org/gnome/desktop/interface"={
         enable-hot-corners=false;
         enable-animations=false;
-        colors-cheme="prefer-dark";
+        color-scheme="prefer-dark";
         gtk-theme="Adwaita-dark";
       };
       "org/gnome/desktop/session"={
