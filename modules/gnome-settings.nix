@@ -24,16 +24,20 @@ with lib.hm.gvariant;
       switch-to-workspace-3=["<Super>3"];
       switch-to-workspace-4=["<Super>4"];
       toggle-maximized=["<Super>Up"];
+      unmaximize=["<Super>Down"];
       show-desktop=["<Super>d"];
       always-on-top=["<Super>p"];
       cycle-windows=["<Hyper>bracketleft"];
       cycle-windows-backward=["<Hyper>bracketright"];
+      begin-resize=["<Super>r"];
+      begin-move=["<Super>m"];
     };
     "org/gnome/shell/keybindings"={
       switch-to-application-1=[];
       switch-to-application-2=[];
       switch-to-application-3=[];
       switch-to-application-4=[];
+      toggle-message-tray=[];
     };
     "org/gnome/shell/app-switcher"={
       current-workspace-only=true;
