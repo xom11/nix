@@ -25,6 +25,9 @@ with lib.hm.gvariant;
       switch-to-workspace-4=["<Super>4"];
       toggle-maximized=["<Super>Up"];
       show-desktop=["<Super>d"];
+      always-on-top=["<Super>p"];
+      cycle-windows=["<Hyper>bracketright"];
+      cycle-windows-backward=["<Hyper>bracketleft"];
     };
     "org/gnome/shell/keybindings"={
       switch-to-application-1=[];

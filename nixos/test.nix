@@ -1,5 +1,5 @@
 
-{ config, pkgs, ... }:
+{input, config, pkgs, lib, ... }:
 
 {
   imports =
@@ -28,5 +28,7 @@
   services.displayManager.autoLogin.user = "kln";
 
   services.xserver.enable = true;
-  services.xserver.displayManager.i3.enable = true;
+  services.xserver.displayManager.sessionPackages = with pkgs; [
+    sway
+  ];
 }

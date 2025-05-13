@@ -5,14 +5,9 @@
       xdotool
       xclip
       
-
-      flatpak
-
       noto-fonts
       noto-fonts-emoji
       fira-code
 
-      ibus
-      ibus-engines.bamboo
     ];
 }
