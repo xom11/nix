@@ -24,6 +24,7 @@
         switch-to-workspace-3=["<Super>3"];
         switch-to-workspace-4=["<Super>4"];
         toggle-maximized=["<Super>Up"];
+        show-desktop=["<Super>d"];
       };
       "org/gnome/shell/keybindings"={
         switch-to-application-1=[];
@@ -56,6 +57,9 @@
           sleep-inactive-battery-type="nothing";
           idle-dim=false;
         };
+      "org/gnome/mutter/wayland"={
+        xwayland-disable-extensions=["Xtest"];
+      }
     };
   };
 }
