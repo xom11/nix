@@ -11,8 +11,15 @@
   users.defaultUserShell = pkgs.zsh;
 
   i18n.inputMethod = {
-    enabled = true;
+    enable = true;
     type = "ibus";
     ibus.engines = with pkgs.ibus-engines; [bamboo];
   };
+
+  nix = {
+    package = pkgs.nixVersions.stable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  }
 }
