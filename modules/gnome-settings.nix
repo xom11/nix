@@ -36,6 +36,7 @@ with lib.hm.gvariant;
       current-workspace-only=true;
     };
     "org/gnome/desktop/interface"={
+      show-battery-percentage=true;
       enable-hot-corners=false;
       enable-animations=false;
       color-scheme="prefer-dark";
