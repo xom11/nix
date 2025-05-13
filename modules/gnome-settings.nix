@@ -63,6 +63,9 @@ with lib.hm.gvariant;
       sleep-inactive-battery-type="nothing";
       idle-dim=false;
     };
+    "org/gnome/desktop/input-sources"={
+      per-window=true;
+    };
     # Turn off sharing
     "org/gnome/mutter/wayland"={
       xwayland-disable-extensions=["Xtest"];
