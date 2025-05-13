@@ -8,7 +8,6 @@
     home.packages = with pkgs;
     [
         kitty
-        rofi
         preload
         xdg-desktop-portal 
         xdg-desktop-portal-gtk
@@ -23,5 +22,7 @@
         localsend
         virtualbox
         vlc
+        ventoy-full-qt
+        ulauncher
     ];
 }

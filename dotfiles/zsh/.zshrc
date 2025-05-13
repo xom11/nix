@@ -4,7 +4,7 @@
 # export XDG_CONFIG_HOME="$HOME/.config"
 # export NIX_CONF_DIR=$HOME/.config/nix
 # export NIX_PATH="$HOME/gnome/nix"
-
+export PATH=/run/wrappers/bin:$PATH
 
 autoload -Uz compinitcompinit
 
