@@ -34,7 +34,9 @@
       };
       "org/gnome/desktop/interface"={
         enable-hot-corners=false;
-          enable-animations=false;
+        enable-animations=false;
+        colors-cheme="prefer-dark";
+        gtk-theme="Adwaita-dark";
       };
       "org/gnome/desktop/session"={
         idle-delay=0;
@@ -57,9 +59,10 @@
           sleep-inactive-battery-type="nothing";
           idle-dim=false;
         };
+      # Turn off sharing
       "org/gnome/mutter/wayland"={
         xwayland-disable-extensions=["Xtest"];
-      }
+      };
     };
   };
 }
