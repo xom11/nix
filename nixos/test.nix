@@ -21,5 +21,12 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-  }
+  };
+
+  # Enable automatic login for the user.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "kln";
+
+  services.xserver.enable = true;
+  services.xserver.displayManager.i3.enable = true;
 }
