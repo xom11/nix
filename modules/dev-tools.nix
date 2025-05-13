@@ -17,14 +17,14 @@
         jq
         fzf
         ripgrep
-        fd
+        fd          #find
         bat
         eza
         gcc
         yazi
         zoxide
         atuin
-        ncdu
+        ncdu        #disk usage
         syncthing 
         pipx
         tailscale
@@ -35,7 +35,6 @@
         python3Packages.pip
         python3Packages.pipx
         python3Packages.uv
-        conda
 
         # Node.js
         nodejs
