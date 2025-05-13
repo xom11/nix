@@ -1,11 +1,9 @@
-{ config
-, pkgs
-, inputs
-, ...
-}:
+{ config, pkgs, inputs, lib, ...}:
+with lib.hm.gvariant;
 {
   home.packages = with pkgs;[
     gnome-bluetooth
+    dconf2nix
     dconf-editor
   ];
   dconf.settings = {
@@ -15,6 +13,9 @@
     };
     "org/gnome/desktop/wm/preferences"={
       num-workspaces=4;
+    };
+    "org/gnome/shell"={
+      favorite-apps=[];
     };
     "org/gnome/desktop/wm/keybindings"={
       close=["<Super>q"];
@@ -31,6 +32,9 @@
       switch-to-application-3=[];
       switch-to-application-4=[];
     };
+    "org/gnome/shell/app-switcher"={
+      current-workspace-only=true;
+    };
     "org/gnome/desktop/interface"={
       enable-hot-corners=false;
       enable-animations=false;
@@ -38,16 +42,17 @@
       gtk-theme="Adwaita-dark";
     };
     "org/gnome/desktop/session"={
-      idle-delay=400;
+      idle-delay = mkUint32 0;
     };
     "org/gnome/desktop/peripherals/keyboard"={
-      delay=200;
-      repeat-interval=16;
+      delay = mkUint32 200;
+      repeat-interval = mkUint32 16;
     };
     "org/gnome/desktop/peripherals/mouse"={
       speed=0.4;
     };
     "org/gnome/desktop/peripherals/touchpad"={
+      click-method="areas";
       speed=0.4;
     };
     "org/gnome/desktop/input-sources"={

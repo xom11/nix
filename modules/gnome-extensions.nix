@@ -8,7 +8,6 @@
     gnome-extension-manager
     gnome-shell-extensions
 
-    gnomeExtensions.dash-to-panel
     gnomeExtensions.dash-to-dock
     gnomeExtensions.run-or-raise
     gnomeExtensions.clipboard-history
@@ -34,26 +33,29 @@
 
     };
     "org/gnome/shell/extensions/dash-to-dock" = {
-      apply-custom-theme=true;
-      autohide=true;
-      background-opacity=0.15;
-      custom-theme-shrink=true;
-      dash-max-icon-size=32;
-      dock-fixed=false;
-      dock-position="RIGHT";
-      extend-height=false;
-      height-fraction=1.0;
-      icon-size-fixed=true;
-      isolate-workspaces=true;
-      intellihide=true;
-      intellihide-mode="ALL_WINDOWS";
-      show-delay=0.2;
-      preview-size-scale=0.0;
-      show-favorites=false;
-      show-show-apps-button=false;
-      show-trash=false;
-      transparency-mode="FIXED";
-      hide-delay=0.2;
+      apply-custom-theme = true;
+      autohide = true;
+      background-opacity = 0.15;
+      custom-theme-shrink = true;
+      dash-max-icon-size = 32;
+      dock-fixed = false;
+      dock-position = "RIGHT";
+      extend-height = false;
+      height-fraction = 1.0;
+      hide-delay = 0.2;
+      hot-keys = false;
+      icon-size-fixed = true;
+      intellihide = true;
+      intellihide-mode = "ALL_WINDOWS";
+      isolate-workspaces = true;
+      preferred-monitor = -2;
+      preferred-monitor-by-connector = "eDP-1";
+      preview-size-scale = 0.0;
+      show-delay = 0.2;
+      show-favorites = false;
+      show-show-apps-button = false;
+      show-trash = false;
+      transparency-mode = "FIXED";
     };
     "org/gnome/shell/extensions/blur-my-shell" = {
       blur-active-windows = true;
