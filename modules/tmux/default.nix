@@ -3,7 +3,7 @@ let
   # Define the path to the tmux configuration file
   keybindingsConf = builtins.readFile ./keybindings.conf;
   tmuxConf = builtins.readFile ./tmux.conf;
-  Conf = keybindingsConf + tmuxConf;
+  allConf = keybindingsConf + tmuxConf;
 in 
 {
   programs.tmux = {
@@ -33,6 +33,6 @@ in
 
       }
       ];
-    extraConfig = Conf; 
+    extraConfig = allConf; 
   };
 }
