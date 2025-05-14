@@ -1,8 +1,8 @@
 { pkgs, config, ... }:
 let 
   # Define the path to the tmux configuration file
-  tmuxConf = builtins.readFile ../dotfiles/tmux/tmux.conf;
-  tmuxReset = builtins.readFile ../dotfiles/tmux/tmux.reset.conf;
+  tmuxConf = builtins.readFile ../../dotfiles/tmux/tmux.conf;
+  tmuxReset = builtins.readFile ../../dotfiles/tmux/tmux.reset.conf;
 in 
 {
   programs.tmux = {

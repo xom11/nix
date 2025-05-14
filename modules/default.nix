@@ -1,13 +1,14 @@
 {... }:
 {
     imports = [
-        ./zsh.nix
-        ./gnome-extensions.nix
+        ./zsh
+        ./gnome
+        ./tmux
+        ./kitty
+
         ./applications.nix
         ./dev-tools.nix
-        # ./wm.nix
         ./other.nix
         ./gnome-settings.nix
-        ./tmux.nix
     ];
 }
