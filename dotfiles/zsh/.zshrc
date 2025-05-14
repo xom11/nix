@@ -11,8 +11,9 @@ autoload -Uz compinitcompinit
 ZSH_THEME="robbyrussell"
 plugins=(git web-search extract copyfile copypath fzf z uv)
 source $ZSH/oh-my-zsh.sh
-source $HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source $HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# source $HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source $HOME/.nix-profile/share/zsh-vi-mode/zsh-vi-mode.zsh
 
 # if command -v uv &> /dev/null; then
 #   eval "$(uv generate-shell-completion zsh)"
@@ -67,7 +68,7 @@ alias gu='git pull && git add . && git commit -m "update" && git push'
 alias py='python3' 
 alias py310='python3.10'
 alias nixupdate="nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#local"
-alias nixosupdate="sudo nixos-rebuild switch --flake --impurt ~/nix#local"
+alias nixosupdate="sudo nixos-rebuild switch --impure --flake ~/nix#local"
 
 t() {
   if [ -z "$TMUX" ]; then
