@@ -1,7 +1,7 @@
 {config, pkgs, ... }:
 {
   imports = [
-    # ./zsh-aliases.nix
+    ./aliases.nix
   ];
   programs.zsh = {
     enable = true;
