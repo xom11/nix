@@ -6,7 +6,6 @@
 {
     home.packages = with pkgs;
     [
-        kitty
         preload
         xdg-desktop-portal 
         xdg-desktop-portal-gtk

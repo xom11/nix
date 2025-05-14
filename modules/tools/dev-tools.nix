@@ -1,11 +1,8 @@
 { config, pkgs, inputs, ...}:
 {
     home.packages = with pkgs;[
-        neovim
         neofetch
         htop
-        git
-        tmux
         htop
         lazygit
         stow

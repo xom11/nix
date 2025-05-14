@@ -6,8 +6,12 @@ let
   allConf = keybindingsConf + tmuxConf;
 in 
 {
+  home.packages = with pkgs; [
+    tmux
+  ];
   programs.tmux = {
     enable = true;
+    extraConfig = allConf; 
 
     plugins = with pkgs.tmuxPlugins; [
       sensible
@@ -33,6 +37,5 @@ in
 
       }
       ];
-    extraConfig = allConf; 
   };
 }
