@@ -8,11 +8,10 @@
     keybindings ={
       "ctrl+c" = "copy_or_interrupt";
       "ctrl+v" = "paste-from-clipboard";
-    }
+    };
     settings = {
       font_family = "Fira Code";
       font_size = 12.0;
-      background_opacity = 0.8;
       cursor_shape = "block";
       cursor_blink_interval = 500;
       cursor_blink_while_typing = true;
