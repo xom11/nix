@@ -8,8 +8,7 @@
         ./nvim
         ./other
         ./tmux
-        ./toold
+        ./tools
         ./zsh
-
     ];
 }
