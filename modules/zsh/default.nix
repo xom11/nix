@@ -1,6 +1,7 @@
 {config, pkgs, ... }:
 {
-  home.packages = with pkgs; [
+  imports = [
+    ./zsh-aliases.nix
   ];
   programs.zsh = {
     enable = true;
@@ -33,24 +34,6 @@
       ];
     };
 
-    shellAliases = {
-      v="nvim";
-      vcf="cd ~/.config/nvim && nvim";
-      vz="nvim ~/.zshrc";
-      sz="source ~/.zshrc";
-      spy="source .venv/bin/activate";
-      gcg-kln="git config --global user.name khanhkhanhlele && git config --global user.email namkhanh20xx@gmail.com";
-      gcl-kln="git config --local user.name khanhkhanhlele && git config --local user.email namkhanh20xx@gmail.com";
-      gu="git pull && git add . && git commit -m 'update' && git push";
-      py="python3";
-      py310="python3.10";
-      nix-u="nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#local";
-      os-u="sudo nixos-rebuild switch --impure --flake ~/nix#local";
-      cat="bat --paging=never --plain";
-      fp="fzf --preview='bat --color=always {}'";
-      vf="nvim $(fzf -m --preview='bat --color=always {}')";
-      ls="eza --icons --group-directories-first";
-    };
     sessionVariables = {
       KEYTIMEOUT=1;
 
