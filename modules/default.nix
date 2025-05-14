@@ -5,7 +5,7 @@
         ./git
         ./gnome
         ./kitty
-        ./neovim
+        ./nvim
         ./other
         ./tmux
         ./toold
