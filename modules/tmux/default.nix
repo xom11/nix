@@ -17,25 +17,12 @@ in
       sensible
       yank
       vim-tmux-navigator
-      cpu
-      {
-      plugin = catppuccin;
-        extraConfig = ''
-          # Configure the catppuccin plugin
-          set -g @catppuccin_flavor "mocha"
-          set -g @catppuccin_window_status_style "rounded"
-
-          set -g status-right-length 100
-          set -g status-left-length 100
-          set -g status-left ""
-          set -g status-right "#{E:@catppuccin_status_application}"
-          set -agF status-right "#{E:@catppuccin_status_cpu}"
-          set -ag status-right "#{E:@catppuccin_status_session}"
-          set -ag status-right "#{E:@catppuccin_status_uptime}"
-          set -agF status-right "#{E:@catppuccin_status_battery}"
-        '';
-
-      }
+      resurrect
+      power-theme
+      continuum
+      tmux-sessionx
+      tmux-fzf
+      tmux-floax
       ];
   };
 }

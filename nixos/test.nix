@@ -20,6 +20,7 @@
   services.xserver.displayManager.sessionPackages = [
     pkgs.sway
   ];
+  engines = with pkgs.ibus-engines; [ mozc ];
   environment.sessionVariables = {
     GTK_IM_MODULE = "ibus";
     QT_IM_MODULE = "ibus";
