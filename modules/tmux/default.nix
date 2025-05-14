@@ -1,17 +1,13 @@
 { pkgs, config, ... }:
 let 
   # Define the path to the tmux configuration file
-  tmuxConf = builtins.readFile ../../dotfiles/tmux/tmux.conf;
-  tmuxReset = builtins.readFile ../../dotfiles/tmux/tmux.reset.conf;
+  keybindingsConf = builtins.readFile ./keybindings.conf;
+  tmuxConf = builtins.readFile ./tmux.conf;
 in 
 {
   programs.tmux = {
     enable = true;
-    prefix = "C-b";
-    mouse = true;
-    baseIndex = 1;
-    terminal = "screen-256color";
-    historyLimit = 1000000;
+
     plugins = with pkgs.tmuxPlugins; [
       sensible
       yank
@@ -36,6 +32,9 @@ in
 
       }
       ];
-      extraConfig = tmuxReset; 
+    extraConfig = keybindingsConf + tmuxConf  
+      ''
+
+      ''; 
   };
 }

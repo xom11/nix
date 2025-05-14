@@ -7,8 +7,4 @@ in
     enable = true;
     extraConfig = kittyConf;
   };
-  # home.file ={
-  #   ".config/kitty/kitty.conf".source = ./kitty.conf;
-  #   # ".config/kitty/kitty-reset.conf".source = ./dotfiles/kitty/kitty.reset.conf;
-  # };
 }
