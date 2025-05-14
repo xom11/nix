@@ -9,6 +9,5 @@
         ./applications.nix
         ./dev-tools.nix
         ./other.nix
-        ./gnome-settings.nix
     ];
 }
