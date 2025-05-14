@@ -1,16 +1,10 @@
 {config, pkgs, ... }:
 {
   home.packages = with pkgs; [
-    zsh
-    oh-my-zsh
-    zsh-autosuggestions
-    zsh-completions
-    zsh-history-substring-search
-    zsh-syntax-highlighting
-    zsh-vi-mode
   ];
   programs.zsh = {
     enable = true;
+    dotDir = ".config/zsh";
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
@@ -24,6 +18,7 @@
 
     oh-my-zsh = {
       enable = true;
+      theme = "robbyrussell";
       plugins = [
         "git"
         "vi-mode"
@@ -56,14 +51,15 @@
       vf="nvim $(fzf -m --preview='bat --color=always {}')";
       ls="eza --icons --group-directories-first";
     };
+    sessionVariables = {
+      KEYTIMEOUT=1;
+
+    };
     initContent = ''
-      export PATH=/run/wrappers/bin:$PATH
       # Make Vi mode transitions smoother
-      export KEYTIMEOUT=1
 
       autoload -Uz compinitcompinit
 
-      ZSH_THEME='robbyrussell'
 
       function y() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -72,6 +68,14 @@
           builtin cd -- "$cwd"
         fi
         rm -f -- "$tmp"
+      }
+
+      t() {
+        if [ -z "$TMUX" ]; then
+          tmux attach -t "$1" || tmux new -s "$1"
+        else
+          tmux new-window -n "$1"
+        fi
       }
       
       

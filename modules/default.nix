@@ -8,5 +8,6 @@
         # ./wm.nix
         ./other.nix
         ./gnome-settings.nix
+        ./tmux.nix
     ];
 }
