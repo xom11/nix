@@ -1,13 +1,15 @@
 {... }:
 {
     imports = [
-        ./zsh
+        ./app
+        ./git
         ./gnome
-        ./tmux
         ./kitty
+        ./neovim
+        ./other
+        ./tmux
+        ./toold
+        ./zsh
 
-        ./applications.nix
-        ./dev-tools.nix
-        ./other.nix
     ];
 }

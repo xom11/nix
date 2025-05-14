@@ -1,7 +1,7 @@
 {config, pkgs, ... }:
 {
   imports = [
-    ./zsh-aliases.nix
+    # ./zsh-aliases.nix
   ];
   programs.zsh = {
     enable = true;
@@ -35,7 +35,9 @@
     };
 
     sessionVariables = {
-      KEYTIMEOUT=1;
+      KEYTIMEOUT = 1;
+      NIX_CONFIG="extra-experimental-features = nix-command flakes";
+      NIXPKGS_ALLOW_UNFREE = 1;
 
     };
     initContent = ''
