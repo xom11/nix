@@ -10,19 +10,16 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     historySubstringSearch.enable = true;
-
     history = {
       ignoreDups = true;
       save = 1000000;
       size = 1000000;
     };
-
     oh-my-zsh = {
       enable = true;
       theme = "robbyrussell";
       plugins = [
         "git"
-        "web-search"
         "extract"
         "copyfile"
         "copypath"
@@ -33,6 +30,12 @@
         "thefuck"
       ];
     };
+    plugins = [
+      {
+        name = "fzf-tab";
+        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+      }
+    ];
 
     sessionVariables = {
       KEYTIMEOUT = 1;
