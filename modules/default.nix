@@ -1,7 +1,7 @@
 {... }:
 {
     imports = [
-        ./app
+        ./apps
         ./git
         ./gnome
         ./kitty
