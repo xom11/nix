@@ -26,6 +26,7 @@
         pipx
         tailscale
         docker
+        tldr
 
         # Python
         python3

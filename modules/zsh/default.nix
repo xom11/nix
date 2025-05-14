@@ -22,7 +22,7 @@
       theme = "robbyrussell";
       plugins = [
         "git"
-        "vi-mode"
+        # "vi-mode"
         "sudo"
         "web-search"
         "extract"
@@ -31,7 +31,8 @@
         "fzf"
         "z"
         "uv"
-        "tldr"
+        "tmux"
+        "thefuck"
       ];
     };
 

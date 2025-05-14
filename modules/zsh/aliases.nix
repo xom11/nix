@@ -2,7 +2,6 @@
 
 {
   programs.zsh.shellAliases = {
-    cd = "z";
     f = "fzf";
     cat = "bat --paging=never --plain";
     fp = "fzf --preview=\"bat --color=always {}\"";
@@ -10,8 +9,6 @@
     ls = "eza --icons --group-directories-first";
     v = "nvim";
     vcf = "cd ~/.config/nvim && nvim";
-    vz = "nvim ~/.zshrc";
-    sz = "source ~/.zshrc";
     spy = "source .venv/bin/activate";
     cc = "conda create -p ./.venv python==3.12";
     ca = "conda activate ./.venv";
