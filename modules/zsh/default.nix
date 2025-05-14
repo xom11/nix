@@ -22,8 +22,6 @@
       theme = "robbyrussell";
       plugins = [
         "git"
-        # "vi-mode"
-        "sudo"
         "web-search"
         "extract"
         "copyfile"
@@ -43,8 +41,6 @@
 
     };
     initContent = ''
-      # Make Vi mode transitions smoother
-
       autoload -Uz compinitcompinit
 
 

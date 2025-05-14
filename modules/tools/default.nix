@@ -27,6 +27,7 @@
         tailscale
         docker
         tldr
+        thefuck
 
         # Python
         python3
