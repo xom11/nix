@@ -1,5 +1,6 @@
 { config, pkgs, inputs, lib, ...}:
 with lib.hm.gvariant;
+
 {
   home.packages = with pkgs;[
     gnome-bluetooth
@@ -74,8 +75,9 @@ with lib.hm.gvariant;
     "org/gnome/desktop/input-sources"={
       per-window=true;
     };
-    "orf/gnome/desktop/background"={
-      picture-uri= ../backgrounds/gt1.jpg
+    "org/gnome/desktop/background"={
+      # picture-uri-dark= "/home/kln/nix/backgrounds/gt1.jpg";
+      picture-uri-dark= builtins.toString ./. + "/backgrounds/gt1.jpg";
     };
     # Turn off sharing
     "org/gnome/mutter/wayland"={
