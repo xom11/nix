@@ -1,6 +1,8 @@
 
 {input, config, pkgs, lib, ... }:
-
+let
+  bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -11,9 +13,10 @@
   users.defaultUserShell = pkgs.zsh;
 
   i18n.inputMethod = {
-    enable = true;
-    type = "ibus";
-    ibus.engines = with pkgs.ibus-engines; [ pinyin anthy bamboo];
+    enabled = "ibus";
+    ibus.engines = [
+      bamboo
+    ];
   };
   services.xserver.xkb.layout = lib.mkForce"us,vn";
   services.xserver.enable = true;
