@@ -3,6 +3,9 @@
   imports = [
     ./aliases.nix
   ];
+
+  home.packages = with pkgs; [
+  ];
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
@@ -34,6 +37,10 @@
       {
         name = "fzf-tab";
         src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+      }
+      {
+        name = "zsh-powerlevel10k";
+        src = "${pkgs.zsh-powerlevel10k}/share/powerlevel10k";
       }
     ];
 

@@ -15,14 +15,36 @@ in
 
     plugins = with pkgs.tmuxPlugins; [
       sensible
+      fzf-tmux-url
       yank
       vim-tmux-navigator
+      {
+        plugin = power-theme;
+        extraConfig = ''
+          set -g @tmux_power_time_format '%H:%M'
+        '';
+      }
       resurrect
-      power-theme
       continuum
-      tmux-sessionx
+      {
+        plugin = tmux-sessionx;
+        extraConfig = ''
+          set -g @sessionx-prefix off
+          set -g @sessionx-window-height '90%'
+          set -g @sessionx-window-width '90%'
+          set -g @sessionx-zoxide-mode 'on'
+
+        '';
+      }
       tmux-fzf
-      tmux-floax
+      {
+        plugin = tmux-floax;
+        extraConfig = ''
+          set -g @floax-bind '-n M-p'
+          set -g @floax-width '90%'
+          set -g @floax-height '90%'
+        '';
+      }
       ];
   };
 }
