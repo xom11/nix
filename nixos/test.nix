@@ -13,7 +13,7 @@
   i18n.inputMethod = {
     enable = true;
     type = "ibus";
-    ibus.engines = with pkgs.ibus-engines; [ bamboo pinyin];
+    ibus.engines = with pkgs.ibus-engines; [ pinyin anthy bamboo];
   };
   services.xserver.xkb.layout = lib.mkForce"us,vn";
   services.xserver.enable = true;

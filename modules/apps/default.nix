@@ -19,7 +19,6 @@
         caprine
         localsend
         vlc
-        ventoy-full-qt
         alacritty  
     ];
 }

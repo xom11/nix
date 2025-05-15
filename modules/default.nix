@@ -7,7 +7,7 @@
         ./kitty
         ./nvim
         ./other
-        ./sway
+        # ./sway
         ./tmux
         ./tools
         ./zsh

@@ -6,7 +6,6 @@
     userEmail = "namkhanh20xx@gmail.com";
     extraConfig = {
       init.defaultBranch = "main";
-      pull.rebase = true;
     };
   };
 
