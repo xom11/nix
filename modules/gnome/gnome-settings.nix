@@ -74,6 +74,9 @@ with lib.hm.gvariant;
     "org/gnome/desktop/input-sources"={
       per-window=true;
     };
+    "orf/gnome/desktop/background"={
+      picture-uri= ../backgrounds/gt1.jpg
+    };
     # Turn off sharing
     "org/gnome/mutter/wayland"={
       xwayland-disable-extensions=["Xtest"];

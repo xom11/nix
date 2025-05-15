@@ -7,8 +7,8 @@
     home.packages = with pkgs;
     [
         preload
-        xdg-desktop-portal 
-        xdg-desktop-portal-gtk
+        # xdg-desktop-portal 
+        # xdg-desktop-portal-gtk
         bitwarden
         discord
         vscode
@@ -18,9 +18,7 @@
         google-chrome
         caprine
         localsend
-        virtualbox
         vlc
         ventoy-full-qt
-        ulauncher
     ];
 }

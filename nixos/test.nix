@@ -20,8 +20,7 @@
   services.xserver.displayManager.sessionPackages = [
     pkgs.sway
   ];
-  engines = with pkgs.ibus-engines; [ mozc ];
-  environment.sessionVariables = {
+   environment.sessionVariables = {
     GTK_IM_MODULE = "ibus";
     QT_IM_MODULE = "ibus";
     XMODIFIERS = "@im=ibus";
@@ -46,5 +45,8 @@
   # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "kln";
+
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
 }
