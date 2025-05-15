@@ -5,7 +5,9 @@
   ];
 
   home.packages = with pkgs; [
+
   ];
+
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
@@ -20,7 +22,7 @@
     };
     oh-my-zsh = {
       enable = true;
-      theme = "robbyrussell";
+      # theme = "robbyrussell";
       plugins = [
         "git"
         "extract"
@@ -41,6 +43,10 @@
       {
         name = "zsh-powerlevel10k";
         src = "${pkgs.zsh-powerlevel10k}/share/powerlevel10k";
+      }
+      {
+        name = "powerlevel10k-config";
+        src = ./p10k.zsh;
       }
     ];
 
