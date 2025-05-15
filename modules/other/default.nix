@@ -1,7 +1,7 @@
 { config, pkgs, inputs, ...}:
 {
   imports = [
-    ./theme
+    ./theme.nix
   ];
   home.packages = with pkgs;[
     wmctrl
