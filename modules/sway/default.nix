@@ -1,0 +1,25 @@
+{ lib
+, config
+, pkgs
+, ...
+}:
+
+{
+  wayland.windowManager.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    checkConfig = false;
+    extraConfig = builtins.readFile ./config;
+    config.bars = [{
+      command = "swaybar_command waybar";
+      position = "top";
+      mode = "dock";
+    }];
+  };
+  programs.waybar = {
+    enable = true;
+    style = builtins.readFile ./waybar/style.css;
+  };
+  home.file".config/waybar/config".source = ./config.jsonc;
+}
+

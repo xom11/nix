@@ -76,8 +76,7 @@ with lib.hm.gvariant;
       per-window=true;
     };
     "org/gnome/desktop/background"={
-      # picture-uri-dark= "/home/kln/nix/backgrounds/gt1.jpg";
-      picture-uri-dark= builtins.toString ./. + "/backgrounds/gt1.jpg";
+      picture-uri-dark= builtins.toString ./.. + "/backgrounds/bg1.jpg";
     };
     # Turn off sharing
     "org/gnome/mutter/wayland"={
