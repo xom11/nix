@@ -7,6 +7,7 @@
     fp = "fzf --preview=\"bat --color=always {}\"";
     vf = "nvim $(fzf -m --preview=\"bat --color=always {}\")";
     ls = "eza --icons --group-directories-first";
+    lg = "lazygit";
     v = "nvim";
     vcf = "cd ~/.config/nvim && nvim";
     spy = "source .venv/bin/activate";
