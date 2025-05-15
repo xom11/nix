@@ -5,8 +5,9 @@
   ];
 
   home.packages = with pkgs; [
-
   ];
+  environment.etc."powerlevel10k/p10k.zsh".source = ./p10k.zsh;
+
 
   programs.zsh = {
     enable = true;
@@ -35,23 +36,34 @@
         "thefuck"
       ];
     };
+    # zplug = {
+    #   enable =true;
+    #   plugins = [
+    #     { name = "romkatv/powerlevel10k"; tags = [as:theme depth:1];}
+    #   ];
+    # };
     plugins = [
       {
         name = "fzf-tab";
         src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
       }
       {
-        name = "zsh-powerlevel10k";
+        name = "powerlevel10k";
         src = "${pkgs.zsh-powerlevel10k}/share/powerlevel10k";
+        file = "powerlevel10k.zsh-theme";
       }
       {
         name = "powerlevel10k-config";
-        src = ./p10k.zsh;
+        src = ./p10k-config;
+        file = "p10k.zsh";
       }
     ];
+    dirHashes = {
+      # cd ~cfg
+      cfg = "$HOME/.config";
+    };
 
     sessionVariables = {
-      KEYTIMEOUT = 1;
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
 
