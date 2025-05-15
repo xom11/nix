@@ -20,6 +20,6 @@
     enable = true;
     style = builtins.readFile ./waybar/style.css;
   };
-  home.file.".config/waybar/config".source = ./config.jsonc;
+  home.file.".config/waybar/config".source = ./waybar/config.jsonc;
 }
 

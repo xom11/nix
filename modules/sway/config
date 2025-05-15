@@ -72,7 +72,7 @@ assign [class="Alacritty"] workspace C
 bindsym $mod+Shift+space floating toggle
 # output eDP-1 resolution 1920x1080 rotate normal
 # Set background (replace with your own image path)
-output * bg ~/nix/dotfiles/sway/bg/bg1.jpg fill
+output * bg ~/nix/modules/sway/backgrounds/bg.jpg fill
 # bar {
   # position top
   # swaybar_command waybar

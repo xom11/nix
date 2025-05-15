@@ -20,5 +20,6 @@
         localsend
         vlc
         ventoy-full-qt
+        alacritty  
     ];
 }
