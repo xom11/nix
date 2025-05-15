@@ -6,7 +6,6 @@
 
   home.packages = with pkgs; [
   ];
-  environment.etc."powerlevel10k/p10k.zsh".source = ./p10k.zsh;
 
 
   programs.zsh = {
@@ -49,7 +48,7 @@
       }
       {
         name = "powerlevel10k";
-        src = "${pkgs.zsh-powerlevel10k}/share/powerlevel10k";
+        src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
         file = "powerlevel10k.zsh-theme";
       }
       {
