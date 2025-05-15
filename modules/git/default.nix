@@ -1,7 +1,13 @@
 {pkgs, ...}:
 {
-  programs.git.enable = true;
-  programs.git.userName = "khanhkhanhlele";
-  programs.git.userEmail = "namkhanh20xx@gmail.com";
+  programs.git = {
+    enable = true;
+    userName  = "khanhkhanhlele";
+    userEmail = "namkhanh20xx@gmail.com";
+    extraConfig = {
+      init.defaultBranch = "main";
+      pull.rebase = true;
+    };
+  };
 
 }

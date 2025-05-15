@@ -2,8 +2,8 @@
 set $mod Mod4
 
 # Basic keybindings
-# Launch Alacritty terminal
-bindsym $mod+Return exec alacritty   
+# Launch kitty terminal
+bindsym $mod+Return exec kitty   
 # Launch Firefox
 bindsym $mod+f exec firefox          
 # Close focused window
@@ -66,13 +66,13 @@ bindsym $mod+Shift+r move container to workspace R
 
 # Which app is assigned to which workspace
 assign [class="Firefox"] workspace B
-assign [class="Alacritty"] workspace C
+assign [class="kitty"] workspace C
 
 # Floating windows
 bindsym $mod+Shift+space floating toggle
 # output eDP-1 resolution 1920x1080 rotate normal
 # Set background (replace with your own image path)
-output * bg ~/nix/modules/sway/backgrounds/bg.jpg fill
+output * bg ~/nix/modules/backgrounds/bg.jpg fill
 # bar {
   # position top
   # swaybar_command waybar
@@ -106,4 +106,4 @@ input "12815:20565:Telink_CIDOO_ABM066" {
 # output eDP-1 pos 0 0
 # output DP-1 pos 0 0
 
-set $term alacritty
+set $term kitty
