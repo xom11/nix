@@ -19,6 +19,8 @@
         vlc
         gnome-tweaks
         alacritty  
+        standardnotes
+        joplin-desktop
 
         xdg-desktop-portal 
         xdg-desktop-portal-gtk
