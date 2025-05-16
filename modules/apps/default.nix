@@ -7,8 +7,6 @@
     home.packages = with pkgs;
     [
         preload
-        # xdg-desktop-portal 
-        # xdg-desktop-portal-gtk
         bitwarden
         discord
         vscode
@@ -21,5 +19,9 @@
         vlc
         gnome-tweaks
         alacritty  
+
+        xdg-desktop-portal 
+        xdg-desktop-portal-gtk
+        xdg-desktop-portal-wlr
     ];
 }
