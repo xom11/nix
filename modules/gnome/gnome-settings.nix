@@ -78,6 +78,10 @@ with lib.hm.gvariant;
     "org/gnome/desktop/background"={
       picture-uri-dark= builtins.toString ./.. + "/backgrounds/bg1.jpg";
     };
+    "org/gnome/mutter"={
+      experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
+
+    };
     # Turn off sharing
     "org/gnome/mutter/wayland"={
       xwayland-disable-extensions=["Xtest"];

@@ -19,6 +19,7 @@
         caprine
         localsend
         vlc
+        gnome-tweaks
         alacritty  
     ];
 }
