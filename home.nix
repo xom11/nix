@@ -12,22 +12,6 @@
     ./modules
   ];
 
-  # home.file = {
-  #   # ".zshrc".source = ./dotfiles/zsh/.zshrc;
-  #   ".config/atuin".source = ./dotfiles/atuin;
-  #   # ".config/kitty".source = ./dotfiles/kitty;
-  #   ".config/run-or-raise".source = ./dotfiles/run-or-raise;
-  #   # ".config/tmux".source = ./dotfiles/tmux;
-  #   ".config/nvim".source = ./dotfiles/nvim;
-  #   ".config/nix".source = ./dotfiles/nix;
-  #   ".config/git".source = ./dotfiles/git;
-  # };
-
-  # home.sessionPath = [
-  #   "/run/current-system/sw/bin"
-  #     "$HOME/.nix-profile/bin"
-  # ];
-
   programs.home-manager.enable = true;
 
   nixpkgs.config.allowUnfree = true;
