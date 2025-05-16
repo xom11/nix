@@ -29,10 +29,11 @@ in
       {
         plugin = tmux-sessionx;
         extraConfig = ''
-          set -g @sessionx-prefix off
+          set -g @sessionx-bind 'o'
           set -g @sessionx-window-height '90%'
           set -g @sessionx-window-width '90%'
           set -g @sessionx-zoxide-mode 'on'
+          set -g @sessionx-fzf-marks-mode 'on'
 
         '';
       }
