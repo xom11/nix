@@ -14,6 +14,7 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.just-perfection
     gnomeExtensions.undecorate
+    gnomeExtensions.switcher
     ];
   dconf.settings = {
     "org/gnome/shell" = {
@@ -24,6 +25,7 @@
         "dash-to-dock@micxgx.gmail.com"
         "just-perfection-desktop@just-perfection"
         "undecorate@sun.wxg@gmail.com"
+        "switcher@landau.fi"
         ];
     };
     "org/gnome/shell/extensions/just-perfection" = {
@@ -66,6 +68,11 @@
     };
     "org/gnome/shell/extensions/run-or-raise" = {
       center-mouse-to-focused-window=true;
+    };
+    "org/gnome/shell/extensions/switcher" = {
+      only-current-workspace=true;
+      fade-enable=true;
+      show-switcher=["<Super>Space"];
     };
   };
   

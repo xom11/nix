@@ -27,11 +27,14 @@ with lib.hm.gvariant;
       toggle-maximized=["<Super>Up"];
       unmaximize=["<Super>Down"];
       show-desktop=["<Super>d"];
+      minimize=["<Super>h"];
       always-on-top=["<Super>p"];
       cycle-windows=["<Hyper>bracketleft"];
       cycle-windows-backward=["<Hyper>bracketright"];
       begin-resize=["<Super>r"];
       begin-move=["<Super>m"];
+      switch-input-source=["<Super><Shift>space" "XF86Keyboard"];
+      switch-input-source-backward=[];
     };
     "org/gnome/shell/keybindings"={
       switch-to-application-1=[];
@@ -66,14 +69,12 @@ with lib.hm.gvariant;
     };
     "org/gnome/desktop/input-sources"={
       xkb-options=["caps:hyper"];
+      per-window=true;
     };
     "org/gnome/settings-daemon/plugins/power"={
       sleep-inactive-ac-type="nothing";
       sleep-inactive-battery-type="nothing";
       idle-dim=false;
-    };
-    "org/gnome/desktop/input-sources"={
-      per-window=true;
     };
     "org/gnome/desktop/background"={
       picture-uri-dark= builtins.toString ./.. + "/backgrounds/bg1.jpg";
@@ -85,6 +86,14 @@ with lib.hm.gvariant;
     # Turn off sharing
     "org/gnome/mutter/wayland"={
       xwayland-disable-extensions=["Xtest"];
+    };
+    "org/gnome/nautilus/preferences"={
+      default-folder-viewer=true;
+    };
+    "org/gnome/settings-daemon/plugins/media-keys"={
+      screensaver = ["<Super>l"];
+      logout = ["<Super><Shift>l"];
+      hibernate = ["<Super><Shift>h"];
     };
   };
 }

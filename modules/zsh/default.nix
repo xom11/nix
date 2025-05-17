@@ -6,6 +6,9 @@
 
   home.packages = with pkgs; [
   ];
+  programs.tofi ={
+    enable = true;
+  };
 
 
   programs.zsh = {
