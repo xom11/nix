@@ -42,6 +42,7 @@ with lib.hm.gvariant;
       switch-to-application-3=[];
       switch-to-application-4=[];
       toggle-message-tray=[];
+      toggle-overview=["<Ctrl>Up"];
     };
     "org/gnome/shell/app-switcher"={
       current-workspace-only=true;
@@ -81,19 +82,17 @@ with lib.hm.gvariant;
     };
     "org/gnome/mutter"={
       experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
+      overlay-key="";
 
     };
     # Turn off sharing
     "org/gnome/mutter/wayland"={
       xwayland-disable-extensions=["Xtest"];
     };
-    "org/gnome/nautilus/preferences"={
-      default-folder-viewer=true;
-    };
     "org/gnome/settings-daemon/plugins/media-keys"={
       screensaver = ["<Super>l"];
       logout = ["<Super><Shift>l"];
-      suspend = ["<Super><Shift>s"];
+      suspend = ["<Super><Shift>"];
     };
   };
 }
