@@ -33,7 +33,7 @@ with lib.hm.gvariant;
       cycle-windows-backward=["<Hyper>bracketright"];
       begin-resize=["<Super>r"];
       begin-move=["<Super>m"];
-      switch-input-source=["<Super><Shift>space" "XF86Keyboard"];
+      switch-input-source=["<Ctrl>space" "XF86Keyboard"];
       switch-input-source-backward=[];
     };
     "org/gnome/shell/keybindings"={
@@ -82,7 +82,7 @@ with lib.hm.gvariant;
     };
     "org/gnome/mutter"={
       experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
-      overlay-key="";
+      overlay-key="Control_R";
 
     };
     # Turn off sharing

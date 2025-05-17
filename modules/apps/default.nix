@@ -21,6 +21,7 @@
         alacritty  
         standardnotes
         joplin-desktop
+        vivaldi
 
         xdg-desktop-portal 
         xdg-desktop-portal-gtk

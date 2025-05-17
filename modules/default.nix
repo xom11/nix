@@ -11,5 +11,6 @@
         ./tmux
         ./tools
         ./zsh
+        ./desktopFile
     ];
 }
