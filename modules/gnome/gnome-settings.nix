@@ -93,7 +93,7 @@ with lib.hm.gvariant;
     "org/gnome/settings-daemon/plugins/media-keys"={
       screensaver = ["<Super>l"];
       logout = ["<Super><Shift>l"];
-      hibernate = ["<Super><Shift>h"];
+      suspend = ["<Super><Shift>s"];
     };
   };
 }
