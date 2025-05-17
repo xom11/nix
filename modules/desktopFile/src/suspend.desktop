@@ -2,7 +2,7 @@
 Name=Sleep/Hibernate
 Comment=Put the computer to sleep or hibernate
 Exec=systemctl suspend
-Icon=system-suspend
+Icon=sleep
 Terminal=false
 Type=Application
 Categories=System;
