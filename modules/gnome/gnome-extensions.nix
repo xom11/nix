@@ -32,6 +32,7 @@
       panel=false;
       animation=0;
       panel-in-overview=true;
+      startup-status = 0;
 
     };
     "org/gnome/shell/extensions/dash-to-dock" = {
