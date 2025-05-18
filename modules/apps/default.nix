@@ -10,10 +10,7 @@
         bitwarden
         discord
         vscode
-        microsoft-edge
         telegram-desktop
-        brave
-        google-chrome
         caprine
         localsend
         vlc
@@ -21,7 +18,12 @@
         alacritty  
         standardnotes
         joplin-desktop
+        
+        microsoft-edge
+        google-chrome
+        brave
         vivaldi
+        chromium
 
         xdg-desktop-portal 
         xdg-desktop-portal-gtk

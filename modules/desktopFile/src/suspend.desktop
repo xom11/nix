@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Sleep/Hibernate
+Name=Sleep
 Comment=Put the computer to sleep or hibernate
 Exec=systemctl suspend
-Icon=sleep
+Icon=./suspend.png
 Terminal=false
 Type=Application
 Categories=System;
