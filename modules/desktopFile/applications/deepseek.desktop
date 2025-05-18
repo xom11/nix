@@ -2,8 +2,8 @@
 Type=Application
 Name=DeepSeek
 StartupWMClass=brave-chat.deepseek.com__-Default
-Comment=Launch DeppSeek
-Icon=brave-agimnkijcaahngcdmfeangaknmldooml-Default
+Comment=Launch DeepSeek
+Icon=deepseek
 Exec=brave --ozone-platform-hint=auto --force-dark-mode --enable-features=WebUIDarkMode --profile-directory=Default --app="https://chat.deepseek.com/" %U 
 Terminal=false
 
