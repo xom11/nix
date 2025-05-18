@@ -21,7 +21,8 @@
         
         brave
         # microsoft-edge
-        # google-chrome
+        google-chrome
+        chromedriver
         # vivaldi
         # chromium
 
