@@ -1,6 +1,6 @@
 { config, pkgs, inputs, lib, ...}:
 with lib.hm.gvariant;
-
+# dconf dump /org/gnome/ | dconf2nix 
 {
   home.packages = with pkgs;[
     gnome-bluetooth
@@ -71,6 +71,8 @@ with lib.hm.gvariant;
     "org/gnome/desktop/input-sources"={
       xkb-options=["caps:hyper"];
       per-window=true;
+      show-all-sources = true;
+      sources = [ (mkTuple [ "xkb" "us" ]) (mkTuple [ "ibus" "Bamboo" ]) ];
     };
     "org/gnome/settings-daemon/plugins/power"={
       sleep-inactive-ac-type="nothing";
