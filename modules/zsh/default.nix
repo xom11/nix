@@ -20,6 +20,7 @@
     historySubstringSearch.enable = true;
     history = {
       ignoreDups = true;
+      ignoreAllDups = true;
       save = 1000000;
       size = 1000000;
     };
@@ -65,9 +66,6 @@
 
     };
     initContent = ''
-      autoload -Uz compinitcompinit
-
-
       function y() {
         local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
         yazi "$@" --cwd-file="$tmp"

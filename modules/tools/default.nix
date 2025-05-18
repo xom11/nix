@@ -2,6 +2,7 @@
 {
     home.packages = with pkgs;[
         neofetch
+        fastfetch
         vim
         htop
         htop
