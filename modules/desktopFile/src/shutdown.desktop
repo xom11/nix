@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Shutdown
 Comment=Shutdown the computer
-Exec=sudo systemctl poweroff
+Exec=systemctl poweroff
 Icon=system-shutdown
 Terminal=false
 Type=Application

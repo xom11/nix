@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=ChatGPT
-StartupWMClass=brave-chat.openai.com__-Default
-Comment=Launch ChatGPT
-Icon=system-shutdown
-Exec=brave --ozone-platform-hint=auto --force-dark-mode --enable-features=WebUIDarkMode --app="https://chat.openai.com/" %U
+Name=Youtube
+StartupWMClass=brave-www.youtube.com__-Default
+Comment=Launch Youtube
+Icon=
+Exec=brave --ozone-platform-hint=auto --force-dark-mode --enable-features=WebUIDarkMode --app="https://www.youtube.com/" %U
 Terminal=false
