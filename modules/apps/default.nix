@@ -19,11 +19,11 @@
         standardnotes
         joplin-desktop
         
-        microsoft-edge
-        google-chrome
         brave
-        vivaldi
-        chromium
+        # microsoft-edge
+        # google-chrome
+        # vivaldi
+        # chromium
 
         xdg-desktop-portal 
         xdg-desktop-portal-gtk

@@ -1,7 +1,7 @@
 { config, pkgs, inputs, ...}:
 {
   imports = [
-    ./theme.nix
+    ./fonts.nix
   ];
   home.packages = with pkgs;[
     wmctrl
