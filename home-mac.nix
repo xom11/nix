@@ -9,6 +9,7 @@
   # user.shell = pkgs.zsh;
 
   imports = [
+    ./modules/macos.nix
   ];
 
   programs.home-manager.enable = true;
