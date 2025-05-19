@@ -8,13 +8,19 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs: {
+  outputs = {self, nix-darwin, nixpkgs, home-manager, ... }@inputs: {
+    darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [ ./darwin.nix ];
+    };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       modules = [ ./nixos/configuration.nix ];
     };
