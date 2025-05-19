@@ -1,5 +1,7 @@
+{pkgs, lib, config, ...}:
 {
   fonts.packages = with pkgs; [
+    nerd-fonts.dejavu-sans-mono
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-emoji
@@ -9,5 +11,6 @@
     mplus-outline-fonts.githubRelease
     dina-font
     proggyfonts
+    meslo-lgs-nf
 ];
 }
