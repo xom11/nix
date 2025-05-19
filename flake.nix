@@ -19,7 +19,9 @@
   outputs = {self, nix-darwin, nixpkgs, home-manager, ... }@inputs: {
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
-      modules = [ ./darwin.nix ];
+      # system.stateVersion = "24.11";
+      modules = [ ./macos/configuration.nix ];
+      specialArgs = { inherit inputs; };
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       modules = [ ./nixos/configuration.nix ];
