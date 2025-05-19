@@ -19,23 +19,22 @@
   outputs = {self, nix-darwin, nixpkgs, home-manager, ... }@inputs: {
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
-      # system.stateVersion = "24.11";
-      modules = [ ./macos/configuration.nix ];
+      modules = [ ./nix-darwin/configuration.nix ];
       specialArgs = { inherit inputs; };
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       modules = [ 
-        ./nixos/configuration.nix 
+        ./nix-os/configuration.nix 
         ];
     };
     homeConfigurations = {
       "nixos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./home.nix ];
+        modules = [ ./nix-os/home.nix ];
       };
       "macos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-        modules = [ ./home-mac.nix ];
+        modules = [ ./nix-darwin/home-mac.nix ];
       };
     };
   };

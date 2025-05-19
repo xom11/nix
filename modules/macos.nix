@@ -1,8 +1,8 @@
-{... }:
+{pkgs, ... }:
 {
     imports = [
         ./apps
-        # ./git
+        ./git
         # ./gnome
         ./kitty
         ./nvim

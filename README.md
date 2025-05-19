@@ -20,3 +20,5 @@ nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#local
 export NIX_CONFIG="extra-experimental-features = nix-command flakes"
 export NIXPKGS_ALLOW_UNFREE=1
 sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/nix#macos
+
+nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos

@@ -6,9 +6,6 @@
 
   home.packages = with pkgs; [
   ];
-  programs.tofi ={
-    enable = true;
-  };
 
 
   programs.zsh = {
@@ -40,10 +37,10 @@
       ];
     };
     plugins = [
-      {
-        name = "fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-      }
+      # {
+      #   name = "fzf-tab";
+      #   src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+      # }
       {
         name = "powerlevel10k";
         src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";

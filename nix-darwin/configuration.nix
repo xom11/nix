@@ -1,7 +1,9 @@
 { config, pkgs, ... }:
 
 {
-  
+  imports = [
+    ./fonts.nix
+  ] 
   environment.systemPackages =
     [ pkgs.vim
     ];
