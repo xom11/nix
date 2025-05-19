@@ -3,9 +3,7 @@ with lib.hm.gvariant;
 # dconf dump /org/gnome/ | dconf2nix 
 {
   home.packages = with pkgs;[
-    gnome-bluetooth
-    dconf2nix
-    dconf-editor
+
   ];
   dconf.settings = {
     "org/gnome/mutter"={

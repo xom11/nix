@@ -4,12 +4,12 @@
         ./apps
         # ./git
         # ./gnome
-        # ./kitty
+        ./kitty
         # ./nvim
         # ./other
-        # ./tmux
+        ./tmux
         ./tools
-        # ./zsh
+        ./zsh
         # ./desktopFile
     ];
 }

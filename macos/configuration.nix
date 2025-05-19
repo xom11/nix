@@ -7,7 +7,7 @@
     ];
 
   nix.settings.experimental-features = "nix-command flakes";
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enable = true; 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   system.stateVersion = 6;

@@ -6,17 +6,14 @@
 {
     home.packages = with pkgs;
     [
-        preload
         bitwarden
         discord
         vscode
         telegram-desktop
         caprine
         localsend
-        vlc
-        gnome-tweaks
         alacritty  
-        standardnotes
+        # standardnotes
         joplin-desktop
         
         brave
@@ -26,8 +23,8 @@
         # vivaldi
         # chromium
 
-        xdg-desktop-portal 
-        xdg-desktop-portal-gtk
-        xdg-desktop-portal-wlr
+        # xdg-desktop-portal 
+        # xdg-desktop-portal-gtk
+        # xdg-desktop-portal-wlr
     ];
 }
