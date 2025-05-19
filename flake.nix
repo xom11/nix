@@ -31,6 +31,10 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [ ./home.nix ];
       };
+      "macos" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        modules = [ ./home-mac.nix ];
+      };
     };
   };
 }
