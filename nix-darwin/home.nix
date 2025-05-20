@@ -9,7 +9,7 @@
   # user.shell = pkgs.zsh;
 
   imports = [
-    ./modules/macos.nix
+    ../modules/macos.nix
   ];
 
 
