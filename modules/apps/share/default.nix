@@ -14,9 +14,9 @@
         localsend
         alacritty  
         joplin-desktop
+        slack
         
         brave
-        # microsoft-edge
         google-chrome
         chromedriver
         # vivaldi

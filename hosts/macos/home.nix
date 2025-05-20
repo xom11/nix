@@ -8,7 +8,7 @@
   # user.shell = pkgs.zsh;
 
   imports = [
-    ../../modules/darwin.nix
+    ../../modules/macos.nix
   ];
 
 

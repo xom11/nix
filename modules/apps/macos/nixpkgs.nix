@@ -2,7 +2,7 @@
 {
 
   home.packages = with pkgs;[
-    # notion-app
+    notion-app
     maccy
     raycast
   ];
