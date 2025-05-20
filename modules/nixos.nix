@@ -1,7 +1,6 @@
 {... }:
 {
     imports = [
-        ./apps/share
         ./apps/nixos
         ./git
         ./gnome
