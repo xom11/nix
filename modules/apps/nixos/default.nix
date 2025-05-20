@@ -1,7 +1,7 @@
 {pkgs, ...}:
 {
   imports = [
-    ./nixpkgs
-    ./desktopFile
-  ]
+    ./nixpkgs.nix
+    ./desktopFile.nix
+  ];
 }

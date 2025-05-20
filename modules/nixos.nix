@@ -6,7 +6,6 @@
         ./gnome
         ./kitty
         ./nvim
-        ./other
         ./tmux
         ./tools
         ./zsh
