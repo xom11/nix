@@ -1,10 +1,12 @@
-{ pkgs }:
+{ pkgs, ... }:
 
-with pkgs;
-let shared-packages = import ../shared/nixpkgs.nix { inherit pkgs; }; in
-shared-packages ++ [
-  dockutil
-  # notion-app
-  maccy
-  raycast
-]
+{
+  imports = [ ../shared ];
+  home.packages = with pkgs; [
+    dockutil
+    # notion-app
+    maccy
+    raycast
+  ];
+
+}
