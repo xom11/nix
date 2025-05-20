@@ -3,8 +3,6 @@
   imports = [
   ];
   home.packages = with pkgs;[
-    wmctrl
-    xdotool
-    xclip
+
   ];
 }

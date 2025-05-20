@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./fonts.nix
-  ] 
+    ../modules/fonts
+  ];
   environment.systemPackages =
     [ pkgs.vim
     ];
