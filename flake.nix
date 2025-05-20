@@ -20,6 +20,7 @@
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
       # system = "aarch64-darwin";
       modules = [
+        home-manager.darwinModules.home-manager
         ./hosts/darwin
       ];
     };

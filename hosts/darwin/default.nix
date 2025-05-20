@@ -4,7 +4,8 @@
 {
   imports = [
     ../../modules/fonts
-    ../../modules/macos.nix
+    # ../../modules/macos.nix
+    ./home.nix
   ];
   environment.systemPackages =
     [ pkgs.vim
