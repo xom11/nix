@@ -1,8 +1,7 @@
-{pkgs,...}:
+{ pkgs, ... }:
+
 {
-with pkgs;
-let shared-packages = import ../shared/packages.nix { inherit pkgs; }; in
-shared-packages ++ [
+  home.packages = with pkgs; [
   preload
   standardnotes
   
@@ -13,4 +12,6 @@ shared-packages ++ [
   # xdg-desktop-portal-gtk
   # xdg-desktop-portal-wlr
 
-]
+  ];
+
+}
