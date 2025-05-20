@@ -7,7 +7,7 @@ in
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/configuration.nix
-      ./modules/fonts
+      ../../modules/fonts
     ];
   
   programs.zsh.enable = true;
