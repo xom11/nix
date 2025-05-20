@@ -9,7 +9,7 @@
   # user.shell = pkgs.zsh;
 
   imports = [
-    ./modules
+    ./modules/nixos.nix
   ];
 
   programs.home-manager.enable = true;

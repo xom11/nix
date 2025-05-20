@@ -1,11 +1,12 @@
+
 { config, pkgs, ... }:
 
 {
   imports = [
-    ../modules/fonts
+    ../../modules/fonts
   ];
-  environment.systemPackages =
-    [ pkgs.vim
+  environment.systemPackages =[
+    pkgs.vim
     ];
 
   nix.settings.experimental-features = "nix-command flakes";

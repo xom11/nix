@@ -20,7 +20,6 @@
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
       # system = "aarch64-darwin";
       modules = [
-        home-manager.darwinModules.home-manager
         ./hosts/darwin
       ];
     };
@@ -28,11 +27,7 @@
       # system = "x86_64-linux";
       modules = [ 
         ./nix-os/configuration.nix 
-        home-manager.nixosModules.home-manager 
       ];
-      home-manager.users.nixos = { 
-        imports = [ ./nix-os/home.nix ];
-      };
     };
     homeConfigurations = {
       "nixos" = home-manager.lib.homeManagerConfiguration {
