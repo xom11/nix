@@ -1,16 +1,15 @@
 {pkgs, ... }:
 {
     imports = [
-        ./apps
+        ./apps/share
+        ./apps/macos
         ./git
         # ./gnome
         ./kitty
         ./nvim
-        # ./other
         ./tmux
         ./tools
         ./zsh
-        # ./desktopFile
     ];
 }
 

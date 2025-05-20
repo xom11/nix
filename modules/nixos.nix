@@ -1,7 +1,8 @@
 {... }:
 {
     imports = [
-        ./apps
+        ./apps/share
+        ./apps/nixos
         ./git
         ./gnome
         ./kitty
@@ -10,6 +11,5 @@
         ./tmux
         ./tools
         ./zsh
-        ./desktopFile
     ];
 }

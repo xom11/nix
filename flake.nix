@@ -35,7 +35,7 @@
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
       # system = "aarch64-darwin";
       modules = [
-        ./hosts/darwin/configuration.nix
+        ./hosts/macos/configuration.nix
       ];
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
@@ -47,7 +47,7 @@
     homeConfigurations = {
       "macos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-        modules = [ ./hosts/darwin/home.nix ];
+        modules = [ ./hosts/macos/home.nix ];
       };
       "nixos" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
