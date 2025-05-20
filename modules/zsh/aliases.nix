@@ -16,7 +16,9 @@
     gu = "git pull && git add . && git commit -m \"update\" && git push";
     py = "python3";
     py310 = "python3.10";
-    # nu = "nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#nixos";
-    # osu = "sudo nixos-rebuild switch --impure --flake ~/nix#nixos";
+    hnu = "nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#nixos";
+    hmu = "nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos";
+    onu = "sudo nixos-rebuild switch --impure --flake ~/nix#nixos";
+    omu = "sudo darwin-rebuild switch --impure --flake ~/nix#macos";
   };
 }

@@ -14,14 +14,3 @@ t() {
         tmux new-window -n "$1"
     fi
 }
-
-
-nu() {
-  local config="${1:-nixos}"
-  nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#"${config}"
-}
-
-osu() {
-  local config="${1:-nixos}"
-  sudo nixos-rebuild switch --impure --flake ~/nix#"${config}"
-}
