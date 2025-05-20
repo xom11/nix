@@ -13,7 +13,6 @@
         caprine
         localsend
         alacritty  
-        # standardnotes
         joplin-desktop
         
         brave
@@ -23,8 +22,6 @@
         # vivaldi
         # chromium
 
-        # xdg-desktop-portal 
-        # xdg-desktop-portal-gtk
-        # xdg-desktop-portal-wlr
+
     ];
 }
