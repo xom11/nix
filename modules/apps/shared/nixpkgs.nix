@@ -7,7 +7,6 @@
         vscode
         telegram-desktop
         localsend
-        alacritty  
         joplin-desktop
         slack
         
