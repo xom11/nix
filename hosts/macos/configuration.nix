@@ -5,6 +5,7 @@ let user = builtins.getEnv "USER"; in
 {
   imports = [
     ../../modules/fonts
+    ./homebrew.nix
   ];
   environment.systemPackages =[
     pkgs.vim
@@ -19,5 +20,11 @@ let user = builtins.getEnv "USER"; in
     # checks.verifyNixPath = false;
     primaryUser = user;
     stateVersion = 6;
+    defaults = {
+      dock = {
+        autohide = false;
+      };
+
+    };
   };
 }

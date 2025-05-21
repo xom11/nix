@@ -33,7 +33,7 @@
 
   outputs = {self, nix-darwin, nixpkgs, home-manager, ... }@inputs: {
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
-      # system = "aarch64-darwin";
+      system = "aarch64-darwin";
       modules = [
         ./hosts/macos/configuration.nix
       ];

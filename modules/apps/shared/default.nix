@@ -1,7 +1,5 @@
 {
   imports = [
-    ../shared
-
     ./nixpkgs.nix
   ];
 }
