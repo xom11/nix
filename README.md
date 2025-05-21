@@ -22,3 +22,8 @@ export NIXPKGS_ALLOW_UNFREE=1
 sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/nix#macos
 
 nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos
+
+sudo darwin-rebuild switch --impure --flake ~/nix#macos
+nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos
+sudo nixos-rebuild switch --impure --flake ~/nix#nixos
+nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#nixos
