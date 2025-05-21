@@ -33,4 +33,6 @@ in
   services.displayManager.autoLogin.user = "kln";
   nixpkgs.config.allowUnfree = true;
 
+  services.flatpak.enable = true;
+
 }
