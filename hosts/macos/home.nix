@@ -1,9 +1,13 @@
-{ config, pkgs, lib, home-manager, ... }:
+{ config, pkgs, ... }:
 
 {
-  home.username = builtins.getEnv "USER";  
-  home.homeDirectory = builtins.getEnv "HOME";  
-  home.stateVersion = "23.11"; 
+  # home.username = builtins.getEnv "USER";  
+  # home.homeDirectory = builtins.getEnv "HOME";  
+
+  home.username = "lenamkhanh";
+  home.homeDirectory = "/Users/lenamkhanh";
+  home.stateVersion = "24.11"; 
+  programs.home-manager.enable = true;
 
   # user.shell = pkgs.zsh;
 

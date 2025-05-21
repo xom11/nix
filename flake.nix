@@ -33,7 +33,7 @@
       system = "aarch64-darwin";
       modules = [
         ./hosts/macos/configuration.nix
-        inputs.nix-homebrew.darwinModules.nix-homebrew {
+        nix-homebrew.darwinModules.nix-homebrew {
           nix-homebrew = {
             enable = true;
             enableRosetta = true;
@@ -47,12 +47,12 @@
             };
           };
         }
-        # inputs.home-manager.darwinModules.home-manager {
-        #     home-manager.useGlobalPkgs = true;
-        #     home-manager.useUserPackages = true;
-        #     home-manager.extraSpecialArgs = { inherit inputs; };
-        #     home-manager.users.${sudo_user} = { imports = [ ./hosts/macos/home.nix ]; };
-        # }
+        home-manager.darwinModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            # home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.users.${sudo_user} = import ./hosts/macos/home.nix ;
+        }
       ];
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {

@@ -6,7 +6,6 @@
         discord
         vscode
         telegram-desktop
-        caprine
         localsend
         alacritty  
         joplin-desktop
