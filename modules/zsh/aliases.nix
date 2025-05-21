@@ -20,5 +20,14 @@
     hmu = "nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos";
     onu = "sudo nixos-rebuild switch --impure --flake ~/nix#nixos";
     omu = "sudo darwin-rebuild switch --impure --flake ~/nix#macos";
+    update = ''
+      if [[ "$(uname)" == "Darwin" ]]; then
+        sudo darwin-rebuild switch --impure --flake ~/nix#macos
+      elif [[ -f /etc/nixos/configuration.nix ]]; then
+        sudo nixos-rebuild switch --impure --flake ~/nix#
+      else
+        echo 123
+      fi
+      '';
   };
 }

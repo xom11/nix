@@ -59,28 +59,26 @@
       system = "x86_64-linux";
       modules = [ 
         ./hosts/nixos/configuration.nix 
-        # nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         {
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.flake-inputs = inputs;
           home-manager.users.${sudo_user}.imports = [ 
-            ./hosts/nixos/home.nix
             nix-flatpak.homeManagerModules.nix-flatpak
-            # ./hosts/nixos/flatpak.nix
+            ./hosts/nixos/home.nix
            ];
         }
       ];
     };
-    homeConfigurations = {
-      "macos" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-        modules = [ ./hosts/macos/home.nix ];
-      };
-      "nixos" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./hosts/nixos/home.nix ];
-      };
-    };
+    # homeConfigurations = {
+    #   "macos" = home-manager.lib.homeManagerConfiguration {
+    #     pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+    #     modules = [ ./hosts/macos/home.nix ];
+    #   };
+    #   "nixos" = home-manager.lib.homeManagerConfiguration {
+    #     pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    #     modules = [ ./hosts/nixos/home.nix ];
+    #   };
+    # };
   };
 }

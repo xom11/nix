@@ -12,7 +12,6 @@
 
   imports = [
     ../../modules/nixos.nix
-    ./flatpak.nix
   ];
 
   programs.home-manager.enable = true;
