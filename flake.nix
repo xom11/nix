@@ -8,6 +8,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -50,16 +51,25 @@
         home-manager.darwinModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            # home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.users.${sudo_user} = import ./hosts/macos/home.nix ;
         }
       ];
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      # system = "x86_64-linux";
+      system = "x86_64-linux";
       modules = [ 
         ./hosts/nixos/configuration.nix 
-        nix-flatpak.nixosModules.nix-flatpak
+        # nix-flatpak.nixosModules.nix-flatpak
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs.flake-inputs = inputs;
+          home-manager.users.${sudo_user}.imports = [ 
+            ./hosts/nixos/home.nix
+            nix-flatpak.homeManagerModules.nix-flatpak
+            # ./hosts/nixos/flatpak.nix
+           ];
+        }
       ];
     };
     homeConfigurations = {

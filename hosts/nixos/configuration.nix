@@ -8,7 +8,7 @@ in
     [ # Include the results of the hardware scan.
       /etc/nixos/configuration.nix
       ../../modules/fonts
-      ./flatpak.nix
+      # ./flatpak.nix
     ];
   
   programs.zsh.enable = true;

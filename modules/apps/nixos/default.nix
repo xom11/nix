@@ -4,5 +4,6 @@
     ../shared
     ./nixpkgs.nix
     ./desktopFile.nix
+    ./flatpak.nix
   ];
 }
