@@ -10,13 +10,11 @@ in
   };
   homebrew = {
     enable = true;
-    global = {
-      autoUpdate = true;
-    };
+    global.autoUpdate = true;
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      cleanup = "zap";
+      # cleanup = "zap";
     };
     taps = [ ];
     brews = [ ];

@@ -1,11 +1,12 @@
 
 { config, pkgs, ... }:
-let user = builtins.getEnv "USER"; in
-
+let user = builtins.getEnv "SUDO_USER";
+in
 {
   imports = [
     ../../modules/fonts
     ./homebrew.nix
+    ./system.nix
   ];
   environment.systemPackages =[
     pkgs.vim
@@ -15,16 +16,4 @@ let user = builtins.getEnv "USER"; in
   programs.zsh.enable = true; 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  system = {
-    # Turn off NIX_PATH warnings now that we're using flakes
-    # checks.verifyNixPath = false;
-    primaryUser = user;
-    stateVersion = 6;
-    defaults = {
-      dock = {
-        autohide = false;
-      };
-
-    };
-  };
 }
