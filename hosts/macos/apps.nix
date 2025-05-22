@@ -55,6 +55,17 @@
       "bitwarden"
       "maccy"
       "raycast"
+      "discord"
+      "visual-studio-code"
+      "telegram"
+      "localsend"
+      "joplin"
+      "slack"
+      "thunderbird"
+      "brave-browser"
+      "google-chrome"
+      "chromedriver"
+
     ];
   };
 }
