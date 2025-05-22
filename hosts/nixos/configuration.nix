@@ -8,8 +8,6 @@ in
     [ # Include the results of the hardware scan.
       /etc/nixos/configuration.nix
       ../../modules/fonts
-      ../../modules/ssh
-      # ./flatpak.nix
     ];
   
   programs.zsh.enable = true;
@@ -36,6 +34,7 @@ in
   nixpkgs.config.allowUnfree = true;
 
   services.flatpak.enable = true;
+  services.tailscale.enable = true;
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
