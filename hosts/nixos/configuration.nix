@@ -42,4 +42,6 @@ in
     options = lib.mkDefault "--delete-older-than 7d";
   };
 
+  security.sudo.wheelNeedsPassword = false;
+
 }

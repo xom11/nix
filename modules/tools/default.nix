@@ -1,9 +1,10 @@
 {
   imports = [
     ./git.nix
+    ./nixpkgs.nix
+    ./syncthing.nix
     ./nvim
     ./tmux
-    ./syncthing.nix
     ./zsh
   ];
 }
