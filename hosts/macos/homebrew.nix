@@ -2,6 +2,12 @@
 let
   caskApps = [
     "simplenote"
+    "messenger"
+    "zalo"
+    # "evkey"
+    # "noiton"
+    "balenaetcher"
+
   ];
 in
 {

@@ -26,11 +26,19 @@
   outputs = {... }@inputs:
     with inputs;
     let
-      system = builtins.currentSystem;
-      sudo_user = builtins.getEnv "SUDO_USER";
+      username = builtins.getEnv "SUDO_USER"; 
+      useremail = "__USEREMAIL__";
+      hostname = "__HOSTNAME__";
+
+      specialArgs =
+        inputs
+        // {
+          inherit username useremail hostname;
+        };
     in
     {
     darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
+      inherit specialArgs;
       system = "aarch64-darwin";
       modules = [
         ./hosts/macos/configuration.nix
@@ -40,7 +48,7 @@
             enableRosetta = true;
             autoMigrate = true;
             mutableTaps = true;
-            user = sudo_user;
+            user = username;
             taps = with inputs; {
               "homebrew/homebrew-core" = homebrew-core;
               "homebrew/homebrew-cask" = homebrew-cask;
@@ -49,13 +57,15 @@
           };
         }
         home-manager.darwinModules.home-manager {
-            home-manager.useGlobalPkgs = true;
+            # home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${sudo_user} = import ./hosts/macos/home.nix ;
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.users.${username} = import ./hosts/macos/home.nix ;
         }
       ];
     };
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      inherit specialArgs;
       system = "x86_64-linux";
       modules = [ 
         ./hosts/nixos/configuration.nix 
@@ -63,7 +73,7 @@
         {
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs.flake-inputs = inputs;
-          home-manager.users.${sudo_user}.imports = [ 
+          home-manager.users.${username}.imports = [ 
             nix-flatpak.homeManagerModules.nix-flatpak
             ./hosts/nixos/home.nix
            ];

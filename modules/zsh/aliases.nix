@@ -24,7 +24,7 @@
       if [[ "$(uname)" == "Darwin" ]]; then
         sudo darwin-rebuild switch --impure --flake ~/nix#macos
       elif [[ -f /etc/nixos/configuration.nix ]]; then
-        sudo nixos-rebuild switch --impure --flake ~/nix#
+        sudo nixos-rebuild switch --impure --flake ~/nix#nixos
       else
         echo 123
       fi
