@@ -1,7 +1,8 @@
 {... }:
 {
     imports = [
-        ./apps/nixos
+        ./apps
+        ./desktop
         ./git
         ./gnome
         ./kitty

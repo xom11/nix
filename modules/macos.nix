@@ -1,7 +1,7 @@
 {pkgs, ... }:
 {
     imports = [
-        ./apps/macos
+        ./apps
         ./git
         ./kitty
         ./nvim

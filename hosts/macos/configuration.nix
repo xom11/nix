@@ -23,7 +23,7 @@
   };
   imports = [
     ../../modules/fonts
-    ./homebrew.nix
+    ./apps.nix
     ./system.nix
   ];
 

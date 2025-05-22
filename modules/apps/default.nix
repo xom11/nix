@@ -9,7 +9,6 @@
         localsend
         joplin-desktop
         slack
-        thunderbird
         
         brave
         google-chrome
