@@ -3,8 +3,7 @@
     ./git.nix
     ./nvim
     ./tmux
-    ./syncthing
+    ./syncthing.nix
     ./zsh
-
-  ]
+  ];
 }
