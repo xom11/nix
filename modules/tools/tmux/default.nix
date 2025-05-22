@@ -1,9 +1,6 @@
 { pkgs, config, ... }:
 let 
-  # Define the path to the tmux configuration file
-  keybindingsConf = builtins.readFile ./keybindings.conf;
   tmuxConf = builtins.readFile ./tmux.conf;
-  allConf = keybindingsConf + tmuxConf;
 in 
 {
   home.packages = with pkgs; [
@@ -11,7 +8,7 @@ in
   ];
   programs.tmux = {
     enable = true;
-    extraConfig = allConf; 
+    extraConfig = tmuxConf; 
 
     plugins = with pkgs.tmuxPlugins; [
       sensible
