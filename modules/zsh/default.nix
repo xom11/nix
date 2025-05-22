@@ -33,7 +33,6 @@
         "z"
         "uv"
         "tmux"
-        "thefuck"
       ];
     };
     plugins = [

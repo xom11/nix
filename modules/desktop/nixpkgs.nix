@@ -3,6 +3,7 @@
 {
   home.packages = with pkgs; [
     preload
+    bitwarden-desktop
     
     # teamviewer
     # anydesk
