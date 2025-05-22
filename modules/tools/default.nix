@@ -24,7 +24,7 @@
         zoxide
         atuin
         ncdu        #disk usage
-        syncthing 
+        # syncthing 
         pipx
         tailscale
         docker

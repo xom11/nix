@@ -6,9 +6,9 @@
         ./gnome
         ./kitty
         ./nvim
+        ./syncthing
         ./tmux
         ./tools
         ./zsh
-        ./syncthing
     ];
 }
