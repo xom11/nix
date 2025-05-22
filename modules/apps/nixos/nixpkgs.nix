@@ -3,7 +3,6 @@
 {
   home.packages = with pkgs; [
     preload
-    standardnotes
     
     # teamviewer
     # anydesk
