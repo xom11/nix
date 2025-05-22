@@ -72,7 +72,6 @@
         home-manager.nixosModules.home-manager
         {
           home-manager.useUserPackages = true;
-          # home-manager.extraSpecialArgs.flake-inputs = inputs;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [ 
             nix-flatpak.homeManagerModules.nix-flatpak

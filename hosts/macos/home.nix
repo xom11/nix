@@ -1,11 +1,7 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, username, ... }:
 {
-  # home.username = builtins.getEnv "USER";  
-  # home.homeDirectory = builtins.getEnv "HOME";  
-
-  home.username = "lenamkhanh";
-  home.homeDirectory = "/Users/lenamkhanh";
+  home.username = username;
+  home.homeDirectory = "/Users/${username}";
   home.stateVersion = "24.11"; 
   programs.home-manager.enable = true;
 
@@ -15,9 +11,6 @@
     ../../modules/macos.nix
   ];
 
-
   nixpkgs.config.allowUnfree = true;
-
-
 }
 

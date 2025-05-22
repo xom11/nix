@@ -1,7 +1,4 @@
-
 { config, pkgs, lib, username, hostname,... }:
-# let user = builtins.getEnv "SUDO_USER";
-# in
 {
   # enable flakes globally
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
