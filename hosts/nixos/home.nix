@@ -1,11 +1,11 @@
 
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 {
   # home.username = builtins.getEnv "USER";  
   # home.homeDirectory = builtins.getEnv "HOME";  
-  home.username = "kln";
-  home.homeDirectory = "/home/kln";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
   # user.shell = pkgs.zsh;

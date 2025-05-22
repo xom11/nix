@@ -1,5 +1,5 @@
 
-{input, config, pkgs, lib, ... }:
+{input, config, pkgs, lib, username, ... }:
 let
   bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
 in
@@ -31,7 +31,7 @@ in
 
   # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "kln";
+  services.displayManager.autoLogin.user = username;
   nixpkgs.config.allowUnfree = true;
 
   services.flatpak.enable = true;
