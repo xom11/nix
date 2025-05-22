@@ -2,8 +2,8 @@
 {
   services.syncthing = {
     enable = true;
-    overrideDevices = true;
-    overrideFolders = true;
+    # overrideDevices = true;
+    # overrideFolders = true;
   };
 }
 

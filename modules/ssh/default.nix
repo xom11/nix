@@ -1,9 +1,13 @@
-{config, pkgs...}:
+{config, pkgs, ...}:
 {
+  # home.packages = with pkgs; [
+  #   tailscale
+  #   openssh
+  # ];
   services.tailscale ={
     enable = true;
   };
-  services.openssh = {
+  programs.openssh = {
     enable = true;
     passwordAuthentication = false;
     publicKeyAuthentication = true;

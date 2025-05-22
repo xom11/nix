@@ -26,7 +26,7 @@
         ncdu        #disk usage
         # syncthing 
         pipx
-        tailscale
+        # tailscale
         docker
         tldr
         thefuck

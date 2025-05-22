@@ -8,6 +8,7 @@ in
     [ # Include the results of the hardware scan.
       /etc/nixos/configuration.nix
       ../../modules/fonts
+      ../../modules/ssh
       # ./flatpak.nix
     ];
   
