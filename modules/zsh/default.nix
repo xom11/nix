@@ -41,6 +41,10 @@
         src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
       }
       {
+        name = "zsh-vi-mode";
+        src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
+      }
+      {
         name = "powerlevel10k";
         src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
         file = "powerlevel10k.zsh-theme";
