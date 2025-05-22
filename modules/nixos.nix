@@ -9,5 +9,6 @@
         ./tmux
         ./tools
         ./zsh
+        ./syncthing
     ];
 }
