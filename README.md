@@ -15,15 +15,12 @@ git clone git@github.com:kln-os/nix.git ~/nix -q
 ```bash
 export NIX_CONFIG="extra-experimental-features = nix-command flakes"
 export NIXPKGS_ALLOW_UNFREE=1
-nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#linux -b bckp
+nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#server -b bckp
 ```
-export NIX_CONFIG="extra-experimental-features = nix-command flakes"
-export NIXPKGS_ALLOW_UNFREE=1
-sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/nix#macos
-
-nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos
-
+```bash
 sudo darwin-rebuild switch --impure --flake ~/nix#macos
-nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos
+```
+```bash
 sudo nixos-rebuild switch --impure --flake ~/nix#nixos
-nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#nixos
+```
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/nix#macos

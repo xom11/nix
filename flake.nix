@@ -52,9 +52,11 @@
           };
         }
         home-manager.darwinModules.home-manager {
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = specialArgs;
-            home-manager.users.${username} = import ./hosts/macos/home.nix ;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = specialArgs;
+          home-manager.users.${username}.imports = [
+            ./hosts/macos/home.nix
+          ];
         }
       ];
     };
@@ -69,25 +71,16 @@
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [ 
             nix-flatpak.homeManagerModules.nix-flatpak
-            ./hosts/nixos/home.nix
+            ./modules/nixos.nix
            ];
         }
       ];
     };
     homeConfigurations = {
-      "macos" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-        modules = [ ./hosts/macos/home.nix ];
-      };
-      "nixos" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./hosts/nixos/home.nix ];
-      };
-      "linux" = home-manager.lib.homeManagerConfiguration {
+      "server" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           ./hosts/linux/home.nix
-          nix-flatpak.homeManagerModules.nix-flatpak
         ];
       };
     };
