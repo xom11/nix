@@ -29,4 +29,4 @@ nix run home-manager/release-24.05 -- switch --flake "github:your-username/your-
 
 nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix#server" -b bckp
 
-nix flake update --flake "github:kln-os/nix#server" self
+nix flake update --flake "github:kln-os/nix" self
