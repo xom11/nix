@@ -2,6 +2,7 @@
 { config, pkgs, ... }:
 let 
   username = builtins.getEnv "USER"; 
+in
 {
   home.username = username;
   home.homeDirectory = "/home/${username}";
