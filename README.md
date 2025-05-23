@@ -15,7 +15,7 @@ git clone git@github.com:kln-os/nix.git ~/nix -q
 ```bash
 export NIX_CONFIG="extra-experimental-features = nix-command flakes"
 export NIXPKGS_ALLOW_UNFREE=1
-nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#local -b bckp
+nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#linux -b bckp
 ```
 export NIX_CONFIG="extra-experimental-features = nix-command flakes"
 export NIXPKGS_ALLOW_UNFREE=1
