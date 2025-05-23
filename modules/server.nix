@@ -7,7 +7,7 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  user.shell = pkgs.zsh;
+  home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
     ./tools
