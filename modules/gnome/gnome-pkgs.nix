@@ -10,7 +10,7 @@
     dconf2nix
     dconf-editor
     preload
-    gnome-tweak
+    gnome-tweaks
 
     wmctrl
     xdotool

@@ -36,7 +36,7 @@
       inherit specialArgs;
       system = "aarch64-darwin";
       modules = [
-        ./hosts/macos/configuration.nix
+        ./hosts/macos
         nix-homebrew.darwinModules.nix-homebrew {
           nix-homebrew = {
             enable = true;
@@ -55,7 +55,7 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
-            ./hosts/macos/home.nix
+            ./modules/macos.nix
           ];
         }
       ];
@@ -64,7 +64,7 @@
       inherit specialArgs;
       system = "x86_64-linux";
       modules = [ 
-        ./hosts/nixos/configuration.nix 
+        ./hosts/nixos
         home-manager.nixosModules.home-manager
         {
           home-manager.useUserPackages = true;
