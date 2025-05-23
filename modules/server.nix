@@ -7,7 +7,7 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  # user.shell = pkgs.zsh;
+  user.shell = pkgs.zsh;
 
   imports = [
     ./tools
