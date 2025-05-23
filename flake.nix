@@ -74,15 +74,22 @@
         }
       ];
     };
-    # homeConfigurations = {
-    #   "macos" = home-manager.lib.homeManagerConfiguration {
-    #     pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-    #     modules = [ ./hosts/macos/home.nix ];
-    #   };
-    #   "nixos" = home-manager.lib.homeManagerConfiguration {
-    #     pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    #     modules = [ ./hosts/nixos/home.nix ];
-    #   };
-    # };
+    homeConfigurations = {
+      "macos" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        modules = [ ./hosts/macos/home.nix ];
+      };
+      "nixos" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./hosts/nixos/home.nix ];
+      };
+      "linux" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          ./hosts/linux/home.nix
+          nix-flatpak.homeManagerModules.nix-flatpak
+        ];
+      };
+    };
   };
 }

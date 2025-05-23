@@ -15,7 +15,7 @@
       autoUpdate = true; # Fetch the newest stable branch of Homebrew's git repo
       upgrade = true; # Upgrade outdated casks, formulae, and App Store apps
       # 'zap': uninstalls all formulae(and related files) not listed in the generated Brewfile
-      # cleanup = "zap";
+      cleanup = "zap";
     };
 
     # Applications to install from Mac App Store using mas.
@@ -64,7 +64,7 @@
       "thunderbird"
       "brave-browser"
       "google-chrome"
-      "chromedriver"
+      # "chromedriver"
 
     ];
   };
