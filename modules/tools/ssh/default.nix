@@ -4,6 +4,6 @@
     tailscale
     openssh
   ];
-  home.files.".ssh/authorized_keys".source = ./authorized_keys;
+  home.file.".ssh/authorized_keys".source = ./authorized_keys;
 
 }

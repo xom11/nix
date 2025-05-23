@@ -24,3 +24,7 @@ sudo darwin-rebuild switch --impure --flake ~/nix#macos
 sudo nixos-rebuild switch --impure --flake ~/nix#nixos
 ```
 sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/nix#macos
+
+nix run home-manager/release-24.05 -- switch --flake "github:your-username/your-dotfiles-repo#<tên_người_dùng>"
+
+nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix#server" -b bckp
