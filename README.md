@@ -24,5 +24,5 @@ sudo darwin-rebuild switch --impure --flake ~/nix#macos
 sudo nixos-rebuild switch --impure --flake ~/nix#nixos
 ```
 ```bash
-nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#server"
+nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#server" --refresh
 ```
