@@ -15,5 +15,7 @@
     wmctrl
     xdotool
     xclip
+
+    gnome-boxes
   ];
 }

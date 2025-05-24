@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Mail
+StartupWMClass=brave-www.mail.com__-Default
+Comment=Launch Mail
+Icon=mail
+Exec=brave --ozone-platform-hint=auto --force-dark-mode --enable-features=WebUIDarkMode --app="https://www.mail.com/" %U
+Terminal=false
