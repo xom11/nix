@@ -17,5 +17,6 @@
     xclip
 
     gnome-boxes
+    qemu
   ];
 }

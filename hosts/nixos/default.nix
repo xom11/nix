@@ -44,4 +44,9 @@ in
 
   security.sudo.wheelNeedsPassword = false;
 
+  # Enable hardware virtualization support.
+  boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+  virtualisation.libvirtd.enable = true;
+  users.users.${username}.extraGroups = [ "libvirtd" ];
+
 }
