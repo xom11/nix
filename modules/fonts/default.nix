@@ -12,5 +12,5 @@
     dina-font
     proggyfonts
     meslo-lgs-nf
-];
+  ];
 }

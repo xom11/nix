@@ -60,7 +60,7 @@ with lib.hm.gvariant;
       repeat-interval = mkUint32 16;
     };
     "org/gnome/desktop/peripherals/mouse"={
-      speed=0.4;
+      speed=0.3;
     };
     "org/gnome/desktop/peripherals/touchpad"={
       click-method="areas";
