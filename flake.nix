@@ -81,7 +81,7 @@
     };
     systemConfigs.default = system-manager.lib.makeSystemConfig {
       modules = [
-        ./hosts/server
+        ./hosts/linux
       ];    
     };
     homeConfigurations = {
