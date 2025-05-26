@@ -80,7 +80,6 @@
       ];
     };
     systemConfigs.default = system-manager.lib.makeSystemConfig {
-      inherit specialArgs;
       modules = [
         ./hosts/linux
       ];    
