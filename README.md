@@ -26,4 +26,3 @@ sudo nixos-rebuild switch --impure --flake ~/nix#nixos
 ```bash
 nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#server" --refresh
 ```
-sudo $(which nix) run 'github:numtide/system-manager'  --extra-experimental-features "nix-command flakes" -- switch  --flake "github:kln-os/nix/main#default" 
