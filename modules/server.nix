@@ -11,6 +11,7 @@ in
 
   imports = [
     ./tools
+    ./bin
   ];
 
   programs.home-manager.enable = true;
