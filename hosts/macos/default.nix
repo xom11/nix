@@ -33,7 +33,7 @@
   system.stateVersion = 6;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."${username}" = {
+  users.users.${username} = {
     home = "/Users/${username}";
     description = username;
   };
