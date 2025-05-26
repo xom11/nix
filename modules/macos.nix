@@ -8,6 +8,7 @@
   imports = [
     ./kitty
     ./tools
+    ./bin
   ];
 
   nixpkgs.config.allowUnfree = true;
