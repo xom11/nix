@@ -11,7 +11,6 @@ in
   users.defaultUserShell = pkgs.zsh;
 
 
-  };
 
 
 
