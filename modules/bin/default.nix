@@ -1,11 +1,8 @@
-{...}:
+{pkgs,...}:
 {
-  home.file = {
-    ".local/bin/add-authkey" = {source = ./add-authkey; executable = true;};
-    ".local/bin/add-visudo".source = ./add-visudo;
-    ".local/bin/set-default-shell".source = ./set-default-shell;
-  };
-  home.sessionVariables.PATH = [
-    "$HOME/.local/bin"
+home.packages = with pkgs; [
+  (writeShellScriptBin "add-authkey" (builtins.readFile ./add-authkey)
+  (writeShellScriptBin "add-visudo" (builtins.readFile ./add-visudo)
+  (writeShellScriptBin "set-zsh" (builtins.readFile ./set-zsh)
   ];
 }
