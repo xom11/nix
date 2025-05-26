@@ -7,7 +7,7 @@ in
     [ # Include the results of the hardware scan.
     ];
   
-  programs.zsh.enable = true;
+  # programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
 
