@@ -1,19 +1,22 @@
-{ config, lib, pkgs, ... }:
-
+{input, config, pkgs, lib, username, ... }:
+let
+  bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
+in
 {
-  config = {
-    nixpkgs.hostPlatform = "x86_64-linux";
-
-    environment = {
-      systemPackages = [
-        pkgs.ripgrep
-        pkgs.fd
-        pkgs.hello
-        pkgs.cowsay
-      ];
-    };
-
-  };
+  imports =
+    [ # Include the results of the hardware scan.
+    ];
+  
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
+
+  nix = {
+    package = pkgs.nixVersions.stable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
+
+
 }

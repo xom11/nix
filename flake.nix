@@ -80,6 +80,8 @@
       ];
     };
     systemConfigs.default = system-manager.lib.makeSystemConfig {
+      inherit specialArgs;
+      system = "x86_64-linux";
       modules = [
         ./hosts/linux
       ];    
