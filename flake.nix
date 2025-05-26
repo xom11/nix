@@ -84,6 +84,13 @@
           ./modules/server.nix
         ];
       };
+      "local" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          nix-flatpak.homeManagerModules.nix-flatpak
+          ./modules/nixos.nix
+        ];
+      };
     };
   };
 }
