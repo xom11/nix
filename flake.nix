@@ -88,7 +88,7 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
-          ./modules/nixos.nix
+          ./modules/local.nix
         ];
       };
     };
