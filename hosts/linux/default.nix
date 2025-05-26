@@ -10,11 +10,7 @@ in
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  nix = {
-    package = pkgs.nixVersions.stable;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
+
   };
 
 
