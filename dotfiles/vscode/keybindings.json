@@ -182,10 +182,6 @@
     "key": "ctrl+shift+f"
   },
   {
-    "command": "workbench.action.quickOpen",
-    "key": "ctrl+shift+p"
-  },
-  {
     "args": {
       "commands": ["workbench.view.scm", "workbench.scm.focus"]
     },
@@ -199,10 +195,10 @@
   },
   {
     "key": "ctrl+shift+x",
-    "command": "workbench.view.extensions",
+    "command": "workbench.view.extensions"
   },
   {
     "key": "ctrl+shift+e",
-    "command": "workbench.view.explorer",
+    "command": "workbench.view.explorer"
   }
 ]
