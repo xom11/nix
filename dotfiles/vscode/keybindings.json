@@ -99,22 +99,6 @@
     "key": "space space",
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
-  {
-    "command": "workbench.action.findInFiles",
-    "key": "space s g",
-    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
-  },
-  {
-    "args": {
-      "commands": [
-        "workbench.view.scm",
-        "workbench.scm.focus"
-      ]
-    },
-    "command": "runCommands",
-    "key": "space g g",
-    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
-  },
 
   // File Explorer
   {
@@ -187,5 +171,35 @@
   {
     "command": "workbench.action.toggleAuxiliaryBar",
     "key": "ctrl+g"
-  }
+  },
+  // VSCODE TOOLBAR
+  {
+    "command": "workbench.action.toggleSidebarVisibility",
+    "key": "ctrl+b"
+  },
+  {
+    "command": "workbench.action.findInFiles",
+    "key": "ctrl+shift+f"
+  },
+  {
+    "command": "workbench.action.quickOpen",
+    "key": "ctrl+shift+p"
+  },
+  {
+    "args": {
+      "commands": ["workbench.view.scm", "workbench.scm.focus"]
+    },
+    "command": "runCommands",
+    "key": "space g g",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "remoteTargets.focus"
+  },
+  {
+    "key": "ctrl+shift+x",
+    "command": "workbench.view.extensions",
+    "when": "viewContainer.workbench.view.extensions.enabled"
+  },
 ]
