@@ -15,7 +15,6 @@ in
     ./bin
     ./gnome
     ./desktop
-    ./kitty
   ];
 
   programs.home-manager.enable = true;

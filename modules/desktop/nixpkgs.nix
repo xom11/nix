@@ -15,6 +15,7 @@
     google-chrome
     chromedriver
     caprine
+    kitty
     # teamviewer
     # anydesk
 

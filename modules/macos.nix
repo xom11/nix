@@ -6,7 +6,6 @@
   programs.home-manager.enable = true;
 
   imports = [
-    ./kitty
     ./tools
   ];
 
