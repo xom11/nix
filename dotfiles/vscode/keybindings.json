@@ -85,7 +85,7 @@
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
   {
-    "command": "workbench.action.closeOtherEditors",
+    "command": "workbench.action.closeAllEditors",
     "key": "space b d",
     "when": "(vim.mode == 'Normal' && editorTextFocus) || !inputFocus"
   },
