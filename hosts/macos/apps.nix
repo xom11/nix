@@ -63,6 +63,7 @@
       "thunderbird"
       "brave-browser"
       "google-chrome"
+      "microsoft-edge"
       # "chromedriver"
 
     ];
