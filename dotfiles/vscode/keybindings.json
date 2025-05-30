@@ -70,6 +70,16 @@
   },
   // BUFFER
   {
+    "key": "alt+right",
+    "command": "workbench.action.nextEditor",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "key": "alt+left",
+    "command": "workbench.action.previousEditor",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
     "command": "workbench.action.showAllEditors",
     "key": "space ,",
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
@@ -96,7 +106,10 @@
   },
   {
     "args": {
-      "commands": ["workbench.view.scm", "workbench.scm.focus"]
+      "commands": [
+        "workbench.view.scm",
+        "workbench.scm.focus"
+      ]
     },
     "command": "runCommands",
     "key": "space g g",
