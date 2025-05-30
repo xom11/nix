@@ -71,6 +71,9 @@
       only-current-workspace=true;
       fade-enable=true;
       show-switcher=["<Super>Space"];
+      font-size = mkUint32 30;
+      icon-size = mkUint32 30;
+      max-width-percentage = mkUint32 80;
     };
   };
   
