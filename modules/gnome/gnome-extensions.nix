@@ -1,4 +1,5 @@
-{ config, pkgs, inputs, ...}:
+{ config, pkgs, inputs, lib, ...}:
+with lib.hm.gvariant;
 # dconf dump /org/gnome/shell/extensions | dconf2nix 
 {
   home.packages = with pkgs;[
