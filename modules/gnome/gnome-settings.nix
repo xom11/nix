@@ -78,7 +78,7 @@ with lib.hm.gvariant;
       idle-dim=false;
     };
     "org/gnome/desktop/background"={
-      picture-uri-dark= builtins.toString ./. + "/background.jpg";
+      picture-uri-dark= builtins.tostring ./. + "/background.jpg";
     };
     "org/gnome/mutter"={
       experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
