@@ -200,6 +200,9 @@
   {
     "key": "ctrl+shift+x",
     "command": "workbench.view.extensions",
-    "when": "viewContainer.workbench.view.extensions.enabled"
   },
+  {
+    "key": "ctrl+shift+e",
+    "command": "workbench.view.explorer",
+  }
 ]
