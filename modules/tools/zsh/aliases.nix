@@ -25,8 +25,10 @@
         sudo darwin-rebuild switch --impure --flake ~/nix#macos
       elif [[ -f /etc/nixos/configuration.nix ]]; then
         sudo nixos-rebuild switch --impure --flake ~/nix#nixos
+      elif [[ "$DESKTOP_SESSION" == "gnome" ]]; then 
+        nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#local" --refresh
       else
-        echo 123
+        nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#server" --refresh
       fi
       '';
   };
