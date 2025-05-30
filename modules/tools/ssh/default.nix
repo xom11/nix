@@ -4,9 +4,4 @@
     tailscale
     openssh
   ];
-  # programs.ssh = {
-  #   enable = true;
-
-  # };
-  home.file.".ssh/authorized_keys".source = ./authorized_keys;
 }
