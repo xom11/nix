@@ -1,8 +1,5 @@
-{ config
-, pkgs
-, inputs
-, ...
-}:
+{ config, pkgs, inputs, ...}:
+# dconf dump /org/gnome/shell/extensions | dconf2nix 
 {
   home.packages = with pkgs;[
     gnome-extension-manager

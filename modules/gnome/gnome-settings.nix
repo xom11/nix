@@ -15,6 +15,7 @@ with lib.hm.gvariant;
     };
     "org/gnome/shell"={
       favorite-apps=[];
+      disable-extension-version-validation=true;
     };
     "org/gnome/desktop/wm/keybindings"={
       close=["<Super>q"];
