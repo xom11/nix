@@ -1,0 +1,54 @@
+{
+	"name": "Vimium C",
+	"@time": "5/30/2025, 3:03:19 PM",
+	"time": 1748592199189,
+	"environment": {
+		"extension": "2.12.2",
+		"platform": "mac",
+		"chromium": 136
+	},
+	"exclusionRules": [
+		{
+			"passKeys": "",
+			"pattern": ":https://mail.google.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://www.youtube.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://keyboardchecker.com/"
+		},
+		{
+			"passKeys": "",
+			"pattern": ":https://github.dev/"
+		}
+	],
+	"keyLayout": 2,
+	"keyMappings": [
+		"#!no-check",
+		"map w removeTab",
+		"map W restoreTab",
+		"map Q closeOtherTabs",
+		"map H goBack",
+		"map L goForward",
+		"map K previousTab",
+		"map [[ previousTab",
+		"map J nextTab",
+		"map ]] nextTab",
+		"map u Vomnibar.activateEditUrl",
+		"map yu copyCurrentUrl",
+		"map yt LinkHints.activateCopyLinkText",
+		"map t Vomnibar.activateTabSelection",
+		"map b Vomnibar.activateBookmarksInNewTab",
+		"map o Vomnibar.activateInNewTab",
+		"map z visitPreviousTab",
+		"map gh Vomnibar.activateHistoryInNewTab",
+		"map gu openCopiedUrlInNewTab",
+		""
+	],
+	"newTabUrl": "https://www.google.com/",
+	"scrollStepSize": 200,
+	"vimSync": true
+}

@@ -53,7 +53,6 @@
       "notion"
       "balenaetcher"
       "bitwarden"
-      "maccy"
       "raycast"
       "discord"
       "visual-studio-code"
