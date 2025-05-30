@@ -7,5 +7,6 @@
     ./ssh
     ./tmux
     ./zsh
+    ./kitty
   ];
 }
