@@ -5,6 +5,7 @@ with lib.hm.gvariant;
   home.packages = with pkgs;[
     gnome-extension-manager
     gnome-shell-extensions
+    gnome-extensions-cli
 
     gnomeExtensions.dash-to-dock
     gnomeExtensions.run-or-raise
