@@ -1,12 +1,13 @@
 {
   imports = [
-    ./git.nix
-    ./nixpkgs.nix
-    ./syncthing.nix
+    ./atuin
+    ./git
+    ./kitty
     ./nvim
+    ./pkgs
     ./ssh
+    ./syncthing
     ./tmux
     ./zsh
-    ./kitty
   ];
 }

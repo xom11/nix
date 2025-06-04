@@ -5,7 +5,6 @@
         fastfetch
         vim
         htop
-        htop
         lazygit
         stow
         zip
