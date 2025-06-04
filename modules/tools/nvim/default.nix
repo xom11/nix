@@ -29,14 +29,14 @@
       {
         plugin = telescope-nvim;
         type = "lua";
-        # config = builtins.readFile ./nvim/plugins/telescope.lua;
+        config = builtins.readFile ./plugins/telescope.lua;
       }
       telescope-fzf-native-nvim
 
     ];
-    # extraLuaConfig = ''
-    #   ${builtins.readFile ./nvim/options.lua}
-    #   ${builtins.readFile ./nvim/keymap.lua}
-    # '';
+    extraLuaConfig = ''
+      ${builtins.readFile ./options.lua}
+      ${builtins.readFile ./keymap.lua}
+    '';
   };
 }
