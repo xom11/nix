@@ -64,7 +64,6 @@
       "brave-browser"
       "google-chrome"
       "microsoft-edge"
-      "kitty"
       # "chromedriver"
 
     ];

@@ -17,7 +17,6 @@
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
-    kitty
   ]; 
 
   # Environment
