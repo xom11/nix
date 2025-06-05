@@ -7,7 +7,6 @@
   home.packages = with pkgs; [
   ];
 
-
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
@@ -33,6 +32,7 @@
         "z"
         "uv"
         "tmux"
+        "sudo"
       ];
     };
     plugins = [

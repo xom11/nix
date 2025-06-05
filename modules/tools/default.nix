@@ -1,6 +1,5 @@
 {
   imports = [
-    ./atuin
     ./git
     ./kitty
     ./nvim
@@ -9,5 +8,6 @@
     ./syncthing
     ./tmux
     ./zsh
+    ./vscode
   ];
 }

@@ -1,7 +1,7 @@
 {pkgs, lib, config, ...}:
 {
-  home.packages = with pkgs; [
-    kitty
-  ];
-  home.file.".config/kitty/kitty.conf".source = ./kitty.conf;
+  programs.kitty = {
+    enable = true;
+    extraConfig = builtins.readFile ./kitty.conf; 
+  };
 }
