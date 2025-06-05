@@ -8,6 +8,5 @@
     ./syncthing
     ./tmux
     ./zsh
-    ./vscode
   ];
 }
