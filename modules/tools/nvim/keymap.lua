@@ -5,6 +5,7 @@ local keymap = vim.keymap
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk"})
 
 keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
+keymap.set("n", "<C-a>", "ggVG", { desc = "Select all content" })
 
 -- telescope
 keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })

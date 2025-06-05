@@ -1,14 +1,5 @@
 {pkgs, ...}:
 {
-  # home.packages = with pkgs; [
-  #   neovim
-  # ]; 
-
-  # home.file = {
-  #     ".config/nvim".source = ./dotfiles;
-  # };
-
-
   programs.neovim = {
     enable = true;
     viAlias = true;
