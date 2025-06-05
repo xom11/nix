@@ -5,7 +5,6 @@
     ./nvim
     ./pkgs
     ./ssh
-    ./syncthing
     ./tmux
     ./zsh
   ];
