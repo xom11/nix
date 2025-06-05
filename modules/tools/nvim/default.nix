@@ -6,7 +6,6 @@
     vimAlias = true;
     vimdiffAlias = true;
     plugins = with pkgs.vimPlugins; [
-      ## regular
       comment-nvim
       lualine-nvim
       nvim-web-devicons
@@ -15,14 +14,17 @@
         plugin = catppuccin-nvim;
         config = "colorscheme catppuccin";
       }
-
-      ## telescope
       {
         plugin = telescope-nvim;
         type = "lua";
         config = builtins.readFile ./plugins/telescope.lua;
       }
       telescope-fzf-native-nvim
+      {
+        plugin = nvim-tree-lua;
+        type = "lua";
+        config = builtins.readFile ./plugins/nvim-tree.lua;
+      }
 
     ];
     extraLuaConfig = ''
