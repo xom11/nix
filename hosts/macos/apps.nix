@@ -55,7 +55,7 @@
       "bitwarden"
       "raycast"
       "discord"
-      "visual-studio-code"
+      # "visual-studio-code"
       "telegram"
       "localsend"
       "joplin"

@@ -1,0 +1,204 @@
+[
+  // NAVIGATION
+  {
+    "command": "workbench.action.navigateLeft",
+    "key": "ctrl-h"
+  },
+  {
+    "command": "workbench.action.navigateRight",
+    "key": "ctrl-l"
+  },
+  {
+    "command": "workbench.action.navigateUp",
+    "key": "ctrl-k"
+  },
+  {
+    "command": "workbench.action.navigateDown",
+    "key": "ctrl-j"
+  },
+  {
+    "command": "workbench.action.openRecent",
+    "key": "ctrl-shift-r"
+  },
+  {
+    "args": {
+      "commands": [
+        "workbench.action.toggleSidebarVisibility",
+        "workbench.files.action.focusFilesExplorer"
+      ]
+    },
+    "command": "runCommands",
+    "key": "space e",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && !sideBarFocus"
+  },
+  {
+    "args": {
+      "commands": [
+        "workbench.action.toggleSidebarVisibility",
+        "workbench.action.focusActiveEditorGroup"
+      ]
+    },
+    "command": "runCommands",
+    "key": "space e",
+    "when": "sideBarFocus && !inputFocus"
+  },
+  {
+    "command": "workbench.action.toggleSidebarVisibility",
+    "key": "space e",
+    "when": "vim.mode == 'Normal' && editorTextFocus && foldersViewVisible"
+  },
+  // CODING
+  {
+    "command": "editor.action.codeAction",
+    "key": "space c a",
+    "when": "vim.mode == 'Normal' && editorTextFocus"
+  },
+  {
+    "command": "editor.action.rename",
+    "key": "space c r",
+    "when": "vim.mode == 'Normal' && editorTextFocus"
+  },
+  {
+    "command": "workbench.action.gotoSymbol",
+    "key": "space c s",
+    "when": "vim.mode == 'Normal' && editorTextFocus"
+  },
+  {
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "key": "ctrl-n",
+    "when": "(vim.mode == 'Normal' || vim.mode == 'Visual') && (editorTextFocus || !inputFocus)"
+  },
+  // BUFFER
+  {
+    "key": "alt+right",
+    "command": "workbench.action.nextEditor",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "key": "alt+left",
+    "command": "workbench.action.previousEditor",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "command": "workbench.action.showAllEditors",
+    "key": "space ,",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "command": "workbench.action.closeAllEditors",
+    "key": "space b d",
+    "when": "(vim.mode == 'Normal' && editorTextFocus) || !inputFocus"
+  },
+  {
+    "command": "workbench.action.showAllEditors",
+    "key": "space b b",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "command": "workbench.action.quickOpen",
+    "key": "space space",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+
+  // File Explorer
+  {
+    "command": "renameFile",
+    "key": "r",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "filesExplorer.copy",
+    "key": "c",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "filesExplorer.paste",
+    "key": "p",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "filesExplorer.cut",
+    "key": "x",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "deleteFile",
+    "key": "d",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "explorer.newFile",
+    "key": "a",
+    "when": "filesExplorerFocus && foldersViewVisible  && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "explorer.newFolder",
+    "key": "shift-a",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "explorer.openAndPassFocus",
+    "key": "enter",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceIsFolder && !inputFocus"
+  },
+  {
+    "command": "list.toggleExpand",
+    "key": "enter",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && explorerResourceIsFolder && !inputFocus"
+  },
+  // TERMINAL
+  {
+    "command": "workbench.action.terminal.focusNext",
+    "key": "ctrl+shift+down",
+    "when": "terminalFocus"
+  },
+  {
+    "command": "workbench.action.terminal.focusPrevious",
+    "key": "ctrl+shift+up",
+    "when": "terminalFocus"
+  },
+  {
+    "command": "workbench.action.terminal.new",
+    "key": "ctrl+shift+t",
+    "when": "terminalFocus"
+  },
+  {
+    "command": "workbench.action.terminal.kill",
+    "key": "ctrl+shift+w",
+    "when": "terminalFocus"
+  },
+  // COPILOT KEY BINDINGS
+  {
+    "command": "workbench.action.toggleAuxiliaryBar",
+    "key": "ctrl+g"
+  },
+  // VSCODE TOOLBAR
+  {
+    "command": "workbench.action.toggleSidebarVisibility",
+    "key": "ctrl+b"
+  },
+  {
+    "command": "workbench.action.findInFiles",
+    "key": "ctrl+shift+f"
+  },
+  {
+    "args": {
+      "commands": ["workbench.view.scm", "workbench.scm.focus"]
+    },
+    "command": "runCommands",
+    "key": "space g g",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "key": "ctrl+shift+s",
+    "command": "remoteTargets.focus"
+  },
+  {
+    "key": "ctrl+shift+x",
+    "command": "workbench.view.extensions"
+  },
+  {
+    "key": "ctrl+shift+e",
+    "command": "workbench.view.explorer"
+  }
+]
