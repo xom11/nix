@@ -47,10 +47,6 @@
         nodejs.pkgs.nodemon
         nodejs.pkgs.pm2
 
-        # Monitoring
-        prometheus
-        # prometheus-node-exporter
-        grafana 
 
     ];
 }

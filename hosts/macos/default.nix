@@ -39,5 +39,11 @@
   };
 
   nix.settings.trusted-users = [username];
+  services.grafana = {
+    enable = true;
+    domain = "grafana.pele";
+    port = 2342;
+    addr = "127.0.0.1";
+  };
 
 }
