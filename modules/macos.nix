@@ -7,6 +7,7 @@
 
   imports = [
     ./tools
+    ./monitor/server.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
