@@ -14,6 +14,7 @@
         pkgs.ripgrep
         pkgs.fd
         pkgs.hello
+        pkgs.cowsay
       ];
     };
 
