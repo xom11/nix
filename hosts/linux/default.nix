@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ../share
-  ];
   config = {
+    imports = [
+      ../share
+    ];
     nixpkgs.hostPlatform = "x86_64-linux";
 
     environment = {
