@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+  home.packages = [
+    pkgs.prometheus-node-exporter
+  ];
   systemd.user.services.attic-watch-store = {
     Unit = {
       Description = "Node Exporter for user";
@@ -16,6 +19,4 @@
     };
   };
 
-  # (Tùy chọn) Nếu bạn muốn Node Exporter luôn được kích hoạt khi khởi động home-manager
-  # systemd.user.enable = true; # Đảm bảo systemd user services được kích hoạt
 }
