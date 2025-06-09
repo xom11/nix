@@ -3,19 +3,16 @@
 {
   systemd.user.services.attic-watch-store = {
     Unit = {
-      Description = "Push nix store changes to attic binary cache.";
+      Description = "Node Exporter for user";
     };
     Install = {
       WantedBy = [ "default.target" ];
     };
-    Service = {
-      ExecStart = "${pkgs.writeShellScript "watch-store" ''
-        #!/run/current-system/sw/bin/bash
-        ATTIC_TOKEN=$(cat ${config.sops.secrets.attic_auth_token.path})
-        ${pkgs.attic}/bin/attic login prod https://majiy00-nix-binary-cache.fly.dev $ATTIC_TOKEN
-        ${pkgs.attic}/bin/attic use prod
-        ${pkgs.attic}/bin/attic watch-store prod:prod
-      ''}";
+    serviceConfig = {
+      ExecStart = "${pkgs.prometheus-node-exporter}/bin/node_exporter --web.listen-address=\":9100\"";
+      Restart = "on-failure"; # Tự động khởi động lại nếu Node Exporter gặp lỗi
+      RestartSec = "5s";      # Chờ 5 giây trước khi khởi động lại
+      # Environment = [ "VAR1=value1" ]; # Có thể thêm biến môi trường nếu cần
     };
   };
 
