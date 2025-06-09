@@ -17,12 +17,7 @@
         pkgs.cowsay
       ];
     };
-    home.packages = with pkgs; [
-      ripgrep
-      fd
-      hello
-      cowsay
-    ];
+    services.prometheus.enable = true;
 
     systemd.services = {
       foo = {
