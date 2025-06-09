@@ -1,10 +1,12 @@
 { config, pkgs, ... }:
-
+let 
+  username = builtins.getEnv "USER"; 
+in
 {
   home.packages = [
     pkgs.prometheus-node-exporter
   ];
-  systemd.user.services.attic-watch-store = {
+  systemd.$username.services.attic-watch-store = {
     Unit = {
       Description = "Node Exporter for user";
     };
