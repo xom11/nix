@@ -11,6 +11,7 @@
     ./desktop
     ./gnome
     ./tools
+    ./systemd
   ];
 
   programs.home-manager.enable = true;
