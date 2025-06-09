@@ -24,16 +24,21 @@
         atuin
         ncdu        #disk usage
         # syncthing 
-        pipx
-        # tailscale
         docker
         tldr
 
+        # SSH
+        openssh
+        tailscale
+        putty
+
         # Python
+        pipx
         python3
         python3Packages.pip
-        python3Packages.pipx
-        python3Packages.uv
+        # python3Packages.pipx
+        # python3Packages.uv
+        uv
 
         # Node.js
         nodejs
@@ -44,7 +49,7 @@
 
         # Monitoring
         prometheus
-        prometheus-modbus-exporter
+        prometheus-node-exporter
         grafana 
 
     ];
