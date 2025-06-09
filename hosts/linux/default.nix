@@ -2,8 +2,8 @@
 
 {
   
-  services.tailscale.enable = true;
   config = {
+    services.tailscale.enable = true;
     nixpkgs.hostPlatform = "x86_64-linux";
 
     environment = {
