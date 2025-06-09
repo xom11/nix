@@ -22,7 +22,7 @@
     auto-optimise-store = false;
   };
   imports = [
-    ../../modules/fonts
+    ../share
     ./apps.nix
     ./system.nix
   ];

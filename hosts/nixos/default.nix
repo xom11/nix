@@ -7,7 +7,7 @@ in
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/configuration.nix
-      ../../modules/fonts
+      ../share
     ];
   
   programs.zsh.enable = true;
@@ -34,7 +34,6 @@ in
   nixpkgs.config.allowUnfree = true;
 
   services.flatpak.enable = true;
-  services.tailscale.enable = true;
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
