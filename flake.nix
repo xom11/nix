@@ -16,10 +16,6 @@
     homebrew-bundle = { url = "github:homebrew/homebrew-bundle"; flake = false; };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
-
-    system-manager.url = "github:numtide/system-manager";
-    system-manager.inputs.nixpkgs.follows = "nixpkgs";
-
   };
 
   outputs = {... }@inputs:
@@ -79,11 +75,6 @@
             ./modules/nixos.nix
            ];
         }
-      ];
-    };
-    systemConfigs.default = system-manager.lib.makeSystemConfig {
-      modules = [
-        ./hosts/linux
       ];
     };
     homeConfigurations = {
