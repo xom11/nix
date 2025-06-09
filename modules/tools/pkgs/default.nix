@@ -28,7 +28,6 @@
         # tailscale
         docker
         tldr
-        thefuck
 
         # Python
         python3
@@ -45,7 +44,7 @@
 
         # Monitoring
         prometheus
-        node_exporter
+        prometheus-modbus-exporter
         grafana 
 
     ];

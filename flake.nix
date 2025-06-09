@@ -17,7 +17,6 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    };
   };
 
   outputs = {... }@inputs:
@@ -40,20 +39,20 @@
       modules = [
         ./hosts/macos
         nix-homebrew.darwinModules.nix-homebrew 
-        # {
-        #   nix-homebrew = {
-        #     enable = true;
-        #     enableRosetta = true;
-        #     autoMigrate = true;
-        #     mutableTaps = true;
-        #     user = username;
-        #     taps = with inputs; {
-        #       "homebrew/homebrew-core" = homebrew-core;
-        #       "homebrew/homebrew-cask" = homebrew-cask;
-        #       "homebrew/homebrew-bundle" = homebrew-bundle;
-        #     };
-        #   };
-        # }
+        {
+          nix-homebrew = {
+            enable = true;
+            enableRosetta = true;
+            autoMigrate = true;
+            mutableTaps = true;
+            user = username;
+            taps = with inputs; {
+              "homebrew/homebrew-core" = homebrew-core;
+              "homebrew/homebrew-cask" = homebrew-cask;
+              "homebrew/homebrew-bundle" = homebrew-bundle;
+            };
+          };
+        }
         home-manager.darwinModules.home-manager {
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
