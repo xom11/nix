@@ -49,7 +49,7 @@
 
         # Monitoring
         prometheus
-        prometheus-node-exporter
+        # prometheus-node-exporter
         grafana 
 
     ];

@@ -12,6 +12,7 @@ in
   imports = [
     ./tools
     ./bin
+    ./monitor
   ];
 
   programs.home-manager.enable = true;
