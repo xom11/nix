@@ -3,7 +3,7 @@
   home.packages = [
     pkgs.prometheus-node-exporter
   ];
-  systemd.user.services.attic-watch-store = {
+  systemd.user.services.node-exporter = {
     Unit = {
       Description = "Node Exporter for user";
     };
