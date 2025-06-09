@@ -4,6 +4,7 @@
     pkgs.prometheus-node-exporter
   ];
   systemd.user.services.node-exporter = {
+    enable = true;
     Unit = {
       Description = "Node Exporter for user";
     };
