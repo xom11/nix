@@ -1,10 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
+  
+  services.tailscale.enable = true;
   config = {
-    imports = [
-      ../share
-    ];
     nixpkgs.hostPlatform = "x86_64-linux";
 
     environment = {
