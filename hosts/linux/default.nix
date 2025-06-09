@@ -17,6 +17,12 @@
         pkgs.cowsay
       ];
     };
+    home.packages = with pkgs; [
+      ripgrep
+      fd
+      hello
+      cowsay
+    ];
 
     systemd.services = {
       foo = {

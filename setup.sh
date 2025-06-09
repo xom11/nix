@@ -3,4 +3,4 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 nix run github:nix-community/home-manager -- switch --impure -b backup --flake "github:kln-os/nix/main#server" --refresh
 add-visudo && add-authkey && set-zsh
 
-nix run github:numtide/system-manager -- switch  --flake "~/nix"
+sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake '.'
