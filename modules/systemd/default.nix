@@ -46,7 +46,7 @@
       Environment = [
         "MINIO_ROOT_USER=admin1234"
         "MINIO_ROOT_PASSWORD=admin1234"
-        "MINIO_VOLUMES=/mnt/data"
+        "MINIO_VOLUMES=~/.minio/data"
       ];
     };
   };
