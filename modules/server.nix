@@ -12,7 +12,7 @@ in
   imports = [
     ./tools
     ./bin
-    ./monitor
+    ./systemd
   ];
 
   programs.home-manager.enable = true;
