@@ -47,6 +47,7 @@
         "MINIO_ROOT_USER=admin1234"
         "MINIO_ROOT_PASSWORD=admin1234"
         "MINIO_VOLUMES=~/.minio/data"
+        "MINIO_OPTS='--address 0.0.0.0:9000 --console-address :9001'"
       ];
     };
   };
