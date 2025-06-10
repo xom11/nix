@@ -27,6 +27,7 @@
         docker
         docker-compose
         tldr
+        redis
 
         # SSH
         openssh
