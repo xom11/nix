@@ -1,7 +1,8 @@
 { config, pkgs, ... }:
 {
-  home.packages = [
-    pkgs.prometheus-node-exporter
+  home.packages = with pkgs; [
+    prometheus-node-exporter
+    redis
   ];
   systemd.user.services.node-exporter = {
     Unit = {
@@ -12,9 +13,17 @@
     };
     Service = {
       ExecStart = "${pkgs.prometheus-node-exporter}/bin/node_exporter --web.listen-address=\":9100\"";
-      Restart = "on-failure"; # Tự động khởi động lại nếu Node Exporter gặp lỗi
-      RestartSec = "5s";      # Chờ 5 giây trước khi khởi động lại
-      # Environment = [ "VAR1=value1" ]; # Có thể thêm biến môi trường nếu cần
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+  };
+  systemd.user.services.redis = {
+    description = "Redis server";
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.redis}/bin/redis-server ${pkgs.redis}/etc/redis.conf";
+      Restart = "on-failure";
+      Type = "simple";
     };
   };
 
