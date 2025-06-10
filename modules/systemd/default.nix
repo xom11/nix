@@ -32,7 +32,6 @@
       Type = "simple";
     };
   };
-  home.file.".local/share/minio/data".source = ./.; 
   systemd.user.services.minio = {
     Unit = {
       Description = "MinIO object storage server for user";
@@ -42,14 +41,12 @@
     };
     Service = {
       ExecStart = ''
-        ${pkgs.minio}/bin/minio server \
-          --address ":9000" \
-          --console-address ":9001" \
-          ${config.home.homeDirectory}/.local/share/minio/data
+        ${pkgs.minio}/bin/minio server 
       '';
       Environment = [
         "MINIO_ROOT_USER=admin1234"
         "MINIO_ROOT_PASSWORD=admin1234"
+        "MINIO_VOLUMES=/mnt/data"
       ];
     };
   };
