@@ -5,11 +5,9 @@
     redis
     minio
     ffmpeg
+    minio-client
   ];
   systemd.user.services.node-exporter = {
-    # Unit = {
-    #   Description = "Node Exporter for user";
-    # };
     Install = {
       WantedBy = [ "default.target" ];
     };
@@ -20,9 +18,6 @@
     };
   };
   systemd.user.services.redis = {
-    Unit = {
-      Description = "Redis server for user";
-    };
     Install = {
       WantedBy = [ "default.target" ];
     };
@@ -33,9 +28,6 @@
     };
   };
   systemd.user.services.minio = {
-    Unit = {
-      Description = "MinIO object storage server for user";
-    };
     Install = {
       WantedBy = [ "default.target" ];
     };
