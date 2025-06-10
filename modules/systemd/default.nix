@@ -48,8 +48,8 @@
           ${config.home.homeDirectory}/.local/share/minio/data
       '';
       Environment = [
-        "MINIO_ROOT_USER=admin"
-        "MINIO_ROOT_PASSWORD=admin"
+        "MINIO_ROOT_USER=admin1234"
+        "MINIO_ROOT_PASSWORD=admin1234"
       ];
     };
   };
