@@ -27,7 +27,6 @@
         docker
         docker-compose
         tldr
-        redis
 
         # SSH
         openssh
@@ -38,8 +37,6 @@
         pipx
         python3
         python3Packages.pip
-        # python3Packages.pipx
-        # python3Packages.uv
         uv
 
         # Node.js
