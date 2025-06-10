@@ -41,13 +41,14 @@
     };
     Service = {
       ExecStart = ''
-        ${pkgs.minio}/bin/minio server 
+        ${pkgs.minio}/bin/minio server \
+          --address 0.0.0.0:9000 \
+          --console-address :9001 \
+          ${config.home.homeDirectory}/.minio/data
       '';
       Environment = [
         "MINIO_ROOT_USER=admin1234"
         "MINIO_ROOT_PASSWORD=admin1234"
-        "MINIO_VOLUMES=~/.minio/data"
-        "MINIO_OPTS='--address 0.0.0.0:9000 --console-address :9001'"
       ];
     };
   };
