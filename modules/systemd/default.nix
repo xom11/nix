@@ -5,7 +5,7 @@
     redis
     minio
     ffmpeg
-    # minio-client
+    minio-client
   ];
   systemd.user.services.node-exporter = {
     Install = {
