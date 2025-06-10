@@ -64,6 +64,7 @@
       "brave-browser"
       "google-chrome"
       "microsoft-edge"
+      "docker"
       # "chromedriver"
 
     ];

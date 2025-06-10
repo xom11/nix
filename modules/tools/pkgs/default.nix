@@ -25,6 +25,7 @@
         ncdu        #disk usage
         # syncthing 
         docker
+        docker-compose
         tldr
 
         # SSH
