@@ -47,10 +47,10 @@
           --console-address ":9001" \
           ${config.home.homeDirectory}/.local/share/minio/data
       '';
-      Environment = {
-        MINIO_ROOT_USER = "admin";
-        MINIO_ROOT_PASSWORD = "admin";
-      };
+      Environment = [
+        "MINIO_ROOT_USER" = "admin";
+        "MINIO_ROOT_PASSWORD" = "admin";
+      ];
     };
   };
 }
