@@ -18,9 +18,13 @@
     };
   };
   systemd.user.services.redis = {
-    description = "Redis server";
-    wantedBy = [ "default.target" ];
-    serviceConfig = {
+    Unit = {
+      Description = "Redis server for user";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+    Service = {
       ExecStart = "${pkgs.redis}/bin/redis-server ${pkgs.redis}/etc/redis.conf";
       Restart = "on-failure";
       Type = "simple";
