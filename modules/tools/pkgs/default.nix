@@ -24,14 +24,14 @@
         atuin
         ncdu        #disk usage
         # syncthing 
-        docker
-        docker-compose
+        # docker
+        # docker-compose
         tldr
 
         # SSH
         openssh
         tailscale
-        putty
+        # putty
 
         # Python
         pipx

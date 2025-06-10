@@ -66,7 +66,6 @@
       "microsoft-edge"
       "docker"
       # "chromedriver"
-
     ];
   };
 }
