@@ -25,7 +25,7 @@
       WantedBy = [ "default.target" ];
     };
     Service = {
-      ExecStart = "${pkgs.redis}/bin/redis-server
+      ExecStart = "${pkgs.redis}/bin/redis-server";
       Restart = "on-failure";
       Type = "simple";
     };
