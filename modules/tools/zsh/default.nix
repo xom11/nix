@@ -13,7 +13,7 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    historySubstringSearch.enable = true;
+    # historySubstringSearch.enable = true;
     history = {
       ignoreDups = true;
       ignoreAllDups = true;
@@ -70,7 +70,7 @@
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
     };
-    # initContent = builtins.readFile ./init.zsh;
+    initContent = builtins.readFile ./.zshrc;
   }; 
   
 }

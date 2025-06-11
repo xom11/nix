@@ -45,11 +45,6 @@
             autoMigrate = true;
             mutableTaps = true;
             user = username;
-            taps = with inputs; {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
-              "homebrew/homebrew-bundle" = homebrew-bundle;
-            };
           };
         }
         home-manager.darwinModules.home-manager {
