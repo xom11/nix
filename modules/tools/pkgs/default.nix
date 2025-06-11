@@ -37,7 +37,7 @@
         pipx
         python3
         python3Packages.pip
-        python3Packages.uv
+        # python3Packages.uv
         uv
 
         # Node.js
