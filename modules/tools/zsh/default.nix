@@ -71,6 +71,9 @@
       NIXPKGS_ALLOW_UNFREE = 1;
     };
     initContent = ''
+      echo $USER@$HOST  $(uname -srm) \
+        $(sed -n 's/^NAME=//p' /etc/os-release 2>/dev/null || printf "") \
+        $(sed -n 's/^VERSION=//p' /etc/os-release 2>/dev/null || printf "")
       zvm_after_init() {
         source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
       }      
