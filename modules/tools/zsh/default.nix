@@ -54,6 +54,11 @@
         src = ./p10k-config;
         file = "p10k.zsh";
       }
+      {
+        name = "zshrc";
+        src = ./zshrc;
+        file = "init.zsh";
+      }
     ];
     dirHashes = {
       # cd ~cfg
@@ -65,7 +70,7 @@
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
     };
-    initContent = builtins.readFile ./init.zsh;
+    # initContent = builtins.readFile ./init.zsh;
   }; 
   
 }
