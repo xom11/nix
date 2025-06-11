@@ -11,10 +11,10 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
-    ./tools
-    ./bin
-    ./gnome
-    ./desktop
+    ../../tools
+    ../../bin
+    ../../gnome
+    ../../desktop
   ];
 
   programs.home-manager.enable = true;

@@ -6,7 +6,7 @@
   programs.home-manager.enable = true;
 
   imports = [
-    ../modules/tools
+    ../../modules/tools
   ];
 
   nixpkgs.config.allowUnfree = true;
