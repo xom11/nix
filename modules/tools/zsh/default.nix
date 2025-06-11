@@ -55,9 +55,9 @@
         file = "p10k.zsh";
       }
       {
-        name = "zshrc";
-        src = ./zshrc;
-        file = "init.zsh";
+        name = "func";
+        src = ./func;
+        file = "func.zsh";
       }
     ];
     dirHashes = {
@@ -70,8 +70,11 @@
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
     };
-    initContent = builtins.readFile ./initContent;
-    initExtra = builtins.readFile ./initExtra;
+    initContent = ''
+      zvm_after_init() {
+        source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
+      }      
+    '';
   }; 
   
 }
