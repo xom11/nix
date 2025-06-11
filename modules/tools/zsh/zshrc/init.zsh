@@ -14,6 +14,3 @@ t() {
         tmux new-window -n "$1"
     fi
 }
-bindkey -M emacs '^R' fzf-history-widget
-bindkey -M viins '^R' fzf-history-widget
-bindkey -M vicmd '^R' fzf-history-widget
