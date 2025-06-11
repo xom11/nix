@@ -8,10 +8,9 @@
   # user.shell = pkgs.zsh;
 
   imports = [
-    ./desktop
-    ./gnome
-    ./tools
-    ./systemd
+    ../modules/desktop
+    ../modules/gnome
+    ../modules/tools
   ];
 
   programs.home-manager.enable = true;

@@ -56,7 +56,7 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
-            ./modules/macos.nix
+            ./home/macos
           ];
         }
       ];
@@ -72,7 +72,7 @@
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [ 
             nix-flatpak.homeManagerModules.nix-flatpak
-            ./modules/nixos.nix
+            ./home/nixos
            ];
         }
       ];
@@ -81,14 +81,14 @@
       "server" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
-          ./modules/server.nix
+          ./home/server
         ];
       };
       "local" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
-          ./modules/local.nix
+          ./home/local
         ];
       };
     };
