@@ -1,15 +1,68 @@
-
 {input, config, pkgs, lib, username, ... }:
 let
   bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
 in
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      /etc/nixos/configuration.nix
+  imports = [
+      # /etc/nixos/configuration.nix
+      /etc/nixos/hardware-configuration.nix
+      ./apps.nix
       ../share
     ];
-  
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  networking.hostName = "nixos"; # Define your hostname.
+
+  networking.networkmanager.enable = true;
+  time.timeZone = "Asia/Ho_Chi_Minh";
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "vi_VN";
+    LC_IDENTIFICATION = "vi_VN";
+    LC_MEASUREMENT = "vi_VN";
+    LC_MONETARY = "vi_VN";
+    LC_NAME = "vi_VN";
+    LC_NUMERIC = "vi_VN";
+    LC_PAPER = "vi_VN";
+    LC_TELEPHONE = "vi_VN";
+    LC_TIME = "vi_VN";
+  };
+
+  services.xserver.enable = true;
+
+  # Enable the GNOME Desktop Environment.
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "kln";
+
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.kln = {
+    isNormalUser = true;
+    description = "kln";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+    #  thunderbird
+    ];
+  };
+
+
+  # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
+
+  programs.firefox.enable = true;
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
@@ -28,11 +81,7 @@ in
     '';
   };
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = username;
   nixpkgs.config.allowUnfree = true;
-
   services.flatpak.enable = true;
 
   # do garbage collection weekly to keep disk usage low
@@ -46,21 +95,16 @@ in
   # Enable hardware virtualization support.
   boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
   virtualisation.libvirtd.enable = true;
-  users.users.${username}.extraGroups = [ "libvirtd" ];
   
   hardware.bluetooth.enable = true;
-  # Audio
-  #
-  hardware.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
-
+  services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
   security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
-
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # Uncomment the following line if you want to use JACK applications
-    # jack.enable = true;
   };
+
+  system.stateVersion = "24.11";
 }
