@@ -70,7 +70,7 @@
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
     };
-    initContent = builtins.readFile ./.zshrc;
+    initContent = builtins.readFile ./default.zsh;
   }; 
   
 }
