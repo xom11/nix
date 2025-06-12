@@ -7,6 +7,7 @@
 
   imports = [
     ../../modules/tools
+    ../../modules/terminal
   ];
 
   nixpkgs.config.allowUnfree = true;

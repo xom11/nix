@@ -12,9 +12,10 @@ in
 
   imports = [
     ../../modules/tools
-    ../../modules/bin
+    # ../../modules/bin
     ../../modules/gnome
     ../../modules/desktop
+    ../../modules/terminal
   ];
 
   nixpkgs.config.allowUnfree = true;

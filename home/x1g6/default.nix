@@ -11,6 +11,7 @@
     ../../modules/desktop
     ../../modules/gnome
     ../../modules/tools
+    ../../modules/terminal
   ];
 
   programs.home-manager.enable = true;
