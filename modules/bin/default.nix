@@ -1,8 +1,13 @@
 {pkgs,...}:
 {
-home.packages = with pkgs; [
-  (writeShellScriptBin "add-authkey" (builtins.readFile ./add-authkey))
-  (writeShellScriptBin "add-visudo" (builtins.readFile ./add-visudo))
-  (writeShellScriptBin "set-zsh" (builtins.readFile ./set-zsh))
-  ];
+home.packages = with pkgs;
+  let
+    scriptFiles = [
+      ./add-authkey
+      ./add-visudo
+      ./set-zsh
+      ./i3-focus
+    ];
+  in
+  map (file: (writeShellScriptBin (builtins.baseNameOf file) (builtins.readFile file))) scriptFiles;
 }

@@ -10,6 +10,7 @@
   imports = [
     ../../modules/desktop
     ../../modules/gnome
+    ../../modules/bin
     ../../modules/sway
     ../../modules/tools
     ../../modules/apps
