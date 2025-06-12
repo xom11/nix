@@ -1,7 +1,7 @@
 set $mod Mod4
 set $hyper Mod3
 
-bindsym $hyper+t exec kitty   
+bindsym $hyper+t i3-focus kitty   
 bindsym $mod+f exec firefox          
 bindsym $mod+q kill               
 
