@@ -57,8 +57,6 @@ bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+2 move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
 bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+b move container to workspace B
-bindsym $mod+Shift+r move container to workspace R
 
 # Which app is assigned to which workspace
 assign [class="Firefox"] workspace B
@@ -91,8 +89,11 @@ bindsym XF86AudioRaiseVolume exec 'pactl set-sink-volume @DEFAULT_SINK@ +5%'
 bindsym XF86AudioLowerVolume exec 'pactl set-sink-volume @DEFAULT_SINK@ -5%'
 bindsym XF86AudioMute exec 'pactl set-sink-mute @DEFAULT_SINK@ toggle'
 
+# input "type:keyboard" {
+#     xkb_options ctrl:nocaps
+# }
 input "type:keyboard" {
-    xkb_options ctrl:nocaps
+    xkb_options caps:hyper
 }
 
 # output eDP-1 pos 0 0
