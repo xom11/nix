@@ -47,7 +47,7 @@ bindsym $mod+d workspace D
 # coding
 bindsym $mod+c workspace C 
 # browser
-bindsym $mod+b workspace B 
+# bindsym $mod+b workspace B 
 # music
 bindsym $mod+m workspace B 
 # reading
