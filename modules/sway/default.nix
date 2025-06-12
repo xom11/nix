@@ -1,16 +1,20 @@
-{...}:
+{ lib, config, pkgs, ...}:
+
 {
   wayland.windowManager.sway = {
     enable = true;
-    wrapperFeatures.gtk = true; # Fixes common issues with GTK 3 apps
-    config = rec {
-      modifier = "Mod4";
-      # Use kitty as default terminal
-      terminal = "kitty"; 
-      startup = [
-        # Launch Firefox on start
-        {command = "firefox";}
-      ];
-    };
+    wrapperFeatures.gtk = true;
+    checkConfig = false;
+    extraConfig = builtins.readFile ./config;
+    config.bars = [{
+      command = "swaybar_command waybar";
+      position = "top";
+      mode = "dock";
+    }];
   };
+  programs.waybar = {
+    enable = true;
+    style = builtins.readFile ./waybar/style.css;
+  };
+  xdg.configFile."waybar/config".source = ./waybar/config.jsonc;
 }
