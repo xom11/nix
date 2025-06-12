@@ -51,7 +51,7 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
-            ./home/macos
+            ./home/m4
           ];
         }
       ];
@@ -67,7 +67,7 @@
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [ 
             nix-flatpak.homeManagerModules.nix-flatpak
-            ./home/nixos
+            ./home/x1g6
            ];
         }
       ];
