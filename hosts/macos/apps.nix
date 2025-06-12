@@ -65,6 +65,7 @@
       "google-chrome"
       "microsoft-edge"
       "docker"
+      "vmware-fusion"
       # "chromedriver"
     ];
   };
