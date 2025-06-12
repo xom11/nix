@@ -1,12 +1,8 @@
-# Set your mod key to the Super (Windows) key
 set $mod Mod4
+set $hyper Mod3
 
-# Basic keybindings
-# Launch Alacritty terminal
-bindsym $mod+Return exec alacritty   
-# Launch Firefox
+bindsym $hyper+t exec kitty   
 bindsym $mod+f exec firefox          
-# Close focused window
 bindsym $mod+q kill               
 
 # Split windows (horizontal/vertical)
