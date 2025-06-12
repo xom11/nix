@@ -2,7 +2,9 @@
 
 {
   imports = [
-    ./bin
+  ];
+  home.packages = with pkgs; [
+    galculator
   ];
   wayland.windowManager.sway = {
     enable = true;
