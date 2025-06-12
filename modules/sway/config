@@ -5,7 +5,7 @@ bindsym $mod+t exec kitty
 bindsym $mod+b i3-focus brave   
 bindsym $mod+f exec firefox          
 bindsym $mod+q kill               
-bindsym --no-repeat $mod+c exec pidof galculator && swaymsg [app_id=^galculator$] focus || galculator
+bindsym --no-repeat $mod+g exec pidof galculator && swaymsg [app_id=^galculator$] focus || galculator
 
 # Split windows (horizontal/vertical)
 # bindsym $mod+h split h
