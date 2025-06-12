@@ -11,10 +11,10 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
-    ../../tools
-    ../../bin
-    ../../gnome
-    ../../desktop
+    ../../modules/tools
+    ../../modules/bin
+    ../../modules/gnome
+    ../../modules/desktop
   ];
 
   nixpkgs.config.allowUnfree = true;
