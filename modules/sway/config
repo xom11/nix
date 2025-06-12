@@ -9,8 +9,10 @@ bindsym $hypr+m exec caprine
 bindsym $hypr+t exec kitty
 bindsym $hypr+i exec discord
 bindsym $hypr+Shift+t exec telegram-desktop
-bindsym $hypr+g exec gemini.desktop
-bindsym $hypr+d exec deepseek.desktop
+bindsym $hypr+g exec gtk-launch gemini.desktop
+bindsym $hypr+d exec gtk-launch deepseek.desktop
+bindsym $hypr+y exec gtk-launch youtube.desktop
+bindsym $hypr+Shift+m exec gtk-launch mail.desktop
 
 bindsym $mod+f exec firefox          
 bindsym $mod+q kill               
