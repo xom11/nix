@@ -1,7 +1,7 @@
 {input, config, pkgs, lib, username, ... }:
-let
-  bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
-in
+# let
+#   bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
+# in
 {
   imports = [
       # /etc/nixos/configuration.nix
@@ -69,9 +69,10 @@ in
   i18n.inputMethod = {
     enable = true;
     type = "ibus";
-    ibus.engines = [
-      bamboo
-    ];
+    # ibus.engines = [
+    #   # bamboo
+    # ];
+    ibus.engines = with pkgs.ibus-engines; [bamboo];
   };
 
   nix = {
