@@ -1,11 +1,19 @@
-set $mod Mod4
+set $super Mod4
 set $hyper Mod3
+set $mod $super
 
-bindsym $mod+t exec kitty   
-bindsym $mod+b i3-focus brave   
+bindsym $hypr+b exec brave
+bindsym $hypr+j exec joplin-desktop
+bindsym $hypr+v exec code
+bindsym $hypr+m exec caprine
+bindsym $hypr+t exec kitty
+bindsym $hypr+i exec discord
+bindsym $hypr+Shift+t exec telegram-desktop
+bindsym $hypr+g exec gemini.desktop
+bindsym $hypr+d exec deepseek.desktop
+
 bindsym $mod+f exec firefox          
 bindsym $mod+q kill               
-bindsym --no-repeat $mod+g exec pidof galculator && swaymsg [app_id=^galculator$] focus || galculator
 
 # Split windows (horizontal/vertical)
 # bindsym $mod+h split h
