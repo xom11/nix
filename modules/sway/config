@@ -1,5 +1,5 @@
 set $super Mod4
-set $hyper Mod3
+set $hypr Mod3
 set $mod $super
 
 bindsym $hypr+b exec brave
