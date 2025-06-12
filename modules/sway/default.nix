@@ -1,6 +1,9 @@
 { lib, config, pkgs, ...}:
 
 {
+  imports = [
+    ./bin
+  ]
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
