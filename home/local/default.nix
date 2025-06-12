@@ -24,9 +24,6 @@ in
   home.pointerCursor.name = "Vanilla-DMZ";
 
   # ibus
-  home.packages = with pkgs; [
-    ibus-engines.bamboo
-  ];
   xsession.windowManager.bspwm.startupPrograms = [
     "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
   ];
