@@ -1,7 +1,6 @@
 {
   imports = [
     ./git
-    ./kitty
     ./nvim
     ./pkgs
     ./ssh
