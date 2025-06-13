@@ -32,6 +32,7 @@
         openssh
         tailscale
         # putty
+        ansible
 
         # Python
         pipx
