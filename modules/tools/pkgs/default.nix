@@ -27,6 +27,7 @@
         # docker
         # docker-compose
         tldr
+        discordchatexporter-cli
 
         # SSH
         openssh
