@@ -1,12 +1,12 @@
 { config, pkgs, inputs, ...}:
 {
     home.packages = with pkgs;[
-        neofetch
+        # neofetch
         fastfetch
         vim
         htop
         lazygit
-        stow
+        # stow
         zip
         unzip
         wget
@@ -21,19 +21,18 @@
         gcc
         yazi
         zoxide
-        atuin
+        # atuin
         ncdu        #disk usage
         # syncthing 
         # docker
         # docker-compose
         tldr
-        discordchatexporter-cli
 
         # SSH
-        openssh
-        tailscale
+        # openssh
+        # tailscale
         # putty
-        ansible
+        # ansible
 
         # Python
         pipx

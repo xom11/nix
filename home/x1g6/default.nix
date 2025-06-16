@@ -5,8 +5,6 @@
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  # user.shell = pkgs.zsh;
-
   imports = [
     ../../modules/desktop
     ../../modules/gnome
@@ -20,6 +18,7 @@
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
+    discordchatexporter-cli
   ]; 
 
   # Environment
