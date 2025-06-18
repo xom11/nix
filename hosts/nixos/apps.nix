@@ -4,7 +4,6 @@
   boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
   virtualisation.libvirtd.enable = true;
 
-  # environment.systemPackages = [ pkgs.tailscale ];
   services.tailscale.enable = true;
   services.openssh.enable = true;
   

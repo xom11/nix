@@ -1,12 +1,10 @@
 {input, config, pkgs, lib, username, ... }:
-# let
-#   bamboo = pkgs.callPackage ./ibus-bamboo.nix {};
-# in
 {
   imports = [
       # /etc/nixos/configuration.nix
       /etc/nixos/hardware-configuration.nix
       ./apps.nix
+      ./suspend-and-hibernate.nix
       ../share
     ];
 
@@ -73,9 +71,6 @@
   i18n.inputMethod = {
     enable = true;
     type = "ibus";
-    # ibus.engines = [
-    #   # bamboo
-    # ];
     ibus.engines = with pkgs.ibus-engines; [bamboo];
   };
 
