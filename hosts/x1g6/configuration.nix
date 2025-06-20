@@ -31,7 +31,7 @@
   # Enable the GNOME Desktop Environment.
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.sessionPackages = [
+  services.displayManager.sessionPackages = [
     pkgs.sway
   ];
   security.polkit.enable = true;
