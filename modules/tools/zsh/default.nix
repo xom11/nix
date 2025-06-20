@@ -74,6 +74,7 @@
       zvm_after_init() {
         source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
       }      
+      printf '\e[5 q'
     '';
   }; 
   
