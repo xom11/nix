@@ -22,9 +22,7 @@
     auto-optimise-store = false;
   };
   imports = [
-    ../share
-    ./apps.nix
-    ./system.nix
+    ./configs
   ];
 
   programs.zsh.enable = true; 
@@ -39,5 +37,13 @@
   };
 
   nix.settings.trusted-users = [username];
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.dejavu-sans-mono
+    fira-code
+    fira-code-symbols
+    meslo-lgs-nf
+  ];
+  services.tailscale.enable = true;
 
 }

@@ -3,9 +3,7 @@
   imports = [
       # /etc/nixos/configuration.nix
       /etc/nixos/hardware-configuration.nix
-      ./apps.nix
-      ./suspend-and-hibernate.nix
-      ../share
+      ./configs
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -92,8 +90,6 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-
-  
   hardware.bluetooth.enable = true;
   services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
   security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
@@ -103,6 +99,14 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.dejavu-sans-mono
+    fira-code
+    fira-code-symbols
+    meslo-lgs-nf
+  ];
+
 
   system.stateVersion = "24.11";
 }

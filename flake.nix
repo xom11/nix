@@ -36,7 +36,7 @@
       inherit specialArgs;
       system = "aarch64-darwin";
       modules = [
-        ./hosts/macos
+        ./hosts/macmini/configuration.nix
         nix-homebrew.darwinModules.nix-homebrew 
         {
           nix-homebrew = {
@@ -51,7 +51,7 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
-            ./home/m4
+            ./hosts/macmini/home.nix
           ];
         }
       ];
@@ -60,14 +60,14 @@
       inherit specialArgs;
       system = "x86_64-linux";
       modules = [ 
-        ./hosts/nixos
+        ./hosts/x1g6/configuration.nix
         home-manager.nixosModules.home-manager
         {
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [ 
             nix-flatpak.homeManagerModules.nix-flatpak
-            ./home/x1g6
+            ./hosts/x1g6/home.nix
            ];
         }
       ];
@@ -76,14 +76,14 @@
       "server" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
-          ./home/server
+          ./hosts/server/home.nix
         ];
       };
       "local" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
-          ./home/local
+          ./hosts/local/home.nix
         ];
       };
     };

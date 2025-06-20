@@ -1,4 +1,4 @@
-{input, config, pkgs, lib, ... }:
+{pkgs, ...}:
 {
   virtualisation.docker.enable = true;
   boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
@@ -6,6 +6,4 @@
 
   services.tailscale.enable = true;
   services.openssh.enable = true;
-  
-
 }
