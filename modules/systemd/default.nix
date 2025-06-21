@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, option, ... }:
 {
   home.packages = with pkgs; [
     prometheus-node-exporter
