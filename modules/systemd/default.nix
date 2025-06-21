@@ -6,6 +6,7 @@
     minio
     ffmpeg
     minio-client
+    discordchatexporter-cli
   ];
   systemd.user.services.node-exporter = {
     Install = {
