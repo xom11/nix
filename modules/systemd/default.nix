@@ -17,18 +17,16 @@
       RestartSec = "5s";
     };
   };
-  services.redis.servers.redis.enable= true;
-
-  # systemd.user.services.redis = {
-  #   Install = {
-  #     WantedBy = [ "default.target" ];
-  #   };
-  #   Service = {
-  #     ExecStart = "${pkgs.redis}/bin/redis-server";
-  #     Restart = "on-failure";
-  #     Type = "simple";
-  #   };
-  # };
+  systemd.user.services.redis = {
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.redis}/bin/redis-server";
+      Restart = "on-failure";
+      Type = "simple";
+    };
+  };
   systemd.user.services.minio = {
     Install = {
       WantedBy = [ "default.target" ];
