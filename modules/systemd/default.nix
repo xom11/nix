@@ -17,7 +17,7 @@
       RestartSec = "5s";
     };
   };
-  services.send.redis.createLocally = true;
+  services.redis.enable = true;
   # systemd.user.services.redis = {
   #   Install = {
   #     WantedBy = [ "default.target" ];
