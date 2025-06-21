@@ -44,6 +44,7 @@
     fira-code-symbols
     meslo-lgs-nf
   ];
+  services.redis.enable = true;
   services.tailscale.enable = true;
 
 }
