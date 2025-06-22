@@ -1,5 +1,5 @@
 if [[ "$NIX_DEVICE" == "macmini" ]]; then
-sudo darwin-rebuild switch --impure --flake ~/nix#$NIX_DEVICE
+sudo darwin-rebuild switch --impure --flake ~/nix#${NIX_DEVICE}
 elif [[ "$NIX_DEVICE" == "x1g6" ]]; then
 sudo nixos-rebuild switch --impure --flake ~/nix#$NIX_DEVICE
 elif [[ "$NIX_DEVICE" == "server" ]]; then
