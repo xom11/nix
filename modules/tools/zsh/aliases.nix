@@ -16,20 +16,5 @@
     gu = "git pull && git add . && git commit -m \"update\" && git push";
     py = "python3";
     py310 = "python3.10";
-    hnu = "nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#nixos";
-    hmu = "nix run github:nix-community/home-manager -- switch --impure -b backup --flake ~/nix#macos";
-    onu = "sudo nixos-rebuild switch --impure --flake ~/nix#nixos";
-    omu = "sudo darwin-rebuild switch --impure --flake ~/nix#macos";
-    update = ''
-      if [[ "$(uname)" == "Darwin" ]]; then
-        sudo darwin-rebuild switch --impure --flake ~/nix#macos
-      elif [[ -f /etc/nixos/configuration.nix ]]; then
-        sudo nixos-rebuild switch --impure --flake ~/nix#nixos
-      elif [[ "$DESKTOP_SESSION" == "gnome" ]]; then 
-        nix run github:nix-community/home-manager -- switch --impure --b backup -flake "github:kln-os/nix/main#local" --refresh
-      else
-        nix run github:nix-community/home-manager -- switch --impure -b backup --flake "github:kln-os/nix/main#server" --refresh
-      fi
-      '';
   };
 }

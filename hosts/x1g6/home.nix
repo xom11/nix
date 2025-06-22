@@ -24,6 +24,7 @@
 
   # Environment
   home.sessionVariables = {
+    NIX_DEVICE = "x1g6";
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";

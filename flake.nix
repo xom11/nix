@@ -32,7 +32,7 @@
         };
     in
     {
-    darwinConfigurations.macos = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."macmini" = nix-darwin.lib.darwinSystem {
       inherit specialArgs;
       system = "aarch64-darwin";
       modules = [
@@ -56,7 +56,7 @@
         }
       ];
     };
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations."x1g6" = nixpkgs.lib.nixosSystem {
       inherit specialArgs;
       system = "x86_64-linux";
       modules = [ 

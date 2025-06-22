@@ -38,6 +38,5 @@
 
   nix.settings.trusted-users = [username];
 
-  environment.variables.EDITOR = "nvim";
 
 }

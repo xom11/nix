@@ -21,6 +21,10 @@ in
   home.packages = with pkgs; [
 
   ];
+  home.sessionVariables = {
+    NIX_DEVICE = "server";
+    EDITOR = "nvim";
+  };
 
 }
 

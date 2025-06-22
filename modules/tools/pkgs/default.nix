@@ -6,6 +6,7 @@
         vim
         htop
         lazygit
+        lazydocker
         # stow
         zip
         unzip
