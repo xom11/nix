@@ -12,7 +12,6 @@
     ../../modules/sway
     ../../modules/tools
     ../../modules/apps
-    ../../modules/systemd
   ];
 
   programs.home-manager.enable = true;
