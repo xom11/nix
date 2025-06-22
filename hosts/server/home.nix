@@ -21,10 +21,8 @@ in
   home.packages = with pkgs; [
 
   ];
-  home.sessionVariables = {
-    NIX_DEVICE = "server";
-    EDITOR = "nvim";
-  };
-
+  programs.zsh.initContent = ''
+    export NIX_DEVICE="server"
+  '';
 }
 
