@@ -31,6 +31,6 @@
     QT_IM_MODULE = "ibus";
   };
   home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ~/nix#x1g6";
+    update = "sudo nixos-rebuild switch --impure --flake ~/nix#x1g6";
   };
 }
