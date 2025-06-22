@@ -6,3 +6,4 @@ elif [[ "$NIX_DEVICE" == "server" ]]; then
 nix run github:nix-community/home-manager -- switch --impure -b backup --flake "github:kln-os/nix/main#$NIX_DEVICE" --refresh
 else
 echo "Unknown NIX_DEVICE: $NIX_DEVICE"
+fi
