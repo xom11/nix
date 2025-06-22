@@ -23,7 +23,6 @@
 
   # Environment
   home.sessionVariables = {
-    NIX_DEVICE = "x1g6";
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";
@@ -31,5 +30,7 @@
     XMODIFIERS = "@im=ibus";
     QT_IM_MODULE = "ibus";
   };
-
+  home.shellAliases = {
+    update = "sudo darwin-rebuild switch --impure --flake ~/nix#x1g6";
+  };
 }

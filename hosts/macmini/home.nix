@@ -13,10 +13,12 @@
 
   nixpkgs.config.allowUnfree = true;
   home.sessionVariables = {
-    NIX_DEVICE = "macmini";
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";
+  };
+  home.shellAliases = {
+    update = "sudo darwin-rebuild switch --impure --flake ~/nix#macmini";
   };
 }
 
