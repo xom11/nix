@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Hibernate
+Exec=systemctl hibernate
+Icon=hibernate
+Terminal=false
+Type=Application
+Categories=GNOME;System;
