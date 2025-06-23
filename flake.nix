@@ -62,7 +62,7 @@
       inherit specialArgs;
       system = system;
       modules = [ 
-        # nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
+        nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
         ./hosts/x1g6/configuration.nix
         home-manager.nixosModules.home-manager
         {
