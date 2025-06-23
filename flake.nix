@@ -25,6 +25,7 @@
       username = builtins.getEnv "SUDO_USER"; 
       useremail = "__USEREMAIL__";
       hostname = "__HOSTNAME__";
+      system = builtins.currentSystem;
 
       specialArgs =
         inputs
@@ -75,7 +76,7 @@
     };
     homeConfigurations = {
       "server" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${pkgs.system};
+        pkgs = nixpkgs.legacyPackages.${system};
         modules = [
           ./hosts/server/home.nix
         ];
