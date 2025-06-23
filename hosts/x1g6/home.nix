@@ -8,7 +8,6 @@
   imports = [
     ../../modules/desktop
     ../../modules/gnome
-    ../../modules/bin
     ../../modules/tools
     ../../modules/apps
   ];
