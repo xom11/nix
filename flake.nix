@@ -74,7 +74,9 @@
     };
     homeConfigurations = {
       "arm-server" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-linux;
+        pkgs = import nixpkgs {
+          inherit (inputs.nixpkgs) system;
+        };
         modules = [
           ./hosts/server/home.nix
         ];
