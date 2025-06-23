@@ -14,7 +14,5 @@
     cc = "conda create -p ./.venv python==3.12";
     ca = "conda activate ./.venv";
     gu = "git pull && git add . && git commit -m \"update\" && git push";
-    py = "python3";
-    py310 = "python3.10";
   };
 }
