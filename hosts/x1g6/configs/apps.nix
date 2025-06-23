@@ -7,5 +7,4 @@
   services.tailscale.enable = true;
   services.openssh.enable = true;
   virtualisation.vmware.host.enable = true;
-  virtualisation.vmware.host.package = unstable.vmware-workstation;
 }
