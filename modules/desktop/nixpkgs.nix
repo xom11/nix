@@ -12,8 +12,8 @@
     # slack
     thunderbird
     brave
-    google-chrome
-    chromedriver
+    # google-chrome
+    # chromedriver
     caprine
     # teamviewer
     # anydesk
