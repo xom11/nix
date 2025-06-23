@@ -4,9 +4,9 @@
     HIBERNATE_LOCK = "/var/run/autohibernate.lock";
   };
 in {
-  # boot.kernelParams = ["resume_offset=<offset>"];
-  # boot.resumeDevice = "/dev/disk/by-uuid/<uuid-of-root-partition>";
-  # powerManagement.enable = true;
+  boot.kernelParams = ["resume_offset=23011328"];
+  boot.resumeDevice = "/dev/disk/by-uuid/117f9948-32f4-442c-9a9d-7852e0ea5ea2";
+  powerManagement.enable = true;
   swapDevices = [
     {
       device = "/var/lib/swapfile";
