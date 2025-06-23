@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # systems.url = "github:nix-systems/default";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -36,7 +36,7 @@
     {
     darwinConfigurations."macmini" = nix-darwin.lib.darwinSystem {
       inherit specialArgs;
-      system = "aarch64-darwin";
+      system = system;
       modules = [
         ./hosts/macmini/configuration.nix
         nix-homebrew.darwinModules.nix-homebrew 
@@ -60,8 +60,9 @@
     };
     nixosConfigurations."x1g6" = nixpkgs.lib.nixosSystem {
       inherit specialArgs;
-      system = "x86_64-linux";
+      system = system;
       modules = [ 
+        nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
         ./hosts/x1g6/configuration.nix
         home-manager.nixosModules.home-manager
         {
@@ -82,7 +83,7 @@
         ];
       };
       "local" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = nixpkgs.legacyPackages.${system};
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
           ./hosts/local/home.nix
