@@ -6,12 +6,12 @@
   home.stateVersion = "25.11"; 
 
   imports = [
-    # ../../modules/desktop
-    # ../../modules/gnome
-    # ../../modules/bin
-    # ../../modules/sway
-    # ../../modules/tools
-    # ../../modules/apps
+    ../../modules/desktop
+    ../../modules/gnome
+    ../../modules/bin
+    ../../modules/sway
+    ../../modules/tools
+    ../../modules/apps
   ];
 
   programs.home-manager.enable = true;
