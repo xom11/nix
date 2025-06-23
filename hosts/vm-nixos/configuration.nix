@@ -2,15 +2,15 @@
 {input, config, pkgs, lib, username, ... }:
 {
   imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal-combined.nix>
+    /etc/nixos/configuration.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  # networking.hostName = "nixos"; # Define your hostname.
+  # networking.networkmanager.enable = true;
 
-  networking.networkmanager.enable = true;
   time.timeZone = "Asia/Ho_Chi_Minh";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
@@ -55,7 +55,6 @@
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
 
-  programs.firefox.enable = true;
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
@@ -82,17 +81,6 @@
   };
 
   security.sudo.wheelNeedsPassword = false;
-
-  hardware.bluetooth.enable = true;
-  services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
-  security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
 
   system.stateVersion = "24.11";
 }
