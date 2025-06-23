@@ -10,7 +10,7 @@
     ../../modules/gnome
     ../../modules/bin
     ../../modules/tools
-    # ../../modules/apps
+    ../../modules/apps
   ];
 
   programs.home-manager.enable = true;
