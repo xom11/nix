@@ -73,6 +73,12 @@
       ];
     };
     homeConfigurations = {
+      "arm-server" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        modules = [
+          ./hosts/server/home.nix
+        ];
+      };
       "server" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
