@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    systems.url = "github:nix-systems/default";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -18,7 +19,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = {system, ... }@inputs:
+  outputs = {... }@inputs:
     with inputs;
     let
       username = builtins.getEnv "SUDO_USER"; 
@@ -73,16 +74,8 @@
       ];
     };
     homeConfigurations = {
-      "arm-server" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          inherit (inputs.nixpkgs) system;
-        };
-        modules = [
-          ./hosts/server/home.nix
-        ];
-      };
       "server" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = nixpkgs.legacyPackages.${system};
         modules = [
           ./hosts/server/home.nix
         ];
