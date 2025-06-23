@@ -2,7 +2,7 @@
 {input, config, pkgs, lib, username, ... }:
 {
   imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal-combined.nix>;
+    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal-combined.nix>
     ];
 
   boot.loader.systemd-boot.enable = true;
