@@ -8,7 +8,7 @@
     vscode
     telegram-desktop
     localsend
-    joplin-desktop
+    # joplin-desktop
     slack
     thunderbird
     brave
