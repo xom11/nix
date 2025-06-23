@@ -2,7 +2,6 @@
 {input, config, pkgs, lib, username, ... }:
 {
   imports = [
-      /etc/nixos/hardware-configuration.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
