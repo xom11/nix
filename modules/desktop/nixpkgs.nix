@@ -9,7 +9,7 @@
     telegram-desktop
     localsend
     # joplin-desktop
-    slack
+    # slack
     thunderbird
     brave
     google-chrome
