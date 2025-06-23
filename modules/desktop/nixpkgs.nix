@@ -4,23 +4,23 @@
   home.packages = with pkgs; [
     preload
     bitwarden-desktop
-    # discord
+    discord
     vscode
     telegram-desktop
     localsend
-    # joplin-desktop
-    # slack
+    joplin-desktop
+    slack
     thunderbird
     brave
-    # google-chrome
+    google-chrome
     # chromedriver
     caprine
     # teamviewer
     # anydesk
 
-    xdg-desktop-portal 
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-wlr
+    # xdg-desktop-portal 
+    # xdg-desktop-portal-gtk
+    # xdg-desktop-portal-wlr
 
   ];
 
