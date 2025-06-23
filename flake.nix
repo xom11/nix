@@ -69,8 +69,8 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [ 
-            # nix-flatpak.homeManagerModules.nix-flatpak
-            # ./hosts/x1g6/home.nix
+            nix-flatpak.homeManagerModules.nix-flatpak
+            ./hosts/x1g6/home.nix
            ];
         }
       ];
