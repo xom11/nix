@@ -9,9 +9,8 @@
     ../../modules/desktop
     ../../modules/gnome
     ../../modules/bin
-    ../../modules/sway
     ../../modules/tools
-    ../../modules/apps
+    # ../../modules/apps
   ];
 
   programs.home-manager.enable = true;
