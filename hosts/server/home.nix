@@ -11,8 +11,8 @@ in
 
   imports = [
     ../../modules/tools
-    ../../modules/bin
-    ../../modules/systemd
+    # ../../modules/bin
+    # ../../modules/systemd
   ];
 
   programs.home-manager.enable = true;
