@@ -6,6 +6,6 @@
 
   services.tailscale.enable = true;
   services.openssh.enable = true;
-  virtualisation.vmware.host.enable = true;
-  virtualisation.vmware.host.package = pkgs.vmware-workstation;
+   virtualisation.virtualbox.host.enable = true;
+   users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 }
