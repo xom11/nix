@@ -4,6 +4,15 @@
     HIBERNATE_LOCK = "/var/run/autohibernate.lock";
   };
 in {
+  # boot.kernelParams = ["resume_offset=<offset>"];
+  # boot.resumeDevice = "/dev/disk/by-uuid/<uuid-of-root-partition>";
+  # powerManagement.enable = true;
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 16 * 1024;
+    }
+  ];
   systemd.services."awake-after-suspend-for-a-time" = {
     description = "Sets up the suspend so that it'll wake for hibernation";
     wantedBy = [ "suspend.target" ];
