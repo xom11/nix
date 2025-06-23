@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     preload
     bitwarden-desktop
-    discord
+    # discord
     vscode
     telegram-desktop
     localsend
