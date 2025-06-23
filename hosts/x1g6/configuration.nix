@@ -48,9 +48,9 @@
   services.printing.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.kln = {
+  users.users.${username} = {
     isNormalUser = true;
-    description = "kln";
+    # description = "kln";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
     #  thunderbird
