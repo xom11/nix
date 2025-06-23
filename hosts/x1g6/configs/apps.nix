@@ -6,5 +6,5 @@
 
   services.tailscale.enable = true;
   services.openssh.enable = true;
-  virtualisation.vmware.guest.enable = true;
+  virtualisation.vmware.host.enable = true;
 }
