@@ -6,11 +6,8 @@
 
   services.tailscale.enable = true;
   services.openssh.enable = true;
-programs.virt-manager.enable = true;
-
-users.groups.libvirtd.members = ["kln"];
-
-virtualisation.libvirtd.enable = true;
-
-virtualisation.spiceUSBRedirection.enable = true;
+  programs.virt-manager.enable = true;
+  users.groups.libvirtd.members = ["kln"];
+  virtualisation.libvirtd.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true;
 }

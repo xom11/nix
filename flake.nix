@@ -58,22 +58,40 @@
         }
       ];
     };
-    nixosConfigurations."x1g6" = nixpkgs.lib.nixosSystem {
-      inherit specialArgs;
-      system = system;
-      modules = [ 
-        ./hosts/x1g6/configuration.nix
-        nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = specialArgs;
-          home-manager.users.${username}.imports = [ 
-            nix-flatpak.homeManagerModules.nix-flatpak
-            ./hosts/x1g6/home.nix
-           ];
-        }
-      ];
+    nixosConfigurations = {
+      "x1g6" = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+        system = system;
+        modules = [ 
+          ./hosts/x1g6/configuration.nix
+          nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.users.${username}.imports = [ 
+              nix-flatpak.homeManagerModules.nix-flatpak
+              ./hosts/x1g6/home.nix
+            ];
+          }
+        ];
+      };
+      "vm-nixos" = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+        system = system;
+        modules = [
+          ./hosts/vm-nixos/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.users.${username}.imports = [ 
+              nix-flatpak.homeManagerModules.nix-flatpak
+              ./hosts/vm-nixos/home.nix
+            ];
+          }
+        ];
+      };
     };
     homeConfigurations = {
       "server" = home-manager.lib.homeManagerConfiguration {
