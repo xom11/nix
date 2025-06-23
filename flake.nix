@@ -18,7 +18,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = {... }@inputs:
+  outputs = {system, ... }@inputs:
     with inputs;
     let
       username = builtins.getEnv "SUDO_USER"; 
