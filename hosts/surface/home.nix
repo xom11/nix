@@ -8,9 +8,8 @@
 
   imports = [
     ../../modules/desktop
-    # ../../modules/gnome
     ../../modules/tools
-    # ../../modules/apps
+    ../../modules/apps
   ];
 
   programs.home-manager.enable = true;
