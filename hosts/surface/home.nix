@@ -11,6 +11,7 @@
     ../../modules/dotfiles
     ../../modules/flatpak
     ../../modules/gnome
+    ../../modules/desktop
     ../../modules/tools
   ];
 
