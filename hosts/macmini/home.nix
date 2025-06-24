@@ -7,7 +7,7 @@
 
   imports = [
     ../../modules/tools
-    ../../modules/dotifiles
+    ../../modules/dotfiles
   ];
 
   nixpkgs.config.allowUnfree = true;
