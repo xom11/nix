@@ -81,7 +81,7 @@
         system = system;
         modules = [
           ./hosts/surface/configuration.nix
-          # nixos-hardware.nixosModules.microsoft-surface-common
+          nixos-hardware.nixosModules.microsoft-surface-common
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;
