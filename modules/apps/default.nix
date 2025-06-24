@@ -13,6 +13,7 @@
     thunderbird
     brave
     google-chrome
+    kitty
     # chromedriver
     caprine
     # teamviewer
