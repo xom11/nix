@@ -82,10 +82,10 @@
         modules = [
           ./hosts/surface/configuration.nix
           nixos-hardware.nixosModules.microsoft-surface-pro-intel
-          # {
-          #   microsoft-surface.ipts.enable = true;
-          #   microsoft-surface.surface-control.enable = false;
-          # }
+          {
+            microsoft-surface.ipts.enable = true;
+            microsoft-surface.surface-control.enable = false;
+          }
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;
