@@ -31,12 +31,12 @@ in
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#surface";
   }; 
 
-  # show ui app
-  # programs.zsh.profileExtra = lib.mkAfter ''
-  #   rm -rf ${config.home.homeDirectory}/.local/share/applications/home-manager
-  #   rm -rf ${config.home.homeDirectory}/.icons/nix-icons
-  #   ls ${config.home.homeDirectory}/.nix-profile/share/applications/*.desktop > ${config.home.homeDirectory}/.cache/current_desktop_files.txt
-  # '';
+  show ui app
+  programs.zsh.profileExtra = lib.mkAfter ''
+    rm -rf ${config.home.homeDirectory}/.local/share/applications/home-manager
+    rm -rf ${config.home.homeDirectory}/.icons/nix-icons
+    ls ${config.home.homeDirectory}/.nix-profile/share/applications/*.desktop > ${config.home.homeDirectory}/.cache/current_desktop_files.txt
+  '';
 
   # home.activation = {
   #   linkDesktopApplications = {
