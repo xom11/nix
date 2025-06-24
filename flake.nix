@@ -81,7 +81,7 @@
         system = system;
         modules = [
           ./hosts/surface/configuration.nix
-          # nixos-hardware.nixosModules.microsoft-surface-pro-intel
+          nixos-hardware.nixosModules.microsoft-surface-pro-intel
           # {
           #   microsoft-surface.ipts.enable = true;
           #   microsoft-surface.surface-control.enable = false;
