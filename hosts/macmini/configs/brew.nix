@@ -61,6 +61,7 @@
       "google-chrome"
       "microsoft-edge"
       "docker"
+      "kitty"
       "vmware-fusion"
       # "chromedriver"
     ];
