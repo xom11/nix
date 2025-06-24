@@ -30,6 +30,6 @@
     QT_IM_MODULE = "ibus";
   };
   home.shellAliases = {
-    update = "sudo nixos-rebuild switch --impure --refresh --flake github:kln-os/nix/main#vm-nixos";
+    update = "sudo nixos-rebuild switch --impure --refresh --flake github:kln-os/nix/main#surface";
   };
 }
