@@ -99,11 +99,11 @@
           ./hosts/server/home.nix
         ];
       };
-      "local" = home-manager.lib.homeManagerConfiguration {
+      "surface" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
-          ./hosts/local/home.nix
+          ./hosts/surface/home.nix
         ];
       };
     };

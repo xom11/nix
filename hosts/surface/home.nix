@@ -27,6 +27,9 @@ in
   xsession.windowManager.bspwm.startupPrograms = [
     "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
   ];
+  home.shellAliases = {
+    update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#surface";
+  }; 
 
   # show ui app
   # programs.zsh.profileExtra = lib.mkAfter ''
