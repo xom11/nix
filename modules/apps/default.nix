@@ -1,27 +1,12 @@
-{ pkgs, ... }:
-
+{ config, pkgs, lib, ... }:
+let
+  isNixOS = pkgs.stdenv.system == "x86_64-linux" || pkgs.stdenv.system == "aarch64-linux";
+  isUbuntu = !isNixOS;
+in
 {
-  home.packages = with pkgs; [
-    preload
-    bitwarden-desktop
-    discord
-    vscode
-    telegram-desktop
-    localsend
-    joplin-desktop
-    slack
-    thunderbird
-    brave
-    google-chrome
-    # chromedriver
-    caprine
-    # teamviewer
-    # anydesk
-
-    # xdg-desktop-portal 
-    # xdg-desktop-portal-gtk
-    # xdg-desktop-portal-wlr
-
+  imports = lib.optionals isNixOS [
+    ./nixos
+  ] ++ lib.optionals isUbuntu [
+    ./ubuntu
   ];
-
 }
