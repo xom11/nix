@@ -11,6 +11,7 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
+    ../../modules/apps/ubuntu
     ../../modules/tools
     ../../modules/gnome
     ../../modules/bin
