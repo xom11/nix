@@ -8,6 +8,7 @@
   imports = [
     ../../modules/apps
     ../../modules/dotfiles
+    ../../modules/desktop
     ../../modules/flatpak
     ../../modules/gnome
     ../../modules/tools
