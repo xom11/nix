@@ -1,39 +1,34 @@
 
-{ config, pkgs, lib, ... }:
-let 
-  username = builtins.getEnv "USER"; 
-in
+{ config, pkgs, username, ... }:
+
 {
   home.username = username;
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
-
   imports = [
-    ../../modules/apps/ubuntu
-    ../../modules/tools
-    ../../modules/gnome
-    ../../modules/bin
     ../../modules/desktop
+    # ../../modules/gnome
+    ../../modules/tools
+    # ../../modules/apps
   ];
 
+  programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
 
-  home.pointerCursor.gtk.enable = true;
-  home.pointerCursor.package = pkgs.vanilla-dmz;
-  home.pointerCursor.name = "Vanilla-DMZ";
+  home.packages = with pkgs; [
+  ]; 
 
-  # ibus
-  xsession.windowManager.bspwm.startupPrograms = [
-    "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
-  ];
-  programs.home-manager.enable = true;
+  # Environment
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    BROWSER = "brave";
+    TERMINAL = "kitty";
+    GTK_IM_MODULE = "ibus";
+    XMODIFIERS = "@im=ibus";
+    QT_IM_MODULE = "ibus";
+  };
   home.shellAliases = {
-    update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#surface";
-  }; 
-
-
-
+    update = "sudo nixos-rebuild switch --impure --refresh --flake github:kln-os/nix/main#vm-nixos";
+  };
 }
-

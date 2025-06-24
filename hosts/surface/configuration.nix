@@ -81,6 +81,8 @@
   };
 
   security.sudo.wheelNeedsPassword = false;
+  services.tailscale.enable = true;
+  services.openssh.enable = true;
 
   system.stateVersion = "24.11";
 }

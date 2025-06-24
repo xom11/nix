@@ -76,17 +76,19 @@
           }
         ];
       };
-      "vm-nixos" = nixpkgs.lib.nixosSystem {
+      "surface" = nixpkgs.lib.nixosSystem {
         inherit specialArgs;
         system = system;
         modules = [
-          ./hosts/vm-nixos/configuration.nix
+          ./hosts/surface/configuration.nix
+          nixos-hardware.nixosModules.microsoft-surface-pro-intel
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = specialArgs;
             home-manager.users.${username}.imports = [ 
-              ./hosts/vm-nixos/home.nix
+              nix-flatpak.homeManagerModules.nix-flatpak
+              ./hosts/surface/home.nix
             ];
           }
         ];
@@ -99,11 +101,10 @@
           ./hosts/server/home.nix
         ];
       };
-      "surface" = home-manager.lib.homeManagerConfiguration {
+      "desktop" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         modules = [
-          nix-flatpak.homeManagerModules.nix-flatpak
-          ./hosts/surface/home.nix
+          ./hosts/desktop/home.nix
         ];
       };
     };
