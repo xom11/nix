@@ -6,7 +6,9 @@
   home.stateVersion = "25.11"; 
 
   imports = [
-    ../../modules/desktop
+    ../../modules/app
+    ../../modules/dotfiles
+    ../../modules/flatpak
     ../../modules/gnome
     ../../modules/tools
     ../../modules/apps
