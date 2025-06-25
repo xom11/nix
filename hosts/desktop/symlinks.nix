@@ -1,4 +1,4 @@
-{pkgs, lib, ... }:
+{ config, lib, pkgs, ... }: # Đảm bảo các tham số đầu vào cần thiết
 
 let
   # Hàm này sẽ tạo symlinks cho tất cả các file trong sourceDir và các thư mục con của nó.
@@ -7,6 +7,8 @@ let
     let
       # Sử dụng lib.filesystem.listFilesRecursive để lấy tất cả các file (đường dẫn tuyệt đối)
       # trong sourceDir và các thư mục con của nó.
+      # Đảm bảo sourceDir là một đường dẫn tuyệt đối hoặc được định nghĩa tốt để lib.filesystem.listFilesRecursive hoạt động.
+      # Nếu sourceDir là một đường dẫn tương đối như ./local/share, Nix sẽ tự động biến nó thành đường dẫn tuyệt đối trong sandbox build.
       allFiles = lib.filesystem.listFilesRecursive sourceDir;
 
       # Ánh xạ từng đường dẫn file để tạo cấu trúc symlink.
@@ -34,32 +36,16 @@ let
 
 in
 {
-    home.file = lib.mkMerge [
+  # home.file mong đợi một attribute set, nơi các khóa là đường dẫn đích và giá trị là các tùy chọn file.
+  # createSymlinksForDirectory trả về một attribute set như vậy,
+  # nên bạn có thể sử dụng nó trực tiếp hoặc hợp nhất nhiều tập hợp nếu cần.
+  home.file = lib.mkMerge [
+    # Ví dụ sử dụng:
+    # tạo symlink cho các file từ ./local/share vào ~/.nix-profile/share
     (createSymlinksForDirectory ".nix-profile/share" ./local/share)
+
+    # Nếu bạn có thêm các thư mục khác để tạo symlink, bạn có thể thêm chúng vào đây:
+    (createSymlinksForDirectory ".local/share/applications" ./applications)
+    (createSymlinksForDirectory ".local/share/icons" ./icons)
   ];
 }
-
-# Ví dụ về cách sử dụng hàm:
-# Giả sử bạn có một thư mục dotfiles với cấu trúc như sau:
-# /home/user/dotfiles/
-# ├── .bashrc
-# ├── .config/
-# │   └── nvim/
-# │       └── init.vim
-# └── .zshrc
-#
-# Để tạo symlink cho tất cả các file này vào thư mục home của bạn (~), bạn có thể gọi:
-#
-# let
-#   myDotfiles = createSymlinksForDirectory
-#     "/home/user" # targetBase: thư mục đích cho các symlink
-#     "/home/user/dotfiles"; # sourceDir: thư mục chứa các file nguồn
-# in
-# myDotfiles
-#
-# Kết quả sẽ là một tập hợp các symlink có cấu trúc tương tự:
-# {
-#   "/home/user/.bashrc" = { source = "/home/user/dotfiles/.bashrc"; enable = true; };
-#   "/home/user/.config/nvim/init.vim" = { source = "/home/user/dotfiles/.config/nvim/init.vim"; enable = true; };
-#   "/home/user/.zshrc" = { source = "/home/user/dotfiles/.zshrc"; enable = true; };
-# }
