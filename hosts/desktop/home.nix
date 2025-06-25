@@ -16,7 +16,7 @@ in
     ../../modules/gnome
     ../../modules/dotfiles
     ../../modules/bin
-    # ../../modules/desktop
+    ../../modules/desktop
     ../../modules/apps/linux
     ../../modules/fonts
   ];
