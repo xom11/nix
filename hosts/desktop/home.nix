@@ -1,5 +1,5 @@
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixgl, ... }:
 let 
   username = builtins.getEnv "USER"; 
 in
@@ -16,8 +16,16 @@ in
     ../../modules/gnome
     ../../modules/bin
     ../../modules/desktop
-    ../../modules/apps
+    # ../../modules/apps
     ../../modules/fonts
+  ];
+  nixGL.packages = import nixgl { inherit pkgs; };
+  nixGL.defaultWrapper = "mesa"; # or the driver you need
+  nixGL.installScripts = [ "mesa" ];
+
+  home.packages = with pkgs; [
+    (config.lib.nixGL.wrap alacritty)
+
   ];
 
   nixpkgs.config.allowUnfree = true;
