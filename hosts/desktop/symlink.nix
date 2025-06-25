@@ -1,4 +1,4 @@
-{ lib, ... }:
+{pkgs, lib, ... }:
 
 let
   # Hàm này sẽ tạo symlinks cho tất cả các file trong sourceDir và các thư mục con của nó.
