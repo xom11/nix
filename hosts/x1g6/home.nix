@@ -6,12 +6,13 @@
   home.stateVersion = "25.11"; 
 
   imports = [
-    ../../modules/apps
+    ../../modules/apps/nixos
     ../../modules/dotfiles
     ../../modules/desktop
     ../../modules/flatpak
     ../../modules/gnome
     ../../modules/tools
+    ../../modules/fonts
   ];
 
   programs.home-manager.enable = true;

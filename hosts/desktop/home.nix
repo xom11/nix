@@ -17,21 +17,9 @@ in
     ../../modules/dotfiles
     ../../modules/bin
     ../../modules/desktop
-    # ../../modules/apps
+    ../../modules/apps/linux
     ../../modules/fonts
   ];
-  nixGL.packages = import nixgl { inherit pkgs; };
-  nixGL.defaultWrapper = "mesa"; # or the driver you need
-  nixGL.installScripts = [ "mesa" ];
-
-  home.packages = with pkgs; [
-    (config.lib.nixGL.wrap alacritty)
-    (config.lib.nixGL.wrap vscode)
-    (config.lib.nixGL.wrap brave)
-    (config.lib.nixGL.wrap kitty)
-
-  ];
-
   nixpkgs.config.allowUnfree = true;
 
   home.pointerCursor.gtk.enable = true;

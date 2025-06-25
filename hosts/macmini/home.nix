@@ -7,6 +7,7 @@
 
   imports = [
     ../../modules/tools
+    ../../modules/fonts
     ../../modules/dotfiles
   ];
 
