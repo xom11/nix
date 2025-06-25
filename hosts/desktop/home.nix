@@ -25,6 +25,9 @@ in
 
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap alacritty)
+    (config.lib.nixGL.wrap vscode)
+    (config.lib.nixGL.wrap brave)
+    (config.lib.nixGL.wrap kitty)
 
   ];
 
