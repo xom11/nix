@@ -40,3 +40,4 @@ nix run github:nix-community/home-manager -- switch --impure --flake ~/nix#serve
 nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#server" --refresh
 nix run github:nix-community/home-manager -- switch --impure --flake "github:kln-os/nix/main#local" --refresh
 ```
+
