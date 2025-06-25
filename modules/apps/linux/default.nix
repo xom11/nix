@@ -2,8 +2,8 @@
 
 {
   nixGL.packages = import nixgl { inherit pkgs; };
-  nixGL.defaultWrapper = "mesa"; # or the driver you need
-  nixGL.installScripts = [ "mesa" ];
+  # nixGL.defaultWrapper = "mesa"; # or the driver you need
+  # nixGL.installScripts = [ "mesa" ];
 
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap kitty)
