@@ -7,6 +7,7 @@
       data = ''
 
 
+        mkdir -p ${config.home.homeDirectory}/.local/share/gnome-shell
         ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
         ln -sf ${config.home.homeDirectory}/.nix-profile/bin ${config.home.homeDirectory}/.local
         ln -sf ${config.home.homeDirectory}/.nix-profile/share/applications ${config.home.homeDirectory}/.local/share
