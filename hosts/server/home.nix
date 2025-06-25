@@ -14,6 +14,7 @@ in
     ../../modules/desktop
     ../../modules/bin
     ../../modules/gnome
+    ../../modules/systemd
   ];
 
   programs.home-manager.enable = true;
