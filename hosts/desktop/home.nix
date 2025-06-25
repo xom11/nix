@@ -17,6 +17,7 @@ in
     ../../modules/bin
     ../../modules/desktop
     ../../modules/apps
+    ../../modules/fonts
   ];
 
   nixpkgs.config.allowUnfree = true;
