@@ -14,6 +14,7 @@ in
     # ./symlinks.nix
     ../../modules/tools
     ../../modules/gnome
+    ../../modules/dotfiles
     ../../modules/bin
     ../../modules/desktop
     # ../../modules/apps
