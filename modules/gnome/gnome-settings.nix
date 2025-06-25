@@ -83,7 +83,7 @@ with lib.hm.gvariant;
     };
     "org/gnome/mutter"={
       experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
-      overlay-key="Control_R";
+      overlay-key="Super_L";
 
     };
     # Turn off sharing
