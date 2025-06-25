@@ -5,21 +5,27 @@
       after = [ "writeBoundary" "createXdgUserDirectories" ];
       before = [ ];
       data = ''
-        # mkdir -p ${config.home.homeDirectory}/.local/share/applications/nix-applications
-        # mkdir -p ${config.home.homeDirectory}/.local/share/icons/nix-icons
-        # mkdir -p ${config.home.homeDirectory}/.local/share/gnome-shell/extensions
-        ln -sf ${config.home.homeDirectory}/.nix-profile/share/icons ${config.home.homeDirectory}/.local/share/icons/
-        ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
-        for file in ${config.home.homeDirectory}/.nix-profile/share/applications/*; do
-            if [ -f "$file" ]; then
-                ln -sf "$file" ${config.home.homeDirectory}/.local/share/applications/
-            fi
+        rm -rf ${config.home.homeDirectory}/.local/share/applications/home-manager
+        rm -rf ${config.home.homeDirectory}/.icons/nix-icons
+        mkdir -p ${config.home.homeDirectory}/.local/share/applications/home-manager
+        mkdir -p ${config.home.homeDirectory}/.icons
+        ln -sf ${config.home.homeDirectory}/.nix-profile/share/icons ${config.home.homeDirectory}/.icons/nix-icons
+
+        # Check if the cached desktop files list exists
+        if [ -f ${config.home.homeDirectory}/.cache/current_desktop_files.txt ]; then
+          current_files=$(cat ${config.home.homeDirectory}/.cache/current_desktop_files.txt)
+        else
+          current_files=""
+        fi
+
+        # Symlink new desktop entries
+        for desktop_file in ${config.home.homeDirectory}/.nix-profile/share/applications/*.desktop; do
+          if ! echo "$current_files" | grep -q "$(basename $desktop_file)"; then
+            ln -sf "$desktop_file" ${config.home.homeDirectory}/.local/share/applications/home-manager/$(basename $desktop_file)
+          fi
         done
-        # for file in ${config.home.homeDirectory}/.nix-profile/share/applications/*; do
-        #     if [ -f "$file" ]; then
-        #         ln -sf "$file" ${config.home.homeDirectory}/.local/share/applications/
-        #     fi
-        # done
+
+        ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
 
         ${pkgs.desktop-file-utils}/bin/update-desktop-database ${config.home.homeDirectory}/.local/share/applications
       '';
