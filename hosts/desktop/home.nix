@@ -16,6 +16,7 @@ in
     ../../modules/gnome
     ../../modules/bin
     ../../modules/desktop
+    ../../modules/apps
   ];
 
   nixpkgs.config.allowUnfree = true;
