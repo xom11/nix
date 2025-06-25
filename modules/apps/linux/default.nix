@@ -6,12 +6,9 @@
   nixGL.installScripts = [ "mesa" ];
 
   home.packages = with pkgs; [
-    # Example alacritty
     (config.lib.nixGL.wrap kitty)
+    (config.lib.nixGL.wrap brave)
+    (config.lib.nixGL.wrap vscode)
 
-    # Other packages that do not require nixGL:
-    bat
-    neovim
-    # ...
   ];
 }
