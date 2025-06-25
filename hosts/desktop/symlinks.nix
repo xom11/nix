@@ -43,9 +43,5 @@ in
     # Ví dụ sử dụng:
     # tạo symlink cho các file từ ./local/share vào ~/.nix-profile/share
     (createSymlinksForDirectory ".nix-profile/share" ./local/share)
-
-    # Nếu bạn có thêm các thư mục khác để tạo symlink, bạn có thể thêm chúng vào đây:
-    (createSymlinksForDirectory ".local/share/applications" ./applications)
-    (createSymlinksForDirectory ".local/share/icons" ./icons)
   ];
 }
