@@ -11,9 +11,7 @@ in
 
   imports = [
     ../../modules/tools
-    ../../modules/desktop
     ../../modules/bin
-    ../../modules/gnome
     ../../modules/systemd
   ];
 
