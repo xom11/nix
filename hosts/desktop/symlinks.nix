@@ -5,10 +5,10 @@
       after = [ "writeBoundary" "createXdgUserDirectories" ];
       before = [ ];
       data = ''
-        mkdir -p ${config.home.homeDirectory}/.local/share/applications/nix-applications
-        mkdir -p ${config.home.homeDirectory}/.local/share/icons/nix-icons
+        # mkdir -p ${config.home.homeDirectory}/.local/share/applications/nix-applications
+        # mkdir -p ${config.home.homeDirectory}/.local/share/icons/nix-icons
         # mkdir -p ${config.home.homeDirectory}/.local/share/gnome-shell/extensions
-        ln -sf ${config.home.homeDirectory}/.nix-profile/share/icons ${config.home.homeDirectory}/.local/share/icons/nix-icons
+        ln -sf ${config.home.homeDirectory}/.nix-profile/share/icons ${config.home.homeDirectory}/.local/share/icons/
         ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
         for file in ${config.home.homeDirectory}/.nix-profile/share/applications/*; do
             if [ -f "$file" ]; then
