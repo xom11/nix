@@ -31,6 +31,7 @@ in
     "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
   ];
   programs.home-manager.enable = true;
+  programs.ssh.enable = true;
   home.shellAliases = {
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
   }; 
