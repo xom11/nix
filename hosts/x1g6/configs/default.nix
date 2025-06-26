@@ -1,7 +1,7 @@
 {...}:
 {
   imports = [
-    ./apps.nix
+    ./services.nix
     ./hibernate.nix
   ];
 }

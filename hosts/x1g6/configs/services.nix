@@ -6,10 +6,4 @@
   services.tailscale.enable = true;
   services.openssh.enable = true;
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.dejavu-sans-mono
-    fira-code
-    fira-code-symbols
-    meslo-lgs-nf
-  ];
 }

@@ -11,5 +11,4 @@
     (config.lib.nixGL.wrap vscode)
 
   ];
-  programs.alacritty.enable = true;
 }

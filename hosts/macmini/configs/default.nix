@@ -1,7 +1,7 @@
 {...}:
 {
   imports = [
-    ./apps.nix
+    ./services.nix
     ./brew.nix
     ./system.nix
   ];
