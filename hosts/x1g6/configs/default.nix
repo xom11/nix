@@ -2,6 +2,6 @@
 {
   imports = [
     ./services.nix
-    ./hibernate.nix
+    # ./hibernate.nix
   ];
 }
