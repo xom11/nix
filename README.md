@@ -18,7 +18,7 @@ sudo darwin-rebuild switch --impure --flake ~/nix#macos
 ```
 # Nixos Setup
 ```bash
-sudo nixos-rebuild switch --impure --flake github:kln-os/nix/main#x1g6
+sudo nixos-rebuild switch --impure --refesh --flake github:kln-os/nix/main#x1g6
 ```
 
 
