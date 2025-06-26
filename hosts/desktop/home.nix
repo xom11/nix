@@ -16,7 +16,7 @@ in
     ../../modules/dotfiles
     ../../modules/bin
     ../../modules/desktop
-    # ../../modules/apps/linux
+    ../../modules/apps/linux
     ../../modules/fonts
     ../../modules/services
   ];
