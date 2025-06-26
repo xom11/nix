@@ -16,7 +16,7 @@ in
     ../../modules/dotfiles
     ../../modules/bin
     ../../modules/desktop
-    ../../modules/apps/linux
+    # ../../modules/apps/linux
     ../../modules/fonts
     ../../modules/services
   ];
@@ -34,8 +34,14 @@ in
   home.shellAliases = {
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
   }; 
-
-
-
+  home.activation = {
+    linkGnomeExtensions = {
+      after = [ "writeBoundary" "createXdgUserDirectories" ];
+      before = [ ];
+      data = ''
+        ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
+      '';
+    };
+  };
 }
 
