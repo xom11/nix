@@ -103,7 +103,11 @@
         ];
       };
       "desktop" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
+        # pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          overlays = [ nixgl.overlay ];
+        };
         extraSpecialArgs = {
           nixgl = nixgl;
         };
