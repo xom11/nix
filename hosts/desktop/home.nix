@@ -11,7 +11,6 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
-    # ./symlinks.nix
     ../../modules/tools
     ../../modules/gnome
     ../../modules/dotfiles
