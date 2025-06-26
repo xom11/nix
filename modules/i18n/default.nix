@@ -4,8 +4,9 @@
     type = "fcitx5";
     fcitx5 = {
       addons = with pkgs; [
-        # fcitx5-bamboo
+        fcitx5-bamboo
         kdePackages.fcitx5-unikey
+        libsForQt5.fcitx5-unikey
         fcitx5-gtk
         fcitx5-mozc
       ];
