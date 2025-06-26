@@ -1,6 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, config,... }:
 
 {
+  xdg.mime.enable = true;
+  xdg.systemDirs.data = [ "${config.home.homeDirectory}/.nix-profile/share/applications" ];
   home.packages = with pkgs; [
     preload
     bitwarden-desktop
