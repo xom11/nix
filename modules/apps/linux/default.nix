@@ -5,6 +5,10 @@
   nixGL.defaultWrapper = "mesa";
   nixGL.installScripts = [ "mesa" ];
 
+  targets.genericLinux.enable = true;
+  xdg.mime.enable = true;
+  xdg.systemDirs.data = [ "${config.home.homeDirectory}/.nix-profile/share/applications" ];
+
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap kitty)
     # (config.lib.nixGL.wrap brave)
