@@ -5,12 +5,13 @@
     fcitx5 = {
       addons = with pkgs; [
         fcitx5-bamboo
+        fcitx5-gtk
       ];
       waylandFrontend = true; 
     };
   };
-  services.kdeconnect = {
-    enable = true;
-    indicator = true;
-  };
+  # services.kdeconnect = {
+  #   enable = true;
+  #   indicator = true;
+  # };
 }
