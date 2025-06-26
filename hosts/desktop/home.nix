@@ -18,7 +18,6 @@ in
     ../../modules/desktop
     ../../modules/apps/linux
     ../../modules/fonts
-    ../../modules/i18n
     ../../modules/services
   ];
   nixpkgs.config.allowUnfree = true;
