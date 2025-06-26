@@ -8,10 +8,10 @@
   home.packages = with pkgs; [
     (writeShellScriptBin "update-nix-app" (builtins.readFile ./update-nix-app.sh))
     (config.lib.nixGL.wrap kitty)
+    (config.lib.nixGL.wrap brave)
     (config.lib.nixGL.wrap discord)
     (config.lib.nixGL.wrap vscode)
     (config.lib.nixGL.wrap google-chrome)
-    brave
     preload
     bitwarden-desktop
     telegram-desktop
