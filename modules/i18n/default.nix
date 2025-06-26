@@ -8,6 +8,9 @@
       ];
       waylandFrontend = true; 
     };
-
+  };
+  services.kdeconnect = {
+    enable = true;
+    indicator = true;
   };
 }
