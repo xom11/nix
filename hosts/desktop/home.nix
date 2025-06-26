@@ -28,9 +28,9 @@ in
   home.pointerCursor.name = "Vanilla-DMZ";
 
   # ibus
-  # xsession.windowManager.bspwm.startupPrograms = [
-  #   "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
-  # ];
+  xsession.windowManager.bspwm.startupPrograms = [
+    "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
+  ];
   programs.home-manager.enable = true;
   home.shellAliases = {
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
