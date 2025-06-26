@@ -1,0 +1,9 @@
+sudo dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/home:lamlng/Fedora_42/home:lamlng.repo
+sudo dnf install -y -q ibus-bamboo
+sudo dnf install -y -q kitty 
+sudo dnf install -y -q dnf-plugins-core
+
+sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+
+sudo dnf install -y -q brave-browser
+sudo ln /usr/bin/brave-browser-stable /usr/bin/brave
