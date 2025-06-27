@@ -43,6 +43,7 @@
       "docker"
       "kitty"
       "vmware-fusion"
+      "Tunnelblick"
       # "chromedriver"
     ];
   };
