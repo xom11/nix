@@ -20,6 +20,7 @@
     ];
 
     brews = [
+      "tailscale"
     ];
 
     casks = [
