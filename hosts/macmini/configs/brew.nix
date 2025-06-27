@@ -37,7 +37,6 @@
       "localsend"
       "joplin"
       "slack"
-      "thunderbird"
       "brave-browser"
       "google-chrome"
       "microsoft-edge"

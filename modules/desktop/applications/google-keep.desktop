@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=google-keep
+StartupWMClass=brave-google-keep.google.com__app-Default
+Comment=Launch google-keep
+Icon=google-keep
+Exec=brave --ozone-platform-hint=auto --force-dark-mode --enable-features=WebUIDarkMode --profile-directory=Default --app="https://keep.google.com/u/0/" %U 
+Terminal=false
+
+
+
+
+
