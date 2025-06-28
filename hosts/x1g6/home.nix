@@ -10,6 +10,7 @@
     ../../modules/dotfiles
     ../../modules/desktop
     ../../modules/flatpak
+    ../../modules/services
     ../../modules/gnome
     ../../modules/tools
     ../../modules/fonts
