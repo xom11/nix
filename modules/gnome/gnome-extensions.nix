@@ -67,7 +67,7 @@ with lib.hm.gvariant;
       blur-background-windows = true;
     };
     "org/gnome/shell/extensions/clipboard-history" = {
-      toggle-menu=["<Super>v"];
+      toggle-menu=["<Alt>v"];
     };
     "org/gnome/shell/extensions/run-or-raise" = {
       center-mouse-to-focused-window=true;

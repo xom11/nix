@@ -23,15 +23,12 @@
   home.packages = with pkgs; [
   ]; 
 
-  # Environment
   home.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";
-    # GTK_IM_MODULE = "ibus";
-    # XMODIFIERS = "@im=ibus";
-    # QT_IM_MODULE = "ibus";
   };
+
   home.shellAliases = {
     update = "sudo nixos-rebuild switch --impure --refresh --flake github:kln-os/nix/main#x1g6";
   };
