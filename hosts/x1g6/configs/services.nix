@@ -21,11 +21,11 @@ services.keyd = {
       settings = {
         main = {
           capslock = "overload(hyper, esc)";
-          hyper = "C-M-A";
         };
         otherlayer = {};
       };
       extraConfig = ''
+        [hyper:C-M-A]
       '';
     };
   };
