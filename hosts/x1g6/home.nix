@@ -21,7 +21,6 @@
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [
-    discordchatexporter-cli
   ]; 
 
   # Environment

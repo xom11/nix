@@ -13,6 +13,9 @@
       waylandFrontend = true; 
     };
   };
+  home.packages = with pkgs; [
+    gnomeExtensions.kimpanel
+  ];
   services.kdeconnect = {
     enable = true;
     indicator = true;
