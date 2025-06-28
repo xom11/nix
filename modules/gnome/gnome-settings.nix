@@ -19,8 +19,8 @@ with lib.hm.gvariant;
       switch-to-workspace-2=["<Super>2"];
       switch-to-workspace-3=["<Super>3"];
       switch-to-workspace-4=["<Super>4"];
-      toggle-maximized=["<Super>Up"];
-      unmaximize=["<Super>Down"];
+      toggle-maximized=["<Super>Up" "<Super><Alt><Ctrl>Up"];
+      unmaximize=["<Super>Down" "<Super><Alt><Ctrl>Down"];
       show-desktop=["<Super>d"];
       minimize=["<Super>h"];
       always-on-top=["<Super>p"];
@@ -96,7 +96,7 @@ with lib.hm.gvariant;
     "org/gnome/settings-daemon/plugins/media-keys"={
       screensaver = ["<Super>l"];
       logout = ["<Super><Shift>l"];
-      suspend = ["<Super><Shift>"];
+      # suspend = ["<Super><Shift>"];
     };
   };
 }
