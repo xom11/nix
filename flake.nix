@@ -17,7 +17,7 @@
     homebrew-cask = { url = "github:homebrew/homebrew-cask"; flake = false; };
     homebrew-bundle = { url = "github:homebrew/homebrew-bundle"; flake = false; };
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";;
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
   };
 
   outputs = {... }@inputs:
