@@ -16,8 +16,7 @@ services.keyd = {
   enable = true;
   keyboards = {
     default = {
-      ids = [ "*" ]; # what goes into the [id] section, here we select all keyboards
-      # Everything but the ID section:
+      ids = [ "*" ];
       settings = {
         main = {
           capslock = "overload(hyper, esc)";
@@ -31,12 +30,12 @@ services.keyd = {
   };
 };
 
-  # Optional, but makes sure that when you type the make palm rejection work with keyd
-  # https://github.com/rvaiya/keyd/issues/723
-  environment.etc."libinput/local-overrides.quirks".text = ''
-    [Serial Keyboards]
-    MatchUdevType=keyboard
-    MatchName=keyd virtual keyboard
-    AttrKeyboardIntegration=internal
-  '';
+# Optional, but makes sure that when you type the make palm rejection work with keyd
+# https://github.com/rvaiya/keyd/issues/723
+environment.etc."libinput/local-overrides.quirks".text = ''
+  [Serial Keyboards]
+  MatchUdevType=keyboard
+  MatchName=keyd virtual keyboard
+  AttrKeyboardIntegration=internal
+'';
 }
