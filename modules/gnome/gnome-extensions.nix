@@ -14,6 +14,7 @@ with lib.hm.gvariant;
     gnomeExtensions.just-perfection
     gnomeExtensions.undecorate
     gnomeExtensions.switcher
+    gnomeExtensions.kimpanel
     ];
   dconf.settings = {
     "org/gnome/shell" = {
@@ -21,6 +22,7 @@ with lib.hm.gvariant;
         "run-or-raise@edvard.cz"
         "clipboard-history@alexsaveau.dev"
         "blur-my-shell@aunetx"
+        "kimpanel@kde.org"
         # "dash-to-dock@micxgx.gmail.com"
         "just-perfection-desktop@just-perfection"
         "undecorate@sun.wxg@gmail.com"
