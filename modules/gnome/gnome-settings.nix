@@ -6,10 +6,6 @@ with lib.hm.gvariant;
 
   ];
   dconf.settings = {
-    "org/gnome/mutter"={
-      dynamic-workspaces=false;
-      workspaces-only-on-primary=false;
-    };
     "org/gnome/desktop/wm/preferences"={
       num-workspaces=4;
     };
@@ -85,8 +81,14 @@ with lib.hm.gvariant;
     "org/gnome/mutter"={
       experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
       overlay-key="Super_L";
-
+      dynamic-workspaces=false;
+      workspaces-only-on-primary=false;
     };
+    "org/gnome/mutter/keybindings"={
+      "toggle-tiled-left"=["<Super>Left", "<Super><Alt><Ctrl>Left"];
+      "toggle-tiled-right"=["<Super>Right", "<Super><Alt><Ctrl>Right"];
+    };
+
     # Turn off sharing
     "org/gnome/mutter/wayland"={
       xwayland-disable-extensions=["Xtest"];
