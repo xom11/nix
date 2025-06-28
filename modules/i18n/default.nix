@@ -5,10 +5,8 @@
     fcitx5 = {
       addons = with pkgs; [
         fcitx5-bamboo
-        kdePackages.fcitx5-unikey
-        libsForQt5.fcitx5-unikey
-        fcitx5-gtk
-        fcitx5-mozc
+        # kdePackages.fcitx5-unikey
+        # libsForQt5.fcitx5-unikey
       ];
       waylandFrontend = true; 
     };
@@ -16,8 +14,4 @@
   home.packages = with pkgs; [
     gnomeExtensions.kimpanel
   ];
-  services.kdeconnect = {
-    enable = true;
-    indicator = true;
-  };
 }
