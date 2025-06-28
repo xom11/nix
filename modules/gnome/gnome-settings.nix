@@ -32,7 +32,8 @@ with lib.hm.gvariant;
       cycle-windows-backward=["<Hyper>bracketright"];
       begin-resize=["<Super>r"];
       begin-move=["<Super>m"];
-      switch-input-source=["<Ctrl>space" "XF86Keyboard"];
+      # switch-input-source=["<Ctrl>space" "XF86Keyboard"];
+      switch-input-source=[""];
       switch-input-source-backward=[];
     };
     "org/gnome/shell/keybindings"={
