@@ -21,7 +21,7 @@ with lib.hm.gvariant;
         "run-or-raise@edvard.cz"
         "clipboard-history@alexsaveau.dev"
         "blur-my-shell@aunetx"
-        "dash-to-dock@micxgx.gmail.com"
+        # "dash-to-dock@micxgx.gmail.com"
         "just-perfection-desktop@just-perfection"
         "undecorate@sun.wxg@gmail.com"
         "switcher@landau.fi"
