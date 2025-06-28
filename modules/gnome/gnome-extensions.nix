@@ -29,6 +29,7 @@ with lib.hm.gvariant;
     };
     "org/gnome/shell/extensions/just-perfection" = {
       panel=false;
+      dask=false;
       animation=0;
       panel-in-overview=true;
       startup-status = 0;
