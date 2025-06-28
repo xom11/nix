@@ -19,7 +19,6 @@
     caprine
     # teamviewer
     # anydesk
-    nix-fast-build
 
   ];
   services.flatpak.packages = [
