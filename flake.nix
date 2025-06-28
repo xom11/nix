@@ -108,6 +108,7 @@
           nixgl = nixgl;
         };
         modules = [
+          nix-flatpak.homeManagerModules.nix-flatpak
           ./hosts/desktop/home.nix
         ];
       };

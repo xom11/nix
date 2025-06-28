@@ -18,6 +18,7 @@ in
     ../../modules/desktop
     # ../../modules/apps/linux
     ../../modules/fonts
+    ../../modules/flatpak
     ../../modules/services
   ];
   nixpkgs.config.allowUnfree = true;
