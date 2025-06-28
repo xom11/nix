@@ -4,4 +4,7 @@
   services.podman = {
     enable = true;
   };
+  services.keyd = {
+    enable = true;
+  };
 }
