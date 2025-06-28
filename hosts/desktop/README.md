@@ -6,5 +6,5 @@ nix run github:nix-community/home-manager -- switch --impure -b backup --refresh
 add-visudo && set-zsh
 ```
 ```bash
-sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake '~/nix'
+sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake '~/nix#desktop'
 ```
