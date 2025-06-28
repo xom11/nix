@@ -13,6 +13,7 @@
     ../../modules/gnome
     ../../modules/tools
     ../../modules/fonts
+    ../../modules/i18n
   ];
 
   programs.home-manager.enable = true;
