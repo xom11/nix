@@ -19,8 +19,9 @@
     caprine
     # teamviewer
     # anydesk
-
-
+  ];
+  services.flatpak.packages = [
+    { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   ];
 
 }

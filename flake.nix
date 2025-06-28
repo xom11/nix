@@ -116,7 +116,9 @@
     };
     systemConfigs ={
       "desktop" = system-manager.lib.makeSystemConfig {
+        inherit specialArgs;
         modules = [
+          nix-flatpak.homeManagerModules.nix-flatpak
           ./hosts/desktop/configuration.nix
         ];
       };
