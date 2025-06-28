@@ -19,6 +19,8 @@
     caprine
     # teamviewer
     # anydesk
+    nix-fast-build
+
   ];
   services.flatpak.packages = [
     { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
