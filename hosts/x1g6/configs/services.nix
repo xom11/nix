@@ -27,7 +27,7 @@ services.keyd = {
         otherlayer = {};
       };
       extraConfig = ''
-        # put here any extra-config, e.g. you can copy/paste here directly a configuration, just remove the ids part
+        [hyper:C-M-S-A]
       '';
     };
   };
