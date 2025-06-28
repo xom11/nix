@@ -69,7 +69,7 @@ with lib.hm.gvariant;
       speed=0.4;
     };
     "org/gnome/desktop/input-sources"={
-      xkb-options=["caps:hyper"];
+      # xkb-options=["caps:hyper"];
       per-window=true;
       show-all-sources = true;
       sources = [ (mkTuple [ "xkb" "us" ]) (mkTuple [ "ibus" "Bamboo" ]) ];

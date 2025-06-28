@@ -22,7 +22,7 @@ services.keyd = {
       settings = {
         # The main layer, if you choose to declare it in Nix
         main = {
-          capslock = "layer(control)"; # you might need to also enclose the key in quotes if it contains non-alphabetical symbols
+          capslock = "overload(meta, esc)"; # you might need to also enclose the key in quotes if it contains non-alphabetical symbols
         };
         otherlayer = {};
       };
