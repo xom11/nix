@@ -85,8 +85,8 @@ with lib.hm.gvariant;
       workspaces-only-on-primary=false;
     };
     "org/gnome/mutter/keybindings"={
-      toggle-tiled-left=["<Super>Left", "<Super><Alt><Ctrl>Left"];
-      toggle-tiled-right=["<Super>Right", "<Super><Alt><Ctrl>Right"];
+      toggle-tiled-left=["<Super>Left" "<Super><Alt><Ctrl>Left"];
+      toggle-tiled-right=["<Super>Right" "<Super><Alt><Ctrl>Right"];
     };
 
     # Turn off sharing
