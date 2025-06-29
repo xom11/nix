@@ -10,6 +10,7 @@
     # atuin
     pipx
     caligula
+    gemini-cli
   ];
 
 }

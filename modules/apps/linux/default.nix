@@ -1,6 +1,9 @@
 { config, lib, pkgs, nixgl, ... }:
 
 {
+  imports = [
+    ../share
+  ]
   nixGL.packages = import nixgl { inherit pkgs; };
   # nixGL.defaultWrapper = "mesa";
   # nixGL.installScripts = [ "mesa" ];
