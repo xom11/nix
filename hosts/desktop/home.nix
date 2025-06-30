@@ -1,9 +1,8 @@
 
 { config, pkgs, lib, nixgl, username,... }:
-let 
+# let 
   # username = builtins.getEnv "USER"; 
-  username = "vm";
-in
+# in
 {
   home.username = username;
   home.homeDirectory = "/home/${username}";
