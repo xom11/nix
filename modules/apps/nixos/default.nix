@@ -3,7 +3,7 @@
 {
   imports = [
     ../share
-  ]
+  ];
 
   home.packages = with pkgs; [
     preload
