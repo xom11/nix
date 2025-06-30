@@ -5,6 +5,7 @@
 
   services.tailscale.enable = true;
   services.openssh.enable = true;
+  services.preload.enable = true;
 
   # i18n.inputMethod = {
   #   enable = true;

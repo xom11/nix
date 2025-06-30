@@ -4,5 +4,4 @@
   services.podman = {
     enable = true;
   };
-  services.preload.enable = true;
 }
