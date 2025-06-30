@@ -20,6 +20,7 @@ in
     ../../modules/fonts
     ../../modules/flatpak
     ../../modules/services
+    ../../modules/i18n
   ];
   nixpkgs.config.allowUnfree = true;
 
