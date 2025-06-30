@@ -3,7 +3,7 @@
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = [ "docker" ];
 
-  virtualisation.vmware.host.enable = true;
+  # virtualisation.vmware.host.enable = true;
 
   programs.virt-manager.enable = true;
   users.groups.libvirtd.members = [ username ];
