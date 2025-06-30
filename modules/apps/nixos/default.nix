@@ -21,7 +21,7 @@
     caprine
     # teamviewer
     # anydesk
-    notion-app-enhanced
+    # notion-app-enhanced
 
   ];
   services.flatpak.packages = [
