@@ -4,5 +4,4 @@
   services.podman = {
     enable = true;
   };
-  services.copyq.enable = true;
 }
