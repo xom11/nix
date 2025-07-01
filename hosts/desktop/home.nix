@@ -38,7 +38,7 @@ in
     ".config/environment.d/nix-path.conf"= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
     ''
-  }
+  };
   # home.activation = {
   #   linkGnomeExtensions = {
   #     after = [ "writeBoundary" "createXdgUserDirectories" ];
