@@ -9,7 +9,7 @@
     # jq
     # atuin
     pipx
-    caligula
+    # caligula
     gemini-cli
   ];
 

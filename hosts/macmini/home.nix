@@ -9,6 +9,7 @@
     ../../modules/tools
     ../../modules/fonts
     ../../modules/dotfiles
+    ../../modules/apps/macos
   ];
 
   nixpkgs.config.allowUnfree = true;
