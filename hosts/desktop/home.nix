@@ -28,23 +28,25 @@ in
   home.pointerCursor.package = pkgs.vanilla-dmz;
   home.pointerCursor.name = "Vanilla-DMZ";
 
-  # ibus
-  # xsession.windowManager.bspwm.startupPrograms = [
-  #   "${pkgs.ibus}/bin/ibus restart || ${pkgs.ibus}/bin/ibus-daemon -d -r -x"
-  # ];
+  # show desktop apps
   targets.genericLinux.enable = true;
   programs.home-manager.enable = true;
   home.shellAliases = {
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
   }; 
-  home.activation = {
-    linkGnomeExtensions = {
-      after = [ "writeBoundary" "createXdgUserDirectories" ];
-      before = [ ];
-      data = ''
-        ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
-      '';
-    };
-  };
+  home.files = {
+    ".config/environment.d/nix-path.conf"= ''
+      PATH="$HOME/.nix-profile/bin:$PATH"
+    ''
+  }
+  # home.activation = {
+  #   linkGnomeExtensions = {
+  #     after = [ "writeBoundary" "createXdgUserDirectories" ];
+  #     before = [ ];
+  #     data = ''
+  #       ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
+  #     '';
+  #   };
+  # };
 }
 
