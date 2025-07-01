@@ -37,7 +37,7 @@ in
   home.files = {
     ".config/environment.d/nix-path.conf"= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
-    ''
+    '';
   };
   # home.activation = {
   #   linkGnomeExtensions = {
