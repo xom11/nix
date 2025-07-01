@@ -10,12 +10,13 @@
 
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap kitty)
+    (config.lib.nixGL.wrap vscode)
     telegram-desktop
     localsend
     ####
     brave
     discord
-    vscode
+    # vscode
     bitwarden-desktop
     joplin-desktop
     slack
