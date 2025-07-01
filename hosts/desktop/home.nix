@@ -34,7 +34,7 @@ in
   home.shellAliases = {
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
   }; 
-  home.files.".config/environment.d/nix-path.conf".text= ''
+  home.file.".config/environment.d/nix-path.conf".text= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
     '';
   # home.activation = {
