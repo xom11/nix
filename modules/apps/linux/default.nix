@@ -9,7 +9,6 @@
   # nixGL.installScripts = [ "mesa" ];
 
   home.packages = with pkgs; [
-    (writeShellScriptBin "update-nix-app" (builtins.readFile ./update-nix-app.sh))
     (config.lib.nixGL.wrap kitty)
     brave
     discord
