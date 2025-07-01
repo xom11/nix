@@ -5,5 +5,5 @@
   }; 
   home.file."hello" = {
     text = "Hello, Kitty!";
-  }
+  };
 }
