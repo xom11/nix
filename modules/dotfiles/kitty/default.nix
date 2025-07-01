@@ -5,5 +5,6 @@
   }; 
   home.file."hello" = {
     text = "Hello, Kitty!";
+    mode = "600";
   };
 }
