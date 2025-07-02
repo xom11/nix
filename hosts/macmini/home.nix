@@ -12,6 +12,7 @@
 
     ../../CLI/programs
     ../../CLI/pkgs
+    ../../CLI/client
   ];
 
   nixpkgs.config.allowUnfree = true;

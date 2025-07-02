@@ -14,6 +14,7 @@
     ../../GUI/i18n
 
     ../../CLI/pkgs
+    ../../CLI/client
     ../../CLI/programs
     ../../CLI/services
   ];
