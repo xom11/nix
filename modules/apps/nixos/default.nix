@@ -19,6 +19,7 @@
     kitty
     # chromedriver
     caprine
+    rustdesk
     # teamviewer
     # anydesk
     # notion-app-enhanced

@@ -44,6 +44,7 @@
       "docker"
       "kitty"
       "vmware-fusion"
+      "rustdesk"
       # "Tunnelblick"
       # "chromedriver"
     ];
