@@ -8,6 +8,6 @@ Host tele
 Host m4
   HostName 100.65.101.95
   User lenamkhanh
-Host x1g6
+Host x1
   HostName 100.98.171.59
   User kln
