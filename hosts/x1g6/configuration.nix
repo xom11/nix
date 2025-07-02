@@ -90,10 +90,5 @@
     pulse.enable = true;
   };
 
-  environment.variables = {
-    TERMINAL = "kitty";
-  };
-
-
   system.stateVersion = "24.11";
 }
