@@ -7,7 +7,7 @@ Host tele
   Port 47964
 Host m4
   HostName 100.65.101.95
-  User lenamkhah
+  User lenamkhanh
 Host nix
   HostName 100.98.171.59
   User kln
