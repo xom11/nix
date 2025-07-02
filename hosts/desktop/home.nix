@@ -11,16 +11,17 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
-    ../../modules/programs
-    ../../modules/pkgs
-    ../../modules/gnome
-    ../../modules/dotfiles
-    ../../modules/bin
-    ../../modules/desktop
-    ../../modules/apps/linux
-    ../../modules/fonts
-    ../../modules/services
-    ../../modules/i18n
+    ../../GUI/gnome
+    ../../GUI/dotfiles
+    ../../GUI/desktop
+    ../../GUI/apps/linux
+    ../../GUI/fonts
+    ../../GUI/i18n
+
+    ../../CLI/bin
+    ../../CLI/services
+    ../../CLI/programs
+    ../../CLI/pkgs
   ];
   nixpkgs.config.allowUnfree = true;
 
