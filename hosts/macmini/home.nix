@@ -6,11 +6,12 @@
   programs.home-manager.enable = true;
 
   imports = [
-    ../../modules/programs
-    ../../modules/pkgs
-    ../../modules/fonts
-    ../../modules/dotfiles
-    ../../modules/apps/macos
+    ../../GUI/dotfiles
+    ../../GUI/apps/macos
+    ../../GUI/fonts
+
+    ../../CLI/programs
+    ../../CLI/pkgs
   ];
 
   nixpkgs.config.allowUnfree = true;

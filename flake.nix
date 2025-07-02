@@ -107,9 +107,7 @@
       };
       "desktop" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = specialArgs;
         modules = [
-          nix-flatpak.homeManagerModules.nix-flatpak
           ./hosts/desktop/home.nix
         ];
       };

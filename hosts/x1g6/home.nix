@@ -6,18 +6,16 @@
   home.stateVersion = "25.11"; 
 
   imports = [
-    ../../modules/apps/nixos
-    # ../../modules/bin
-    # ../../modules/bt
-    ../../modules/desktop
-    ../../modules/dotfiles
-    ../../modules/fonts
-    ../../modules/gnome
-    ../../modules/i18n
-    ../../modules/pkgs
-    ../../modules/programs
-    ../../modules/services
-    ../../modules/sway
+    ../../GUI/apps/nixos
+    ../../GUI/desktop
+    ../../GUI/dotfiles
+    ../../GUI/fonts
+    ../../GUI/gnome
+    ../../GUI/i18n
+
+    ../../CLI/pkgs
+    ../../CLI/programs
+    ../../CLI/services
   ];
 
   programs.home-manager.enable = true;
