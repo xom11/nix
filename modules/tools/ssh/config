@@ -1,6 +1,6 @@
 Host DKChau
-    HostName 100.126.180.8
-    User dk
+  HostName 100.126.180.8
+  User dk
 Host tele
   HostName 185.32.162.180
   User user
