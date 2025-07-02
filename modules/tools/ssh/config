@@ -5,3 +5,6 @@ Host tele
   HostName 185.32.162.180
   User user
   Port 47964
+Host m4
+  HostName 100.65.101.95
+  User lenamkhah
