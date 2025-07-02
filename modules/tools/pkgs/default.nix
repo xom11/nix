@@ -19,6 +19,11 @@
         zoxide
         ncdu
 
+        # Rust
+        cargo
+        maturin
+        rustc
+
         # Python
         python3
         python3Packages.pip
