@@ -1,4 +1,4 @@
-Host DKChau
+Host dk
   HostName 100.126.180.8
   User dk
 Host tele
@@ -8,6 +8,6 @@ Host tele
 Host m4
   HostName 100.65.101.95
   User lenamkhanh
-Host nix
+Host x1g6
   HostName 100.98.171.59
   User kln
