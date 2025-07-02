@@ -7,20 +7,20 @@
 
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap kitty)
-    (config.lib.nixGL.wrap vscode)
     telegram-desktop
     localsend
 
     ####
-    brave
-    discord
+    # (config.lib.nixGL.wrap vscode)
+    # brave
+    # discord
     # vscode
-    bitwarden-desktop
-    joplin-desktop
-    slack
-    google-chrome
-    chromedriver
-    caprine
+    # bitwarden-desktop
+    # joplin-desktop
+    # slack
+    # google-chrome
+    # chromedriver
+    # caprine
   ];
 
 }
