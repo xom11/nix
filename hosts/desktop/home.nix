@@ -25,16 +25,23 @@ in
   ];
   nixpkgs.config.allowUnfree = true;
 
-  home.pointerCursor.gtk.enable = true;
-  home.pointerCursor.package = pkgs.vanilla-dmz;
-  home.pointerCursor.name = "Vanilla-DMZ";
+  # home.pointerCursor.gtk.enable = true;
+  # home.pointerCursor.package = pkgs.vanilla-dmz;
+  # home.pointerCursor.name = "Vanilla-DMZ";
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    BROWSER = "brave";
+    TERMINAL = "kitty";
+  };
+
+  home.shellAliases = {
+    update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
+  }; 
 
   # show desktop apps
   targets.genericLinux.enable = true;
   programs.home-manager.enable = true;
-  home.shellAliases = {
-    update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
-  }; 
   home.file.".config/environment.d/nix-path.conf".text= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
     '';
