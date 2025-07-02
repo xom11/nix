@@ -1,1 +1,1 @@
-`etc/keyd/default.conf`
+etc/keyd/default.conf
