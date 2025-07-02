@@ -75,9 +75,9 @@ with lib.hm.gvariant;
       sleep-inactive-battery-type="nothing";
       idle-dim=false;
     };
-    "org/gnome/desktop/background"={
-      picture-uri-dark= builtins.toString ./. + "/background.jpg";
-    };
+    # "org/gnome/desktop/background"={
+    #   picture-uri-dark= builtins.toString ./. + "/background.jpg";
+    # };
     "org/gnome/mutter"={
       experimental-features=["scale-monitor-framebuffer" "xwayland-native-scaling"];
       overlay-key="Super_L";
