@@ -6,7 +6,8 @@
   programs.home-manager.enable = true;
 
   imports = [
-    ../../modules/tools
+    ../../modules/programs
+    ../../modules/pkgs
     ../../modules/fonts
     ../../modules/dotfiles
     ../../modules/apps/macos

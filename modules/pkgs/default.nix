@@ -18,6 +18,12 @@
         yazi
         zoxide
         ncdu
+        # tldr
+        # ansible
+        # atuin
+        # pipx
+        # caligula
+        # gemini-cli
 
         # Rust
         cargo

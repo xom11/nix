@@ -10,9 +10,11 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
-    ../../modules/tools
+    ../../modules/programs
+    ../../modules/services
+    ../../modules/pkgs
     ../../modules/bin
-    ../../modules/systemd
+    ../../modules/bt/sn85
   ];
 
   programs.home-manager.enable = true;

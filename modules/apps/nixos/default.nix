@@ -1,10 +1,6 @@
 { pkgs, config,... }:
 
 {
-  imports = [
-    ../share
-  ];
-
   home.packages = with pkgs; [
     bitwarden-desktop
     discord
@@ -20,9 +16,8 @@
     # chromedriver
     caprine
     rustdesk
-    # teamviewer
-    # anydesk
     # notion-app-enhanced
+
 
   ];
   services.flatpak.packages = [

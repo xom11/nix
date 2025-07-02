@@ -21,6 +21,7 @@
 
     brews = [
       "tailscale"
+      "docker"
     ];
 
     casks = [
@@ -41,7 +42,6 @@
       "brave-browser"
       "google-chrome"
       "microsoft-edge"
-      "docker"
       "kitty"
       "vmware-fusion"
       "rustdesk"

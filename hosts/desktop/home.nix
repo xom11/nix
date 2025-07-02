@@ -11,14 +11,14 @@ in
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
-    ../../modules/tools
+    ../../modules/programs
+    ../../modules/pkgs
     ../../modules/gnome
     ../../modules/dotfiles
     ../../modules/bin
     ../../modules/desktop
     ../../modules/apps/linux
     ../../modules/fonts
-    ../../modules/flatpak
     ../../modules/services
     ../../modules/i18n
   ];

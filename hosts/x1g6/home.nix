@@ -7,14 +7,17 @@
 
   imports = [
     ../../modules/apps/nixos
-    ../../modules/dotfiles
+    # ../../modules/bin
+    # ../../modules/bt
     ../../modules/desktop
-    ../../modules/flatpak
-    ../../modules/services
-    ../../modules/gnome
-    ../../modules/tools
+    ../../modules/dotfiles
     ../../modules/fonts
+    ../../modules/gnome
     ../../modules/i18n
+    ../../modules/pkgs
+    ../../modules/programs
+    ../../modules/services
+    ../../modules/sway
   ];
 
   programs.home-manager.enable = true;
