@@ -8,10 +8,12 @@
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap kitty)
     (config.lib.nixGL.wrap localsend)
+    (config.lib.nixGL.wrap google-chrome)
+    (config.lib.nixGL.wrap brave)
     telegram-desktop
     vscode
-    google-chrome
-    brave
+    # google-chrome
+    # brave
 
     ####
     # (config.lib.nixGL.wrap vscode)
