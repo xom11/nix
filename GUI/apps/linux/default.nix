@@ -10,11 +10,11 @@
     (config.lib.nixGL.wrap localsend)
     telegram-desktop
     brave
+    vscode
 
     ####
     # (config.lib.nixGL.wrap vscode)
     # discord
-    # vscode
     # bitwarden-desktop
     # joplin-desktop
     # slack
