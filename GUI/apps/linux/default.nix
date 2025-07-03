@@ -10,6 +10,7 @@
     (config.lib.nixGL.wrap localsend)
     telegram-desktop
     vscode
+    google-chrome
     brave
 
     ####
@@ -18,7 +19,6 @@
     # bitwarden-desktop
     # joplin-desktop
     # slack
-    # google-chrome
     # chromedriver
     # caprine
   ];
