@@ -9,11 +9,10 @@
     (config.lib.nixGL.wrap kitty)
     (config.lib.nixGL.wrap localsend)
     telegram-desktop
-    # localsend
+    brave
 
     ####
     # (config.lib.nixGL.wrap vscode)
-    # brave
     # discord
     # vscode
     # bitwarden-desktop
