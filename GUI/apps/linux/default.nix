@@ -22,5 +22,6 @@
     # chromedriver
     # caprine
   ];
+  nixpkgs.config.brave.commandLineArgs = "--no-sandbox";
 
 }
