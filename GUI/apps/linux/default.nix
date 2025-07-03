@@ -1,9 +1,12 @@
 { config, lib, pkgs, nixgl, ... }:
 
 {
-  nixGL.packages = import nixgl { inherit pkgs; };
-  nixGL.defaultWrapper = "mesa";
-  nixGL.installScripts = [ "mesa" ];
+  nixGL = {
+    packages = inputs.nix-gl.packages;
+    defaultWrapper = "mesa";
+    installScripts = ["mesa"];
+    vulkan.enable = true;
+  };
 
   home.packages = with pkgs; [
     (config.lib.nixGL.wrap kitty)
