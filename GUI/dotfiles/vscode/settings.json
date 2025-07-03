@@ -9,6 +9,10 @@
   "workbench.editor.showTabs": "multiple",
   "workbench.sideBar.location": "right",
   "editor.stickyScroll.enabled": false,
+
+  "editor.scrollbar.verticalScrollbarSize": 10,
+  "editor.scrollbar.horizontalScrollbarSize": 10,
+
   // Language specific settings
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -19,9 +23,6 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "[nix]": {
-    "editor.defaultFormatter": "jnoortheen.nix-ide"
-  },
 
   // Auto sync settings
   "settingsSync.keybindingsPerPlatform": true,
@@ -30,7 +31,7 @@
   "breadcrumbs.enabled": true,
   "editor.cursorStyle": "line-thin",
   "editor.formatOnSave": true,
-  "editor.lineNumbers": "relative",
+  "editor.lineNumbers": "off",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.suggest.insertMode": "replace",
@@ -150,5 +151,6 @@
 
   //terminal copy paste
   "terminal.integrated.copyOnSelection": true,
-  "terminal.integrated.sendKeybindingsToShell": false
+  "terminal.integrated.sendKeybindingsToShell": false,
+  "diffEditor.renderSideBySide": false
 }
