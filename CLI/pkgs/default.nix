@@ -18,6 +18,7 @@
         yazi
         zoxide
         ncdu
+        jq
 
         # Rust
         cargo
