@@ -16,6 +16,7 @@
     # chromedriver
     caprine
     rustdesk
+    xournalpp
     # notion-app-enhanced
 
 

@@ -22,6 +22,7 @@
     brews = [
       "tailscale"
       "docker"
+      "openssl@3"
     ];
 
     casks = [
@@ -39,6 +40,7 @@
       "localsend"
       "joplin"
       "slack"
+      "xournal++"
       "brave-browser"
       "google-chrome"
       "microsoft-edge"
