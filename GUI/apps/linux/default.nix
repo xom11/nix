@@ -15,9 +15,6 @@
     # vscode
     # google-chrome
     # brave
-
-    ####
-    # (config.lib.nixGL.wrap vscode)
     # discord
     # bitwarden-desktop
     # joplin-desktop
