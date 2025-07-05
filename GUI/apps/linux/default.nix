@@ -2,7 +2,7 @@
 
 {
   nixGL = {
-    packages = nixgl.packages;
+    packages = import nixgl { inherit pkgs; };
     defaultWrapper = "mesa";
     installScripts = ["mesa"];
     vulkan.enable = true;
