@@ -25,10 +25,6 @@ in
   ];
   nixpkgs.config.allowUnfree = true;
 
-  # home.pointerCursor.gtk.enable = true;
-  # home.pointerCursor.package = pkgs.vanilla-dmz;
-  # home.pointerCursor.name = "Vanilla-DMZ";
-
   home.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "brave";
