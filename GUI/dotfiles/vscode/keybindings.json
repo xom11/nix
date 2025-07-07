@@ -20,33 +20,6 @@
     "command": "workbench.action.openRecent",
     "key": "ctrl-shift-r"
   },
-  {
-    "args": {
-      "commands": [
-        "workbench.action.toggleSidebarVisibility",
-        "workbench.files.action.focusFilesExplorer"
-      ]
-    },
-    "command": "runCommands",
-    "key": "space e",
-    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && !sideBarFocus"
-  },
-  {
-    "args": {
-      "commands": [
-        "workbench.action.toggleSidebarVisibility",
-        "workbench.action.focusActiveEditorGroup"
-      ]
-    },
-    "command": "runCommands",
-    "key": "space e",
-    "when": "sideBarFocus && !inputFocus"
-  },
-  {
-    "command": "workbench.action.toggleSidebarVisibility",
-    "key": "space e",
-    "when": "vim.mode == 'Normal' && editorTextFocus && foldersViewVisible"
-  },
   // CODING
   {
     "command": "editor.action.codeAction",
@@ -85,7 +58,7 @@
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
   {
-    "command": "workbench.action.closeAllEditors",
+    "command": "workbench.action.closeEditorsInGroup",
     "key": "space b d",
     "when": "(vim.mode == 'Normal' && editorTextFocus) || !inputFocus"
   },
@@ -146,59 +119,68 @@
     "key": "enter",
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && explorerResourceIsFolder && !inputFocus"
   },
-  // TERMINAL
+
+  // TOGGLE
   {
-    "command": "workbench.action.terminal.focusNext",
-    "key": "ctrl+shift+down",
-    "when": "terminalFocus"
+    "key": "alt+t",
+    "command":"workbench.action.terminal.toggleTerminal",
   },
-  {
-    "command": "workbench.action.terminal.focusPrevious",
-    "key": "ctrl+shift+up",
-    "when": "terminalFocus"
-  },
-  {
-    "command": "workbench.action.terminal.new",
-    "key": "ctrl+shift+t",
-    "when": "terminalFocus"
-  },
-  {
-    "command": "workbench.action.terminal.kill",
-    "key": "ctrl+shift+w",
-    "when": "terminalFocus"
-  },
-  // COPILOT KEY BINDINGS
   {
     "command": "workbench.action.toggleAuxiliaryBar",
     "key": "ctrl+g"
   },
-  // VSCODE TOOLBAR
   {
     "command": "workbench.action.toggleSidebarVisibility",
     "key": "ctrl+b"
   },
   {
+    "key": "alt+f",
     "command": "workbench.action.findInFiles",
-    "key": "ctrl+shift+f"
+    "when": "!sideBarVisible || (sideBarVisible && !activeViewlet == 'workbench.view.search')"
   },
   {
-    "args": {
-      "commands": ["workbench.view.scm", "workbench.scm.focus"]
-    },
-    "command": "runCommands",
-    "key": "space g g",
-    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+    "key": "alt+f",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarVisible && activeViewlet == 'workbench.view.search'"
   },
   {
-    "key": "ctrl+shift+s",
-    "command": "remoteTargets.focus"
+    "key": "alt+s",
+    "command": "remoteTargets.focus",
+    "when": "!sideBarVisible || (sideBarVisible && !activeViewlet == 'workbench.view.remote')"
   },
   {
-    "key": "ctrl+shift+x",
-    "command": "workbench.view.extensions"
+    "key": "alt+s",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarVisible && activeViewlet == 'workbench.view.remote'"
   },
   {
-    "key": "ctrl+shift+e",
-    "command": "workbench.view.explorer"
+    "key": "alt+x",
+    "command": "workbench.view.extensions",
+    "when": "!sideBarVisible || (sideBarVisible && !activeViewlet == 'workbench.view.extensions')"
+  },
+  {
+    "key": "alt+x",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarVisible && activeViewlet == 'workbench.view.extensions'"
+  },
+  {
+    "key": "alt+e",
+    "command": "workbench.view.explorer",
+    "when": "!sideBarVisible || (sideBarVisible && !activeViewlet == 'workbench.view.explorer')"
+  },
+  {
+    "key": "alt+e",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarVisible && activeViewlet == 'workbench.view.explorer'"
+  },
+  {
+    "key": "alt+g",
+    "command": "workbench.view.scm",
+    "when": "!sideBarVisible || (sideBarVisible && !activeViewlet == 'workbench.view.scm')"
+  },
+  {
+    "key": "alt+g",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarVisible && activeViewlet == 'workbench.view.scm'"
   }
 ]
