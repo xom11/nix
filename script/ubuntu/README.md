@@ -32,3 +32,7 @@ sudo apt install -y apt-transport-https
 sudo apt update
 sudo apt install -y code
 ```
+# TailScale
+```
+curl -fsSL https://tailscale.com/install.sh | sh
+```
