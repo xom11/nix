@@ -83,6 +83,7 @@ with lib.hm.gvariant;
       overlay-key="Super_L";
       dynamic-workspaces=false;
       workspaces-only-on-primary=false;
+      edge-tiling=false;
     };
     "org/gnome/mutter/keybindings"={
       toggle-tiled-left=["<Super>Left" "<Super><Alt><Ctrl>Left"];
