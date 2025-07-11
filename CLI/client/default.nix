@@ -2,11 +2,9 @@
 { pkgs, ...}:
 {
   home.packages = with pkgs;[
-      # tldr
-      # ansible
-      # atuin
+      tldr
+      ansible
       pipx
-      # caligula
       gemini-cli
   ];
 }
