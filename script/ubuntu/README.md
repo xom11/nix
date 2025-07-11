@@ -1,10 +1,9 @@
 ```
-sudo apt update
 sudo apt upgrade -y
 ```
 # SSH
 ```
-sudo apt install openssh-server
+sudo apt install openssh-server -y
 sudo systemctl enable --now ssh
 ```
 # KEYD
@@ -13,7 +12,23 @@ sudo add-apt-repository ppa:keyd-team/ppa
 sudo apt update -y
 sudo apt install keyd -y
 sudo systemctl enable --now keyd
+sudo mkdir -p /etc/keyd
+sudo touch /etc/keyd/default.conf
+sudo vi /etc/keyd/default.conf
 ```
+```
+[ids]
+*
+
+[main]
+capslock=overload(hyper, esc)
+
+[otherlayer]
+
+[hyper:C-M-A]
+```
+
+
 # Brave
 ```
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
