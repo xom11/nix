@@ -22,6 +22,8 @@ in
     ../../CLI/services
     ../../CLI/programs
     ../../CLI/pkgs
+    ../../CLI/client
+    ../../CLI/vm
   ];
   nixpkgs.config.allowUnfree = true;
 
@@ -41,14 +43,5 @@ in
   home.file.".config/environment.d/nix-path.conf".text= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
     '';
-  # home.activation = {
-  #   linkGnomeExtensions = {
-  #     after = [ "writeBoundary" "createXdgUserDirectories" ];
-  #     before = [ ];
-  #     data = ''
-  #       ln -sf ${config.home.homeDirectory}/.nix-profile/share/gnome-shell/extensions ${config.home.homeDirectory}/.local/share/gnome-shell/
-  #     '';
-  #   };
-  # };
 }
 
