@@ -5,7 +5,7 @@
       # tldr
       # ansible
       # atuin
-      # pipx
+      pipx
       # caligula
       gemini-cli
   ];
