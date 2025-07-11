@@ -32,3 +32,6 @@ sudo nixos-rebuild switch --impure --refesh --flake github:kln-os/nix/main#x1g6
 ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
 cat ~/.ssh/id_rsa.pub
 ```
+## Other Setup
+sudo gedit /etc/systemd/logind.conf
+sudo systemctl set-default multi-user.target
