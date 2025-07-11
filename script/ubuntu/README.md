@@ -14,10 +14,7 @@ sudo apt install keyd -y
 sudo systemctl enable --now keyd
 sudo mkdir -p /etc/keyd
 sudo touch /etc/keyd/default.conf
-sudo vi /etc/keyd/default.conf
-```
-```
-[ids]
+echo '[ids]
 *
 
 [main]
@@ -25,10 +22,9 @@ capslock=overload(hyper, esc)
 
 [otherlayer]
 
-[hyper:C-M-A]
+[hyper:C-M-A]' | sudo tee /etc/keyd/default.conf > /dev/null
+sudo systemctl restart keyd
 ```
-
-
 # Brave
 ```
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
