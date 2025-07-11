@@ -36,5 +36,9 @@
         nodejs.pkgs.yarn
         nodejs.pkgs.nodemon
         nodejs.pkgs.pm2
+
+        # Other tools
+        discordchatexporter-cli
+        ffmpeg
     ];
 }
