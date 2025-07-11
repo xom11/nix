@@ -11,3 +11,6 @@ Host m4
 Host x1
   HostName 100.98.171.59
   User kln
+Host rog
+  HostName 100.122.114.102
+  User rog
