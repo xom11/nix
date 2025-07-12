@@ -1,7 +1,7 @@
 {config, pkgs, lib, ...}:
 let
-  RunOrRaisePath = "${config.home.homeDirectory}/.config/run-or-raise/shortcut.conf";
-  RunOrRaise = pkgs.writeText "tmp" (builtins.readFile ./shortcut.conf);
+  RunOrRaisePath = "${config.home.homeDirectory}/.config/run-or-raise/shortcuts.conf";
+  RunOrRaise = pkgs.writeText "tmp" (builtins.readFile ./shortcuts.conf);
 in
 {
   home.activation = {
