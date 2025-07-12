@@ -3,7 +3,7 @@ let
 in
 {
   networking = {
-    computerName = hostame;
+    computerName = hostname;
     hostName = hostname;
     localHostName = hostname;
   };
