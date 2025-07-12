@@ -4,5 +4,6 @@
     ./nvim
     ./tmux
     ./zsh
+    ./ssh
   ];
 }
