@@ -1,6 +1,6 @@
-
+{username}:
 let
-  hostname = "macmini-kln";
+  hostname = "macmini-${username}";
 in
 {
   networking = {
