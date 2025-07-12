@@ -55,7 +55,7 @@
       };
       CustomSystemPreferences = {
         NSGlobalDomain = {
-          AppleLanguages = {"en"};
+          AppleLanguages = ["en"];
         };
       };
 
