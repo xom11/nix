@@ -12,12 +12,17 @@
       rm -rf ~/.ssh/authorized_keys;
       mkdir -p ~/.ssh;
       cp ${./authorized_keys} ~/.ssh/authorized_keys;
+      chmod 600 ~/.ssh/authorized_keys;
     '';
 
     genSshKeyGen = lib.hm.dag.entryAfter ["writeBoundary"] ''
       if [ ! -f ~/.ssh/id_ed25519 ]; then
         ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
       fi
+    '';
+    testABC = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      echo "SSH setup completed successfully."
+      sudo chmod 700 ~/.ssh 
     '';
 
   };
