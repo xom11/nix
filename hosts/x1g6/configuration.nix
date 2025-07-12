@@ -1,6 +1,7 @@
 {input, config, pkgs, lib, username, ... }:
 let
   hostname = "x1g6-kln";
+in
 {
   imports = [
       # /etc/nixos/configuration.nix
