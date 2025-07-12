@@ -37,6 +37,7 @@
   };
 
   nix.settings.trusted-users = [username];
+  nix.enable = false;
 
 
 }
