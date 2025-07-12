@@ -14,7 +14,7 @@
       cp ${./authorized_keys} ~/.ssh/authorized_keys;
     '';
 
-    genSshKey = lib.hm.dag.entryAfter ["copySshConfig"] ''
+    genSshKey = lib.hm.dag.entryAfter ["writeBoundary"] ''
       if [ ! -f "~/.ssh/id_ed25519" ]; then
         ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
       fi
