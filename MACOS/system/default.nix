@@ -41,6 +41,12 @@
       #   ShowPathbar = true;
       #   ShowStatusBar = false;
       # };
+      controlcenter = {
+        AirDrop = 24; # 24: off, 18: on
+        Bluetooth = 24; # 24: off, 18: on
+        Display = 24; # 24: off, 18: on
+        FocusModes = 24; # 24: off, 18: on
+      }
       screencapture = {
         disable-shadow = true;
         location = "~/Downloads";
@@ -49,7 +55,6 @@
         target = "file";
       };
       NSGlobalDomain = {
-        _HIHideMenuBar = true;
         InitialKeyRepeat = 15; # slider values: 120, 94, 68, 35, 25, 15
         KeyRepeat = 2; # slider values: 120, 90, 60, 30, 12, 6, 2
         AppleInterfaceStyle = "Dark";
