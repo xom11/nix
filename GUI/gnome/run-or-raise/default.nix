@@ -10,7 +10,7 @@
   #   '';
   # };
   home.file."text.txt" = {
-    text = "";
+    text = "a";
     onChange = "echo TEST";
   };
 }
