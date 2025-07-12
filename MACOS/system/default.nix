@@ -55,7 +55,7 @@
       };
       CustomSystemPreferences = {
         AppleLanguages = ("en");
-      }
+      };
 
     };
   };
