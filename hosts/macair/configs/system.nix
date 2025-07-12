@@ -30,7 +30,7 @@
       trackpad = {
         Clicking = true;
         Dragging = true:
-      }
+      };
       # finder = {
       #   _FXShowPosixPathInTitle = false;
       #   _FXSortFoldersFirst = true;
