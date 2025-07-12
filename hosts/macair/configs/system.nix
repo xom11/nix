@@ -52,7 +52,7 @@
         target = "file";
       };
       NSGlobalDomain = {
-        # _HIHideMenuBar = true;
+        _HIHideMenuBar = false;
         InitialKeyRepeat = 15; # slider values: 120, 94, 68, 35, 25, 15
         KeyRepeat = 2; # slider values: 120, 90, 60, 30, 12, 6, 2
       };
