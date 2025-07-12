@@ -1,16 +1,17 @@
-{config, ...}:
+{config, pkgs, lib, ...}:
+let
+  RunOrRaisePath = "${config.home.homeDirectory}/.config/run-or-raise";
+  RunOrRaise = pkgs.writeText "tmp" (builtins.readFile ./yabairc);
+in
 {
-  # xdg.configFile."run-or-raise/shortcut.conf".source = ./shortcuts.conf;
-  # xdg.configFile."run-or-raise/_shortcuts.conf" = {
-  #   text = builtins.readFile ./shortcuts.conf; 
-  #   onChange = ''
-  #     rm -f ${config.xdg.configHome}/run-or-rise/shortcut.conf
-  #     cp ${config.xdg.configHome}/run-or-rise/_shortcuts.conf ${config.xdg.configHome}/run-or-rise/shortcut.conf
-  #     chmod u+w ${config.xdg.configHome}/run-or-rise/shortcut.conf
-  #   '';
-  # };
-  home.file."text.txt" = {
-    text = "a";
-    onChange = "echo TEST";
-  };
+  home.activation = {
+    removeRunOrRaise = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+      rm -rf ${RunOrRaisePath}; 
+    '';
+    copyRunOrRaise =  lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      rm -rf ${RunOrRaisePath}; 
+      cp "${RunOrRaise}" "${RunOrRaisePath}";
+      chmod +x '${RunOrRaisePath}'; 
+    '';
+};
 }
