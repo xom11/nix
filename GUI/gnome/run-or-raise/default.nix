@@ -1,4 +1,4 @@
-{...}:
+{config, ...}:
 {
   xdg.configFile."run-or-raise/_shortcuts.conf" = {
     text = builtins.readFile ./shortcuts.conf; 
