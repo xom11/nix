@@ -35,7 +35,6 @@ sudo darwin-rebuild switch --impure --flake ~/nix#macmini
 ```
 ### Macair Setup
 ```bash
-export
 sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --impure --refresh --flake github:kln-os/nix/main#macair
 ```
 # Other Setup
