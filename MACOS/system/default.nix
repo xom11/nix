@@ -54,7 +54,7 @@
         AppleInterfaceStyle = "Dark";
       };
       CustomSystemPreferences = {
-        AppleLanguages = ["en"];
+        AppleLanguages = {"en"};
       };
 
     };
