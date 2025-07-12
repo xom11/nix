@@ -32,6 +32,8 @@
         Dragging = true;
         ActuationStrength = 0;
         TrackpadThreeFingerDrag = true;
+        FirstClickThreshold = 0;
+        SecondClickThreshold = 0;
       };
       # finder = {
       #   _FXShowPosixPathInTitle = false;
