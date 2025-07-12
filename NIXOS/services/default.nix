@@ -3,17 +3,6 @@
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = [ "docker" ];
 
-  # virtualisation.vmware.host.enable = true;
-
-  programs.virt-manager.enable = true;
-  users.groups.libvirtd.members = [ username ];
-  virtualisation.libvirtd.enable = true;
-  virtualisation.spiceUSBRedirection.enable = true;
-
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ username ];
-
-
   services.tailscale.enable = true;
   services.openssh.enable = true;
   services.preload.enable = true;
