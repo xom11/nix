@@ -8,7 +8,11 @@ in
     ../../MAC/base
     ../../MAC/brew
     ../../MAC/system
-    ../../MAC/network
   ];
+  networking = {
+    computerName = hostname;
+    hostName = hostname;
+    localHostName = hostname;
+  };
 
 }
