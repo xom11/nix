@@ -46,7 +46,7 @@
         Bluetooth = 24; # 24: off, 18: on
         Display = 24; # 24: off, 18: on
         FocusModes = 24; # 24: off, 18: on
-      }
+      };
       screencapture = {
         disable-shadow = true;
         location = "~/Downloads";
