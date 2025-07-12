@@ -21,6 +21,7 @@
         showhidden = true;
         static-only = false;
         tilesize = 40;
+        largesize = 80;
         wvous-bl-corner = 1;
         wvous-br-corner = 1;
         wvous-tl-corner = 1;
