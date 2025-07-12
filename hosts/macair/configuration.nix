@@ -5,8 +5,8 @@ in
 {
  
   imports = [
-    ../../MAC/base
-    ../../MAC/system
+    ../../MACOS/base
+    ../../MACOS/system
   ];
   networking = {
     computerName = hostname;
