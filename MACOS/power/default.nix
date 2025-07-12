@@ -1,9 +1,9 @@
 {...}:
 {
   power.sleep = {
-    computer = 10;
-    display = 10;
-    harddisk = 10;
+    computer = 60;
+    display = 60;
+    harddisk = 60;
   };
 
 }

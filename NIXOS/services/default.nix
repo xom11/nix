@@ -17,6 +17,16 @@
   services.tailscale.enable = true;
   services.openssh.enable = true;
   services.preload.enable = true;
+  services.flatpak.enable = true;
+
+  services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
+  security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
 
   services.keyd = {
     enable = true;
@@ -35,7 +45,6 @@
       };
     };
   };
-
 # Optional, but makes sure that when you type the make palm rejection work with keyd
 # https://github.com/rvaiya/keyd/issues/723
 environment.etc."libinput/local-overrides.quirks".text = ''
