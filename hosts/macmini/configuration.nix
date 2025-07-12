@@ -22,7 +22,9 @@
     auto-optimise-store = false;
   };
   imports = [
-    ./configs
+    ../../MAC/brew
+    ../../MAC/network
+    ../../MAC/system
   ];
 
   programs.zsh.enable = true; 
