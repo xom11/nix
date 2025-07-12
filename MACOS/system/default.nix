@@ -58,7 +58,6 @@
         NSGlobalDomain = {
           AppleLanguages = ["en"];
         };
-        b
       };
 
     };
