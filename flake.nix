@@ -27,14 +27,12 @@
     with inputs;
     let
       username = builtins.getEnv "SUDO_USER"; 
-      useremail = "__USEREMAIL__";
-      hostname = "__HOSTNAME__";
       system = builtins.currentSystem;
 
       specialArgs =
         inputs
         // {
-          inherit username useremail hostname;
+          inherit username ;
         };
     in
     {
