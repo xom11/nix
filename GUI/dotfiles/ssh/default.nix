@@ -6,7 +6,7 @@ let
 in
 {
   home.activation = {
-    copyRunOrRaise =  lib.hm.dag.entryAfter ["writeBoundary"] ''
+    copySshConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
       rm -rf ${file}; 
       mkdir -p ${folder};
       cp ${tmp} ${file};
