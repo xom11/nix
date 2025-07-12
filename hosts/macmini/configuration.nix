@@ -36,6 +36,10 @@
     description = username;
   };
 
+  security.sudo.extraConfig = ''
+    ${username} ALL=(ALL) NOPASSWD: ALL
+  '';
+
   nix.settings.trusted-users = [username];
 
 
