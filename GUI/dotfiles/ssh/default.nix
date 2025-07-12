@@ -1,8 +1,8 @@
 {config, pkgs, lib, ...}:
 let
-  folder = "${config.home.homeDirectory}/.config/run-or-raise";
-  file = "${config.home.homeDirectory}/.config/run-or-raise/shortcuts.conf";
-  tmp = pkgs.writeText "tmp" (builtins.readFile ./shortcuts.conf);
+  folder = "${config.home.homeDirectory}/.ssh";
+  file = "${config.home.homeDirectory}/.ssh/config";
+  tmp = pkgs.writeText "tmp" (builtins.readFile ./config);
 in
 {
   home.activation = {
