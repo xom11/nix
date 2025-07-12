@@ -1,6 +1,6 @@
 {config, ...}:
 {
-  xdg.configFile."run-or-raise/shortcut.conf".source = ./shortcut.conf;
+  xdg.configFile."run-or-raise/shortcut.conf".source = ./shortcuts.conf;
   xdg.configFile."run-or-raise/_shortcuts.conf" = {
     text = builtins.readFile ./shortcuts.conf; 
     onChange = ''
