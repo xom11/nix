@@ -42,10 +42,10 @@
       #   ShowStatusBar = false;
       # };
       controlcenter = {
-        AirDrop = 24; # 24: off, 18: on
-        Bluetooth = 24; # 24: off, 18: on
-        Display = 24; # 24: off, 18: on
-        FocusModes = 24; # 24: off, 18: on
+        AirDrop = false;
+        Bluetooth = false;
+        Display = false;
+        FocusModes = false;
       };
       screencapture = {
         disable-shadow = true;
