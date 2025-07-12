@@ -19,9 +19,13 @@ add-visudo && add-authkey && set-zsh
 nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake "github:kln-os/nix/main#desktop" 
 add-visudo && add-authkey && set-zsh
 ```
-## MacOS Setup
+## Macmini Setup
 ```bash
-sudo darwin-rebuild switch --impure --flake ~/nix#macos
+sudo darwin-rebuild switch --impure --flake ~/nix#macmini
+```
+## Macair Setup
+```bash
+sudo darwin-rebuild switch --impure --flake ~/nix#macair
 ```
 ## Nixos Setup
 ```bash

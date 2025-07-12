@@ -7,12 +7,10 @@
 
   imports = [
     ../../GUI/dotfiles
-    ../../GUI/apps/macos
     ../../GUI/fonts
 
     ../../CLI/programs
     ../../CLI/pkgs
-    ../../CLI/client
   ];
 
   nixpkgs.config.allowUnfree = true;

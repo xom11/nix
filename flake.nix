@@ -63,6 +63,30 @@
           }
         ];
       };
+      "macair" = nix-darwin.lib.darwinSystem {
+        inherit specialArgs;
+        system = system;
+        modules = [
+          ./hosts/macair/configuration.nix
+          # nix-homebrew.darwinModules.nix-homebrew 
+          # {
+          #   nix-homebrew = {
+          #     enable = true;
+          #     enableRosetta = true;
+          #     autoMigrate = true;
+          #     mutableTaps = true;
+          #     user = username;
+          #   };
+          # }
+          home-manager.darwinModules.home-manager {
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.users.${username}.imports = [
+              ./hosts/macair/home.nix
+            ];
+          }
+        ];
+      };
     };
     nixosConfigurations = {
       "x1g6" = nixpkgs.lib.nixosSystem {
