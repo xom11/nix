@@ -25,7 +25,7 @@ sudo darwin-rebuild switch --impure --flake ~/nix#macmini
 ```
 ## Macair Setup
 ```bash
-sudo darwin-rebuild switch --impure --flake ~/nix#macair
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --impure --flake github:kln-os/nix/main#macair
 ```
 ## Nixos Setup
 ```bash
