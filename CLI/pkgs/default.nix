@@ -19,6 +19,7 @@
         zoxide
         ncdu
         jq
+        gh
 
         # Rust
         cargo
