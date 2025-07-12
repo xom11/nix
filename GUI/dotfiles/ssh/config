@@ -6,10 +6,10 @@ Host tele
   User user
   Port 47964
 Host m4
-  HostName 100.65.101.95
+  HostName 100.115.218.17
   User lenamkhanh
 Host x1
-  HostName 100.98.171.59
+  HostName 100.83.77.33
   User kln
 Host rog
   HostName 100.77.72.116
