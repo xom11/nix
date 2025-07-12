@@ -68,3 +68,15 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo usermod -aG docker $USER
 newgrp docker
 ```
+# Other Setup
+## Logind Configuration
+```
+sudo gedit /etc/systemd/logind.conf
+```
+## non-graphical target
+```
+sudo systemctl set-default multi-user.target
+```
+```
+sudo systemctl set-default graphical.target
+```

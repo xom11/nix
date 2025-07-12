@@ -22,7 +22,13 @@ in
         '';
       }
       resurrect
-      continuum
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-boot 'on'
+          set -g @continuum-save-interval '15'
+      }
       {
         plugin = tmux-sessionx;
         extraConfig = ''
