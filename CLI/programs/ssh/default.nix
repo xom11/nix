@@ -11,7 +11,7 @@
     copyAuthorizedKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
       rm -rf ~/.ssh/authorized_keys;
       mkdir -p ~/.ssh;
-      cp ${./authorized_keys} "~/.ssh/authorized_keys";
+      cp ${./authorized_keys} ~/.ssh/authorized_keys;
     '';
 
     genSshKey = lib.hm.dag.entryAfter ["copySshConfig"] ''
