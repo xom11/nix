@@ -27,6 +27,10 @@
         wvous-tr-corner = 1;
         persistent-apps = [];
       };
+      trackpad = {
+        Clicking = true;
+        Dragging = true:
+      }
       # finder = {
       #   _FXShowPosixPathInTitle = false;
       #   _FXSortFoldersFirst = true;

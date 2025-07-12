@@ -27,7 +27,7 @@ sudo nixos-rebuild switch --impure --refesh --flake github:kln-os/nix/main#x1g6
 ## MacOS
 ## Install Nix
 ```bash
-curl -fsSL https://install.determinate.systems/nix | sh -s -- install --no-confirm
+sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
 ```
 ### Macmini Setup
 ```bash
