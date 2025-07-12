@@ -6,5 +6,5 @@ in
     computerName = hostame;
     hostName = hostname;
     localHostName = hostname;
-  }
+  };
 }
