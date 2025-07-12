@@ -11,5 +11,5 @@ in
     computer = 30;
     display = 30;
     harddisk = 30;
-  }
+  };
 }

@@ -4,6 +4,6 @@
     ./services.nix
     ./brew.nix
     ./system.nix
-    ./network.nix
+    ./other.nix
   ];
 }
