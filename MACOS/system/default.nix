@@ -54,10 +54,11 @@
         KeyRepeat = 2; # slider values: 120, 90, 60, 30, 12, 6, 2
         AppleInterfaceStyle = "Dark";
       };
-      CustomSystemPreferences = {
+      CustomUserPreferences = {
         NSGlobalDomain = {
           AppleLanguages = ["en"];
         };
+        b
       };
 
     };
