@@ -7,7 +7,6 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-
   nix.package = pkgs.nix;
 
   # do garbage collection weekly to keep disk usage low
