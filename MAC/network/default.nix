@@ -1,7 +1,4 @@
-{username}:
-let
-  hostname = "macmini-${username}";
-in
+{hostname,...}:
 {
   networking = {
     computerName = hostname;
