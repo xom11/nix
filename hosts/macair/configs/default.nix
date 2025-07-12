@@ -2,6 +2,6 @@
 {
   imports = [
     ./system.nix
-    ./network.nix
+    ./other.nix
   ];
 }
