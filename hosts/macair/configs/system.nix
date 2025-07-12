@@ -29,7 +29,7 @@
       };
       trackpad = {
         Clicking = true;
-        Dragging = true:
+        Dragging = true;
       };
       # finder = {
       #   _FXShowPosixPathInTitle = false;
