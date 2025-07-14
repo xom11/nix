@@ -28,19 +28,10 @@
         wvous-tr-corner = 1;
         persistent-apps = [];
       };
-      # finder = {
-      #   _FXShowPosixPathInTitle = false;
-      #   _FXSortFoldersFirst = true;
-      #   AppleShowAllExtensions = true;
-      #   AppleShowAllFiles = false;
-      #   CreateDesktop = true;
-      #   FXDefaultSearchScope = "SCcf";
-      #   FXEnableExtensionChangeWarning = false;
-      #   FXPreferredViewStyle = "clmv";
-      #   QuitMenuItem = false;
-      #   ShowPathbar = true;
-      #   ShowStatusBar = false;
-      # };
+      finder = {
+        ShowPathbar = true;
+        ShowStatusBar = true;
+      };
       controlcenter = {
         AirDrop = false;
         Bluetooth = false;
