@@ -41,4 +41,5 @@ sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/maste
 ## SSH Key Generation
 ```bash
 ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519 && cat ~/.ssh/id_ed25519.pub
+ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519 && type ~/.ssh/id_ed25519.pub
 ```
