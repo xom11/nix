@@ -1,5 +1,6 @@
 {config, pkgs, lib, ...}:
 {
+  
   home.activation = {
 
     copySshConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
