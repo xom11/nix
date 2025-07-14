@@ -6,13 +6,13 @@
     copySshConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
       rm -rf  ~/.ssh/config; 
       mkdir -p  ~/.ssh;
-      cp ${./config}  ~/.ssh/config;
+      cp ${./config}  ~/.ssh/;
     '';
 
     copyAuthorizedKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
       rm -rf ~/.ssh/authorized_keys;
       mkdir -p ~/.ssh;
-      cp ${./authorized_keys} ~/.ssh/authorized_keys;
+      cp ${./authorized_keys} ~/.ssh/;
       chmod 600 ~/.ssh/authorized_keys;
     '';
 

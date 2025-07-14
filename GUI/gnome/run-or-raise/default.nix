@@ -1,15 +1,10 @@
 {config, pkgs, lib, ...}:
-let
-  folder = "${config.home.homeDirectory}/.config/run-or-raise";
-  file = "${config.home.homeDirectory}/.config/run-or-raise/shortcuts.conf";
-  tmp = pkgs.writeText "tmp" (builtins.readFile ./shortcuts.conf);
-in
 {
   home.activation = {
     copyRunOrRaise =  lib.hm.dag.entryAfter ["writeBoundary"] ''
-      rm -rf ${file}; 
-      mkdir -p ${folder};
-      cp ${tmp} ${file};
+      rm -rf ~/.config/run-or-raise; 
+      mkdir -p ~/.config/run-or-raise;
+      cp ${./shortcuts.conf} ~/.config/run-or-raise/;
     '';
   };
 }
