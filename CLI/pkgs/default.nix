@@ -20,7 +20,6 @@
         ncdu
         jq
         gh
-        openssh
 
         # Rust
         cargo
