@@ -22,6 +22,7 @@
     brews = [
       "tailscale"
       "docker"
+      "podman"
       "openssl@3"
     ];
 
