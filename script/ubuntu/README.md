@@ -47,6 +47,11 @@ sudo apt install -y code
 ```
 curl -fsSL https://tailscale.com/install.sh | sh
 ```
+# Podman
+```
+sudo apt-get update -y
+sudo apt-get install -y podman
+```
 # Docker
 ```
 # Add Docker's official GPG key:
