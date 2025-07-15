@@ -24,6 +24,7 @@
       "docker"
       "podman"
       "openssl@3"
+      "redis"
     ];
 
     casks = [
