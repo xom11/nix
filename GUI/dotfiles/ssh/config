@@ -1,10 +1,6 @@
 Host dk
   HostName 100.126.180.8
   User dk
-Host tele
-  HostName 185.32.162.180
-  User user
-  Port 47964
 Host m4
   HostName ma4
   User lenamkhanh
@@ -14,3 +10,6 @@ Host x1
 Host rog
   HostName asus
   User rog
+Host dkp
+  HostName 167.86.81.250
+  User dkp 
