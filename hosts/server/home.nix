@@ -7,7 +7,7 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  # home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
+  home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   imports = [
     ../../CLI/programs

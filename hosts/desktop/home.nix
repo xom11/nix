@@ -8,8 +8,6 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
-
   imports = [
     ../../GUI/gnome
     ../../GUI/dotfiles
@@ -28,6 +26,7 @@ in
   nixpkgs.config.allowUnfree = true;
 
   home.sessionVariables = {
+    # SHELL = "${pkgs.zsh}/bin/zsh";
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";
