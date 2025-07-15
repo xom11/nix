@@ -33,9 +33,9 @@ sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
 ```bash
 sudo darwin-rebuild switch --impure --flake ~/nix#macmini
 ```
-### Macair Setup
+### Macbook Setup
 ```bash
-sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --impure --refresh --flake github:kln-os/nix/main#macair
+sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --impure --refresh --flake github:kln-os/nix/main#macbook
 ```
 # Other Setup
 ## SSH Key Generation
