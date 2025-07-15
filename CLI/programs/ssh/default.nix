@@ -3,12 +3,6 @@
   
   home.activation = {
 
-    copySshConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
-      rm -rf  ~/.ssh/config; 
-      mkdir -p  ~/.ssh;
-      cp ${./config}  ~/.ssh/config;
-    '';
-
     copyAuthorizedKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
       rm -rf ~/.ssh/authorized_keys;
       mkdir -p ~/.ssh;
