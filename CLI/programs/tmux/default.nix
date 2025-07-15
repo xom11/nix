@@ -13,7 +13,12 @@ in
     plugins = with pkgs.tmuxPlugins; [
       # sensible
       fzf-tmux-url
-      yank
+      {
+        plugin = yank;
+        extraConfig = ''
+          set -g @yank_action 'copy-pipe'
+        '';
+      }
       vim-tmux-navigator
       {
         plugin = power-theme;
