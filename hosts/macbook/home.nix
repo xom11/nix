@@ -20,7 +20,7 @@
     TERMINAL = "kitty";
   };
   home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --refresh --flake github:kln-os/nix/main#macair";
+    update = "sudo darwin-rebuild switch --impure --refresh --flake github:kln-os/nix/main#macbook";
   };
 
 }

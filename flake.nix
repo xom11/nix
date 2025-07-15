@@ -61,11 +61,11 @@
           }
         ];
       };
-      "macair" = nix-darwin.lib.darwinSystem {
+      "macbook" = nix-darwin.lib.darwinSystem {
         inherit specialArgs;
         system = system;
         modules = [
-          ./hosts/macair/configuration.nix
+          ./hosts/macbook/configuration.nix
           # nix-homebrew.darwinModules.nix-homebrew 
           # {
           #   nix-homebrew = {
@@ -80,7 +80,7 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = specialArgs;
             home-manager.users.${username}.imports = [
-              ./hosts/macair/home.nix
+              ./hosts/macbook/home.nix
             ];
           }
         ];

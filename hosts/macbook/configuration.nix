@@ -1,6 +1,6 @@
 { config, pkgs, lib, username, ... }:
 let 
-  hostname = "macair-qphus";
+  hostname = "macbook-${username}";
 in
 {
  
