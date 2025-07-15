@@ -5,6 +5,8 @@
   home.stateVersion = "24.11"; 
   programs.home-manager.enable = true;
 
+  home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
+
   imports = [
     ../../GUI/dotfiles
     ../../GUI/apps/macos
