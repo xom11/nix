@@ -66,16 +66,16 @@
         system = system;
         modules = [
           ./hosts/macbook/configuration.nix
-          # nix-homebrew.darwinModules.nix-homebrew 
-          # {
-          #   nix-homebrew = {
-          #     enable = true;
-          #     enableRosetta = true;
-          #     autoMigrate = true;
-          #     mutableTaps = true;
-          #     user = username;
-          #   };
-          # }
+          nix-homebrew.darwinModules.nix-homebrew 
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              autoMigrate = true;
+              mutableTaps = true;
+              user = username;
+            };
+          }
           home-manager.darwinModules.home-manager {
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = specialArgs;
