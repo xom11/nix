@@ -6,7 +6,6 @@
   programs.home-manager.enable = true;
 
   imports = [
-    ../../GUI/dotfiles
     ../../GUI/fonts
 
     ../../CLI/programs
