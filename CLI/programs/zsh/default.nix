@@ -28,7 +28,7 @@
         "fzf"
         "z"
         "uv"
-        "tmux"
+        # "tmux"
         "sudo"
       ];
     };
