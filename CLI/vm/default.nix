@@ -5,7 +5,6 @@
     # redis
     # minio
     ffmpeg
-    minio-client
     discordchatexporter-cli
   ];
 }

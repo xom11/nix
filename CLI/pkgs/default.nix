@@ -21,6 +21,9 @@
         jq
         gh
 
+        # Database
+        minio-client
+
         # Rust
         cargo
         maturin
