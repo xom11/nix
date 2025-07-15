@@ -17,7 +17,6 @@ in
         plugin = yank;
         extraConfig = ''
           set -g @yank_action 'copy-pipe'
-          set -g @yank_with_mouse on
         '';
       }
       vim-tmux-navigator
