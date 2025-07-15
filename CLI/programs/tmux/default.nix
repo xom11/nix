@@ -11,7 +11,7 @@ in
     extraConfig = tmuxConf; 
 
     plugins = with pkgs.tmuxPlugins; [
-      sensible
+      # sensible
       fzf-tmux-url
       yank
       vim-tmux-navigator

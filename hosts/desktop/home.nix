@@ -26,7 +26,7 @@ in
   nixpkgs.config.allowUnfree = true;
 
   home.sessionVariables = {
-    # SHELL = "${pkgs.zsh}/bin/zsh";
+    SHELL = "${pkgs.zsh}/bin/zsh";
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";

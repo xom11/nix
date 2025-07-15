@@ -7,8 +7,6 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
-
   imports = [
     ../../CLI/programs
     ../../CLI/services
@@ -16,6 +14,10 @@ in
     ../../CLI/bin
     ../../CLI/vm
   ];
+
+  home.sessionVariables = {
+    SHELL = "${pkgs.zsh}/bin/zsh";
+  };
 
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
