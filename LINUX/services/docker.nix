@@ -2,11 +2,11 @@
 
 {
   environment = {
-    # systemPackages = with pkgs; [
-    #   docker
-    #   apparmor-parser
-    #   apparmor-utils
-    # ];
+    systemPackages = with pkgs; [
+      docker
+      apparmor-parser
+      apparmor-utils
+    ];
   };
   systemd.services = {
     docker = {
