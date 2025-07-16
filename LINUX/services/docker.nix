@@ -1,6 +1,13 @@
 { config, lib, pkgs, ... }:
 
 {
+  environment = {
+    systemPackages = with pkgs; [
+      docker
+      apparmor-parser
+      apparmor-utils
+    ];
+  };
   systemd.services = {
     docker = {
       enable = true;
