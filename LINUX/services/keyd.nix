@@ -14,7 +14,17 @@
         AttrKeyboardIntegration=internal
       '';
     };
-    # systemPackages = [
   };
-
+  systemd.services = {
+    keyd = {
+      enable = true;
+      description = "Keyd Keyboard Daemon";
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.keyd}/bin/keyd";
+        # Restart = "always";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
+  };
 }

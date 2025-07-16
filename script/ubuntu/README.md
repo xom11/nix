@@ -12,17 +12,6 @@ sudo add-apt-repository ppa:keyd-team/ppa
 sudo apt update -y
 sudo apt install keyd -y
 sudo systemctl enable --now keyd
-sudo mkdir -p /etc/keyd
-sudo touch /etc/keyd/default.conf
-echo '[ids]
-*
-
-[main]
-capslock=overload(hyper, esc)
-
-[otherlayer]
-
-[hyper:C-M-A]' | sudo tee /etc/keyd/default.conf > /dev/null
 sudo systemctl restart keyd
 ```
 # Brave
