@@ -3,9 +3,6 @@ let
   tmuxConf = builtins.readFile ./tmux.conf;
 in 
 {
-  home.packages = with pkgs; [
-    tmux
-  ];
   programs.tmux = {
     enable = true;
     extraConfig = tmuxConf; 
@@ -41,7 +38,6 @@ in
           set -g @sessionx-window-width '90%'
           set -g @sessionx-zoxide-mode 'on'
           set -g @sessionx-fzf-marks-mode 'on'
-
         '';
       }
       tmux-fzf
