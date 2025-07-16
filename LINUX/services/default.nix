@@ -2,7 +2,7 @@
 {
   imports = [
     ./keyd.nix
-  ]
+  ];
   environment = {
     etc = {
       "foo.conf".text = ''
