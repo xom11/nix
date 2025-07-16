@@ -5,6 +5,6 @@
     imports = [
       ../../LINUX/base
       ../../LINUX/services
-    ]
+    ];
   };
 }
