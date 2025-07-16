@@ -2,13 +2,13 @@ Host dk
   HostName 100.126.180.8
   User dk
 Host m4
-  HostName ma4
+  HostName 100.115.218.17
   User lenamkhanh
 Host x1
-  HostName nixos
+  HostName 100.83.77.33
   User kln
 Host rog
-  HostName asus
+  HostName 100.77.72.116
   User rog
 Host dkp
   HostName 167.86.81.250
