@@ -17,15 +17,15 @@
       '';
     };
   };
-  systemd.services = {
-    keyd = {
-      enable = true;
-      description = "Keyd Keyboard Daemon";
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.keyd}/bin/keyd --config /etc/keyd/default.conf";
-      };
-      wantedBy = [ "multi-user.target" ];
-    };
-  };
+  # systemd.services = {
+  #   keyd = {
+  #     enable = true;
+  #     description = "Keyd Keyboard Daemon";
+  #     serviceConfig = {
+  #       Type = "simple";
+  #       ExecStart = "${pkgs.keyd}/bin/keyd --config /etc/keyd/default.conf";
+  #     };
+  #     wantedBy = [ "multi-user.target" ];
+  #   };
+  # };
 }
