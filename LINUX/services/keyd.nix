@@ -3,6 +3,8 @@
   environment = {
     etc = {
       "keyd/default.conf".text = ''
+        [ids]
+        *
         [main]
         capslock=overload(hyper, esc)
         [hyper:C-M-A]
