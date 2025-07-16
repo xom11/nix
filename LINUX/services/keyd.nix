@@ -24,7 +24,6 @@
       serviceConfig = {
         Type = "simple";
         ExecStart = "${pkgs.keyd}/bin/keyd --config /etc/keyd/default.conf";
-        Restart = "always";
       };
       wantedBy = [ "multi-user.target" ];
     };
