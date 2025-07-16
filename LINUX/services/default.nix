@@ -2,6 +2,7 @@
 {
   imports = [
     ./keyd.nix
+    ./docker.nix
   ];
   environment = {
     etc = {
