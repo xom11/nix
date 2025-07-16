@@ -140,14 +140,14 @@
     };
     systemConfigs ={
       "desktop" = system-manager.lib.makeSystemConfig {
-        inherit specialArgs;
+        # inherit specialArgs;
         modules = [
           ./hosts/desktop/configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = specialArgs;
-            home-manager.users.${username}.imports = [ 
+            home-manager.users.rog.imports = [ 
               nix-flatpak.homeManagerModules.nix-flatpak
               ./hosts/desktop/home.nix
             ];
