@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
 {
+  imports = [
+    ./keyd.nix
+  ]
   environment = {
     etc = {
       "foo.conf".text = ''
