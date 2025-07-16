@@ -23,8 +23,8 @@
       description = "Keyd Keyboard Daemon";
       serviceConfig = {
         Type = "simple";
-        ExecStart = "${pkgs.keyd}/bin/keyd";
-        # Restart = "always";
+        ExecStart = "${pkgs.keyd}/bin/keyd --config /etc/keyd/default.conf";
+        Restart = "always";
       };
       wantedBy = [ "multi-user.target" ];
     };
