@@ -1,10 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
-  config = {
-    imports = [
-      ../../LINUX/base
-      ../../LINUX/services
-    ];
-  };
+  imports = [
+    ../../LINUX/base
+    ../../LINUX/services
+  ];
 }
