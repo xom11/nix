@@ -13,7 +13,7 @@
     (config.lib.nixGL.wrap localsend)
     telegram-desktop
     # vscode
-    # google-chrome
+    google-chrome
     # brave
     # discord
     # bitwarden-desktop
