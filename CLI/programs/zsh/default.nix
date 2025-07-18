@@ -66,6 +66,7 @@
     sessionVariables = {
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
+      PYTHONPATH = "$(pwd)"
     };
     initContent = ''
       zvm_after_init() {
