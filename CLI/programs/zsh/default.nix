@@ -66,13 +66,13 @@
     sessionVariables = {
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
-      PYTHONPATH = "$(pwd)"
     };
     initContent = ''
       zvm_after_init() {
         source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
       }      
       printf '\e[5 q'
+      export PYTHONPATH=$(pwd)
     '';
   }; 
   
