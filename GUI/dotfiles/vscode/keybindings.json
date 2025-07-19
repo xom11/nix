@@ -28,7 +28,7 @@
   },
   {
     "command": "editor.action.rename",
-    "key": "space c r",
+    "key": "space r",
     "when": "vim.mode == 'Normal' && editorTextFocus"
   },
   {
@@ -85,6 +85,16 @@
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
   },
   {
+    "command": "copyFilePath",
+    "key": "y",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "command": "copyRelativeFilePath",
+    "key": "shift+y",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
     "command": "filesExplorer.paste",
     "key": "p",
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
@@ -110,7 +120,7 @@
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
   },
   {
-    "command": "explorer.openAndPassFocus",
+    "command": "filesExplorer.openFilePreserveFocus",
     "key": "enter",
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceIsFolder && !inputFocus"
   },
@@ -120,10 +130,38 @@
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && explorerResourceIsFolder && !inputFocus"
   },
 
+  //TERMINAL
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+w",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.terminal.killActiveTab",
+        "workbench.action.terminal.focus"
+      ]
+    },
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+up",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+down",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+
   // TOGGLE
   {
     "key": "alt+t",
-    "command":"workbench.action.terminal.toggleTerminal",
+    "command": "workbench.action.terminal.toggleTerminal"
   },
   {
     "command": "workbench.action.toggleAuxiliaryBar",
