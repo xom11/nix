@@ -21,10 +21,11 @@
 
     brews = [
       "tailscale"
-      "docker"
       "podman"
       "openssl@3"
       "redis"
+      "docker"
+      "colima"
     ];
 
     casks = [
