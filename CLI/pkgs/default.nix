@@ -25,9 +25,7 @@
         minio-client
 
         # Rust
-        # cargo
         maturin
-        rustc
         rustup
 
         # Python
