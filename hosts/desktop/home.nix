@@ -42,5 +42,10 @@ in
   home.file.".config/environment.d/nix-path.conf".text= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
     '';
+  home.file.".config/environment.d/system-manager-path.sh".text= ''
+    PATH="/run/system-manager/sw/bin/:$PATH"
+  '';
+  
+    
 }
 
