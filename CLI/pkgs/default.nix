@@ -20,6 +20,7 @@
         ncdu
         jq
         gh
+        openssl
 
         # Database
         minio-client
