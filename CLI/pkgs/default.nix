@@ -25,7 +25,7 @@
         minio-client
 
         # Rust
-        cargo
+        # cargo
         maturin
         rustc
         rustup
