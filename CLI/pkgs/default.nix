@@ -28,6 +28,7 @@
         cargo
         maturin
         rustc
+        rustup
 
         # Python
         python3
