@@ -44,7 +44,7 @@ in
     '';
 
   # system manager path
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
       # source system manager path
       if [ -d /run/system-manager/sw/bin ]; then
         export PATH="/run/system-manager/sw/bin/:$PATH"
