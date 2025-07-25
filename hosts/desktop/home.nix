@@ -42,9 +42,15 @@ in
   home.file.".config/environment.d/nix-path.conf".text= ''
       PATH="$HOME/.nix-profile/bin:$PATH"
     '';
-  home.file.".config/environment.d/system-manager-path.conf".text= ''
-    PATH="/run/system-manager/sw/bin/:$PATH"
-  '';
+
+  # system manager path
+  home.zsh.initExtra = ''
+      # source system manager path
+      if [ -d /run/system-manager/sw/bin ]; then
+        export PATH="/run/system-manager/sw/bin/:$PATH"
+      fi
+    '';
+
   
     
 }
