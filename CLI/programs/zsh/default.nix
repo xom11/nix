@@ -72,7 +72,7 @@
         source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
       }      
       printf '\e[5 q'
-      export PYTHONPATH=$PYTHONPATH:$(pwd)
+      export PYTHONPATH=$(pwd)
     '';
   }; 
   
