@@ -1,13 +1,18 @@
 {config, pkgs, lib, ...}:
+let
+  qutebrowserConfigDir = if pkgs.stdenv.hostPlatform.isLinux
+    then "~/.config/qutebrowser"
+    else "~/.qutebrowser"; 
+in
 {
   
   home.activation = {
 
     copyQutebrowserConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
-      rm -rf  ~/.config/qutebrowser; 
-      mkdir -p  ~/.config/qutebrowser;
-      cp ${./config.py}  ~/.config/qutebrowser/config.py;
-      chmod u+w ~/.config/qutebrowser/config.py;
+      rm -rf  ${qutebrowserConfigDir}/config.py; 
+      mkdir -p  ${qutebrowserConfigDir};
+      cp ${./config.py}  ${qutebrowserConfigDir}/config.py;
+      chmod u+w ${qutebrowserConfigDir}/config.py;
     '';
 
   };
