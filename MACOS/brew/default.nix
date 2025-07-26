@@ -42,7 +42,7 @@
       "localsend"
       "slack"
       "brave-browser"
-      "qutebrowser"
+      # "qutebrowser"
       "google-chrome"
       "microsoft-edge"
       "kitty"

@@ -3,6 +3,7 @@
 {
   home.packages = with pkgs; [
     bitwarden-desktop
+    qutebrowser
     discord
     vscode
     telegram-desktop
