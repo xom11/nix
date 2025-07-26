@@ -12,7 +12,7 @@
       description = "Tailscale node agent";
       documentation = [ "https://tailscale.com/kb/" ];
       wantedBy = [ "multi-user.target" ];
-      after = [ "network-pre.target NetworkManager.service systemd-resolved.service" ];
+      after = [ "network-pre.target" "NetworkManager.service" "systemd-resolved.service" ];
       wants = [ "network-pre.target" ];
       serviceConfig = {
         Type = "notify";
