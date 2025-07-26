@@ -7,22 +7,18 @@
     vscode
     telegram-desktop
     localsend
-    joplin-desktop
     slack
-    thunderbird
     brave
     google-chrome
     kitty
     # chromedriver
     caprine
-    rustdesk
-    xournalpp
     # notion-app-enhanced
 
 
   ];
   services.flatpak.packages = [
-    { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
+    # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   ];
 
 }

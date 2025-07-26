@@ -19,13 +19,6 @@
         ExecStart = "${pkgs.tailscale}/bin/tailscaled --port 41641 ";
         ExecStartPost = "${pkgs.tailscale}/bin/tailscaled --cleanup";
         Restart = "on-failure";
-
-        RuntimeDirectory= "tailscale";
-        RuntimeDirectoryMode = 0755;
-        StateDirectory = "tailscale";
-        StateDirectoryMode = 0700;
-        CacheDirectory = "tailscale";
-        CacheDirectoryMode = 0750;
       };
     };
   };

@@ -5,7 +5,6 @@
     packages = import nixgl { inherit pkgs; };
     defaultWrapper = "mesa";
     installScripts = ["mesa"];
-    # vulkan.enable = true;
   };
 
   home.packages = with pkgs; [
@@ -17,7 +16,6 @@
     # brave
     # discord
     # bitwarden-desktop
-    # joplin-desktop
     # slack
     # chromedriver
     # caprine

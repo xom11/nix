@@ -29,7 +29,6 @@
     ];
 
     casks = [
-      "simplenote"
       "messenger"
       "zalo"
       "evkey"
@@ -41,15 +40,13 @@
       "visual-studio-code"
       "telegram"
       "localsend"
-      "joplin"
       "slack"
-      "xournal++"
       "brave-browser"
+      "qutebrowser"
       "google-chrome"
       "microsoft-edge"
       "kitty"
       "vmware-fusion"
-      "rustdesk"
       # "Tunnelblick"
       # "chromedriver"
     ];
