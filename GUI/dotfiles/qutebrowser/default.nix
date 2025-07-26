@@ -6,15 +6,21 @@ let
 in
 {
   
-  home.activation = {
+  # home.activation = {
 
-    copyQutebrowserConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
-      rm -rf  ${qutebrowserConfigDir}; 
-      mkdir -p  ${qutebrowserConfigDir};
-      cp ${./config.py}  ${qutebrowserConfigDir}/config.py;
-      cp ${./quickmarks}  ${qutebrowserConfigDir}/quickmarks;
-      chmod -R u+w ${qutebrowserConfigDir};
-    '';
+  #   copyQutebrowserConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
+  #     rm -rf  ${qutebrowserConfigDir}; 
+  #     mkdir -p  ${qutebrowserConfigDir};
+  #     cp ${./config.py}  ${qutebrowserConfigDir}/config.py;
+  #     cp ${./quickmarks}  ${qutebrowserConfigDir}/quickmarks;
+  #     chmod -R u+w ${qutebrowserConfigDir};
+  #   '';
 
-  };
+  # };
+
+  home.files = {
+    "test" = {
+      source = config.lib.file.mkOutOfStoreSymlink ./config.py;
+    }
+  }
 }
