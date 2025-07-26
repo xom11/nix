@@ -18,7 +18,7 @@ in
 
   # };
 
-  home.files = {
+  home.file = {
     "test" = {
       source = config.lib.file.mkOutOfStoreSymlink ./config.py;
     };
