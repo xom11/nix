@@ -3,7 +3,7 @@
   
   home.activation = {
 
-    copySshConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
+    copyQutebrowserConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
       rm -rf  ~/.config/qutebrowser; 
       mkdir -p  ~/.config/qutebrowser;
       cp ${./config.py}  ~/.config/qutebrowser/config.py;
