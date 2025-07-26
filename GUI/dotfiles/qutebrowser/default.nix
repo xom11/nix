@@ -21,6 +21,6 @@ in
   home.files = {
     "test" = {
       source = config.lib.file.mkOutOfStoreSymlink ./config.py;
-    }
-  }
+    };
+  };
 }
