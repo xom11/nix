@@ -7,7 +7,7 @@
     ];
   };
   systemd.services = {
-    docker = {
+    tailscale = {
       enable = true;
       description = "Tailscale node agent";
       documentation = [ "https://tailscale.com/kb/" ];
