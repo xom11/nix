@@ -7,6 +7,7 @@
       rm -rf  ~/.ssh/config; 
       mkdir -p  ~/.ssh;
       cp ${./config}  ~/.ssh/config;
+      chmod u+w ~/.ssh/config;
     '';
 
   };
