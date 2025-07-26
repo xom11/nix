@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...}:
+{config, pkgs, lib, nixrc ...}:
 let
   qutebrowserConfigDir = if pkgs.stdenv.hostPlatform.isLinux
     then "~/.config/qutebrowser"
@@ -19,8 +19,8 @@ in
   # };
 
   home.file = {
-    "test" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/nix/GUI/dotfiles/qutebrowser/config.py";
+    "${qutebrowserConfigDir}/config.py" = {
+      source = config.lib.file.mkOutOfStoreSymlink  "${nixrc}/GUI/dotfiles/qutebrowser/config.py";
     };
   };
 }

@@ -27,6 +27,7 @@
     with inputs;
     let
       username = builtins.getEnv "SUDO_USER"; 
+      nixrc = "${builtins.Env "HOME"}/nix";
       system = builtins.currentSystem;
 
       specialArgs =
