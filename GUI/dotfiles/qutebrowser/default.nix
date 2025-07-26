@@ -20,7 +20,7 @@ in
 
   home.file = {
     "test" = {
-      source = config.lib.file.mkOutOfStoreSymlink ./config.py;
+      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/nix/GUI/dotfiles/qutebrowser/config.py";
     };
   };
 }
