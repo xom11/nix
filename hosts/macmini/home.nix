@@ -24,7 +24,7 @@
     TERMINAL = "kitty";
   };
   home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ~/nix#macmini";
+    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#macmini";
   };
 
 }

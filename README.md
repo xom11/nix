@@ -27,7 +27,7 @@ add-visudo && add-authkey && set-zsh
 ---
 # Nixos
 ```bash
-sudo nixos-rebuild switch --impure --refesh --flake github:kln-os/nix/main#x1g6
+sudo nixos-rebuild switch --impure --refesh --flake ~/.nix#x1g6
 ```
 ---
 # MacOS
