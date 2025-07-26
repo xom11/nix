@@ -3,6 +3,11 @@
 curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/install | sh
 ```
 ---
+# Git Clone
+```bash
+git clone https://github.com/kln-os/nix.git ~/.nix -q --depth 1
+```
+---
 # Linux
 ## Install Nix
 ```bash
@@ -44,11 +49,6 @@ sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/maste
 ```bash
 curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-```
-## Git Clone
-```bash
-git clone https://github.com/kln-os/nix.git ~/nix -q
-cd ~/nix
 ```
 ```bash
 sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/nix#desktop

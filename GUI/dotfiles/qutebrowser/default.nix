@@ -8,10 +8,10 @@ in
   
   home.file = {
     "${configDir}/config.py" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/nix/GUI/dotfiles/qutebrowser/config.py";
+      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/config.py";
     };
     "${configDir}/quickmarks" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/nix/GUI/dotfiles/qutebrowser/quickmarks";
+      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/quickmarks";
     };
   };
 }
