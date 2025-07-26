@@ -60,7 +60,7 @@
     dirHashes = {
       # cd ~cfg
       cfg = "$HOME/.config";
-      nix = "$HOME/nix";
+      nix = "$HOME/.nix";
     };
 
     sessionVariables = {
