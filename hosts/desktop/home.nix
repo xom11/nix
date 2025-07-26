@@ -34,6 +34,7 @@ in
 
   home.shellAliases = {
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#desktop";
+    system-update = "git -C ~/nix pull && sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/nix#desktop"; 
   }; 
 
   # show desktop apps
