@@ -1,5 +1,5 @@
 {pkgs, ...}:
 {
   # services.ssh-agent.enable = true;
-  service.podman.enable = true;
+  services.podman.enable = true;
 }

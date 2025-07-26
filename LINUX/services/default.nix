@@ -3,6 +3,6 @@
   imports = [
     ./keyd.nix
     ./docker.nix
-    ./tailscale.nix
+    # ./tailscale.nix
   ];
 }
