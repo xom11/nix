@@ -9,10 +9,11 @@ in
   home.activation = {
 
     copyQutebrowserConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
-      rm -rf  ${qutebrowserConfigDir}/config.py; 
+      rm -rf  ${qutebrowserConfigDir}; 
       mkdir -p  ${qutebrowserConfigDir};
       cp ${./config.py}  ${qutebrowserConfigDir}/config.py;
-      chmod u+w ${qutebrowserConfigDir}/config.py;
+      cp ${./quickmarks}  ${qutebrowserConfigDir}/quickmarks;
+      chmod -R u+w ${qutebrowserConfigDir};
     '';
 
   };
