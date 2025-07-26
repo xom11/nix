@@ -5,6 +5,7 @@
       rm -rf ~/.config/run-or-raise; 
       mkdir -p ~/.config/run-or-raise;
       cp ${./shortcuts.conf} ~/.config/run-or-raise/shortcuts.conf;
+      chmod u+w ~/.config/run-or-raise/shortcuts.conf;
     '';
   };
 }
