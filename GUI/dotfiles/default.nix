@@ -4,5 +4,6 @@
     ./kitty
     ./ssh
     ./qutebrowser
+    ./vscode
   ];
 }

@@ -1,14 +1,9 @@
 {config, pkgs, lib, ...}:
 {
   
-  home.activation = {
-
-    copySshConfig =  lib.hm.dag.entryAfter ["writeBoundary"] ''
-      rm -rf  ~/.ssh/config; 
-      mkdir -p  ~/.ssh;
-      cp ${./config}  ~/.ssh/config;
-      chmod u+w ~/.ssh/config;
-    '';
-
+  home.file = {
+    ".ssh/config" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/GUI/dotfiles/ssh/default.nix";
+    };
   };
 }
