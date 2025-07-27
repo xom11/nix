@@ -37,7 +37,7 @@ sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
 ```
 ## Macmini Setup
 ```bash
-sudo darwin-rebuild switch --impure --flake ~/nix#macmini
+sudo darwin-rebuild switch --impure --flake ~/.nix#macmini
 ```
 ## Macbook Setup
 ```bash
@@ -51,4 +51,4 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 ```
 ```bash
-sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/nix#desktop
+sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#desktop
