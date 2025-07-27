@@ -21,5 +21,7 @@
   services.flatpak.packages = [
     # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   ];
+  programs.firefox.enable = true;
+
 
 }

@@ -61,6 +61,7 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  home-manager.backupFileExtension = "backup";
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
