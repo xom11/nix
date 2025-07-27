@@ -152,5 +152,8 @@
   //terminal copy paste
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.sendKeybindingsToShell": false,
-  "diffEditor.renderSideBySide": false
+  "diffEditor.renderSideBySide": false,
+  "[markdown]": {
+    "diffEditor.ignoreTrimWhitespace": true
+  }
 }
