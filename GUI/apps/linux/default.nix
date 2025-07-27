@@ -14,7 +14,7 @@
     qutebrowser
     # vscode
     # google-chrome
-    # brave
+    brave
     # discord
     # bitwarden-desktop
     # slack
