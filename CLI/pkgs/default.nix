@@ -32,7 +32,7 @@
         rustup
 
         # Python
-        python3
+        python3Full
         python3Packages.pip
         uv
 
