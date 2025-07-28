@@ -33,6 +33,9 @@
       ];
     };
   };
+  environment.systemPackages = with pkgs; [
+    nautilus
+  ];
 
   security.polkit.enable = true;
   services.displayManager.autoLogin.enable = true;
