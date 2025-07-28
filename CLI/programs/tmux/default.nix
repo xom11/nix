@@ -23,13 +23,13 @@ in
           set -g @tmux_power_time_format '%H:%M'
         '';
       }
-      # resurrect
-      # {
-      #   plugin = continuum;
-      #   extraConfig = ''
-      #     set -g @continuum-restore 'on'
-      #     '';
-      # }
+      resurrect
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          '';
+      }
       {
         plugin = tmux-sessionx;
         extraConfig = ''
