@@ -29,6 +29,7 @@
     ];
 
     casks = [
+      # "firefox"
       "messenger"
       "zalo"
       "evkey"
