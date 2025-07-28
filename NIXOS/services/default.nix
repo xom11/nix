@@ -42,4 +42,8 @@ environment.etc."libinput/local-overrides.quirks".text = ''
   MatchName=keyd virtual keyboard
   AttrKeyboardIntegration=internal
 '';
+environment.systemPackages = with pkgs; [
+  python310
+  python311
+];
 }

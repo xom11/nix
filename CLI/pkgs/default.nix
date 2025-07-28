@@ -32,9 +32,8 @@
         rustup
 
         # Python
-        python3
         python310
-        # python3Packages.pip
+        python3Packages.pip
         uv
 
         # Node.js
