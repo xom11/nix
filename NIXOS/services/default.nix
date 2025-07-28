@@ -43,7 +43,7 @@ environment.etc."libinput/local-overrides.quirks".text = ''
   AttrKeyboardIntegration=internal
 '';
 environment.systemPackages = with pkgs; [
-  python310
+  python313
   python311
 ];
 }
