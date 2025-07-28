@@ -47,6 +47,7 @@
       "microsoft-edge"
       "kitty"
       "vmware-fusion"
+      "miniconda"
       # "Tunnelblick"
       # "chromedriver"
     ];

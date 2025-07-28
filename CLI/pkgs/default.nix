@@ -14,13 +14,15 @@
         fzf
         bat
         eza
-        gcc
         yazi
         zoxide
         ncdu
         jq
         gh
         # openssl
+
+        # C++
+        gcc
 
         # Database
         minio-client
