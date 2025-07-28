@@ -5,5 +5,6 @@
     ./ssh
     ./qutebrowser
     ./vscode
+    ./firefox
   ];
 }
