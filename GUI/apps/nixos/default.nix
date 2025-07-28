@@ -38,6 +38,17 @@
           definedAliases = [ "@np" ];
         };
       };
+      search.force = true;
+
+      settings = {
+        "extensions.pocket.enabled" = false;
+        "dom.security.https_only_mode" = false;
+        "browser.download.panel.shown" = true;
+        "identity.fxaccounts.enabled" = false;
+        "signon.rememberSignons" = false;
+        "browser.theme.toolbar-theme" = 1;
+      };
+      userChrome = builtins.readFile ./userChrome.css;
     };
   };
 }
