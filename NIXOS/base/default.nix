@@ -26,13 +26,13 @@
   # GNOME without the apps 
   services.gnome.core-apps.enable = false;
   xdg.terminal-exec = {
-    enabled = true;
+    enable = true;
     settings = {
       default = [
         "kitty.desktop"
       ];
     };
-  }
+  };
 
   security.polkit.enable = true;
   services.displayManager.autoLogin.enable = true;
