@@ -16,7 +16,7 @@ t() {
 }
 
 function py() {
-    uv run $1
+    uv run $@
 }
 _uv_run_mod() {
     if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
