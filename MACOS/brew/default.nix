@@ -45,6 +45,7 @@
       "qutebrowser"
       "google-chrome"
       "microsoft-edge"
+      "xquartz"
       "kitty"
       "vmware-fusion"
       "miniconda"
