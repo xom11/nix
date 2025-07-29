@@ -11,15 +11,7 @@
     (config.lib.nixGL.wrap kitty)
     (config.lib.nixGL.wrap localsend)
     telegram-desktop
-    qutebrowser
-    # vscode
-    # google-chrome
-    # brave
-    # discord
-    # bitwarden-desktop
-    # slack
-    # chromedriver
-    # caprine
+    brave
   ];
 
 }

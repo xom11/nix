@@ -140,6 +140,9 @@
     };
     systemConfigs ={
       "desktop" = system-manager.lib.makeSystemConfig {
+        extraSpecialArgs = {
+          distro = "ubuntu";
+        };
         modules = [
           ./hosts/desktop/configuration.nix
         ];
