@@ -6,5 +6,6 @@
     ./qutebrowser
     ./vscode
     ./firefox
+    ./zathura
   ];
 }

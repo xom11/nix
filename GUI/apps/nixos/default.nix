@@ -15,6 +15,7 @@
     # chromedriver
     caprine
     # notion-app-enhanced
+    vlc
 
 
   ];
