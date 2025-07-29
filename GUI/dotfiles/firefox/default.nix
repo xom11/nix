@@ -20,15 +20,19 @@
       search.force = true;
 
       settings = {
-        "extensions.pocket.enabled" = false;
-        "dom.security.https_only_mode" = false;
-        "browser.download.panel.shown" = true;
-        "identity.fxaccounts.enabled" = false;
-        "signon.rememberSignons" = false;
-        "browser.theme.toolbar-theme" = 1;
+        # "extensions.pocket.enabled" = false;
+        # "dom.security.https_only_mode" = false;
+        # "browser.download.panel.shown" = true;
+        # "identity.fxaccounts.enabled" = false;
+        # "signon.rememberSignons" = false;
+        # "browser.theme.toolbar-theme" = 1;
+
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "sidebar.verticalTabs" = true;
+        "sidebar.visibility" = "hide-sidebar"; 
+        "browser.aboutConfig.showWarning" = false;
       };
-      userChrome = builtins.readFile ./userChrome.css;
+      # userChrome = builtins.readFile ./userChrome.css;
     };
   };
 }
