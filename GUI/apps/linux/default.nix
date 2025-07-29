@@ -3,7 +3,7 @@
 {
   imports = [
     ../desktop
-  ]
+  ];
   nixGL = {
     packages = import nixgl { inherit pkgs; };
     defaultWrapper = "mesa";

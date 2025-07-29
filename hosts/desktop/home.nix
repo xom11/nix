@@ -11,7 +11,6 @@ in
   imports = [
     ../../GUI/gnome
     ../../GUI/dotfiles
-    ../../GUI/desktop
     ../../GUI/apps/linux
     ../../GUI/fonts
     ../../GUI/i18n
