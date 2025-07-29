@@ -7,7 +7,6 @@
 
   imports = [
     ../../GUI/apps/nixos
-    ../../GUI/desktop
     ../../GUI/dotfiles
     ../../GUI/fonts
     ../../GUI/gnome
