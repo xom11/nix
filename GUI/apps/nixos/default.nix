@@ -17,6 +17,7 @@
     brave
     google-chrome
     kitty
+    zathura
     # chromedriver
     caprine
     # notion-app-enhanced
