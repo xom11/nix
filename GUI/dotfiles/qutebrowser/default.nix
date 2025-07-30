@@ -10,6 +10,9 @@ in
     "${configDir}/config.py" = {
       source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/config.py";
     };
+    "${configDir}/gruvbox.py" = {
+      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/gruvbox.py";
+    };
     "${configDir}/quickmarks" = {
       source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/quickmarks";
     };
