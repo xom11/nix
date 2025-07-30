@@ -4,6 +4,7 @@
   imports = [
     ../desktop
     ../pwa
+    ../programs
   ];
 
   home.packages = with pkgs; [

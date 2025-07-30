@@ -3,9 +3,8 @@
   imports = [
     ./kitty
     ./ssh
-    ./qutebrowser
+    ./qute
     ./vscode
-    ./firefox
     ./zathura
   ];
 }
