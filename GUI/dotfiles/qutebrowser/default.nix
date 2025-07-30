@@ -16,5 +16,8 @@ in
     "${configDir}/quickmarks" = {
       source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/quickmarks";
     };
+    "${configDir}/bookmarks/urls" = {
+      source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/.nix/GUI/dotfiles/qutebrowser/bookmarks/urls";
+    };
   };
 }

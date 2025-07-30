@@ -5,6 +5,11 @@ c.content.blocking.method = "adblock"
 c.editor.command = ["vim", "{}"]
 c.fonts.web.size.default = 20
 
+
+c.tabs.padding = {'top': 5, 'bottom': 5, 'left': 9, 'right': 9}
+c.tabs.indicator.width = 0 # no tab indicators
+c.tabs.width = '7%'
+
 # Mininal decoration
 c.window.hide_decoration = True
 c.statusbar.show = 'in-mode'
