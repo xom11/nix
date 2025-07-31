@@ -4,7 +4,7 @@ let
   configDir = if pkgs.stdenv.hostPlatform.isLinux
     then ".config/Code/User"
     else "Library/Application Support/Code/User"; 
-  dotfileDir = ".nix/src/home-manager/gui/dotfiles/vscode";
+  dotfileDir = "${config.home.homeDirectory}/.nix/src/home-manager/gui/dotfiles/vscode";
 in
 {
   

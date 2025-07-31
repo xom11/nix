@@ -1,6 +1,7 @@
 {config, pkgs, lib, ...}:
 let 
-  dotfileDir = ".nix/src/home-manager/gui/dotfiles/ssh";   
+  dotfileDir = "${config.home.homedirectory}/.nix/src/home-manager/gui/dotfiles/ssh";   
+in
 {
   
   home.file = {

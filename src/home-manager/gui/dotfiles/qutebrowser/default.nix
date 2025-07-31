@@ -3,7 +3,7 @@ let
   configDir = if pkgs.stdenv.hostPlatform.isLinux
     then ".config/qutebrowser"
     else ".qutebrowser"; 
-  dotfileDir = ".nix/src/home-manager/gui/dotfiles/qutebrowser";
+  dotfileDir = "${config.home.homeDirectory}/.nix/src/home-manager/gui/dotfiles/qutebrowser";
 in
 {
   
