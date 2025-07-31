@@ -31,5 +31,8 @@
       ${builtins.readFile ./options.lua}
       ${builtins.readFile ./keymap.lua}
     '';
+    programs.neovim.extraPackages = [
+      pkgs.nodePackages_latest.vscode-json-languageserver
+    ];
   };
 }
