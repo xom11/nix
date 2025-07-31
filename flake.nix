@@ -26,10 +26,13 @@
   outputs = {... }@inputs:
     with inputs;
     let
-      username = builtins.getEnv "SUDO_USER"; 
-      homeDir = builtins.getEnv "HOME";
-      dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
       system = builtins.currentSystem;
+      username = builtins.getEnv "SUDO_USER";
+      homeDir = if builtins.match ".*-darwin" system != null
+          then "/Users/${username}"
+          else "/home/${username}";
+
+      dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
 
       specialArgs =
         inputs
