@@ -6,5 +6,6 @@
     ./qutebrowser
     ./vscode
     ./zathura
+    ./run-or-raise
   ];
 }

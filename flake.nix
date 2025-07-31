@@ -27,6 +27,7 @@
     with inputs;
     let
       username = builtins.getEnv "SUDO_USER"; 
+      dotfileDir = "${home-manager.config.home.homeDirectory}/.nix/src/home-manager/gui/dotfiles";
       system = builtins.currentSystem;
 
       specialArgs =
