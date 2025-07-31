@@ -4,5 +4,5 @@
     ../base
     ../services
     ../systemPackages
-  ]
+  ];
 }

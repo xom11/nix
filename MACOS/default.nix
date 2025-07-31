@@ -5,5 +5,5 @@
     ./brew
     ./power
     ./system
-  ]
+  ];
 }

@@ -31,6 +31,7 @@
         "sidebar.verticalTabs" = true;
         "sidebar.visibility" = "hide-sidebar"; 
         "browser.aboutConfig.showWarning" = false;
+        "browser.toolbars.bookmarks.visibility" = "never";
       };
       # userChrome = builtins.readFile ./userChrome.css;
     };
