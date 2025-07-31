@@ -5,10 +5,7 @@ in
 {
  
   imports = [
-    ../../MACOS/base
-    ../../MACOS/brew
-    ../../MACOS/system
-    ../../MACOS/power
+    ../../MACOS
   ];
   networking = {
     computerName = hostname;

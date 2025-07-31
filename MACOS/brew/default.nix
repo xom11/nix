@@ -17,9 +17,11 @@
     };
 
     taps = [
+      # "homebrew-zathura/zathura"
     ];
 
     brews = [
+      # "zathura"
       "tailscale"
       "podman"
       "openssl@3"

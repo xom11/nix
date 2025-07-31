@@ -8,8 +8,7 @@ in
       /etc/nixos/hardware-configuration.nix
       ./hibernate.nix
 
-      ../../NIXOS/base
-      ../../NIXOS/services
+      ../../NIXOS
     ];
 
 
