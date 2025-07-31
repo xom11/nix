@@ -7,12 +7,12 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  imports = [
-    ../../CLI/programs
-    ../../CLI/services
-    ../../CLI/pkgs
-    ../../CLI/bin
-    ../../CLI/vm
+  imports = builtins.map (name: ../../src/home-manager/${name}) [
+    "cli/programs"
+    "cli/services"
+    "cli/pkgs"
+    "cli/bin"
+    "cli/vm"
   ];
 
   home.sessionVariables = {

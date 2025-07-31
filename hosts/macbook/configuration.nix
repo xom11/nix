@@ -5,8 +5,7 @@ in
 {
  
   imports = [
-    ../../MACOS/base
-    # ../../MACOS/system
+    ../../src/nix-darwin
   ];
   networking = {
     computerName = hostname;

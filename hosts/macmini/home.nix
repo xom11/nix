@@ -7,15 +7,16 @@
 
   home.sessionVariables.SHELL = "${pkgs.zsh}/bin/zsh";
 
-  imports = [
-    ../../GUI/dotfiles
-    ../../GUI/apps/macos
-    ../../GUI/fonts
+  imports = builtins.map (name: ../../src/home-manager/${name}) [
+    "gui/dotfiles"
+    "gui/apps/macos"
+    "gui/fonts"
 
-    ../../CLI/programs
-    ../../CLI/pkgs
-    ../../CLI/client
+    "cli/programs"
+    "cli/pkgs"
+    "cli/client"
   ];
+
 
   nixpkgs.config.allowUnfree = true;
   home.sessionVariables = {

@@ -5,11 +5,11 @@
   home.stateVersion = "24.11"; 
   programs.home-manager.enable = true;
 
-  imports = [
-    ../../GUI/fonts
+  imports = builtins.map (name: ../../src/home-manager/${name}) [
+    "gui/fonts"
 
-    ../../CLI/programs
-    ../../CLI/pkgs
+    "cli/pkgs"
+    "cli/programs"
   ];
 
   nixpkgs.config.allowUnfree = true;
