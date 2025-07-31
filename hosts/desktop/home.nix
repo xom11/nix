@@ -8,20 +8,20 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  imports = [
-    ../../GUI/gnome
-    ../../GUI/dotfiles
-    ../../GUI/apps/linux
-    ../../GUI/fonts
-    ../../GUI/i18n
+imports = builtins.map (name: ../../src/home-manager/${name}) [
+  "gui/gnome"
+  "gui/dotfiles"
+  "gui/apps/linux"
+  "gui/fonts"
+  "gui/i18n"
 
-    ../../CLI/bin
-    ../../CLI/services
-    ../../CLI/programs
-    ../../CLI/pkgs
-    ../../CLI/client
-    ../../CLI/vm
-  ];
+  "cli/bin"
+  "cli/services"
+  "cli/programs"
+  "cli/pkgs"
+  "cli/client"
+  "cli/vm"
+];
   nixpkgs.config.allowUnfree = true;
 
   home.sessionVariables = {

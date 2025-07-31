@@ -7,8 +7,7 @@ in
       # /etc/nixos/configuration.nix
       /etc/nixos/hardware-configuration.nix
       ./hibernate.nix
-
-      ../../NIXOS
+      ../../src/nixos
     ];
 
 

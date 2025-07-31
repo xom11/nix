@@ -5,17 +5,17 @@
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11"; 
 
-  imports = [
-    ../../GUI/apps/nixos
-    ../../GUI/dotfiles
-    ../../GUI/fonts
-    ../../GUI/gnome
-    ../../GUI/i18n
+  imports = builtins.map (name: ../../src/home-manager/${name}) [
+    "gui/apps/nixos"
+    "gui/dotfiles"
+    "gui/fonts"
+    "gui/gnome"
+    "gui/i18n"
 
-    ../../CLI/pkgs
-    ../../CLI/client
-    ../../CLI/programs
-    ../../CLI/services
+    "cli/pkgs"
+    "cli/services"
+    "cli/client"
+    "cli/programs"
   ];
 
   programs.home-manager.enable = true;

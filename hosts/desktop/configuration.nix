@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ../../LINUX/base
-    ../../LINUX/services
+    ../../src/system-manager
   ];
 }
