@@ -38,7 +38,10 @@
     {
     darwinConfigurations = {
       "macmini" = nix-darwin.lib.darwinSystem {
-        inherit specialArgs;
+        specialArgs = specialArgs // {
+          device = "macmini";
+          distro = "macos";
+        };
         system = system;
         modules = [
           ./hosts/macmini/configuration.nix
@@ -88,7 +91,10 @@
     };
     nixosConfigurations = {
       "x1g6" = nixpkgs.lib.nixosSystem {
-        inherit specialArgs;
+        specialArgs = specialArgs // {
+          distro = "nixos";
+          device = "x1g6";
+        };
         system = system;
         modules = [ 
           ./hosts/x1g6/configuration.nix

@@ -1,4 +1,4 @@
-{input, config, pkgs, lib, username, ... }:
+{input, config, pkgs, lib, username, device, ... }:
 {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -63,6 +63,8 @@
   programs.firefox.enable = true;
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
+
+  networking.hostName = "${device}-${username}";
 
 
   nix = {

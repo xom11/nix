@@ -7,10 +7,9 @@
 
   imports = builtins.map (name: ../../src/home-manager/${name}) [
     "gui/apps/nixos"
+    "gui/desktop-environment"
     "gui/dotfiles"
     "gui/fonts"
-    "gui/gnome"
-    "gui/i18n"
 
     "cli/os/nixos"
     "cli/pkgs"
