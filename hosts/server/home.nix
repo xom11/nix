@@ -11,8 +11,7 @@ in
     "cli/programs"
     "cli/services"
     "cli/pkgs"
-    "cli/bin"
-    "cli/vm"
+    "cli/os/ubuntu"
   ];
 
   home.sessionVariables = {

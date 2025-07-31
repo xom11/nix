@@ -12,10 +12,11 @@
     "gui/gnome"
     "gui/i18n"
 
+    "cli/os/nixos"
     "cli/pkgs"
     "cli/services"
-    "cli/client"
     "cli/programs"
+
   ];
 
   programs.home-manager.enable = true;

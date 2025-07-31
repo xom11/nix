@@ -12,6 +12,7 @@
     "gui/apps/macos"
     "gui/fonts"
 
+    "cli/os/macos"
     "cli/programs"
     "cli/pkgs"
     "cli/client"
