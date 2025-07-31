@@ -27,13 +27,14 @@
     with inputs;
     let
       username = builtins.getEnv "SUDO_USER"; 
-      dotfileDir = "${home-manager.config.home.homeDirectory}/.nix/src/home-manager/gui/dotfiles";
+      homeDir = builtins.getEnv "HOME";
+      dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
       system = builtins.currentSystem;
 
       specialArgs =
         inputs
         // {
-          inherit username ;
+          inherit username dotfileDir;
         };
     in
     {

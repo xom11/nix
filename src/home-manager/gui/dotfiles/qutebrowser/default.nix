@@ -1,24 +1,23 @@
-{config, pkgs, lib, ...}:
+{config, pkgs, lib, dotfileDir, ...}:
 let
   configDir = if pkgs.stdenv.hostPlatform.isLinux
     then ".config/qutebrowser"
     else ".qutebrowser"; 
-  dotfileDir = "${config.home.homeDirectory}/.nix/src/home-manager/gui/dotfiles/qutebrowser";
 in
 {
   
   home.file = {
     "${configDir}/config.py" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/config.py";
+      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/config.py";
     };
     "${configDir}/gruvbox.py" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/gruvbox.py";
+      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/gruvbox.py";
     };
     "${configDir}/quickmarks" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/quickmarks";
+      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/quickmarks";
     };
     "${configDir}/bookmarks/urls" = {
-      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/bookmarks/urls";
+      source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/bookmarks/urls";
     };
   };
 }

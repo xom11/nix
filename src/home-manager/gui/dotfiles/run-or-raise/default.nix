@@ -1,10 +1,7 @@
-{config, pkgs, lib,  .dotfileDir, ..}:
-let
-  configDir = ".config/run-or-raise";
-in
+{config, pkgs, lib, dotfileDir, ...}:
 {
   home.file = {
-    "${configDir}/shortcuts.conf" = {
+    ".config/run-or-raise/shortcuts.conf" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/run-or-rise/shortcuts.conf";
     };
   };
