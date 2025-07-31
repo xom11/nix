@@ -28,6 +28,7 @@
       "colima"
     ];
 
+    caskArgs.no_quarantine = true;
     casks = [
       "messenger"
       "zalo"

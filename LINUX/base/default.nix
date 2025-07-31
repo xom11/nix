@@ -8,4 +8,12 @@
   environment.etc."sysctl.conf".text = lib.mkIf (distro == "ubuntu") ''
     kernel.apparmor_restrict_unprivileged_userns=0
   '';
+  system-manager.preActivationAssertions = {
+    hello = {
+      enable = true;
+      script = ''
+        sudo echo "Hello from system-manager!"
+      '';
+    }; 
+  };
 }
