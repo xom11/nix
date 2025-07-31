@@ -4,5 +4,5 @@
     ./gnome
     ./i18n
     ./wayland
-  ]
+  ];
 }

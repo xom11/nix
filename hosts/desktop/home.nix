@@ -9,11 +9,10 @@ in
   home.stateVersion = "25.11"; 
 
 imports = builtins.map (name: ../../src/home-manager/${name}) [
-  "gui/gnome"
-  "gui/dotfiles"
   "gui/apps/linux"
+  "gui/desktop-environment"
+  "gui/dotfiles"
   "gui/fonts"
-  "gui/i18n"
 
   "cli/services"
   "cli/programs"
