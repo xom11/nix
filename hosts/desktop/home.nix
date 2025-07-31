@@ -15,12 +15,10 @@ imports = builtins.map (name: ../../src/home-manager/${name}) [
   "gui/fonts"
   "gui/i18n"
 
-  "cli/bin"
   "cli/services"
   "cli/programs"
   "cli/pkgs"
-  "cli/client"
-  "cli/vm"
+  "cli/os/ubuntu"
 ];
   nixpkgs.config.allowUnfree = true;
 

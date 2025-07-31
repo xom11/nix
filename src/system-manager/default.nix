@@ -3,4 +3,5 @@
   imports = [
     ./base
     ./services
+  ];
 }
