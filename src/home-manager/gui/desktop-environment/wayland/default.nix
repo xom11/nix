@@ -16,4 +16,9 @@
     --ozone-platform=wayland
     --enable-features=WaylandWindowDecorations
   '';
+  home.file.".config/code-flags.conf".text = ''
+    --enable-features=UseOzonePlatform
+    --ozone-platform=wayland
+    --enable-features=WaylandWindowDecorations
+  '';
 }
