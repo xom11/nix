@@ -15,7 +15,6 @@
     "cli/os/macos"
     "cli/programs"
     "cli/pkgs"
-    "cli/client"
   ];
 
 
