@@ -4,5 +4,6 @@
       tldr
       ansible
       gemini-cli
+      gcc
   ];
 }

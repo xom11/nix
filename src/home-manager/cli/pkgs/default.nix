@@ -21,9 +21,6 @@
         gh
         # openssl
 
-        # C++
-        gcc
-
         # Database
         minio-client
 
@@ -37,7 +34,6 @@
         uv
 
         # Node.js
-        nodejs
         nodejs.pkgs.npm
         nodejs.pkgs.yarn
         nodejs.pkgs.nodemon
