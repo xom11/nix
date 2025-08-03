@@ -10,7 +10,6 @@
   home.packages = with pkgs; [
     bitwarden-desktop
     qutebrowser
-    nautilus
     discord
     vscode
     telegram-desktop
