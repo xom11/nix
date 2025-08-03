@@ -9,5 +9,6 @@
     # minio
     ffmpeg
     discordchatexporter-cli
+    xsel
   ];
 }
