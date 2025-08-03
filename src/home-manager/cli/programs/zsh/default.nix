@@ -6,7 +6,7 @@
 
   programs.zsh = {
     enable = true;
-    dotDir = "${home.homeDirectory}.config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
