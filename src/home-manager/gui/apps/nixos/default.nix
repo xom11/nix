@@ -29,4 +29,7 @@
   services.flatpak.packages = [
     # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   ];
+  home.file.".config/brave-flags.conf".text = ''
+    --enable-features=enable-parallel-downloading
+  '';
 }
