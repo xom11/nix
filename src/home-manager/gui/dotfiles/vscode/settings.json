@@ -156,5 +156,6 @@
   "diffEditor.renderSideBySide": false,
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": true
-  }
+  },
+  "terminal.integrated.inheritEnv": false
 }
