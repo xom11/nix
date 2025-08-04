@@ -34,7 +34,22 @@
       {
         plugin = nvim-treesitter;
         type = "lua";
-        config = builtins.readFile ./plugins/nvim-treesitter.lua;
+        config = builtins.readFile ./plugins/treesitter.lua;
+      }
+      {
+        plugin = nvim-cmp;
+        type = "lua";
+        config = builtins.readFile ./plugins/cmp.lua;
+      }
+      {
+        plugin = nvim-lspconfig;
+        type = "lua";
+        config = builtins.readFile ./plugins/lspconfig.lua;
+      }
+      {
+        plugin = nvim-notify;
+        type = "lua";
+        config = builtins.readFile ./plugins/notify.lua;
       }
 
     ];
