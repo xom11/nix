@@ -31,6 +31,11 @@
         type = "lua";
         config = builtins.readFile ./plugins/nvim-tree.lua;
       }
+      {
+        plugin = nvim-treesitter;
+        type = "lua";
+        config = builtins.readFile ./plugins/treesitter.lua;
+      }
 
     ];
     extraLuaConfig = ''
