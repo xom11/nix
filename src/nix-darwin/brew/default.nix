@@ -47,7 +47,7 @@
       "brave-browser"
       "qutebrowser"
       "google-chrome"
-      "microsoft-edge"
+      # "microsoft-edge"
       "xquartz"
       "kitty"
       "vmware-fusion"

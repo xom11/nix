@@ -5,7 +5,6 @@ Back: `Alt + Left`
 Forward: `Alt + Right`
 
 # Vimium c
-## Keymappings
 ```
 map d removeTab
 map u restoreTab
@@ -31,3 +30,6 @@ map yt LinkHints.activateCopyLinkText
 map yu LinkHints.activateCopyLinkUrl
 map M addBookmark folder="Bookmarks"
 ```
+
+# Flags
+brave://flags/#brave-override-download-danger-level
