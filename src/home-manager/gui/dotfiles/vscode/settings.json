@@ -157,5 +157,6 @@
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": true
   },
-  "terminal.integrated.inheritEnv": false
+  "terminal.integrated.inheritEnv": false,
+  "nix.enableLanguageServer": true
 }

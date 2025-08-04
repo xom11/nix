@@ -36,11 +36,17 @@
         type = "lua";
         config = builtins.readFile ./plugins/treesitter.lua;
       }
+      cmp-buffer
+      cmp-path
+      cmp-cmdline
       {
         plugin = nvim-cmp;
         type = "lua";
         config = builtins.readFile ./plugins/cmp.lua;
       }
+      mason-nvim
+      mason-lspconfig-nvim
+      cmp-nvim-lsp
       {
         plugin = nvim-lspconfig;
         type = "lua";
@@ -57,7 +63,10 @@
       ${builtins.readFile ./options.lua}
       ${builtins.readFile ./keymap.lua}
     '';
-    extraPackages = [
+    extraPackages = with pkgs; [
+      python3Packages.python-lsp-server
+      nixd
+
     ];
   };
 }
