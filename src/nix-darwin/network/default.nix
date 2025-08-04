@@ -1,6 +1,6 @@
 { config, pkgs, lib, username, device, ... }:
 let 
-  hostname = "${device}_${username}";
+  hostname = "${device}-${username}";
 in
 {
   networking = {

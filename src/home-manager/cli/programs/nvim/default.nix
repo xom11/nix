@@ -10,6 +10,7 @@
       lualine-nvim
       nvim-web-devicons
       vim-tmux-navigator
+      render-markdown-nvim
       {
         plugin = catppuccin-nvim;
         config = "colorscheme catppuccin";
