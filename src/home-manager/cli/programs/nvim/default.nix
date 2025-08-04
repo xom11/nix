@@ -66,6 +66,7 @@
     extraPackages = with pkgs; [
       python3Packages.python-lsp-server
       nixd
+      nil
 
     ];
   };
