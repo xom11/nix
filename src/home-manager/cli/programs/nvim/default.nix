@@ -34,7 +34,7 @@
       {
         plugin = nvim-treesitter;
         type = "lua";
-        config = builtins.readFile ./plugins/treesitter.lua;
+        config = builtins.readFile ./plugins/nvim-treesitter.lua;
       }
 
     ];
