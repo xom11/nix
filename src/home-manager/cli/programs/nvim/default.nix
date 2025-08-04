@@ -12,6 +12,11 @@
       vim-tmux-navigator
       render-markdown-nvim
       {
+        plugin = transparent-nvim;
+        type = "lua";
+        config = builtins.readFile ./plugins/transparent.lua;
+      }
+      {
         plugin = catppuccin-nvim;
         config = "colorscheme catppuccin";
       }
