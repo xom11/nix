@@ -10,11 +10,6 @@
     XDG_SCREENSHOTS_DIR = "$HOME/Pictures/Screenshots";
     NIXOS_OZONE_WL = 1; # fixed electron apps blurriness
   };
-  home.file.".config/electron-flags.conf".text = ''
-    --enable-features=UseOzonePlatform
-    --ozone-platform=wayland
-    --enable-features=WaylandWindowDecorations
-  '';
   home.file.".config/code-flags.conf".text = ''
     --enable-features=UseOzonePlatform
     --ozone-platform=wayland

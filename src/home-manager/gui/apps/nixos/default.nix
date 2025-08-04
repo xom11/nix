@@ -15,7 +15,6 @@
     telegram-desktop
     localsend
     slack
-    # brave
     google-chrome
     kitty
     zathura
@@ -29,16 +28,4 @@
   services.flatpak.packages = [
     # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   ];
-  programs.chromium = {
-    enable = true;
-    package = pkgs.brave;
-    extensions = [
-    ];
-    commandLineArgs = [
-      "--enable-features=ParallelDownloading"
-      "--enable-features=UseOzonePlatform"
-      "--ozone-platform=wayland"
-      "--enable-features=WaylandWindowDecorations"
-    ];
-  };
 }
