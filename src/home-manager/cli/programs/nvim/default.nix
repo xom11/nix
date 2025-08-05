@@ -11,7 +11,7 @@
       nvim-web-devicons
       vim-tmux-navigator
       {
-        plugin = render-markdown-nvim;
+        plugin = render-markdown-nvim
         type = "lua";
         config = builtins.readFile ./plugins/render-markdown.lua;
       }
@@ -41,15 +41,19 @@
         type = "lua";
         config = builtins.readFile ./plugins/treesitter.lua;
       }
+      cmp-buffer
+      cmp-path
+      cmp-cmdline
       {
-        plugin = blink-cmp;
+        plugin = nvim-cmp;
         type = "lua";
-        config = builtins.readFile ./plugins/blink.lua;
+        config = builtins.readFile ./plugins/nvim-cmp.lua;
       }
       {
         plugin = mason-nvim;
       }
       mason-lspconfig-nvim
+      cmp-nvim-lsp
       {
         plugin = nvim-lspconfig;
         type = "lua";
