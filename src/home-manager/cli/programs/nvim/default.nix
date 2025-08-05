@@ -10,7 +10,11 @@
       lualine-nvim
       nvim-web-devicons
       vim-tmux-navigator
-      render-markdown-nvim
+      {
+        plugin = render-markdown-nvim;
+        type = "lua";
+        config = builtins.readFile ./plugins/render-markdown.lua;
+      }
       mini-nvim
       {
         plugin = transparent-nvim;
@@ -45,10 +49,8 @@
         type = "lua";
         config = builtins.readFile ./plugins/cmp.lua;
       }
-      mason-nvim
       {
         plugin = mason-nvim;
-        config = "require("mason").setup()";
       }
       mason-lspconfig-nvim
       cmp-nvim-lsp
@@ -70,10 +72,9 @@
     '';
     extraPackages = with pkgs; [
       nodePackages_latest.vscode-json-languageserver
+      python3Packages.python-lsp-server
       lua-language-server
       stylua
-      basedpyright
-      pyright
       nil
 
     ];
