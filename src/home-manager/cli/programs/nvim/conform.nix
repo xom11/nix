@@ -3,7 +3,7 @@
 {
   programs.nixvim.plugins.conform-nvim = {
     enable = true;
-    formattersByFt = {
+    formatters_by_ft = {
       "*" = [ "codespell" ];
       "_" = [ "trim_whitespace" ];
       #go = [ "goimports" "golines" "gofmt" "gofumpt" ];

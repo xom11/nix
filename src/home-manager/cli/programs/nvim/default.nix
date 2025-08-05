@@ -5,6 +5,7 @@
     ./cmp.nix
     ./conform.nix
     ./dashboard.nix
+    ./efmls.nix
     ./treesitter.nix
     ./lsp-format.nix
     ./lsp-servers.nix
