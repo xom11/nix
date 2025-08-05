@@ -56,6 +56,11 @@
         config = builtins.readFile ./plugins/nvim-cmp.lua;
       }
       {
+        plugin = none-ls-nvim;
+        type = "lua";
+        config = builtins.readFile ./plugins/none-ls.lua;
+      }
+      {
         plugin = mason-nvim;
       }
       mason-lspconfig-nvim
