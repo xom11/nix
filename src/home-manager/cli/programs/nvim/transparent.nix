@@ -7,6 +7,12 @@
       require('transparent').clear_prefix('Telescope')
       require('transparent').clear_prefix('Lualine')
 
+      vim.cmd("highlight Normal guibg=NONE")
+      vim.cmd("highlight Lualine guibg=NONE")
+      vim.cmd("highlight Lualine guifg=NONE")
+      vim.cmd("highlight NormalNC guibg=NONE")
+      vim.cmd("highlight CursorLine guibg=NONE")
+
     '';
     settings = {
       enable = true;

@@ -19,6 +19,7 @@
         ncdu
         jq
         gh
+        ripgrep
         # openssl
 
         # Database

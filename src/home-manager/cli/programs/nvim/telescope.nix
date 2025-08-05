@@ -16,7 +16,7 @@
       settings.auto_depth = true;
     };
     keymaps = {
-      "<leader><leader>" = "find_files";
+      "<leader><leader>" = "oldfiles";
       "<leader>ff" = "find_files";
       "<leader>fs" = "grep_string";
       "<leader>fg" = "live_grep";

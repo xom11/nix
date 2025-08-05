@@ -13,13 +13,24 @@
           };
         }
         {
-          key = "<leader>bb";
-          action = "<CMD>Telescope file_browser<NL>";
-        }
-        {
           key = "<leader>t";
           action = "<CMD>Neotree toggle<NL>";
         }
+        {
+          key = ">";
+          mode = "v";
+          action = ">gv";
+        }
+        {
+          key = "<";
+          mode = "v";
+          action = "<gv";
+        }
+        {
+          key = "<C-a>";
+          action = "ggVG";
+        }
+	
       ];
     };
   };

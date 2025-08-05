@@ -21,6 +21,14 @@
     enable = true;
     globals.mapleader = " ";
     clipboard.register = "unnamedplus";
+    opts = {
+      expandtab = true;
+      tabstop = 2;
+      softtabstop = 2;
+      shiftwidth = 2;
+      number = false;
+      relativenumber = true;
+    };
 
     colorschemes.catppuccin.enable = true;
 
@@ -40,6 +48,7 @@
       colorizer.enable = true;
       auto-save.enable = true;
       gitsigns.enable = true;
+      visual-multi.enable = true;
     };
   };
 }
