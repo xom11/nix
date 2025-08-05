@@ -16,6 +16,7 @@
     ./telescope.nix
     ./transparent.nix
     ./keymaps.nix
+    ./which-keys.nix
   ];
   programs.nixvim = {
     enable = true;
