@@ -14,11 +14,7 @@
       }
       nvim-web-devicons
       vim-tmux-navigator
-      {
-        plugin = render-markdown-nvim;
-        type = "lua";
-        config = builtins.readFile ./plugins/render-markdown.lua;
-      }
+      render-markdown-nvim
       mini-nvim
       {
         plugin = transparent-nvim;
