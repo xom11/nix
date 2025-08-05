@@ -1,4 +1,4 @@
-{config, pkgs, lib, dotfileDir, ...}:
+{config, pkgs, dotfileDir, ...}:
 let
   configDir = if pkgs.stdenv.hostPlatform.isLinux
     then ".config/qutebrowser"

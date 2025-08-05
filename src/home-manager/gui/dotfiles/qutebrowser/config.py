@@ -24,10 +24,11 @@ c.fonts.web.family.serif = 'Inconsolata Nerd Font Mono'
 c.fonts.web.family.standard = 'Inconsolata Nerd Font Mono'
 
 c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history', 'filesystem']
-c.url.start_pages = ['https://start.duckduckgo.com']
+c.url.start_pages = ['https://www.google.com/']
 c.url.searchengines = {
-    'DEFAULT': 'https://duckduckgo.com/?q={}',
-    'gg': 'https://google.com/search?q={}',
+    'DEFAULT': 'https://google.com/search?q={}',
+    'ddg': 'https://duckduckgo.com/?q={}',
+    'pkgs': 'https://search.nixos.org/packages?channel=unstable&query={}',
     'gh': 'https://github.com/search?q={}',
     'yt': 'https://www.youtube.com/results?search_query={}'
 }
