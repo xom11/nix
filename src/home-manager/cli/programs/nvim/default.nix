@@ -7,11 +7,16 @@
     vimdiffAlias = true;
     plugins = with pkgs.vimPlugins; [
       comment-nvim
-      lualine-nvim
+      {
+        plugin = lualine-nvim;
+        type = "lua";
+        config = builtins.readFile ./plugins/lualine.lua;
+      }
       nvim-web-devicons
       vim-tmux-navigator
+      luasnip
       {
-        plugin = render-markdown-nvim
+        plugin = render-markdown-nvim;
         type = "lua";
         config = builtins.readFile ./plugins/render-markdown.lua;
       }
