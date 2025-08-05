@@ -3,6 +3,7 @@
 {
   imports = [
     ./cmp.nix
+    ./conform.nix
     ./dashboard.nix
     ./treesitter.nix
     ./lsp-format.nix
