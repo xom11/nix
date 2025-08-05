@@ -2,17 +2,17 @@
 
 {
   imports = [
-    ./cmp.nix
-    ./conform.nix
-    ./dashboard.nix
-    ./efmls.nix
-    ./treesitter.nix
-    ./lsp-format.nix
-    ./lsp-servers.nix
+    # ./cmp.nix
+    # ./conform.nix
+    # ./dashboard.nix
+    # ./efmls.nix
+    # ./treesitter.nix
+    # ./lsp-format.nix
+    # ./lsp-servers.nix
     ./neotree.nix
     ./telescope.nix
-    ./keymaps.nix
-    ./bufferline.nix
+    # ./keymaps.nix
+    # ./bufferline.nix
 
   ];
   programs.nixvim = {
@@ -23,22 +23,24 @@
     colorschemes.catppuccin.enable = true;
 
     plugins = {
-      nix.enable = true;
+      # nix.enable = true;
       lualine.enable = true;
-      web-devicons.enable = true;
-      markdown-preview.enable = true;
-      lsp-lines.enable = true;
-      lsp.enable = true;
-      lspkind.enable = true;
-      none-ls.sources.formatting.prettier.enable = true;
+      render-markdown.enable = true;
       nvim-autopairs.enable = true;
-      neogit.enable = true;
-      cmp-zsh.enable = true;
+      dashboard.enable = true;
+      tmux-navigator.enable = true;
+      web-devicons.enable = true;
+      # lsp-lines.enable = true;
+      # lsp.enable = true;
+      # lspkind.enable = true;
+      # none-ls.sources.formatting.prettier.enable = true;
+      # neogit.enable = true;
+      # cmp-zsh.enable = true;
       noice.enable = true;
+      treesitter.enable = true;
       colorizer.enable = true;
-      luasnip.enable = true;
-      notify.enable = true; 
-      airline.enable = true;
+      auto-save.enable = true;
+      # luasnip.enable = true;
     };
   };
 }

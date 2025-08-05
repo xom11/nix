@@ -116,6 +116,7 @@
             home-manager.extraSpecialArgs = specialArgs;
             home-manager.users.${username}.imports = [ 
               nix-flatpak.homeManagerModules.nix-flatpak
+              nixvim.homeModules.nixvim
               ./hosts/x1g6/home.nix
             ];
           }
@@ -144,6 +145,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         modules = [
           ./hosts/server/home.nix
+          nixvim.homeModules.nixvim
         ];
       };
       "desktop" = home-manager.lib.homeManagerConfiguration {
@@ -151,6 +153,7 @@
         extraSpecialArgs = specialArgs;
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
+          nixvim.homeModules.nixvim
           ./hosts/desktop/home.nix
         ];
       };
