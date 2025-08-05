@@ -14,7 +14,6 @@
       }
       nvim-web-devicons
       vim-tmux-navigator
-      luasnip
       {
         plugin = render-markdown-nvim;
         type = "lua";
@@ -46,9 +45,11 @@
         type = "lua";
         config = builtins.readFile ./plugins/treesitter.lua;
       }
+      luasnip
       cmp-buffer
       cmp-path
       cmp-cmdline
+      cmp-nvim-lsp
       {
         plugin = nvim-cmp;
         type = "lua";
@@ -58,7 +59,6 @@
         plugin = mason-nvim;
       }
       mason-lspconfig-nvim
-      cmp-nvim-lsp
       {
         plugin = nvim-lspconfig;
         type = "lua";
@@ -68,6 +68,11 @@
         plugin = nvim-notify;
         type = "lua";
         config = builtins.readFile ./plugins/notify.lua;
+      }
+      {
+        plugin = gitsigns-nvim;
+        type = "lua";
+        config = builtins.readFile ./plugins/gitsigns.lua;
       }
 
     ];
