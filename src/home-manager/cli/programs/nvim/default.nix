@@ -4,7 +4,6 @@
   home.packages = with pkgs; [
     prettierd
     black
-    isort
     shfmt 
     stylua 
   ];

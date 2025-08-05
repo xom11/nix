@@ -15,7 +15,7 @@
         css = [ "prettierd" ];
 
         lua = [ "stylua" ];
-        python = [ "isort" "black" ];
+        python = [ "black" ];
         rust = [ "rustfmt" ];
         sh = [ "shfmt" ];
         "_" = [ "trim_whitespace" ];
