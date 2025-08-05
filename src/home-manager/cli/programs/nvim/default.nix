@@ -41,19 +41,15 @@
         type = "lua";
         config = builtins.readFile ./plugins/treesitter.lua;
       }
-      cmp-buffer
-      cmp-path
-      cmp-cmdline
       {
-        plugin = nvim-cmp;
+        plugin = blink-cmp;
         type = "lua";
-        config = builtins.readFile ./plugins/cmp.lua;
+        config = builtins.readFile ./plugins/blink.lua;
       }
       {
         plugin = mason-nvim;
       }
       mason-lspconfig-nvim
-      cmp-nvim-lsp
       {
         plugin = nvim-lspconfig;
         type = "lua";
