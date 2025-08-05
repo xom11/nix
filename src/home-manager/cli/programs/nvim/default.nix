@@ -3,13 +3,13 @@
 {
   imports = [
     ./cmp.nix
+    ./dashboard.nix
     ./treesitter.nix
     ./lsp-format.nix
     ./lsp-servers.nix
     ./neotree.nix
     ./telescope.nix
     ./keymaps.nix
-
 
   ];
   programs.nixvim = {
