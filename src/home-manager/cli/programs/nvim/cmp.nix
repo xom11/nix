@@ -4,7 +4,7 @@
   programs.nixvim.plugins = {
     cmp = {
       enable = true;
-      extraOptions.sources =
+      settings.sources =
         [
           { name = "nvim_lsp"; }
           { name = "path"; }

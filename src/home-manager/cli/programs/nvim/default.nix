@@ -7,6 +7,7 @@
     ./lsp-format.nix
     ./lsp-servers.nix
     ./neotree.nix
+    ./telescope.nix
 
 
   ];
@@ -19,6 +20,7 @@
     plugins = {
       nix.enable = true;
       lualine.enable = true;
+      web-devicons.enable = true;
 
       lsp-lines.enable = true;
       lsp.enable = true;
