@@ -3,18 +3,29 @@
   programs.nixvim.plugins.transparent = {
     enable = true;
     settings = {
-      extraGroups = [
-				"Normal",
-				"NormalNC",
-				"TelescopeBorder",
-				"NvimTreeNormal",
-				"LualineNormal",
-				"FzfLuaBorder",
-				"FzfLuaNormal",
-				"FzfLuaTitle",
-				"FzfLuaPreviewBorder",
-				"FzfLuaPreviewNormal",
-				"FzfLuaPreviewTitle",
+      enable = true;
+      extra_groups = [
+        "NeoTreeNormal"
+        "NeoTreeNormalNC"
+        "NeoTreeFloat"
+        "NeoTreeFloatBorder"
+
+        "TelescopeNormal"
+        "TelescopeBorder"
+        "TelescopePromptNormal"
+        "TelescopePromptBorder"
+        "TelescopeResultsNormal"
+        "TelescopePreviewNormal"
+
+        "LualineNormal"
+        "LualineNC"
+
+        "FzfLuaBorder"
+        "FzfLuaNormal"
+        "FzfLuaTitle"
+        "FzfLuaPreviewBorder"
+        "FzfLuaPreviewNormal"
+        "FzfLuaPreviewTitle"
       ];
     };
   };

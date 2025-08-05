@@ -4,13 +4,13 @@
   programs.nixvim.plugins = {
     cmp = {
       enable = true;
+      autoEnableSources = true;
       settings.sources =
         [
           { name = "nvim_lsp"; }
           { name = "path"; }
           { name = "buffer"; }
-          { name = "luasnip"; }
-          { name = "cmdline"; }
+          { name = "render-markdown"; }
         ];
 
         settings.mapping = {
@@ -22,13 +22,7 @@
           "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
           "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
         };
-        settings.snippet.expand = ''
-        function(args)
-        require('luasnip').lsp_expand(args.body)
-        end
-        '';
       };
-      cmp-cmdline.enable = true;
     };
   }
 

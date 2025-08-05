@@ -2,7 +2,8 @@
 
 {
   imports = [
-    # ./cmp.nix
+    ./cmp.nix
+    ./lsp.nix
     # ./conform.nix
     # ./dashboard.nix
     # ./efmls.nix
@@ -32,12 +33,12 @@
       tmux-navigator.enable = true;
       web-devicons.enable = true;
       # lsp-lines.enable = true;
-      # lsp.enable = true;
       # lspkind.enable = true;
       # none-ls.sources.formatting.prettier.enable = true;
       # neogit.enable = true;
       # cmp-zsh.enable = true;
       noice.enable = true;
+      comment.enable = true;
       treesitter.enable = true;
       colorizer.enable = true;
       auto-save.enable = true;
