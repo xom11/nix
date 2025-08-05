@@ -1,16 +1,20 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.nixvim.plugins ={
-    lsp ={
+    lsp = {
       enable = true;
       servers = {
-        pylsp.enable = true;
+        pyright.enable = true;
         nixd.enable = true;
         lua_ls.enable = true;
         jsonls.enable = true;
         yamlls.enable = true;
+        marksman.enable = true;
       };
+    };
+    lsp-format = {
+      enable = true;
     };
   };
 }

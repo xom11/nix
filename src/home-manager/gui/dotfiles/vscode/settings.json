@@ -158,5 +158,5 @@
     "diffEditor.ignoreTrimWhitespace": true
   },
   "terminal.integrated.inheritEnv": false,
-  "nix.enableLanguageServer": true
+  "nix.serverPath": "nixd"
 }

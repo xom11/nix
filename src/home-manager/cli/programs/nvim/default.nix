@@ -16,7 +16,6 @@
     ./telescope.nix
     ./transparent.nix
     ./keymaps.nix
-
   ];
   programs.nixvim = {
     enable = true;
@@ -26,8 +25,9 @@
     colorschemes.catppuccin.enable = true;
 
     plugins = {
-      # nix.enable = true;
       lualine.enable = true;
+      luasnip.enable = true;
+      friendly-snippets.enable = true;
       render-markdown.enable = true;
       nvim-autopairs.enable = true;
       dashboard.enable = true;
