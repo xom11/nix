@@ -2,7 +2,12 @@
 
 {
   imports = [
+    ./cmp.nix
     ./treesitter.nix
+    ./lsp-format.nix
+    ./lsp-servers.nix
+    ./neotree.nix
+
 
   ];
   programs.nixvim = {
@@ -18,7 +23,8 @@
       lsp-lines.enable = true;
       lsp.enable = true;
       lspkind.enable = true;
-      prettier.enable = true;
+      none-ls.sources.formatting.prettier.enable = true;
+
 
       neogit.enable = true;
       cmp-zsh.enable = true;
