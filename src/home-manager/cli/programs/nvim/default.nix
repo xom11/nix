@@ -1,20 +1,21 @@
 { config, pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    prettierd
+    black
+    isort
+    shfmt 
+    stylua 
+  ];
   imports = [
     ./cmp.nix
     ./lsp.nix
-    # ./conform.nix
-    # ./dashboard.nix
-    # ./efmls.nix
-    # ./treesitter.nix
-    # ./lsp-format.nix
-    # ./lsp-servers.nix
+    ./conform.nix
     ./neotree.nix
     ./telescope.nix
     ./transparent.nix
-    # ./keymaps.nix
-    # ./bufferline.nix
+    ./keymaps.nix
 
   ];
   programs.nixvim = {
@@ -32,17 +33,12 @@
       dashboard.enable = true;
       tmux-navigator.enable = true;
       web-devicons.enable = true;
-      # lsp-lines.enable = true;
-      # lspkind.enable = true;
-      # none-ls.sources.formatting.prettier.enable = true;
-      # neogit.enable = true;
-      # cmp-zsh.enable = true;
       noice.enable = true;
       comment.enable = true;
       treesitter.enable = true;
       colorizer.enable = true;
       auto-save.enable = true;
-      # luasnip.enable = true;
+      gitsigns.enable = true;
     };
   };
 }
