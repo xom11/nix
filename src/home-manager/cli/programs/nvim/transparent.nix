@@ -3,13 +3,18 @@
   programs.nixvim.plugins.transparent = {
     enable = true;
     settings = {
-      enable = true;
       extraGroups = [
-        "NormalFloat"
-        "FloatBorder"
-        "TelescopeBorder"
-        "NeoTreeNormal"
-        "NeoTreeFloatBorder"
+				"Normal",
+				"NormalNC",
+				"TelescopeBorder",
+				"NvimTreeNormal",
+				"LualineNormal",
+				"FzfLuaBorder",
+				"FzfLuaNormal",
+				"FzfLuaTitle",
+				"FzfLuaPreviewBorder",
+				"FzfLuaPreviewNormal",
+				"FzfLuaPreviewTitle",
       ];
     };
   };

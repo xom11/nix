@@ -11,6 +11,7 @@
     # ./lsp-servers.nix
     ./neotree.nix
     ./telescope.nix
+    ./transparent.nix
     # ./keymaps.nix
     # ./bufferline.nix
 
