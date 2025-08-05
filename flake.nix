@@ -69,6 +69,7 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = specialArgs;
             home-manager.users.${username}.imports = [
+              nixvim.homeModules.nixvim
               ./hosts/macmini/home.nix
             ];
           }
