@@ -16,7 +16,9 @@
       lualine.enable = true;
 
       lsp-lines.enable = true;
+      lsp.enable = true;
       lspkind.enable = true;
+      prettier.enable = true;
 
       neogit.enable = true;
       cmp-zsh.enable = true;
