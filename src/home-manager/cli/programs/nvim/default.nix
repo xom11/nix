@@ -10,6 +10,7 @@
     ./neotree.nix
     ./telescope.nix
     ./keymaps.nix
+    ./bufferline.nix
 
   ];
   programs.nixvim = {
@@ -27,7 +28,7 @@
       lsp.enable = true;
       lspkind.enable = true;
       none-ls.sources.formatting.prettier.enable = true;
-
+      nvim-autopairs.enable = true;
 
       neogit.enable = true;
       cmp-zsh.enable = true;
