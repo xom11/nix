@@ -8,6 +8,7 @@
     ./lsp-servers.nix
     ./neotree.nix
     ./telescope.nix
+    ./keymaps.nix
 
 
   ];
