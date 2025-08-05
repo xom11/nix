@@ -26,6 +26,7 @@
     colorschemes.catppuccin.enable = true;
 
     plugins = {
+      arrow.enable = true;
       lualine.enable = true;
       luasnip.enable = true;
       friendly-snippets.enable = true;
