@@ -21,12 +21,15 @@
       "<leader>fs" = "grep_string";
       "<leader>fg" = "live_grep";
     };
-    settings = {
-      pickers = {
-        find_files = {
-          hidden = true;
-        };
-      };
+    settings.defaults = {
+      file_ignore_patterns = [
+        "^.git/"
+        "^.mypy_cache/"
+        "^__pycache__/"
+        "^output/"
+        "^data/"
+        "%.ipynb"
+      ];
     };
   };
 }

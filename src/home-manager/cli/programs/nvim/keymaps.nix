@@ -24,7 +24,7 @@
 
         {
           key = "<leader>t";
-          action = "<CMD>Neotree<NL>";
+          action = "<CMD>Neotree toggle<NL>";
         }
 
         {
