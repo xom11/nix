@@ -11,6 +11,7 @@
       nvim-web-devicons
       vim-tmux-navigator
       render-markdown-nvim
+      mini-nvim
       {
         plugin = transparent-nvim;
         type = "lua";
@@ -45,6 +46,10 @@
         config = builtins.readFile ./plugins/cmp.lua;
       }
       mason-nvim
+      {
+        plugin = mason-nvim;
+        config = "require("mason").setup()";
+      }
       mason-lspconfig-nvim
       cmp-nvim-lsp
       {
@@ -64,8 +69,11 @@
       ${builtins.readFile ./keymap.lua}
     '';
     extraPackages = with pkgs; [
-      python3Packages.python-lsp-server
-      nixd
+      nodePackages_latest.vscode-json-languageserver
+      lua-language-server
+      stylua
+      basedpyright
+      pyright
       nil
 
     ];

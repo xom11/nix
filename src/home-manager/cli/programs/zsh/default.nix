@@ -61,6 +61,9 @@
       # cd ~cfg
       cfg = "$HOME/.config";
       nix = "$HOME/.nix";
+      dev = "$HOME/Documents/dev";
+      note = "$HOME/Documents/note";
+      test = "$HOME/Documents/test";
     };
 
     sessionVariables = {
