@@ -1,5 +1,6 @@
 config.load_autoconfig()
 config.source('gruvbox.py')
+config.set('content.javascript.clipboard', 'access')
 
 c.content.blocking.method = "adblock"
 c.editor.command = ["vim", "{}"]
