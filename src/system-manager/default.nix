@@ -1,4 +1,4 @@
-{dotfileDir, ...}:
+{...}:
 {
   imports = [
     ./base

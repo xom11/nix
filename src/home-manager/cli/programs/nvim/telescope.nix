@@ -18,8 +18,11 @@
     keymaps = {
       "<leader><leader>" = "find_files";
       "<leader>ff" = "find_files";
+      "<leader>fb" = "buffers";
+      "<leader>fp" = "git_files";
       "<leader>fs" = "grep_string";
       "<leader>fg" = "live_grep";
+      "<leader>fo" = "oldfiles";
     };
     settings.defaults = {
       file_ignore_patterns = [
