@@ -8,7 +8,6 @@
     stylua 
   ];
   imports = [
-    ./arrow.nix
     ./cmp.nix
     ./lsp.nix
     ./conform.nix
