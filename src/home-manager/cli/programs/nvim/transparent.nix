@@ -5,7 +5,6 @@
     luaConfig.post = ''
       require('transparent').clear_prefix('NeoTree')
       require('transparent').clear_prefix('Telescope')
-      require('transparent').clear_prefix('Lualine')
 
       vim.cmd("highlight Normal guibg=NONE")
       vim.cmd("highlight Lualine guibg=NONE")

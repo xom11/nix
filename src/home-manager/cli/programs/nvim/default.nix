@@ -49,6 +49,7 @@
       gitsigns.enable = true;
       visual-multi.enable = true;
       image.enable = true;
+      barbecue.enable = true;
     };
   };
 }
