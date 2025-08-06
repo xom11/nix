@@ -17,11 +17,6 @@
           action = "<CMD>Neotree toggle<NL>";
         }
         {
-          key = ".";
-          mode = "n";
-          action = ":";
-        }
-        {
           key = ">";
           mode = "v";
           action = ">gv";

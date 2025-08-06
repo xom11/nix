@@ -6,6 +6,8 @@ c.content.blocking.method = "adblock"
 c.editor.command = ["vim", "{}"]
 c.fonts.web.size.default = 20
 
+config.bind('gq', 'cmd-set-text -s :quickmark-load')
+
 
 c.tabs.padding = {'top': 5, 'bottom': 5, 'left': 9, 'right': 9}
 c.tabs.indicator.width = 0 # no tab indicators
@@ -24,8 +26,12 @@ c.fonts.web.family.sans_serif = 'Inconsolata Nerd Font Mono'
 c.fonts.web.family.serif = 'Inconsolata Nerd Font Mono'
 c.fonts.web.family.standard = 'Inconsolata Nerd Font Mono'
 
-c.completion.open_categories = ['searchengines', 'quickmarks', 'bookmarks', 'history', 'filesystem']
-c.url.start_pages = ['https://www.google.com/']
+c.completion.web_history.max_items = -1
+c.completion.open_categories = ['history', 'searchengines', 'quickmarks', 'bookmarks', 'filesystem']
+
+c.url.start_pages = ['https://start.duckduckgo.com/']
+c.url.default_page = "https://start.duckduckgo.com/"
+c.url.open_base_url = True;
 c.url.searchengines = {
     'DEFAULT': 'https://google.com/search?q={}',
     'ddg': 'https://duckduckgo.com/?q={}',
