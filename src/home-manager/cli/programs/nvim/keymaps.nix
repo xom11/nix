@@ -30,6 +30,11 @@
           key = "<C-a>";
           action = "ggVG";
         }
+        {
+          key = "gd";
+          mode = "n";
+          action = "<cmd>lua vim.lsp.buf.definition()<cr>";
+        }
 	
       ];
     };

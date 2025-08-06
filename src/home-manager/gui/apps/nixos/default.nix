@@ -10,6 +10,7 @@
   home.packages = with pkgs; [
     bitwarden-desktop
     qutebrowser
+    nautilus
     discord
     vscode
     telegram-desktop
@@ -17,14 +18,10 @@
     slack
     google-chrome
     kitty
-    zathura
-    # chromedriver
     caprine
-    # notion-app-enhanced
     vlc
-
-
   ];
+
   services.flatpak.packages = [
     # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   ];

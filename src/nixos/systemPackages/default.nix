@@ -3,6 +3,5 @@
   environment.systemPackages = with pkgs; [
     python313
     python311
-    nautilus
   ];
 }

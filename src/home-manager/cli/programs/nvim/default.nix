@@ -28,7 +28,7 @@
       softtabstop = 2;
       shiftwidth = 2;
       number = false;
-      relativenumber = true;
+      relativenumber = false;
     };
 
     colorschemes.catppuccin.enable = true;
@@ -48,6 +48,7 @@
       auto-save.enable = true;
       gitsigns.enable = true;
       visual-multi.enable = true;
+      image.enable = true;
     };
   };
 }

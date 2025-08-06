@@ -5,7 +5,18 @@
     lsp = {
       enable = true;
       servers = {
-        pyright.enable = true;
+        pyright = {
+          enable = true;
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = "off";
+                autoSearchPaths = true;
+                useLibraryCodeForTypes = true;
+              };
+            };
+          };
+        };
         nixd.enable = true;
         lua_ls.enable = true;
         jsonls.enable = true;
