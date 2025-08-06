@@ -13,10 +13,6 @@
           };
         }
         {
-          key = "<leader>e";
-          action = "<CMD>Neotree toggle<NL>";
-        }
-        {
           key = "<A-e>";
           action = "<CMD>Neotree toggle<NL>";
         }

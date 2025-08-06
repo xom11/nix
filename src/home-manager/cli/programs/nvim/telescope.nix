@@ -22,6 +22,7 @@
       "<leader>fp" = "git_files";
       "<leader>fs" = "grep_string";
       "<leader>fg" = "live_grep";
+      "<A-f>" = "live_grep";
       "<leader>fo" = "oldfiles";
     };
     settings.defaults = {
