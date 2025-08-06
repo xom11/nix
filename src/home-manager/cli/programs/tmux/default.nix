@@ -23,7 +23,13 @@ in
           set -g @tmux_power_time_format '%H:%M'
         '';
       }
-      resurrect
+      {
+        plugin = resurrect;
+        extraConfig = ''
+          set -g @resurrect-capture-pane-contents 'on'
+          set -g @resurrect-strategy-nvim 'session'
+        '';
+      }
       {
         plugin = continuum;
         extraConfig = ''
