@@ -9,6 +9,7 @@
   ];
   imports = [
     ./cmp.nix
+    ./treesitter.nix
     ./lsp.nix
     ./conform.nix
     ./neotree.nix
@@ -43,7 +44,6 @@
       web-devicons.enable = true;
       noice.enable = true;
       comment.enable = true;
-      treesitter.enable = true;
       colorizer.enable = true;
       auto-save.enable = true;
       gitsigns.enable = true;
