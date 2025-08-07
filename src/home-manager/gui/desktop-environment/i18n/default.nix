@@ -1,6 +1,6 @@
 {...}:
 {
   imports = [
-    ./ibus.nix
+    # ./ibus.nix
   ];
 }
