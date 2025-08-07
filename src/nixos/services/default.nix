@@ -3,7 +3,7 @@
   imports = [
     ./hibernate.nix
     ./keyd.nix
-    # ./ibus.nix
+    ./ibus.nix
   ];
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = [ "docker" ];
