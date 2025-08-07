@@ -4,7 +4,7 @@
     type = "fcitx5";
     fcitx5 = {
       addons = with pkgs; [
-        fcitx5-bamboo
+        # fcitx5-bamboo
         fcitx5-gtk
         fcitx5-unikey
       ];
@@ -17,7 +17,7 @@
           DefaultIM = "bamboo";
         };
         "Groups/0/Items/0".Name = "keyboard-us";
-        "Groups/0/Items/1".Name = "bamboo";
+        "Groups/0/Items/1".Name = "unikey";
       };
     };
   };

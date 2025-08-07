@@ -28,8 +28,8 @@ with lib.hm.gvariant;
       cycle-windows-backward=["<Super>bracketright"];
       begin-resize=["<Super>r"];
       begin-move=["<Super>m"];
-      switch-input-source=["<Ctrl>space"];
-      # switch-input-source=[""];
+      # switch-input-source=["<Ctrl>space"];
+      switch-input-source=[""];
       switch-input-source-backward=[];
     };
     "org/gnome/shell/keybindings"={
