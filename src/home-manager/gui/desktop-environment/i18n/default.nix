@@ -7,7 +7,6 @@
         fcitx5-bamboo
         # kdePackages.fcitx5-unikey
         # libsForQt5.fcitx5-unikey
-        libsForQt5.fcitx5-with-addons
       ];
       waylandFrontend = true; 
       settings.inputMethod = {
