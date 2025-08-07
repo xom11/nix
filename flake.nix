@@ -26,6 +26,8 @@
 
     system-manager.url = "github:numtide/system-manager";
     system-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    ibus-bamboo.url = "github:BambooEngine/ibus-bamboo";
   };
 
   outputs = {... }@inputs:
