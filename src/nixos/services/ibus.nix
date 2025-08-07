@@ -1,7 +1,7 @@
-{ inputs, system, ... }:
+{ ibus-bamboo, system, ... }:
 
 let
-  bamboo = inputs.ibus-bamboo.packages."${system}".default;
+  bamboo = ibus-bamboo.packages."${system}".default;
 in
 {
   i18n.inputMethod = {
