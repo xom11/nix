@@ -51,7 +51,7 @@
         };
     in
     builtins.trace ''
-      system: ${system}
+      # system: ${system}
       username: ${username}
       homeDir: ${homeDir}
     ''
