@@ -170,7 +170,7 @@
     };
     systemConfigs ={
       "desktop" = system-manager.lib.makeSystemConfig {
-        extraSpecialArgs = {
+        extraSpecialArgs = specialArgs // {
           distro = "ubuntu";
         };
         modules = [
