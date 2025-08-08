@@ -13,3 +13,6 @@ Host rog
 Host dkp
   HostName 167.86.81.250
   User dkp 
+Host dkp2
+  HostName 185.239.208.208
+  User dkp 

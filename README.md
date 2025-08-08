@@ -24,6 +24,9 @@ add-visudo && add-authkey && set-zsh
 ```bash
 sudo nixos-rebuild switch --impure --refesh --flake ~/.nix#x1g6
 ```
+```bash
+sudo nixos-rebuild switch --impure --refesh --flake ~/.nix#x1g6
+```
 ---
 # MacOS
 ## Install Nix
@@ -47,8 +50,8 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 ```
 ## Desktop Setup
 ```bash
-nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#desktop 
+nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix\#desktop 
 add-visudo && add-authkey && set-zsh
 ```
 ```bash
-sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#desktop
+sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix\#desktop
