@@ -8,8 +8,8 @@ Host x1
   HostName 100.83.77.33
   User kln
 Host rog
-  HostName 100.77.72.116
-  User rog
+  HostName rpg-asus
+  User rpg
 Host dkp
   HostName 167.86.81.250
   User dkp 
