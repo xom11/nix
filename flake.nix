@@ -35,13 +35,9 @@
     let
       system = builtins.currentSystem;
       username =
-        let
-          sudoUser = builtins.getEnv "SUDO_USER";
-          user = builtins.getEnv "USER";
-        in
-        if sudoUser != "" then sudoUser
-        else if user != "" then user
-        else "kln";
+        (builtins.getEnv "SUDO_USER") // ""
+        or (builtins.getEnv "USER") // ""
+        or "kln";
       homeDir = if builtins.match ".*-darwin" system != null
           then "/Users/${username}"
           else "/home/${username}";
