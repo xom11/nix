@@ -35,9 +35,9 @@
     let
       system = builtins.currentSystem;
       username =
-        (builtins.getEnv "SUDO_USER") // ""
-        or (builtins.getEnv "USER") // ""
-        or "kln";
+        if builtins.getEnv "SUDO_USER" != "" then builtins.getEnv "SUDO_USER"
+        else if builtins.getEnv "USER" != "" then builtins.getEnv "USER"
+        else "kln";
       homeDir = if builtins.match ".*-darwin" system != null
           then "/Users/${username}"
           else "/home/${username}";
@@ -50,6 +50,11 @@
           inherit username dotfileDir system homeDir;
         };
     in
+    builtins.trace ''
+      system: ${system}
+      username: ${username}
+      homeDir: ${homeDir}
+    ''
     {
     darwinConfigurations = {
       "macmini" = nix-darwin.lib.darwinSystem {
