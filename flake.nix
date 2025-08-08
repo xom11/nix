@@ -50,11 +50,6 @@
           inherit username dotfileDir system homeDir;
         };
     in
-    # builtins.trace ''
-    #   system: ${system}
-    #   username: ${username}
-    #   homeDir: ${homeDir}
-    # ''
     {
     darwinConfigurations = {
       "macmini" = nix-darwin.lib.darwinSystem {
