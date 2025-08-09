@@ -1,8 +1,8 @@
 {config, pkgs, ... }:
 {
-  imports = [
-    ./aliases.nix
-  ];
+  # imports = [
+  #   ./aliases.nix
+  # ];
 
   programs.zsh = {
     enable = true;
@@ -60,6 +60,11 @@
         name = "py";
         src = ./zshrc;
         file = "py.zsh";
+      }
+      {
+        name = "alias";
+        src = ./zshrc;
+        file = "alias.zsh";
       }
     ];
     dirHashes = {
