@@ -1,12 +1,14 @@
 [tool.poetry]
-name = "test-fastapi"
+name = "app"
 version = "0.1.0"
-description = "Test of python fastapi package"
+description = ""
 authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-fastapi = "^0.111"
+python = "^3.11"
+
 
 [build-system]
 requires = ["poetry-core"]
