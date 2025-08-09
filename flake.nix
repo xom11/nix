@@ -50,6 +50,10 @@
 
       dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
 
+      myAwesomeApp = import ./fastapi {
+        inherit pkgs poetry2nix;
+      };
+
       specialArgs =
         inputs
         // {
