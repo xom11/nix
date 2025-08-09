@@ -16,7 +16,7 @@
     gu = "git pull && git add . && git commit -m \"update\" && git push";
     lzg = "lazygit";
     lzd = "lazydocker";
-    p = "python";
+    py = "python";
     m = "micromamba";
   };
 }
