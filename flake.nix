@@ -50,14 +50,11 @@
 
       dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
 
-      myAwesomeApp = import ./fastapi {
-        inherit pkgs poetry2nix;
-      };
 
       specialArgs =
         inputs
         // {
-          inherit username dotfileDir system homeDir myAwesomeApp;
+          inherit username dotfileDir system homeDir pkgs;
         };
       myapp = { poetry2nix, lib }: poetry2nix.mkPoetryApplication {
         projectDir = self;
