@@ -1,4 +1,4 @@
-{ poetry2nix, python3, runCommand }:
+{ poetry2nix, python3, ...}:
 let
   env = poetry2nix.mkPoetryEnv {
     python = python3;
@@ -6,6 +6,6 @@ let
     poetrylock = ./poetry.lock;
   };
 in
-runCommand "fastapi-test" { } ''
+"fastapi-test" { } ''
   ${env}/bin/python -c 'import fastapi; print(fastapi.__version__)' > $out
 ''

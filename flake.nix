@@ -57,7 +57,7 @@
       specialArgs =
         inputs
         // {
-          inherit username dotfileDir system homeDir;
+          inherit username dotfileDir system homeDir myAwesomeApp;
         };
     in
     {

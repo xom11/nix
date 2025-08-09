@@ -1,8 +1,6 @@
-{ config, pkgs, inputs, ...}:
+{ config, pkgs,  ...}:
 {
-    imports = [
-        ./fastapi
-    ];
+
     home.packages = with pkgs;[
         fastfetch
         vim
