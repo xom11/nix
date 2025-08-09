@@ -34,6 +34,7 @@
         python3Packages.pip
         uv
         pipx
+        conda
 
 
         # Node.js
