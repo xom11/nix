@@ -2,7 +2,7 @@
 {
     imports = [
         ./python-lib.nix
-    ]
+    ];
     home.packages = with pkgs;[
         fastfetch
         vim

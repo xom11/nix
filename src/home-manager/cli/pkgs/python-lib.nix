@@ -1,28 +1,46 @@
-{pkgs, ...}:
+# File: ./nvitop.nix
+{ pkgs, ... }:
+
 let
-    vpn-slice = with python3Packages; buildPythonPackage rec {
-      name = "vpn-slice";
-      version = "v0.13";
+  btcli-package = pkgs.python3Packages.buildPythonApplication rec {
+    pname = "btcli";
+    version = "9.10.0";
+    pyproject = true;
 
-      src = pkgs.fetchFromGitHub {
-      	 owner = "dlenski";
-	 repo = "${name}";
-	 rev = "${version}";
-	 sha256 = "1ibrwal80z27c2mh9hx85idmzilx6cpcmgc15z3lyz57bz0krigb";
-      };
-
-      propagatedBuildInputs = [ numpy toolz setproctitle ];
-
-      meta = {
-        homepage = "https://github.com/dlenski/vpn-slice";
-        description = "vpnc-script replacement for easy and secure split-tunnel VPN setup";
-        license = stdenv.lib.licenses.gpl3Plus;
-        maintainers = with maintainers; [ dlenski ];
-      };
+    src = pkgs.fetchFromGitHub {
+      owner = "opentensor";
+      repo = "btcli";
+      rev = "v${version}";
+      hash = "sha256-kUlKb5L8dzT4ESi0rO2v0kQILjnVy+zcoePwqckyfbk=";
     };
+
+    build-system = with pkgs.python3Packages; [ setuptools ];
+
+    pythonRelaxDeps = [ "" ];
+
+    dependencies = with pkgs.python3Packages; [
+    ];
+
+    doInstallCheck = true;
+    nativeInstallCheckInputs = [
+      pkgs.versionCheckHook
+    ];
+    versionCheckProgramArg = "--version";
+
+    # pythonImportsCheck = [ "nvitop" ];
+
+    meta = {
+    #   description = "Interactive NVIDIA-GPU process viewer, the one-stop solution for GPU process management";
+    #   homepage = "https://github.com/XuehaiPan/nvitop";
+    #   changelog = "https://github.com/XuehaiPan/nvitop/releases/tag/v${version}";
+    #   license = pkgs.lib.licenses.gpl3;
+    #   maintainers = with pkgs.lib.maintainers; [ GaetanLepage ];
+    #   platforms = pkgs.lib.platforms.linux;
+    };
+  };
 in
 {
-    home.packages = [
-        vpn-slice
+    home.packages = with pkgs; [
+        btcli-package
     ];
 }
