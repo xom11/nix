@@ -1,8 +1,7 @@
 { config, pkgs, inputs, ...}:
 {
     imports = [
-        ./python-lib.nix
-        ./test.nix
+        ./fastapi
     ];
     home.packages = with pkgs;[
         fastfetch

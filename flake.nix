@@ -28,6 +28,12 @@
     system-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     ibus-bamboo.url = "github:BambooEngine/ibus-bamboo";
+
+    flake-utils.url = "github:numtide/flake-utils";
+
+    poetry2nix.url = "github:nix-community/poetry2nix";
+    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs = {... }@inputs:
