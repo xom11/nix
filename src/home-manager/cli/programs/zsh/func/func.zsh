@@ -8,16 +8,19 @@ y() {
 }
 
 t() {
-    if [ -z "$TMUX" ]; then
-        tmux attach -t "$1" || tmux new -s "$1"
+    if [ -z "$1" ]; then
+        SESSION_NAME="0"
     else
-        tmux new-window -n "$1"
+        SESSION_NAME="$1"
+    fi
+
+    if [ -z "$TMUX" ]; then
+        tmux attach -t "$SESSION_NAME" || tmux new -s "$SESSION_NAME"
+    else
+        tmux new-window -n "$SESSION_NAME"
     fi
 }
 
-function py() {
-    uv run $@
-}
 _uv_run_mod() {
     if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
         _arguments '*:filename:_files -g "*.py"'
