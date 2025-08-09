@@ -11,7 +11,7 @@ let
       owner = "opentensor";
       repo = "btcli";
       rev = "v${version}";
-      hash = "sha256-kUlKb5L8dzT4ESi0rO2v0kQILjnVy+zcoePwqckyfbk=";
+      hash = "sha256-kUlKb5L8dzT4ESi0rO2v0kQPwqckyfbk=";
     };
 
     build-system = with pkgs.python3Packages; [ setuptools ];

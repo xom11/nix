@@ -2,6 +2,7 @@
 {
     imports = [
         ./python-lib.nix
+        ./test.nix
     ];
     home.packages = with pkgs;[
         fastfetch
