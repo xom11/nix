@@ -34,7 +34,7 @@
         python3Packages.pip
         uv
         pipx
-        conda
+        micromamba
 
 
         # Node.js
