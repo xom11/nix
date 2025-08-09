@@ -47,8 +47,8 @@
         file = "powerlevel10k.zsh-theme";
       }
       {
-        name = "powerlevel10k-config";
-        src = ./p10k-config;
+        name = "p10k";
+        src = ./p10k;
         file = "p10k.zsh";
       }
       {
