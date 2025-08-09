@@ -56,6 +56,11 @@
         src = ./func;
         file = "func.zsh";
       }
+      {
+        name = "py";
+        src = ./py;
+        file = "py.zsh";
+      }
     ];
     dirHashes = {
       # cd ~cfg
@@ -75,7 +80,6 @@
         source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
       }      
       printf '\e[5 q'
-      export PYTHONPATH=$(pwd)
     '';
   }; 
   
