@@ -48,22 +48,18 @@
       }
       {
         name = "p10k";
-        src = ./p10k;
+        src = ./zshrc;
         file = "p10k.zsh";
       }
       {
         name = "func";
-        src = ./func;
+        src = ./zshrc;
         file = "func.zsh";
       }
       {
         name = "py";
-        src = ./py;
+        src = ./zshrc;
         file = "py.zsh";
-      }
-      {
-        name = "init";
-        src = ./init;
       }
     ];
     dirHashes = {
