@@ -65,7 +65,9 @@ newgrp docker
 # Other Setup
 ## Logind Configuration
 ```
-sudo gedit /etc/systemd/logind.conf
+sudo vi /etc/systemd/logind.conf
+#HandleLidSwitch=suspend -> HandleLidSwitch=ignore
+sudo systemctl restart systemd-logind
 ```
 ## non-graphical target
 ```

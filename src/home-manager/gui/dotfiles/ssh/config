@@ -10,9 +10,9 @@ Host x1
 Host rog
   HostName rpg-asus
   User rpg
-Host dkp
+Host 250
   HostName 167.86.81.250
   User dkp 
-Host dkp2
+Host 208
   HostName 185.239.208.208
   User dkp 

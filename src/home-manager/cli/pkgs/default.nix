@@ -33,6 +33,8 @@
         python310
         python3Packages.pip
         uv
+        pipx
+
 
         # Node.js
         nodejs.pkgs.npm
