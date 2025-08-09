@@ -51,7 +51,7 @@
       "xquartz"
       "kitty"
       "vmware-fusion"
-      "miniconda"
+      # "miniconda"
       # "Tunnelblick"
       # "chromedriver"
     ];

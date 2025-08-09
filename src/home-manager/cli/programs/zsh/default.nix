@@ -61,6 +61,10 @@
         src = ./py;
         file = "py.zsh";
       }
+      {
+        name = "init";
+        src = ./init;
+      }
     ];
     dirHashes = {
       # cd ~cfg
