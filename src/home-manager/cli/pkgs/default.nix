@@ -34,7 +34,6 @@
         python310
         python3Packages.pip
         uv
-        pipx
         micromamba
 
 
