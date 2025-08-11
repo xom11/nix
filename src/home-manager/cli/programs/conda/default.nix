@@ -1,7 +1,7 @@
 {
   home.file = {
-    .condarc = {
+    ".condarc" = {
       source = ./condarc;
-    }
-  }
+    };
+  };
 }

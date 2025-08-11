@@ -1,5 +1,6 @@
 {
   imports = [
+    ./conda
     ./git
     ./nvim
     ./tmux
