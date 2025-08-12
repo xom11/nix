@@ -3,19 +3,11 @@
   hosts: local
   become: yes
   tasks:
+    # --- Add all repositories and GPG keys ---
     - name: Add IBus Bamboo PPA
       ansible.builtin.apt_repository:
         repo: 'ppa:bamboo-engine/ibus-bamboo'
         state: present
-
-    - name: Install IBus and IBus-Bamboo
-      ansible.builtin.apt:
-        name:
-          - ibus
-          - ibus-bamboo
-        state: present
-        update_cache: yes
-        install_recommends: yes
 
     - name: Add Brave Browser GPG key
       ansible.builtin.get_url:
@@ -29,19 +21,6 @@
         dest: /etc/apt/sources.list.d/brave-browser-release.sources
         mode: '0644'
 
-    - name: Install Brave Browser
-      ansible.builtin.apt:
-        name: brave-browser
-        state: present
-        update_cache: yes
-
-    - name: Create symlink for 'brave' command
-      ansible.builtin.file:
-        src: /usr/bin/brave-browser
-        dest: /usr/bin/brave
-        state: link
-        force: yes
-
     - name: Add Visual Studio Code GPG key
       ansible.builtin.get_url:
         url: https://packages.microsoft.com/keys/microsoft.asc
@@ -54,8 +33,35 @@
         state: present
         filename: vscode
 
-    - name: Install Visual Studio Code
+    # --- Update the APT cache  ---
+    - name: Update apt cache after adding all repositories
       ansible.builtin.apt:
-        name: code
-        state: present
         update_cache: yes
+
+    # --- Install packages ---
+    - name: Install apt packages
+      ansible.builtin.apt:
+        name:
+          - ibus
+          - ibus-bamboo
+          - brave-browser
+          - code
+          - qutebrowser
+        state: present
+        install_recommends: yes
+
+    # --- Install Snap packages ---
+    - name: Install Snap packages
+      community.general.snap:
+        name:
+          - vlc
+          - discord
+          - telegram-desktop
+        state: present
+
+    - name: Create symlink for 'brave' command
+      ansible.builtin.file:
+        src: /usr/bin/brave-browser
+        dest: /usr/bin/brave
+        state: link
+        force: yes
