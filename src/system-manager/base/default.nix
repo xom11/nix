@@ -1,7 +1,4 @@
 {input, config, pkgs, lib, distro,  username,... }:
-let
-  user = config.lib.getEnv "USER";
-in
 {
   nixpkgs.hostPlatform = "x86_64-linux";
   system-manager.allowAnyDistro = true;
@@ -24,7 +21,7 @@ in
     echo123 = {
       enable = true;
       script = ''
-        echo  ${user} 
+        echo  ${username} 
     };
   };
 }
