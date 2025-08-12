@@ -52,7 +52,7 @@
   // Terminal settings
   "terminal.integrated.customGlyphs": false,
   "terminal.integrated.defaultProfile.linux": "zsh",
-  "terminal.integrated.fontFamily": "MesloLGS NF",
+  "terminal.integrated.fontFamily": "'Meslo LG M DZ for Powerline', 'fontawesome'",
 
   // TypeScript settings
   "typescript.updateImportsOnFileMove.enabled": "always",

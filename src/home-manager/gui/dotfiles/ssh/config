@@ -1,3 +1,5 @@
+Include /Users/lenamkhanh/.colima/ssh_config
+
 Host dk
   HostName 100.126.180.8
   User dk
