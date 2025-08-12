@@ -1,4 +1,4 @@
-{input, config, pkgs, lib, distro, username, user, homeDir,  sudo_user,  ... }:
+{input, config, pkgs, lib, distro, username, user,  sudo_user,  ... }:
 {
   nixpkgs.hostPlatform = "x86_64-linux";
   system-manager.allowAnyDistro = true;
@@ -21,7 +21,7 @@
     echo123 = {
       enable = true;
       script = ''
-        echo ${username} ${user} ${sudo_user} ${homeDir}
+        echo ${username} ${user} ${sudo_user} 
       '';
     };
   };
