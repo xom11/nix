@@ -12,10 +12,10 @@
     $USER ALL=(ALL) NOPASSWD: ALL
   '';
   system-manager.preActivationAssertions = {
-    hello = {
+    zsh = {
       enable = true;
       script = ''
-        sudo echo "Hello from system-manager!"
+        sudo chsh -s $(which zsh) $USER
       '';
     }; 
   };
