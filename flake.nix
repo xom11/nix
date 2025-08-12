@@ -56,7 +56,7 @@
       specialArgs =
         inputs
         // {
-          inherit username dotfileDir system homeDir sudo_user user system ;
+          inherit username dotfileDir system homeDir sudo_user user  ;
         };
       
     in
