@@ -40,8 +40,6 @@
     with inputs;
     let
       system = builtins.currentSystem;
-      user = builtins.getEnv "USER";
-      sudo_user = builtins.getEnv "SUDO_USER";
       username =
         if builtins.getEnv "SUDO_USER" != "" then builtins.getEnv "SUDO_USER"
         else if builtins.getEnv "USER" != "" then builtins.getEnv "USER"

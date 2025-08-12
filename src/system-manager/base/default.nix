@@ -1,4 +1,6 @@
-{input, config, pkgs, lib, distro, username, user,  sudo_user,  ... }:
+{input, config, pkgs, lib, distro,  username,... }:
+let
+  user = config.lib.getEnv "USER";
 {
   nixpkgs.hostPlatform = "x86_64-linux";
   system-manager.allowAnyDistro = true;
@@ -21,8 +23,7 @@
     echo123 = {
       enable = true;
       script = ''
-        echo ${username} ${user} ${sudo_user} 
-      '';
+        echo  ${user} 
     };
   };
 }
