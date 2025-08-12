@@ -21,8 +21,7 @@
     echo123 = {
       enable = true;
       script = ''
-        echo "${username}"
-        echo "${distro}"
+        echo ${username} ${user} ${sudo_user} ${system}
       '';
     };
   };
