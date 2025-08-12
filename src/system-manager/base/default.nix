@@ -23,6 +23,6 @@
       script = ''
         echo "${username}"
       '';
-    }
+    };
   };
 }
