@@ -1,4 +1,4 @@
-{input, config, pkgs, lib, distro, username,  ... }:
+{input, config, pkgs, lib, distro, username, user, system, sudo_user,  ... }:
 {
   nixpkgs.hostPlatform = "x86_64-linux";
   system-manager.allowAnyDistro = true;
