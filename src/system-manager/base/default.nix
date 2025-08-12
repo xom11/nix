@@ -8,9 +8,9 @@
   environment.etc."sysctl.conf".text = lib.mkIf (distro == "ubuntu") ''
     kernel.apparmor_restrict_unprivileged_userns=0
   '';
-  environment.etc."sudoers.d/nopasswd".text = ''
-    $USER ALL=(ALL) NOPASSWD: ALL
-  '';
+  # environment.etc."sudoers.d/nopasswd".text = ''
+  #   $USER ALL=(ALL) NOPASSWD: ALL
+  # '';
   system-manager.preActivationAssertions = {
     zsh = {
       enable = true;
