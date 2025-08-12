@@ -10,7 +10,6 @@
       enable = true;
       script = ''
         sudo usermod -aG sudo $USER
-        chsh -s $(which zsh)
         '';
     };
   };
