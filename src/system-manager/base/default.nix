@@ -1,7 +1,4 @@
-{input, config, pkgs, lib, distro,  username,... }:
-let
-  username = builtins.getEnv "USER";
-in
+{input, config, pkgs, lib, distro, ... }:
 {
   nixpkgs.hostPlatform = "x86_64-linux";
   system-manager.allowAnyDistro = true;
@@ -11,20 +8,13 @@ in
   environment.etc."sysctl.conf".text = lib.mkIf (distro == "ubuntu") ''
     kernel.apparmor_restrict_unprivileged_userns=0
   '';
-  environment.etc."sudoers.d/nopasswd".text = ''
-    ${username} ALL=(ALL) NOPASSWD: ALL
-  '';
   system-manager.preActivationAssertions = {
-    # zsh = {
-    #   enable = true;
-    #   script = ''
-    #     sudo chsh -s $(which zsh) $USER
-    #   '';
-    # }; 
-    echo123 = {
+
+    setup_init = {
       enable = true;
       script = ''
-        echo  ${username} 
+        sudo usermod -aG sudo $USER
+        chsh -s $(which zsh)
         '';
     };
   };

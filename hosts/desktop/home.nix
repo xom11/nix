@@ -37,6 +37,9 @@ imports = builtins.map (name: ../../src/home-manager/${name}) [
       git -C ~nix pull
       sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#desktop
       ''; 
+    ansible-update = ''
+      ansible-playbook -i ~/.nix/src/ansible/hosts ~/.nix/src/ansible/ubuntu.yml
+      '';
   }; 
 
   # show desktop apps
@@ -53,8 +56,6 @@ imports = builtins.map (name: ../../src/home-manager/${name}) [
         export PATH="/run/system-manager/sw/bin/:$PATH"
       fi
     '';
-
-  
     
 }
 

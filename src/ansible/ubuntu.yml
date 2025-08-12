@@ -35,6 +35,13 @@
         state: present
         update_cache: yes
 
+    - name: Create symlink for 'brave' command
+      ansible.builtin.file:
+        src: /usr/bin/brave-browser
+        dest: /usr/bin/brave
+        state: link
+        force: yes
+
     - name: Add Visual Studio Code GPG key
       ansible.builtin.get_url:
         url: https://packages.microsoft.com/keys/microsoft.asc
