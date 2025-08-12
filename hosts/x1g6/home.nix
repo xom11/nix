@@ -6,8 +6,8 @@
   home.stateVersion = "25.11"; 
 
   imports = builtins.map (name: ../../src/home-manager/${name}) [
-    "gui/apps/nixos"
-    "gui/desktop-environment"
+    "gui/apps"
+    "gui/environment"
     "gui/dotfiles"
     "gui/fonts"
 

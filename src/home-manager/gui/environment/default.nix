@@ -1,8 +1,9 @@
 {...}:
 {
   imports = [
+    ./desktop
     ./gnome
-    # ./i18n
+    ./pwa
     ./wayland
   ];
 }

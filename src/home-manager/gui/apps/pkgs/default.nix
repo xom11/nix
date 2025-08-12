@@ -1,12 +1,6 @@
 { pkgs, config,... }:
 
 {
-  imports = [
-    ../desktop
-    ../pwa
-    ../programs
-  ];
-
   home.packages = with pkgs; [
     bitwarden-desktop
     qutebrowser

@@ -9,7 +9,6 @@
 
   imports = builtins.map (name: ../../src/home-manager/${name}) [
     "gui/dotfiles"
-    "gui/apps/macos"
     "gui/fonts"
 
     "cli/os/macos"

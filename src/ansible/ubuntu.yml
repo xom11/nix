@@ -34,14 +34,15 @@
         filename: vscode
 
     # --- Update the APT cache  ---
-    - name: Update apt cache after adding all repositories
+    - name: Update apt cache 
       ansible.builtin.apt:
         update_cache: yes
 
-    # --- Install packages ---
+    # --- Install apt packages ---
     - name: Install apt packages
       ansible.builtin.apt:
         name:
+          - kitty
           - ibus
           - ibus-bamboo
           - brave-browser
@@ -49,6 +50,13 @@
           - qutebrowser
         state: present
         install_recommends: yes
+    
+    # --- Uninstall apt packages ---
+    - name: Uninstall apt packages
+      ansible.builtin.apt:
+        name: []
+        state: absent
+        autoremove: yes
 
     # --- Install Snap packages ---
     - name: Install Snap packages
@@ -57,7 +65,15 @@
           - vlc
           - discord
           - telegram-desktop
+          - caprine
+          - localsend
         state: present
+    
+    # --- Uninstall Snap packages ---
+    - name: Uninstall Snap packages
+      community.general.snap:
+        name: []
+        state: absent
 
     - name: Create symlink for 'brave' command
       ansible.builtin.file:
