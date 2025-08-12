@@ -30,7 +30,7 @@ imports = builtins.map (name: ../../src/home-manager/${name}) [
 
   home.shellAliases = {
     update = ''
-      git -C ~nix pull;
+      git -C ~nix pull
       nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#desktop
       '';
     system-update = ''
