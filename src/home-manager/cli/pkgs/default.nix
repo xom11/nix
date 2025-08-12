@@ -21,6 +21,7 @@
         jq
         gh
         ripgrep
+        ansible
         # openssl
 
         # Database

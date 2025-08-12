@@ -1,0 +1,54 @@
+---
+- name: Ubuntu Install
+  hosts: local
+  become: yes
+  tasks:
+    - name: Add IBus Bamboo PPA
+      ansible.builtin.apt_repository:
+        repo: 'ppa:bamboo-engine/ibus-bamboo'
+        state: present
+
+    - name: Install IBus and IBus-Bamboo
+      ansible.builtin.apt:
+        name:
+          - ibus
+          - ibus-bamboo
+        state: present
+        update_cache: yes
+        install_recommends: yes
+
+    - name: Add Brave Browser GPG key
+      ansible.builtin.get_url:
+        url: https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+        dest: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+        mode: '0644'
+
+    - name: Add Brave Browser APT source file
+      ansible.builtin.get_url:
+        url: https://brave-browser-apt-release.s3.brave.com/brave-browser.sources
+        dest: /etc/apt/sources.list.d/brave-browser-release.sources
+        mode: '0644'
+
+    - name: Install Brave Browser
+      ansible.builtin.apt:
+        name: brave-browser
+        state: present
+        update_cache: yes
+
+    - name: Add Visual Studio Code GPG key
+      ansible.builtin.get_url:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        dest: /etc/apt/trusted.gpg.d/microsoft.asc
+        mode: '0644'
+
+    - name: Add Visual Studio Code APT repository
+      ansible.builtin.apt_repository:
+        repo: 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main'
+        state: present
+        filename: vscode
+
+    - name: Install Visual Studio Code
+      ansible.builtin.apt:
+        name: code
+        state: present
+        update_cache: yes

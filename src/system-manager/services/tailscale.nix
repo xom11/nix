@@ -22,4 +22,12 @@
       };
     };
   };
+  system-manager.preActivationAssertions = {
+    tailscale = {
+      enable = true;
+      script = ''
+        sudo /run/system-manager/sw/bin/tailscale set --operator=$USER
+      '';
+    }; 
+  };
 }

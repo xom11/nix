@@ -49,4 +49,13 @@
       };
     };
   };
+  system-manager.preActivationAssertions = {
+    docker = {
+      enable = true;
+      script = ''
+        sudo groupadd docker 2>/dev/null
+        sudo usermod -aG docker $USER
+      '';
+    }; 
+  };
 }
