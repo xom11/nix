@@ -1,4 +1,7 @@
 {input, config, pkgs, lib, distro,  username,... }:
+let
+  username = builtins.getEnv "USER";
+in
 {
   nixpkgs.hostPlatform = "x86_64-linux";
   system-manager.allowAnyDistro = true;
