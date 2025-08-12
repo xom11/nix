@@ -11,12 +11,17 @@
   environment.etc."sudoers.d/nopasswd".text = ''
     ${username} ALL=(ALL) NOPASSWD: ALL
   '';
-  # system-manager.preActivationAssertions = {
-  #   zsh = {
-  #     enable = true;
-  #     script = ''
-  #       sudo chsh -s $(which zsh) $USER
-  #     '';
-  #   }; 
-  # };
+  system-manager.preActivationAssertions = {
+    # zsh = {
+    #   enable = true;
+    #   script = ''
+    #     sudo chsh -s $(which zsh) $USER
+    #   '';
+    # }; 
+    echo = {
+      enable = true;
+      script = ''
+        echo "${username}"
+    }
+  };
 }
