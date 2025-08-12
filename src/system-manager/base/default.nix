@@ -18,7 +18,7 @@
     #     sudo chsh -s $(which zsh) $USER
     #   '';
     # }; 
-    echo = {
+    echo123 = {
       enable = true;
       script = ''
         echo "${username}"
