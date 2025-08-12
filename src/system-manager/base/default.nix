@@ -22,6 +22,7 @@
       enable = true;
       script = ''
         echo "${username}"
+        echo "${distro}
       '';
     };
   };
