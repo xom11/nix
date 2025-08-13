@@ -4,10 +4,13 @@
   become: yes
   tasks:
     # --- Add all repositories and GPG keys ---
-    - name: Add IBus Bamboo PPA
+    - name: Add multiple PPAs
       ansible.builtin.apt_repository:
-        repo: 'ppa:bamboo-engine/ibus-bamboo'
+        repo: "{{ item }}"
         state: present
+      loop:
+        - ppa:bamboo-engine/ibus-bamboo
+        - ppa:keyd-team/ppa
 
     - name: Add Brave Browser GPG key
       ansible.builtin.get_url:
