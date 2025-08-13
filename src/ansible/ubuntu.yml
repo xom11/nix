@@ -60,15 +60,10 @@
           - code
           - qutebrowser
           - google-chrome-stable
+          - flatpak
+          - gnome-software-plugin-flatpak
         state: present
         install_recommends: yes
-    
-    # --- Uninstall apt packages ---
-    - name: Uninstall apt packages
-      ansible.builtin.apt:
-        name: []
-        state: absent
-        autoremove: yes
 
     # --- Install Snap packages ---
     - name: Install Snap packages
@@ -80,13 +75,21 @@
           - caprine
           - localsend
         state: present
-    
-    # --- Uninstall Snap packages ---
-    - name: Uninstall Snap packages
-      community.general.snap:
-        name: []
-        state: absent
 
+    # --- Flatpak packages ---
+    - name: Add Flathub repository
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+    - name: Install Flatpak applications 
+      community.general.flatpak:
+        name:
+          - net.lutris.Lutris
+        state: present
+    
+    # --- Other tasks ---
     - name: Create symlink for 'brave' command
       ansible.builtin.file:
         src: /usr/bin/brave-browser
