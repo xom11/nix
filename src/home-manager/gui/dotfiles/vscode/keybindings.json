@@ -220,5 +220,21 @@
     "key": "alt+g",
     "command": "workbench.action.toggleSidebarVisibility",
     "when": "sideBarVisible && activeViewlet == 'workbench.view.scm'"
+  },
+  // Buffer
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.navigateBack",
+    "when": "canNavigateBack"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "workbench.action.navigateForward",
+    "when": "canNavigateForward"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-lineBreakInsert",
+    "when": "textInputFocus && !editorReadonly"
   }
 ]

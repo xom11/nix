@@ -79,6 +79,8 @@
     "<C-w>": false,
     "<C-b>": false,
     "<C-d>": false,
+    "<C-i>": false,
+    "<C-o>": false,
     "<C-z>": false
   },
   "vim.insertModeKeyBindings": [
@@ -179,5 +181,6 @@
         }
       }
     }
-  }
+  },
+  "workbench.editor.navigationScope": "editorGroup"
 }
