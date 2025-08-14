@@ -33,6 +33,18 @@
           dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
         - url: https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list
           dest: /etc/apt/sources.list.d/tailscale.list 
+    
+    - name:  Configuration files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: '0644'
+      loop:
+        - src: keyd.conf
+          dest: /etc/keyd/default.conf
+
 
     - name: Add Visual Studio Code GPG key
       ansible.builtin.get_url:
