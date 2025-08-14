@@ -39,6 +39,9 @@ imports = builtins.map (name: ../../src/home-manager/${name}) [
     ansible-update = ''
       ansible-playbook -i ~/.nix/src/ansible/hosts ~/.nix/src/ansible/ubuntu.yml
       '';
+    galaxy-update = ''
+      ansible-galaxy install -r  ~/.nix/src/ansible/requirements.yml
+      '';
   }; 
 
   # show desktop apps
