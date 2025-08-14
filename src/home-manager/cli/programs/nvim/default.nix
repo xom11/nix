@@ -6,6 +6,8 @@
     black
     shfmt 
     stylua 
+    nixd
+    nixfmt
   ];
   imports = [
     ./cmp.nix

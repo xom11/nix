@@ -6,7 +6,7 @@
     - role: geerlingguy.docker
       vars:
         docker_users:
-          - "{{ ansible_env.USER }}"
+          - "{{ ansible_env.SUDO_USER }}"
   tasks:
     # --- Add all repositories and GPG keys ---
     - name: Add multiple PPAs
@@ -45,6 +45,14 @@
         - src: keyd.conf
           dest: /etc/keyd/default.conf
 
+    - name: visudo configuration
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/90-{{ ansible_env.SUDO_USER }}
+        state: present
+        line: "{{ ansible_env.SUDO_USER }} ALL=(ALL) NOPASSWD: ALL"
+        mode: '0440'
+        create: true
+        validate: '/usr/sbin/visudo -cf %s'
 
     - name: Add Visual Studio Code GPG key
       ansible.builtin.get_url:

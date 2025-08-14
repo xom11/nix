@@ -158,5 +158,26 @@
     "diffEditor.ignoreTrimWhitespace": true
   },
   "terminal.integrated.inheritEnv": false,
-  "nix.serverPath": "nixd"
+
+  // Nix settings
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "formatting": {
+        "command": ["nixfmt"]
+      },
+      "options": {
+        "nixos": {
+          "expr": "(builtins.getFlake \"${HOME}/.nix\").nixosConfigurations.x1g6.options"
+        },
+        "home-manager": {
+          "expr": "(builtins.getFlake \"${HOME}/.nix\").homeConfigurations.server.options"
+        },
+        "nix-darwin": {
+          "expr": "(builtins.getFlake \"${HOME}/.nix\").darwinConfigurations.macmini.options"
+        }
+      }
+    }
+  }
 }
