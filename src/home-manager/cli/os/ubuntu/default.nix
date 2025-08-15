@@ -7,6 +7,5 @@
     ffmpeg
     discordchatexporter-cli
     xsel
-    ventoy
   ];
 }
