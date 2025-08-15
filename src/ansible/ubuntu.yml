@@ -73,7 +73,7 @@
         - ibus
         - ibus-bamboo
         - brave-browser
-        - code
+        # - code
         - qutebrowser
         - flatpak
         - gnome-software-plugin-flatpak
