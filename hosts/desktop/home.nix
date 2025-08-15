@@ -1,5 +1,5 @@
 
-{ config, pkgs, lib, nixgl, ... }:
+{ pkgs,... }:
 let 
   username = builtins.getEnv "USER"; 
 in

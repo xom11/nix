@@ -83,25 +83,6 @@
       loop:
         - keyd
 
-    # --- Flatpak packages ---
-    - name: Add Flathub repository
-      community.general.flatpak_remote:
-        name: flathub
-        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
-        state: present
-
-    - name: Install Flatpak applications
-      community.general.flatpak:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - org.videolan.VLC
-        - com.discordapp.Discord
-        - org.telegram.desktop
-        - com.sindresorhus.Caprine
-        - org.localsend.localsend_app
-        - net.lutris.Lutris
-    
     # --- Other tasks ---
     - name: Create symlink for 'brave' command
       ansible.builtin.file:
@@ -121,3 +102,22 @@
       loop:
         - src: keyd.conf
           dest: /etc/keyd/default.conf
+
+    # --- Flatpak packages ---
+    - name: Add Flathub repository
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+    - name: Install Flatpak applications
+      community.general.flatpak:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - org.videolan.VLC
+        - com.discordapp.Discord
+        - org.telegram.desktop
+        - com.sindresorhus.Caprine
+        - org.localsend.localsend_app
+    
