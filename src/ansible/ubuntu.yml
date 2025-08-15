@@ -58,21 +58,22 @@
         update_cache: yes
 
     # --- Install apt packages ---
-    - name: Install apt packages
+    - name: Install individual apt packages
       ansible.builtin.apt:
-        name:
-          - kitty
-          - ibus
-          - ibus-bamboo
-          - brave-browser
-          - code
-          - qutebrowser
-          - flatpak
-          - gnome-software-plugin-flatpak
-          - tailscale
-          - keyd
+        name: "{{ item }}"
         state: present
         install_recommends: yes
+      loop:
+        - kitty
+        - ibus
+        - ibus-bamboo
+        - brave-browser
+        - code
+        - qutebrowser
+        - flatpak
+        - gnome-software-plugin-flatpak
+        - tailscale
+        - keyd
 
     - name: Enabled and start services 
       ansible.builtin.systemd:
