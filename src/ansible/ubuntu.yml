@@ -109,15 +109,15 @@
         - keyd
 
     # --- Install Snap packages ---
-    - name: Install Snap packages
-      community.general.snap:
-        name:
-          - vlc
-          - discord
-          - telegram-desktop
-          - caprine
-          - localsend
-        state: present
+    # - name: Install Snap packages
+    #   community.general.snap:
+    #     name:
+          # - vlc
+          # - discord
+          # - telegram-desktop
+          # - caprine
+          # - localsend
+        # state: present
 
     # --- Flatpak packages ---
     - name: Add Flathub repository
@@ -130,6 +130,11 @@
       community.general.flatpak:
         name: []
           # - net.lutris.Lutris
+          - org.videolan.VLC
+          - com.discorg.telegram.desktopordapp.Discord
+          - org.telegram.desktop
+          - com.sindresorhus.Caprine
+          - org.localsend.localsend_app
         state: present
     
     # --- Other tasks ---
