@@ -6,7 +6,7 @@
   },
   "git.autofetch": true,
   "workbench.activityBar.location": "top",
-  "workbench.editor.showTabs": "multiple",
+  "workbench.editor.showTabs": "none",
   "workbench.sideBar.location": "right",
   "editor.stickyScroll.enabled": false,
 
@@ -58,15 +58,6 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.statusBar.visible": true,
-
-  // Zen Mode settings
-  "zenMode.fullScreen": true,
-  "zenMode.hideActivityBar": true,
-  "zenMode.hideLineNumbers": false,
-  "zenMode.hideStatusBar": true,
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
 
   // Vim settings
   "vim.easymotion": true,
@@ -182,5 +173,6 @@
       }
     }
   },
-  "workbench.editor.navigationScope": "editorGroup"
+  "workbench.editor.navigationScope": "editorGroup",
+  "workbench.secondarySideBar.defaultVisibility": "hidden"
 }
