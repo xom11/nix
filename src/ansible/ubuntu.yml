@@ -8,6 +8,10 @@
         docker_users:
           - "{{ ansible_env.SUDO_USER }}"
     - role: gantsign.visual-studio-code
+      users:
+        - username: "{{ ansible_env.SUDO_USER }}"
+          visual_studio_code_extensions:
+            - ms-python.python
   tasks:
     # --- Add all repositories and GPG keys ---
     - name: Add multiple PPAs
