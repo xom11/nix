@@ -128,7 +128,7 @@
 
     - name: Install Flatpak applications 
       community.general.flatpak:
-        name: []
+        name: 
           # - net.lutris.Lutris
           - org.videolan.VLC
           - com.discorg.telegram.desktopordapp.Discord
