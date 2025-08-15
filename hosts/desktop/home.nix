@@ -33,10 +33,10 @@ imports = builtins.map (name: ../../src/home-manager/${name}) [
       nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#desktop
       '';
     galaxy-update = ''
-      sudo $(which ansible-galaxy) install -r  ~/.nix/src/ansible/requirements.yml
+      ansible-galaxy install -r  ~/.nix/src/ansible/requirements.yml
       '';
     ansible-update = ''
-      sudo $(which ansible-playbook) -i ~/.nix/src/ansible/hosts ~/.nix/src/ansible/ubuntu.yml
+      ansible-playbook -i ~/.nix/src/ansible/hosts ~/.nix/src/ansible/ubuntu.yml
       '';
   }; 
 
