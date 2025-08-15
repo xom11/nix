@@ -33,6 +33,12 @@
           dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
         - url: https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list
           dest: /etc/apt/sources.list.d/tailscale.list 
+        # Vscode
+        - url: https://packages.microsoft.com/keys/microsoft.asc
+        - dest: /etc/apt/trusted.gpg.d/microsoft.asc
+        # Google Chrome
+        - url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+          dest: /etc/apt/trusted.gpg.d/google-chrome.gpg
     
     - name: visudo configuration
       ansible.builtin.lineinfile:
@@ -43,22 +49,11 @@
         create: true
         validate: '/usr/sbin/visudo -cf %s'
 
-    - name: Add Visual Studio Code GPG key
-      ansible.builtin.get_url:
-        url: https://packages.microsoft.com/keys/microsoft.asc
-        dest: /etc/apt/trusted.gpg.d/microsoft.asc
-        mode: '0644'
-
     - name: Add Visual Studio Code APT repository
       ansible.builtin.apt_repository:
         repo: 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main'
         state: present
         filename: vscode
-
-    - name: Add Google Chrome GPG key
-      ansible.builtin.apt_key:
-        url: https://dl-ssl.google.com/linux/linux_signing_key.pub
-        state: present
 
     - name: Add Google Chrome APT repository
       ansible.builtin.apt_repository:
@@ -115,16 +110,16 @@
         flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
         state: present
 
-    - name: Install Flatpak applications 
+    - name: Install Flatpak applications
       community.general.flatpak:
-        name: 
-          # - net.lutris.Lutris
-          - org.videolan.VLC
-          - com.discordapp.Discord
-          - org.telegram.desktop
-          - com.sindresorhus.Caprine
-          - org.localsend.localsend_app
+        name: "{{ item }}"
         state: present
+      loop:
+        - org.videolan.VLC
+        - com.discordapp.Discord
+        - org.telegram.desktop
+        - com.sindresorhus.Caprine
+        - org.localsend.localsend_app
     
     # --- Other tasks ---
     - name: Create symlink for 'brave' command
