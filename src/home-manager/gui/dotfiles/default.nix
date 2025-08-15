@@ -1,6 +1,7 @@
-{...}:
+{ ... }:
 {
   imports = [
+    ./btop
     ./kitty
     ./ssh
     ./qutebrowser
