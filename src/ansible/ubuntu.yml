@@ -67,7 +67,6 @@
           - brave-browser
           - code
           - qutebrowser
-          - google-chrome-stable
           - flatpak
           - gnome-software-plugin-flatpak
           - tailscale
