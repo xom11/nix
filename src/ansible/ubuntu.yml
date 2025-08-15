@@ -120,7 +120,7 @@
         name: 
           # - net.lutris.Lutris
           - org.videolan.VLC
-          - com.discorg.telegram.desktopordapp.Discord
+          - com.discordapp.Discord
           - org.telegram.desktop
           - com.sindresorhus.Caprine
           - org.localsend.localsend_app
@@ -141,6 +141,7 @@
         owner: root
         group: root
         mode: '0644'
+        directory_mode: '0755'
       loop:
         - src: keyd.conf
           dest: /etc/keyd/default.conf
