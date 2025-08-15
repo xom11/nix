@@ -174,11 +174,16 @@
             nixvim.homeModules.nixvim
           ];
         };
+        "minimal" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          modules = [
+            ./hosts/minimal/home.nix
+          ];
+        };
         "desktop" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
           extraSpecialArgs = specialArgs;
           modules = [
-            nix-flatpak.homeManagerModules.nix-flatpak
             nixvim.homeModules.nixvim
             ./hosts/desktop/home.nix
           ];

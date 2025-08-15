@@ -7,11 +7,15 @@ in
   home.homeDirectory = "/home/${username}";
   home.stateVersion = "25.11";
 
-  imports = builtins.map (name: ../../src/home-manager/${name}) [
-    "cli/programs"
-    "cli/services"
-    "cli/pkgs"
-    "cli/os/ubuntu"
+  # imports = builtins.map (name: ../../src/home-manager/${name}) [
+  #   "cli/programs"
+  #   "cli/services"
+  #   "cli/pkgs"
+  #   "cli/os/ubuntu"
+  # ];
+
+  home.packages = with pkgs; [
+    zsh
   ];
 
   home.sessionVariables = {
@@ -22,6 +26,6 @@ in
   nixpkgs.config.allowUnfree = true;
 
   home.shellAliases = {
-    update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#server";
+    update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#minimal";
   };
 }
