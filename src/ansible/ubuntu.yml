@@ -12,6 +12,10 @@
         - username: "{{ ansible_env.SUDO_USER }}"
           visual_studio_code_extensions:
             - ms-python.python
+            - catppuccin.catppuccin-vsc
+            - vscodevim.vim
+            - esbenp.prettier-vscode
+            - pkief.material-icon-theme
   tasks:
     # --- Add all repositories and GPG keys ---
     - name: Add multiple PPAs
@@ -38,9 +42,6 @@
           dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
         - url: https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list
           dest: /etc/apt/sources.list.d/tailscale.list 
-        # Vscode
-        # - url: https://packages.microsoft.com/keys/microsoft.asc
-        #   dest: /etc/apt/trusted.gpg.d/microsoft.asc
     
     - name: visudo configuration
       ansible.builtin.lineinfile:
@@ -51,11 +52,6 @@
         create: true
         validate: '/usr/sbin/visudo -cf %s'
 
-    # - name: Add Visual Studio Code APT repository
-    #   ansible.builtin.apt_repository:
-    #     repo: 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main'
-    #     state: present
-    #     filename: vscode
 
     # --- Update the APT cache  ---
     - name: Update apt cache 
@@ -73,19 +69,10 @@
         - ibus
         - ibus-bamboo
         - brave-browser
-        # - code
         - qutebrowser
         - flatpak
         - gnome-software-plugin-flatpak
         - tailscale
-        - keyd
-
-    - name: Enabled and start services 
-      ansible.builtin.systemd:
-        name: "{{ item }}"
-        enabled: yes
-        state: started
-      loop:
         - keyd
 
     # --- Other tasks ---
@@ -107,6 +94,14 @@
       loop:
         - src: keyd.conf
           dest: /etc/keyd/default.conf
+
+    - name: Enabled and start services 
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - keyd
 
     # --- Flatpak packages ---
     - name: Add Flathub repository
