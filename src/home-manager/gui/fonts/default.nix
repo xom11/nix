@@ -3,9 +3,7 @@
   home.packages = with pkgs;
     [ 
       nerd-fonts.dejavu-sans-mono
-      # fira-code
-      # fira-code-symbols
-      # meslo-lgs-nf
+      nerd-fonts.fira-code
       nerd-fonts.meslo-lg
     ];
 

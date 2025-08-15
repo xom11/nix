@@ -10,9 +10,7 @@
   "workbench.sideBar.location": "right",
   "editor.stickyScroll.enabled": false,
 
-  "editor.scrollbar.verticalScrollbarSize": 10,
-  "editor.scrollbar.horizontalScrollbarSize": 10,
-
+  
   // Language specific settings
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -23,11 +21,17 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-
+  
   // Auto sync settings
-  "settingsSync.keybindingsPerPlatform": true,
-
+  "settingsSync.keybindingsPerPlatform": false,
+  
   // Editor settings
+  "editor.fontFamily": "Fira Code",
+  "editor.fontLigatures": true,
+  "editor.scrollbar.verticalScrollbarSize": 10,
+  "editor.scrollbar.horizontalScrollbarSize": 10,
+  // "editor.scrollbar.vertical": "hidden",
+  // "editor.scrollbar.horizontal": "hidden",
   "breadcrumbs.enabled": true,
   "editor.cursorStyle": "line-thin",
   "editor.formatOnSave": true,
@@ -35,10 +39,14 @@
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.suggest.insertMode": "replace",
-
+  
   // Explorer settings
+  "workbench.tree.enableStickyScroll": false,
+  "workbench.tree.indent": 8,
+  "material-icon-theme.hidesExplorerArrows": true,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
+  "explorer.compactFolders": false,
 
   // Files settings
   "files.autoSave": "afterDelay",
@@ -70,8 +78,6 @@
     "<C-w>": false,
     "<C-b>": false,
     "<C-d>": false,
-    "<C-i>": false,
-    "<C-o>": false,
     "<C-z>": false
   },
   "vim.insertModeKeyBindings": [

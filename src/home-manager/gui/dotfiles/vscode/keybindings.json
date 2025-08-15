@@ -43,6 +43,21 @@
   },
   // BUFFER
   {
+    "key": "tab",
+    "command": "workbench.action.navigateBack",
+    "when": "canNavigateBack && vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "key": "shift+tab",
+    "command": "workbench.action.navigateForward",
+    "when": "canNavigateForward && vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
+    "key": "delete",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
+  {
     "key": "alt+right",
     "command": "workbench.action.nextEditor",
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
@@ -113,6 +128,11 @@
     "command": "explorer.newFile",
     "key": "a",
     "when": "filesExplorerFocus && foldersViewVisible  && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "s",
+    "command": "explorer.openToSide",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
   },
   {
     "command": "explorer.newFolder",
@@ -220,21 +240,5 @@
     "key": "alt+g",
     "command": "workbench.action.toggleSidebarVisibility",
     "when": "sideBarVisible && activeViewlet == 'workbench.view.scm'"
-  },
-  // Buffer
-  {
-    "key": "ctrl+o",
-    "command": "workbench.action.navigateBack",
-    "when": "canNavigateBack"
-  },
-  {
-    "key": "ctrl+i",
-    "command": "workbench.action.navigateForward",
-    "when": "canNavigateForward"
-  },
-  {
-    "key": "ctrl+o",
-    "command": "-lineBreakInsert",
-    "when": "textInputFocus && !editorReadonly"
   }
 ]
