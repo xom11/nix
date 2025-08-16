@@ -9,6 +9,7 @@ Host m4
 Host x1
   HostName 100.83.77.33
   User kln
+  ForwardAgent yes
 Host rog
   HostName rpg-asus
   User rpg
