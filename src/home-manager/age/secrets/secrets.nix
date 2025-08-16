@@ -6,4 +6,5 @@ let
 in
 {
   "github_token.age".publicKeys = users;
+  "tailscale_key.age".publicKeys = users;
 }
