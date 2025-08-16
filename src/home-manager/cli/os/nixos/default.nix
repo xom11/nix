@@ -4,5 +4,6 @@
       tldr
       gemini-cli
       gcc
+      caligula
   ];
 }
