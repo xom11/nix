@@ -15,6 +15,7 @@
     "cli/pkgs"
     "cli/services"
     "cli/programs"
+    "cli/secrect"
 
   ];
 

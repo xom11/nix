@@ -23,7 +23,6 @@
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";
-    SECRET1 = "$(cat ${config.age.secrets.secret1.path})";
   };
   home.shellAliases = {
     update = "sudo darwin-rebuild switch --impure --flake ~/.nix#macmini";
