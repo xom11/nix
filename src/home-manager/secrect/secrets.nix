@@ -5,5 +5,5 @@ let
   ];
 in
 {
-  "envs.age".publicKeys = users;
+  "github_token.age".publicKeys = users;
 }
