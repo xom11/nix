@@ -13,6 +13,7 @@
 
     "cli/os/nixos"
     "cli/pkgs"
+    "cli/base"
     "cli/services"
     "cli/programs"
     "cli/secrect"

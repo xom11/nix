@@ -146,6 +146,7 @@
               home-manager.extraSpecialArgs = specialArgs;
               home-manager.users.${username}.imports = [
                 nix-flatpak.homeManagerModules.nix-flatpak
+                # agenix.homeManagerModules.default
                 nixvim.homeModules.nixvim
                 ./hosts/x1g6/home.nix
               ];
