@@ -31,6 +31,9 @@
   };
 
   home.shellAliases = {
-    update = "sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#x1g6";
+    update = ''
+      git -C ~nix pull
+      "sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#x1g6";
+    '';
   };
 }
