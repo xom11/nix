@@ -13,4 +13,7 @@
     TAILSCALE_KEY = "$(cat ${config.age.secrets.tailscale_key.path})"; 
     OPENAI_KEY = "$(cat ${config.age.secrets.openai_key.path})";
   };
+  home.shellAliases = {
+    test_age =  "echo $(cat ${config.age.secrets.openai_key.path})";
+  };
 }
