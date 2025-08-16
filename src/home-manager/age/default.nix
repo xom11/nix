@@ -14,6 +14,6 @@
     OPENAI_KEY = "$(cat ${config.age.secrets.openai_key.path})";
   };
   home.shellAliases = {
-    test_age =  "$(cat ${config.age.secrets.openai_key.path})";
+    testage =  "$(cat ${config.age.secrets.openai_key.path})";
   };
 }
