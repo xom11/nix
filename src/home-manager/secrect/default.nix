@@ -10,7 +10,9 @@
       };
     };
     identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
-    # secretsDir = "/home/username/.local/share/agenix/agenix";
-    # secretsMountPoint = "/home/username/.local/share/agenix/agenix.d";
+  };
+  home.shellAliases = {
+    keyage = "${config.age.secrets.secret1.file}";
+    keyage2 = "${config.age.secrets.secret1.path}";
   };
 }

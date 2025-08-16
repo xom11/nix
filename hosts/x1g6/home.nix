@@ -16,7 +16,8 @@
     "cli/base"
     "cli/services"
     "cli/programs"
-    "cli/secrect"
+
+    "secrect"
 
   ];
 

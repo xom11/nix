@@ -15,7 +15,8 @@
     "cli/programs"
     "cli/pkgs"
     "cli/base"
-    "cli/secrect"
+
+    "secrect"
   ];
 
   nixpkgs.config.allowUnfree = true;
