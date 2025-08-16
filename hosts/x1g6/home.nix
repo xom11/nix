@@ -17,7 +17,7 @@
     "cli/services"
     "cli/programs"
 
-    "secrect"
+    "age"
 
   ];
 

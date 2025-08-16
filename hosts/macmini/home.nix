@@ -16,7 +16,7 @@
     "cli/pkgs"
     "cli/base"
 
-    "secrect"
+    "age"
   ];
 
   nixpkgs.config.allowUnfree = true;
