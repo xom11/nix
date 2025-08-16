@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ pkgs, username, ... }:
 {
   home.username = username;
   home.homeDirectory = "/Users/${username}";
@@ -16,7 +16,6 @@
     "cli/pkgs"
     "cli/base"
   ];
-
 
   nixpkgs.config.allowUnfree = true;
   home.sessionVariables = {
