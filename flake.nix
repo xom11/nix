@@ -98,7 +98,7 @@
               home-manager.extraSpecialArgs = specialArgs;
               home-manager.users.${username}.imports = [
                 nixvim.homeModules.nixvim
-                # agenix.homeManagerModules.default
+                agenix.homeManagerModules.default
                 ./hosts/macmini/home.nix
               ];
             }

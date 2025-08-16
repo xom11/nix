@@ -1,4 +1,4 @@
-{ pkgs, username, ... }:
+{ pkgs, username, config, ... }:
 {
   home.username = username;
   home.homeDirectory = "/Users/${username}";
@@ -15,6 +15,7 @@
     "cli/programs"
     "cli/pkgs"
     "cli/base"
+    "cli/secrect"
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -22,6 +23,7 @@
     EDITOR = "nvim";
     BROWSER = "brave";
     TERMINAL = "kitty";
+    SECRET1 = "$(cat ${config.age.secrets.secret1.path})";
   };
   home.shellAliases = {
     update = "sudo darwin-rebuild switch --impure --flake ~/.nix#macmini";
