@@ -5,5 +5,5 @@ let
   ];
 in
 {
-  "secret1.age".publicKeys = users;
+  "envs.age".publicKeys = users;
 }

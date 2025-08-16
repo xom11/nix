@@ -1,18 +1,14 @@
 {config, ...}:
-#   user1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICtklD5ou04FnuluU8mT+YhryqPzOq/p/Zds3DQQ+IN2 macmini";
-
-# in
 {
   age = {
     secrets = {
-      "secret1" = {
-        file = ./secret1.age;
+      "envs" = {
+        file = ./envs.age;
       };
     };
     identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
   };
   home.shellAliases = {
-    keyage = "${config.age.secrets.secret1.file}";
-    keyage2 = "${config.age.secrets.secret1.path}";
+    nix-age-env = builtins.readFile config.age.secrets."envs".path;
   };
 }
