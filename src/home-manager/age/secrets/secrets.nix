@@ -7,4 +7,5 @@ in
 {
   "github_token.age".publicKeys = users;
   "tailscale_key.age".publicKeys = users;
+  "openai_key.age".publicKeys = users;
 }
