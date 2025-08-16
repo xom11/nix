@@ -3,7 +3,7 @@
   age = {
     secrets = {
       "github_token" = {
-        file = ./secrect/github_token.age;
+        file = ./secrets/github_token.age;
       };
     };
     identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
