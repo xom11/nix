@@ -6,6 +6,7 @@
     ./ssh
     ./qutebrowser
     ./vscode
+    ./sway
     ./run-or-raise
   ];
 }
