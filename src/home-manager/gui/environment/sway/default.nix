@@ -7,6 +7,7 @@
     galculator
     waybar
     dunst
+    libnotify
   ];
   # wayland.windowManager.sway = {
   #   enable = true;
