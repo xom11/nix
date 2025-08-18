@@ -36,7 +36,7 @@
     rustup
 
     # Python
-    python310
+    python3
     python3Packages.pip
     uv
     micromamba
