@@ -20,11 +20,18 @@
 
   services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment.
+  # GNOME 
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
-  # GNOME without the apps 
+  # without the apps 
   services.gnome.core-apps.enable = false;
+  services.gnome.gnome-keyring.enable = true;
+  # Sway
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
+
   xdg.terminal-exec = {
     enable = true;
     settings = {
