@@ -23,6 +23,7 @@
     gh
     ripgrep
     ansible
+    pass
     # openssl
 
     # Database

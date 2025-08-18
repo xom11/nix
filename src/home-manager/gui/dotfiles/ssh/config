@@ -1,5 +1,3 @@
-Include /Users/lenamkhanh/.colima/ssh_config
-
 Host dk
   HostName 100.126.180.8
   User dk
@@ -11,8 +9,9 @@ Host x1
   User kln
   ForwardAgent yes
 Host rog
-  HostName rpg-asus
-  User rpg
+  HostName ubuntu
+  User rog
+  ForwardAgent yes
 Host 250
   HostName 167.86.81.250
   User dkp 
