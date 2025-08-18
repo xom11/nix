@@ -27,8 +27,6 @@
     # Pass
     pass
     gnupg
-    pinentry-curses
-    # openssl
 
     # Database
     minio-client
