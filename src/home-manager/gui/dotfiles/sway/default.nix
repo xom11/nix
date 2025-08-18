@@ -6,15 +6,5 @@
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/config.conf";
     };
   };
-  home.packages = with pkgs; [
-    # sway
-    # swaylock
-    # swaybg
-    waybar
-    # wofi
-    # grim
-    # slurp
-    # mako
-    # hyprpaper
-  ];
+
 }
