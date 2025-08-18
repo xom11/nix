@@ -1,6 +1,3 @@
-input * {
-    xkb_options caps:hyper
-}
 set $super Mod4
 set $hypr Mod3
 set $mod $super
