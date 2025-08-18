@@ -15,10 +15,13 @@ set $super Mod4
 # bindsym $hypr+d exec gtk-launch deepseek.desktop
 # bindsym $hypr+y exec gtk-launch youtube.desktop
 # bindsym $hypr+Shift+m exec gtk-launch mail.desktop
-bindsym --no-repeat $mod+t exec pidof kitty && swaymsg [app_id=^kitty$] focus || kitty
-# for_window [app_id="kitty"] move container to workspace "kitty"
 # bindsym $mod+t exec swaymsg workspace "kitty"; exec swaymsg [app_id=^kitty$] focus || kitty
-bindsym $mod+v exec swaymsg workspace "code"; exec swaymsg [app_id=^code$] focus || code
+bindsym --no-repeat $mod+t exec pidof kitty && swaymsg [app_id=^kitty$] focus || (swaymsg workspace "kitty" && kitty)
+assign [app_id="kitty"] workspace "kitty"
+
+bindsym --no-repeat $mod+v exec pidof code && swaymsg [app_id=^code$] focus || (swaymsg workspace "code" && code)
+bindsym --no-repeat $mod+b exec pidof brave && swaymsg [app_id=^brave-browser$] focus || (swaymsg workspace "brave" && brave)
+# bindsym $mod+v exec swaymsg workspace "code"; exec swaymsg [app_id=^code$] focus || code
 bindsym $mod+b exec swaymsg workspace "brave"; exec swaymsg [app_id=^brave-browser$] focus || brave
 
 bindsym $super+f exec firefox          
