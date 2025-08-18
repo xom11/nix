@@ -7,7 +7,6 @@
     "cli/os/macos"
     "cli/programs"
     "cli/pkgs"
-    "cli/base"
 
     "base"
     "secrets"

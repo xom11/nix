@@ -24,6 +24,7 @@
     ripgrep
     ansible
     pass
+    gnupg
     # openssl
 
     # Database
