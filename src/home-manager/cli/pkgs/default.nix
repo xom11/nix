@@ -23,8 +23,11 @@
     gh
     ripgrep
     ansible
+
+    # Pass
     pass
     gnupg
+    pinentry-curses
     # openssl
 
     # Database
