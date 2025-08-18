@@ -1,8 +1,11 @@
-{config, ...}:
+{config, agenix, system,...}:
 {
+  home.packages = [
+    agenix.packages.${system}.default
+  ];
   age = {
     secrets = {
-      "secret".file = ./secrets/secret.age;
+      "secret".file = ./secret.age;
     };
     identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ]; 
   };
