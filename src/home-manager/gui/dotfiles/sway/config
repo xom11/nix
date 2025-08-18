@@ -18,6 +18,7 @@ bindsym $mod+b exec brave
 # bindsym --no-repeat $mod+t exec pidof kitty && swaymsg [app_id=^kitty$] focus || kitty
 # for_window [app_id="kitty"] move container to workspace "kitty"
 bindsym $mod+t exec swaymsg workspace "kitty"; exec swaymsg [app_id=^kitty$] focus || kitty
+bindsym $mod+v exec swaymsg workspace "code"; exec swaymsg [app_id=^code$] focus || code
 
 bindsym $super+f exec firefox          
 bindsym $super+q kill               
