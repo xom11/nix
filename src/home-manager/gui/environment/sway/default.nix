@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     galculator
     waybar
+    dunst
   ];
   # wayland.windowManager.sway = {
   #   enable = true;
