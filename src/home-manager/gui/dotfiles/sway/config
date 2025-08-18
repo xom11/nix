@@ -1,3 +1,17 @@
+input {
+  kb_layout = us
+  kb_variant =
+  kb_model =
+  kb_options =
+  kb_rules =
+
+  xkb_options = caps:hyper
+
+  follow_mouse = 1
+  touchpad {
+      natural_scroll = no
+  }
+}
 set $super Mod4
 set $hypr Mod3
 set $mod $super
