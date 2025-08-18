@@ -7,7 +7,6 @@ set $super Mod4
 
 # bindsym $mod+b exec brave
 # bindsym $hypr+j exec joplin-desktop
-# bindsym $hypr+v exec code
 # bindsym $hypr+m exec caprine
 # bindsym $hypr+i exec discord
 # bindsym $hypr+Shift+t exec telegram-desktop
@@ -17,7 +16,8 @@ set $super Mod4
 # bindsym $hypr+Shift+m exec gtk-launch mail.desktop
 # bindsym $mod+t exec pidof kitty && swaymsg [app_id=^kitty$] focus || (swaymsg workspace "kitty" && kitty)
 # assign [app_id="kitty"] workspace "kitty"
-bindsym  $mod+t exec  ~/.nix/src/home-manager/gui/dotfiles/sway/run-or-raise.sh
+bindsym $super+t exec kitty
+bindsym $mod+t exec --no-startup-id ~/.nix/src/home-manager/gui/dotfiles/sway/run-or-raise.sh --toggle-scratchpad --send-to-origin -- kitty
 # bindsym  $mod+m exec  ./run-or-raise.sh
 
 bindsym --no-repeat $mod+v exec pidof code && swaymsg [app_id=^code$] focus || (swaymsg workspace "code" && code)
