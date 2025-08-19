@@ -1,11 +1,8 @@
 { ... }:
 {
   imports = builtins.map (name: ../../src/home-manager/${name}) [
-    "gui/dotfiles"
-    "gui/fonts"
-
+    "gui"
     "cli"
-
     "base"
     "secrets"
   ];

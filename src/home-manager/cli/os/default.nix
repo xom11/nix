@@ -1,9 +1,10 @@
-{ lib, distro, ... }:
-
+{ distro, ... }:
+let 
+  modules = if distro == "macos" then [./macos]
+    else if distro == "nixos" then [./nixos]
+    else if distro == "ubuntu" then [./ubuntu]
+    else [];
+in 
 {
-  imports = [
-    (lib.mkIf (distro == "macos") ./macos)
-    (lib.mkIf (distro == "nixos") ./nixos)
-    (lib.mkIf (distro == "ubuntu") ./ubuntu)
-  ];
+  imports = modules;
 }
