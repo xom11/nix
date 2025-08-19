@@ -59,15 +59,17 @@
         if builtins.match ".*-darwin" system != null then "/Users/${username}" else "/home/${username}";
 
       dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
+      distro = "";
+      device = "";
 
-      specialArgs = inputs // {
+      args = inputs // {
         inherit
           username
           dotfileDir
           system
           homeDir
-          sudo_user
-          user
+          distro
+          device
           ;
       };
 
@@ -75,13 +77,12 @@
     {
       darwinConfigurations = {
         "macmini" = let
-          extraSpecialArgs = specialArgs // {
-            distro = "macos";
-            device = "macmini";
+          specialArgs = args // {
+            distro = "macos"; device = "macmini";
           };
         in
         nix-darwin.lib.darwinSystem {
-          specialArgs = extraSpecialArgs;
+          specialArgs = specialArgs;
           system = system;
           modules = [
             ./hosts/macmini/configuration.nix
@@ -98,7 +99,7 @@
             home-manager.darwinModules.home-manager
             {
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = extraSpecialArgs;
+              home-manager.extraSpecialArgs = specialArgs;
               home-manager.users.${username}.imports = [
                 nixvim.homeModules.nixvim
                 agenix.homeManagerModules.default
@@ -134,11 +135,14 @@
         };
       };
       nixosConfigurations = {
-        "x1g6" = nixpkgs.lib.nixosSystem {
-          specialArgs = specialArgs // {
+        "x1g6" = let
+          specialArgs = args // {
             distro = "nixos";
             device = "x1g6";
           };
+        in  
+        nixpkgs.lib.nixosSystem {
+          specialArgs = specialArgs;
           system = system;
           modules = [
             ./hosts/x1g6/configuration.nix
@@ -177,6 +181,9 @@
       homeConfigurations = {
         "server" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = args // {
+            distro = "ubuntu"; device = "server";
+          };
           modules = [
             ./hosts/server/home.nix
             nixvim.homeModules.nixvim
@@ -190,7 +197,9 @@
         };
         "desktop" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = specialArgs;
+          extraSpecialArgs = args // {
+            distro = "ubuntu"; device = "desktop";
+          };
           modules = [
             nixvim.homeModules.nixvim
             ./hosts/desktop/home.nix
