@@ -1,3 +1,5 @@
+Host *
+    AddKeysToAgent yes
 Host dk
   HostName 100.126.180.8
   User dk

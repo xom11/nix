@@ -1,12 +1,11 @@
-{ ... }:
+{ lib, ... }:
+let
+  inherit (builtins) filter map toString;
+  inherit (lib.filesystem) listFilesRecursive;
+  inherit (lib.strings) hasSuffix;
+in
 {
-  imports = [
-    ./btop
-    ./kitty
-    ./ssh
-    ./qutebrowser
-    ./vscode
-    ./sway
-    ./run-or-raise
-  ];
+  imports = filter (hasSuffix ".nix") (
+    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+  );
 }

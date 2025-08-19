@@ -8,10 +8,6 @@
 
 lib.mkIf pkgs.stdenv.isLinux {
   home.packages = with pkgs; [
-    galculator
-    waybar
-    dunst
-    libnotify
   ];
   home.file = {
     ".config/sway/config" = {
