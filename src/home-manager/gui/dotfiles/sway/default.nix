@@ -2,10 +2,11 @@
   config,
   dotfileDir,
   pkgs,
+  lib,
   distro,
   ...
 }:
-{
+(lib.optional (distro == "nixos"){
   home.file = {
     ".config/sway/config" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/config";
@@ -14,4 +15,4 @@
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/run_or_raise.sh";
     };
   };
-}
+})
