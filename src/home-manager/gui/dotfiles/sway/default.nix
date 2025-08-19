@@ -3,10 +3,16 @@
   dotfileDir,
   pkgs,
   lib,
-  distro,
   ...
 }:
-(lib.optional (distro == "nixos"){
+
+lib.mkIf pkgs.stdenv.isLinux {
+  home.packages = with pkgs; [
+    galculator
+    waybar
+    dunst
+    libnotify
+  ];
   home.file = {
     ".config/sway/config" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/config";
@@ -15,4 +21,4 @@
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/run_or_raise.sh";
     };
   };
-})
+}

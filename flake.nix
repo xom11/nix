@@ -74,11 +74,14 @@
     in
     {
       darwinConfigurations = {
-        "macmini" = nix-darwin.lib.darwinSystem {
-          specialArgs = specialArgs // {
-            device = "macmini";
+        "macmini" = let
+          extraSpecialArgs = specialArgs // {
             distro = "macos";
+            device = "macmini";
           };
+        in
+        nix-darwin.lib.darwinSystem {
+          specialArgs = extraSpecialArgs;
           system = system;
           modules = [
             ./hosts/macmini/configuration.nix
@@ -95,7 +98,7 @@
             home-manager.darwinModules.home-manager
             {
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.extraSpecialArgs = extraSpecialArgs;
               home-manager.users.${username}.imports = [
                 nixvim.homeModules.nixvim
                 agenix.homeManagerModules.default
