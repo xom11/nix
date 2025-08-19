@@ -5,6 +5,6 @@ let
 in
 {
   home.packages = builtins.map (name:
-    pkgs.writeShellScriptBin name (builtins.readFile (scriptsPath + "/$${name}"))
+    pkgs.writeShellScriptBin name (builtins.readFile (scriptsPath + "/${name}"))
   ) (builtins.attrNames scriptFiles);
 }
