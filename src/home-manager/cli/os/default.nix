@@ -1,16 +1,9 @@
-{lib, distro, ...}:
-lib.mkIf (distro == "macos") {
+{ lib, distro, ... }:
+
+{
   imports = [
-    ./macos
+    (lib.mkIf (distro == "macos") ./macos)
+    (lib.mkIf (distro == "nixos") ./nixos)
+    (lib.mkIf (distro == "ubuntu") ./ubuntu)
   ];
-} 
-lib.mkIf (distro == "nixos") {
-  imports = [
-    ./nixos
-  ];
-} 
-lib.mkIf (distro == "ubuntu") {
-  imports = [
-    ./ubuntu
-  ];
-} 
+}
