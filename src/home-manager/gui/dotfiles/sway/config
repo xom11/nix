@@ -4,7 +4,7 @@ input "type:keyboard" {
 }
 set $super Mod4
 set $mod Mod4+Control+Alt
-set $run_or_raise ~/.nix/src/home-manager/gui/dotfiles/sway/run-or-raise.sh
+set $run_or_raise ~/.nix/src/home-manager/gui/dotfiles/sway/run_or_raise.sh
 
 # bindsym $mod+b exec brave
 # bindsym $hypr+j exec joplin-desktop
@@ -18,11 +18,14 @@ set $run_or_raise ~/.nix/src/home-manager/gui/dotfiles/sway/run-or-raise.sh
 # bindsym $mod+t exec pidof kitty && swaymsg [app_id=^kitty$] focus || (swaymsg workspace "kitty" && kitty)
 # assign [app_id="kitty"] workspace "kitty"
 bindsym $super+t exec kitty
-bindsym $mod+t exec $run_or_raise 
+bindsym $mod+t exec $run_or_raise kitty kitty 
+bindsym $mod+b exec $run_or_raise brave Brave-browser
+bindsym $mod+q exec $run_or_raise qutebrowser qutebrowser
+bindsym $mod+v exec $run_or_raise code code
+
+
 # bindsym  $mod+m exec  ./run-or-raise.sh
 
-bindsym --no-repeat $mod+v exec pidof code && swaymsg [app_id=^code$] focus || (swaymsg workspace "code" && code)
-bindsym --no-repeat $mod+b exec pidof brave && swaymsg [app_id=^brave-browser$] focus || (swaymsg workspace "brave" && brave)
 # bindsym $mod+v exec swaymsg workspace "code"; exec swaymsg [app_id=^code$] focus || code
 
 bindsym $super+f exec firefox          

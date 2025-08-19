@@ -1,6 +1,11 @@
-{config,dotfileDir,pkgs,   ...}:
 {
-  
+  config,
+  dotfileDir,
+  pkgs,
+  distro,
+  ...
+}:
+{
   home.file = {
     ".config/sway/config" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/config";
@@ -9,5 +14,4 @@
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/sway/run_or_raise.sh";
     };
   };
-
 }
