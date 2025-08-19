@@ -11,9 +11,9 @@ if distro == "ubuntu" then
 else if distro == "nixos" then
   {
     imports = [
-      ./desktop
+      # ./desktop
       ./gnome
-      ./pwa
+      # ./pwa
       ./desktop
     ];
   }

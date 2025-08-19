@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ lib, ... }:
 
 let
   createSymlinksForDirectory = targetBase: sourceDir:
