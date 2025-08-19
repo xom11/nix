@@ -2,17 +2,9 @@
 
 {
   imports = builtins.map (name: ../../src/home-manager/${name}) [
-    "gui/apps"
-    "gui/environment"
-    "gui/dotfiles"
-    "gui/fonts"
-
-    "cli/os/nixos"
-    "cli/pkgs"
-    "cli/services"
-    "cli/programs"
-
     "base"
+    "gui"
+    "cli"
     "secrets"
 
   ];

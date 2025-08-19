@@ -2,15 +2,8 @@
 {
   imports = builtins.map (name: ../../src/home-manager/${name}) [
     "base"
-
-    "gui/environment"
-    "gui/dotfiles"
-    "gui/fonts"
-
-    "cli/services"
-    "cli/programs"
-    "cli/pkgs"
-    "cli/os/ubuntu"
+    "gui"
+    "cli"
   ];
 
   home.shellAliases = {
