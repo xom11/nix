@@ -20,10 +20,10 @@
 
   services.xserver.enable = true;
   # GNOME 
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-  services.gnome.core-apps.enable = false;
-  services.gnome.gnome-keyring.enable = true;
+  # services.displayManager.gdm.enable = true;
+  # services.desktopManager.gnome.enable = true;
+  # services.gnome.core-apps.enable = false;
+  # services.gnome.gnome-keyring.enable = true;
   # KDE
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
