@@ -1,6 +1,7 @@
 {...}:
 {
   imports = [
+    ./bin
     ./os
     ./pkgs
     ./programs

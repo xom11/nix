@@ -1,8 +1,5 @@
-{ config, pkgs, option, ... }:
+{ pkgs, ... }:
 {
-  imports = [
-    ./bin
-  ];
   home.packages = with pkgs; [
     ffmpeg
     discordchatexporter-cli
