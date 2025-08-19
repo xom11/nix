@@ -4,6 +4,6 @@
     ./apps
     ./dotfiles
     ./fonts
-    # ./environment
+    ./environment
   ];
 }

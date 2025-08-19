@@ -1,8 +1,10 @@
-{distro, lib, ...}:
-lib.mkIf (distro == "nixos")
-{
-  imports = [
-    ./programs
-    ./pkgs
-  ];
-}
+{distro, ...}:
+if distro == "ubuntu" then
+  {
+    imports = [
+      ./pkgs
+      ./programs
+    ];
+  }
+else
+  {}
