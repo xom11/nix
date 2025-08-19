@@ -1,5 +1,5 @@
 {distro, ...}:
-if distro == "ubuntu" then
+if distro == "nixos" then
   {
     imports = [
       ./pkgs
