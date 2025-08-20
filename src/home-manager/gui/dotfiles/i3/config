@@ -57,6 +57,7 @@ bindsym $cap+g exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --
 bindsym $cap+k exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w keep
 bindsym $cap+y exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://www.youtube.com" -s "www.youtube.com" -w youtube
 bindsym $cap+shift+d exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -r
+bindsym $cap+shift+m exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://mail.google.com/" -s "mail.google.com" -w mail
 bindsym $cap+q exec --no-startup-id uvx --python=3.11 raiseorlaunch -e qutebrowser -s qutebrowser -w qute
 # for_window [instance="gemini.google.com__app" ] floating enable
 bindsym $cap+v exec --no-startup-id uvx --python=3.11 raiseorlaunch -e code -s code -w code 

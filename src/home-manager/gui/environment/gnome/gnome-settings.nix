@@ -97,6 +97,8 @@ with lib.hm.gvariant;
     "org/gnome/settings-daemon/plugins/media-keys"={
       screensaver = ["<Super>l"];
       logout = ["<Super><Shift>l"];
+      shutdown = ["<Super><Shift>s"];
+      reboot = ["<Super><Shift>r"];
       # suspend = ["<Super><Shift>"];
     };
   };
