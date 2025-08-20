@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=ww -t -c code -f Code
+Name=vscode
+NoDisplay=true
+StartupNotify=false
+Type=Application
+X-KDE-GlobalAccel-CommandShortcut=true
