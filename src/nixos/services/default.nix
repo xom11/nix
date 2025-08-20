@@ -12,6 +12,7 @@
   services.openssh.enable = true;
   services.preload.enable = true;
   services.flatpak.enable = true;
+  xdg.portal.enable = true;
 
   services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
   security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
