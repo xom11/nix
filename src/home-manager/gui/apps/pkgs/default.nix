@@ -16,7 +16,7 @@
     vlc
   ];
 
-  services.flatpak.packages = [
+  # services.flatpak.packages = [
     # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
-  ];
+  # ];
 }
