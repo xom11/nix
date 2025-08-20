@@ -5,6 +5,5 @@
       gemini-cli
       gcc
       caligula
-      raiseorlaunch
   ];
 }
