@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Logout
-Comment=Log out of the current GNOME session
-Exec=gnome-session-quit --logout --no-prompt
-Icon=logout
-Terminal=false
-Type=Application
-Categories=GNOME;System;
