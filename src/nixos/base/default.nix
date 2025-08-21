@@ -97,11 +97,5 @@
   security.sudo.wheelNeedsPassword = false;
 
   hardware.bluetooth.enable = true;
-  environment = {
-    sessionVariables = {
-      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-    };
-  };
-
   system.stateVersion = "24.11";
 }

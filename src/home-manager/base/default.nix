@@ -12,5 +12,6 @@
     BROWSER = "brave";
     TERMINAL = "kitty";
     SHELL = "${pkgs.zsh}/bin/zsh";
+    LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
 }
