@@ -5,5 +5,6 @@
       gemini-cli
       gcc
       caligula
+      stdenv.cc.cc.lib
   ];
 }
