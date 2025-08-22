@@ -27,6 +27,7 @@
     # Pass
     pass
     gnupg
+    age
 
     # Database
     minio-client
