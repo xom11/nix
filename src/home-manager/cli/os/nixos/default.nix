@@ -6,5 +6,6 @@
       gcc
       caligula
       stdenv.cc.cc.lib
+      openvscode-server
   ];
 }
