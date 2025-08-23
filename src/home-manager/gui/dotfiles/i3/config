@@ -51,12 +51,12 @@ tiling_drag modifier titlebar
 
 # start a terminal
 bindsym $mod+Return exec kitty 
-bindsym $cap+t exec --no-startup-id uvx --python=3.11 raiseorlaunch -e kitty -s kitty -r  
+bindsym $cap+t exec --no-startup-id uvx --python=3.11 raiseorlaunch -e kitty -s kitty -w kitty  
 bindsym $cap+b exec --no-startup-id uvx --python=3.11 raiseorlaunch -e brave -s brave-browser -w brave 
-bindsym $cap+g exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -r
+bindsym $cap+g exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w gemini
 bindsym $cap+k exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w keep
 bindsym $cap+y exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://www.youtube.com" -s "www.youtube.com" -w youtube
-bindsym $cap+shift+d exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -r
+bindsym $cap+shift+d exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -w deepseek
 bindsym $cap+shift+m exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://mail.google.com/" -s "mail.google.com" -w mail
 bindsym $cap+q exec --no-startup-id uvx --python=3.11 raiseorlaunch -e qutebrowser -s qutebrowser -w qute
 # for_window [instance="gemini.google.com__app" ] floating enable
