@@ -35,6 +35,8 @@
   # };
   # i3
   services.xserver.windowManager.i3.enable = true;
+  services.xserver.dpi = 144;
+
 
   xdg.terminal-exec = {
     enable = true;
