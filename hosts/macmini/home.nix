@@ -1,10 +1,7 @@
 { ... }:
 {
-  imports = builtins.map (name: ../../src/home-manager/${name}) [
-    "gui"
-    "cli"
-    "base"
-    "secrets"
+  imports = [
+    ../../src/home-manager
   ];
 
   home.shellAliases = {
