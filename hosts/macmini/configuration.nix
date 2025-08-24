@@ -1,6 +1,0 @@
-{ ... }:
-{
-  imports = [
-    ../../src/nix-darwin
-  ];
-}

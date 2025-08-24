@@ -1,11 +1,8 @@
-{ ... }:
-{
-  imports = builtins.map (name: ../../src/home-manager/${name}) [
-    "base"
-    "gui"
-    "cli"
+{ pkgs, device, lib, ... }:
+lib.mkIf (device == "desktop") {
+  home.packages = with pkgs; [
+ 
   ];
-
   home.shellAliases = {
     update = ''
       git -C ~nix pull
@@ -33,5 +30,6 @@
       export PATH="/run/system-manager/sw/bin/:$PATH"
     fi
   '';
+
 
 }

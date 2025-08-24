@@ -38,4 +38,11 @@ lib.mkIf (device == "x1g6")
       "--extensions-on-chrome-urls"
     ];
   };
+
+  home.shellAliases = {
+    update = ''
+      git -C ~nix pull
+      sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#x1g6
+    '';
+  };
 }

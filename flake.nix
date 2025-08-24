@@ -81,7 +81,7 @@
           specialArgs = specialArgs;
           system = system;
           modules = [
-            ./hosts/macmini/configuration.nix
+            ./src/nix-darwin
             nix-homebrew.darwinModules.nix-homebrew
             {
               nix-homebrew = {
@@ -99,7 +99,7 @@
               home-manager.users.${username}.imports = [
                 nixvim.homeModules.nixvim
                 agenix.homeManagerModules.default
-                ./hosts/macmini/home.nix
+                ./src/home-manager
               ];
             }
           ];
@@ -149,7 +149,7 @@
                 nix-flatpak.homeManagerModules.nix-flatpak
                 agenix.homeManagerModules.default
                 nixvim.homeModules.nixvim
-                ./hosts/x1g6/home.nix
+                ./src/home-manager
               ];
             }
           ];
@@ -177,14 +177,8 @@
           pkgs = nixpkgs.legacyPackages.${system};
           extraSpecialArgs = args // {device = "server";};
           modules = [
-            ./hosts/server/home.nix
+            ./src/home-manager
             nixvim.homeModules.nixvim
-          ];
-        };
-        "minimal" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
-          modules = [
-            ./hosts/minimal/home.nix
           ];
         };
         "desktop" = home-manager.lib.homeManagerConfiguration {
@@ -192,7 +186,7 @@
           extraSpecialArgs = args // {device = "desktop";};
           modules = [
             nixvim.homeModules.nixvim
-            ./hosts/desktop/home.nix
+            ./src/home-manager
           ];
         };
       };
@@ -200,7 +194,7 @@
         "desktop" = system-manager.lib.makeSystemConfig {
           extraSpecialArgs = specialArgs // {device = "desktop";};
           modules = [
-            ./hosts/desktop/configuration.nix
+            ./src/system-manager
           ];
         };
       };
