@@ -21,5 +21,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  # nature scrolling
+  services.libinput.touchpad.naturalScrolling = true;
 
 }
