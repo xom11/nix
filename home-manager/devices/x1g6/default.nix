@@ -8,6 +8,7 @@ lib.mkIf (device == "x1g6")
     gcc
     caligula
     feh
+    rofi
 
     # GUI
     bitwarden-desktop

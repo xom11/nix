@@ -1,4 +1,5 @@
 alias f='fzf'
+alias ff='fastfetch'
 alias cat='bat --paging=never --plain'
 alias fp='fzf --preview="bat --color=always {}"'
 alias vf='nvim $(fzf -m --preview="bat --color=always {}")'
