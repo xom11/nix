@@ -58,7 +58,7 @@
       homeDir =
         if builtins.match ".*-darwin" system != null then "/Users/${username}" else "/home/${username}";
 
-      dotfileDir = "${homeDir}/.nix/src/home-manager/dotfiles";
+      dotfileDir = "${homeDir}/.nix/home-manager/dotfiles";
       device = "";
 
       args = inputs // {
@@ -81,7 +81,7 @@
           specialArgs = specialArgs;
           system = system;
           modules = [
-            ./src/nix-darwin
+            ./nix-darwin
             nix-homebrew.darwinModules.nix-homebrew
             {
               nix-homebrew = {
@@ -99,7 +99,7 @@
               home-manager.users.${username}.imports = [
                 nixvim.homeModules.nixvim
                 agenix.homeManagerModules.default
-                ./src/home-manager
+                ./home-manager
               ];
             }
           ];
@@ -139,7 +139,7 @@
           system = system;
           modules = [
             /etc/nixos/hardware-configuration.nix
-            ./src/nixos
+            ./nixos
             nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
             home-manager.nixosModules.home-manager
             {
@@ -149,7 +149,7 @@
                 nix-flatpak.homeManagerModules.nix-flatpak
                 agenix.homeManagerModules.default
                 nixvim.homeModules.nixvim
-                ./src/home-manager
+                ./home-manager
               ];
             }
           ];
@@ -177,7 +177,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
           extraSpecialArgs = args // {device = "server";};
           modules = [
-            ./src/home-manager
+            ./home-manager
             nixvim.homeModules.nixvim
           ];
         };
@@ -186,7 +186,7 @@
           extraSpecialArgs = args // {device = "desktop";};
           modules = [
             nixvim.homeModules.nixvim
-            ./src/home-manager
+            ./home-manager
           ];
         };
       };
@@ -194,7 +194,7 @@
         "desktop" = system-manager.lib.makeSystemConfig {
           extraSpecialArgs = specialArgs // {device = "desktop";};
           modules = [
-            ./src/system-manager
+            ./system-manager
           ];
         };
       };
