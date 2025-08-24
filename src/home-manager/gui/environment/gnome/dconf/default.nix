@@ -1,5 +1,5 @@
 { config, pkgs, inputs, lib, ...}:
-lib.mkIf pkgs.stdenv.isLinux { 
+lib.mkIf pkgs.stdenv.isLinux ( 
   with lib.hm.gvariant;
   # dconf dump /org/gnome/ | dconf2nix 
   {
@@ -105,4 +105,4 @@ lib.mkIf pkgs.stdenv.isLinux {
       };
     };
   }
-}
+)

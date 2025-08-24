@@ -11,5 +11,4 @@ in
       bamboo
     ];
   };
-  services.vscode-server.enable = true;
 }

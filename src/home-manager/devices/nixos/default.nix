@@ -2,6 +2,7 @@
 lib.mkIf (device == "x1g6") 
 {
   home.packages = with pkgs;[
+    # CLI
     tldr
     gemini-cli
     gcc
@@ -9,11 +10,33 @@ lib.mkIf (device == "x1g6")
     feh
     picom
 
-
+    # GUI
+    bitwarden-desktop
+    qutebrowser
+    nautilus
+    discord
+    vscode
+    telegram-desktop
+    localsend
+    slack
+    google-chrome
+    kitty
+    caprine
+    vlc
   ];
-  # imports = [
-  #   "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+    # services.flatpak.packages = [
+    # { appId = "com.simplenote.Simplenote"; origin = "flathub"; }
   # ];
-
-  # services.vscode-server.enable = true;
+  programs.chromium = {
+    enable = true;
+    package = pkgs.brave;
+    extensions = [
+      { id = "hfjbmagddngcpeloejdejnfgbamkjaeg"; } # vimium c
+      { id = "nacjakoppgmdcpemlfnfegmlhipddanj"; } # pdf for vimium c
+    ];
+    commandLineArgs = [
+      "--enable-features=ParallelDownloading"
+      "--extensions-on-chrome-urls"
+    ];
+  };
 }
