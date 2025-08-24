@@ -1,5 +1,3 @@
-{...}:
-{
 { lib, ... }:
 let
   inherit (builtins) filter map toString;
@@ -7,7 +5,7 @@ let
   inherit (lib.strings) hasSuffix;
 in
 {
-  imports = filter (hasSuffix ".nix") (
+  imports = filter (hasSuffix "/default.nix") (
     map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
   );
 }

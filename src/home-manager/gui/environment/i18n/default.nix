@@ -1,4 +1,6 @@
-{pkgs, ...}:{
+{pkgs, lib, ...}:
+lib.mkIf false
+{
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
