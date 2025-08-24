@@ -1,6 +1,6 @@
 {pkgs, lib, ...}:
-lib.mkIf false
-# lib.mkIf pkgs.stdenv.isLinux ( 
+# lib.mkIf false
+lib.mkIf pkgs.stdenv.isLinux  
 {
   i18n.inputMethod = {
     enable = true;
