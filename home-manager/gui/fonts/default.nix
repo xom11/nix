@@ -1,5 +1,5 @@
 {pkgs, lib, device, ...}:
-lib.mkIf (device != "server") ( 
+lib.mkIf (device != "server") 
 {
   home.packages = with pkgs;
     [ 
