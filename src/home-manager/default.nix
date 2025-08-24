@@ -1,4 +1,13 @@
 {...}:
 {
-    imports = builtins.filter (name: name != "default.nix") (builtins.attrNames (builtins.readDir ./.) ); 
+{ lib, ... }:
+let
+  inherit (builtins) filter map toString;
+  inherit (lib.filesystem) listFilesRecursive;
+  inherit (lib.strings) hasSuffix;
+in
+{
+  imports = filter (hasSuffix ".nix") (
+    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+  );
 }

@@ -1,5 +1,5 @@
-{ pkgs, ...}:
-{
+{ pkgs, device, lib, ... }:
+lib.mkIf (device == "x1g6") {
   home.packages = with pkgs;[
       tldr
       gemini-cli

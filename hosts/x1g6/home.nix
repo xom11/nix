@@ -3,7 +3,7 @@
 {
   imports = [
     ../../src/home-manager
-  ]
+  ];
 
   home.packages = with pkgs; [
   ]; 
