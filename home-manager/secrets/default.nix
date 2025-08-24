@@ -1,4 +1,5 @@
-{config, agenix, system,...}:
+{config, agenix, system, lib, device,...}:
+lib.mkIf (device != "server")
 {
   home.packages = [
     agenix.packages.${system}.default

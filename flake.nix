@@ -179,6 +179,7 @@
           modules = [
             ./home-manager
             nixvim.homeModules.nixvim
+            agenix.homeManagerModules.default
           ];
         };
         "desktop" = home-manager.lib.homeManagerConfiguration {
@@ -186,6 +187,7 @@
           extraSpecialArgs = args // {device = "desktop";};
           modules = [
             nixvim.homeModules.nixvim
+            agenix.homeManagerModules.default
             ./home-manager
           ];
         };
