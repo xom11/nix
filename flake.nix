@@ -59,7 +59,6 @@
         if builtins.match ".*-darwin" system != null then "/Users/${username}" else "/home/${username}";
 
       dotfileDir = "${homeDir}/.nix/src/home-manager/dotfiles";
-      distro = "";
       device = "";
 
       args = inputs // {
@@ -68,7 +67,6 @@
           dotfileDir
           system
           homeDir
-          distro
           device
           ;
       };
@@ -77,9 +75,7 @@
     {
       darwinConfigurations = {
         "macmini" = let
-          specialArgs = args // {
-            distro = "macos"; device = "macmini";
-          };
+          specialArgs = args // {device = "macmini";};
         in
         nix-darwin.lib.darwinSystem {
           specialArgs = specialArgs;
@@ -136,16 +132,14 @@
       };
       nixosConfigurations = {
         "x1g6" = let
-          specialArgs = args // {
-            distro = "nixos";
-            device = "x1g6";
-          };
+          specialArgs = args // {device = "x1g6";};
         in  
         nixpkgs.lib.nixosSystem {
           specialArgs = specialArgs;
           system = system;
           modules = [
-            ./hosts/x1g6/configuration.nix
+            /etc/nixos/hardware-configuration.nix
+            ./src/nixos
             nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
             home-manager.nixosModules.home-manager
             {
@@ -181,9 +175,7 @@
       homeConfigurations = {
         "server" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = args // {
-            distro = "ubuntu"; device = "server";
-          };
+          extraSpecialArgs = args // {device = "server";};
           modules = [
             ./hosts/server/home.nix
             nixvim.homeModules.nixvim
@@ -197,9 +189,7 @@
         };
         "desktop" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = args // {
-            distro = "ubuntu"; device = "desktop";
-          };
+          extraSpecialArgs = args // {device = "desktop";};
           modules = [
             nixvim.homeModules.nixvim
             ./hosts/desktop/home.nix
@@ -208,9 +198,7 @@
       };
       systemConfigs = {
         "desktop" = system-manager.lib.makeSystemConfig {
-          extraSpecialArgs = specialArgs // {
-            distro = "ubuntu";
-          };
+          extraSpecialArgs = specialArgs // {device = "desktop";};
           modules = [
             ./hosts/desktop/configuration.nix
           ];

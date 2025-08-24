@@ -1,5 +1,5 @@
-{lib, ...}:
-lib.mkIf lib.hm.isLinux
+{lib, pkgs, ...}:
+lib.mkIf pkgs.stdenv.isLinux
 {
 services.picom.enable = true;
 }
