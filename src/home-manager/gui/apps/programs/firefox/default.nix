@@ -1,4 +1,5 @@
-{ pkgs, config,... }:
+{ pkgs, lib, distro,  ... }:
+lib.mkIf (distro == "nixos")
 {
   programs.firefox = {
     enable = true;

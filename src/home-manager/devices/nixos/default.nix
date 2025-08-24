@@ -8,6 +8,8 @@ lib.mkIf (device == "x1g6")
     caligula
     feh
     picom
+
+
   ];
   # imports = [
   #   "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"

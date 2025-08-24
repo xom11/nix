@@ -1,5 +1,5 @@
-{ pkgs, config,... }:
-
+{ pkgs, distro, lib, ... }:
+lib.mkIf (distro == "nixos")
 {
   home.packages = with pkgs; [
     bitwarden-desktop
