@@ -1,4 +1,4 @@
-{ pkgs, username, ... }:
+{ pkgs, username, dotfileDir, ... }:
 {
   home.username = username;
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
@@ -13,5 +13,6 @@
     TERMINAL = "kitty";
     SHELL = "${pkgs.zsh}/bin/zsh";
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+    DOTFILE_DIR = "${dotfileDir}";
   };
 }

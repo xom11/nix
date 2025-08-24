@@ -58,7 +58,7 @@
       homeDir =
         if builtins.match ".*-darwin" system != null then "/Users/${username}" else "/home/${username}";
 
-      dotfileDir = "${homeDir}/.nix/src/home-manager/gui/dotfiles";
+      dotfileDir = "${homeDir}/.nix/src/home-manager/dotfiles";
       distro = "";
       device = "";
 
