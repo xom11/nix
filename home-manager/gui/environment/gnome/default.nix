@@ -1,4 +1,4 @@
-{lib, devices, pkgs, ...}:
+{lib, device, pkgs, ...}:
 lib.mkIf (pkgs.stdenv.isLinux && device != "server") 
 {
     imports = [
