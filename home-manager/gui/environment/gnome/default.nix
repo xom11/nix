@@ -1,7 +1,8 @@
 { lib, device, pkgs, ... }:
 {
-#   imports = lib.optionals (pkgs.stdenv.isLinux && device != "server") [
-#     # ./extensions.nix
-#     # ./dconf.nix
-#   ];
+  imports = [
+  ] ++ lib.optionals (device == "x1g6") [
+    ./dconf.nix
+    ./extensions.nix
+  ];
 }
