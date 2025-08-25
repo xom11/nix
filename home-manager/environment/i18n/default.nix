@@ -1,6 +1,5 @@
-{pkgs, lib, ...}:
-# lib.mkIf false
-lib.mkIf pkgs.stdenv.isLinux  
+{pkgs, lib, device, ...}:
+lib.mkIf (device != "server") 
 {
   i18n.inputMethod = {
     enable = true;
