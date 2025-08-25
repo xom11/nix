@@ -1,4 +1,10 @@
-{input, config, pkgs, lib, username, device, ... }:
+{
+  pkgs,
+  lib,
+  username,
+  device,
+  ...
+}:
 {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -19,7 +25,7 @@
   };
 
   services.xserver.enable = true;
-  # GNOME 
+  # GNOME
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
   services.gnome.core-apps.enable = false;
@@ -36,7 +42,6 @@
   # i3
   services.xserver.windowManager.i3.enable = true;
   services.xserver.dpi = 144;
-
 
   xdg.terminal-exec = {
     enable = true;
@@ -65,9 +70,11 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
   };
-
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
@@ -78,7 +85,6 @@
   users.defaultUserShell = pkgs.zsh;
 
   networking.hostName = "${device}-${username}";
-
 
   nix = {
     package = pkgs.nixVersions.stable;
