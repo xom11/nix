@@ -1,5 +1,6 @@
 set $mod Mod4
 set $cap Mod4+Mod1+Ctrl
+set $raiseorlaunch uvx --python=3.11 git+https://github.com/khanhkhanhlele/raiseorlaunch.git
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -44,15 +45,15 @@ for_window [class="^.*$"] border pixel 0
 
 # start a terminal
 bindsym $mod+Return exec kitty 
-bindsym $cap+t exec --no-startup-id uvx --python=3.11 raiseorlaunch -e kitty -s kitty -w k
-bindsym $cap+b exec --no-startup-id uvx --python=3.11 raiseorlaunch -e brave -s brave-browser -w b
-bindsym $cap+g exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w g
-bindsym $cap+k exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w k
-bindsym $cap+y exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://www.youtube.com" -s "www.youtube.com" -w y
-bindsym $cap+shift+d exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -w D
-bindsym $cap+shift+m exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://mail.google.com/" -s "mail.google.com" -w M 
-bindsym $cap+q exec --no-startup-id uvx --python=3.11 raiseorlaunch -e qutebrowser -s qutebrowser -w q
-bindsym $cap+v exec --no-startup-id uvx --python=3.11 raiseorlaunch -e code -s code -w v 
+bindsym $cap+t exec --no-startup-id $raiseorlaunch -e kitty -s kitty -w k
+bindsym $cap+b exec --no-startup-id $raiseorlaunch -e brave -s brave-browser -w b
+bindsym $cap+g exec --no-startup-id $raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w g
+bindsym $cap+k exec --no-startup-id $raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w k
+bindsym $cap+y exec --no-startup-id $raiseorlaunch -e "brave --app=https://www.youtube.com" -s "www.youtube.com" -w y
+bindsym $cap+shift+d exec --no-startup-id $raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -w D
+bindsym $cap+shift+m exec --no-startup-id $raiseorlaunch -e "brave --app=https://mail.google.com/" -s "mail.google.com" -w M 
+bindsym $cap+q exec --no-startup-id $raiseorlaunch -e qutebrowser -s qutebrowser -w q
+bindsym $cap+v exec --no-startup-id $raiseorlaunch -e code -s code -w v 
 
 # kill focused window
 bindsym $mod+q kill
@@ -63,6 +64,7 @@ bindsym $mod+space exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 # bindsym $mod+space exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+Tab workspace back_and_forth
 
 exec --no-startup-id sh -c "sleep 0.5 && feh --bg-scale ~/.nix/home-manager/dotfiles/images/bg.jpg"
 
