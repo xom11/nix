@@ -15,5 +15,6 @@ python3Packages.buildPythonPackage {
   build-system = [
     python3Packages.setuptools
   ];
+  pythonPath = with python3Packages; [ i3ipc ];
 
 }

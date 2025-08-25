@@ -7,7 +7,7 @@
 {
 
   home.packages = [
-    raiseorlaunch # Add your package here!
+    raiseorlaunch 
   ];
   
 }
