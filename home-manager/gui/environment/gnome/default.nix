@@ -1,8 +1,7 @@
-{lib, device, pkgs, ...}:
-lib.mkIf (pkgs.stdenv.isLinux && device != "server") 
+{ lib, device, pkgs, ... }:
 {
-    imports = [
-        ./extensions.nix
-        ./dconf.nix
-    ];
+#   imports = lib.optionals (pkgs.stdenv.isLinux && device != "server") [
+#     # ./extensions.nix
+#     # ./dconf.nix
+#   ];
 }
