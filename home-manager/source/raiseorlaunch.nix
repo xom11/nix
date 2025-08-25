@@ -9,7 +9,7 @@ python3Packages.buildPythonPackage {
   src = fetchFromGitHub {
     owner = "khanhkhanhlele";
     repo = "raiseorlaunch";
-    rev = "";
+    rev = "main";
   };
   pyproject = true;
   build-system = with python3Packages; [ setuptools ];
