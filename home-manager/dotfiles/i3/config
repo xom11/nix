@@ -47,7 +47,6 @@ for_window [class="^.*$"] border pixel 0
 # pipx install git+https://github.com/khanhkhanhlele/raiseorlaunch.git
 bindsym $mod+Return exec kitty 
 bindsym $cap+t exec --no-startup-id raiseorlaunch -e kitty -s kitty -w k
-bindsym $cap+r exec --no-startup-id raiseorlaunch -e kitty -s kitty -r
 bindsym $cap+b exec --no-startup-id raiseorlaunch -e brave -s brave-browser -w b
 bindsym $cap+g exec --no-startup-id raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w g
 bindsym $cap+k exec --no-startup-id raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w k
@@ -104,7 +103,7 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
+# bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
@@ -173,11 +172,11 @@ mode "system" {
     bindsym s exec --no-startup-id i3exit suspend
     bindsym h exec --no-startup-id i3exit hibernate
     bindsym Shift+r exec --no-startup-id i3exit reboot
-    bindsym Shift+s exec --no-startup-id i3exit shutdown
+    bindsym Shift+s exec shutdown -h now
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+Delete mode "system"
+bindsym $mod+s mode "system"
 bindsym $mod+r mode "resize"
