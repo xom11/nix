@@ -10,6 +10,7 @@ python3Packages.buildPythonPackage {
     owner = "khanhkhanhlele";
     repo = "raiseorlaunch";
     rev = "main";
+    hash = "sha256-f3F+VClpjF99yQ9KT09OY26dCxMbgdjAp1Ff33jXeVc=";
   };
   pyproject = true;
   build-system = with python3Packages; [ setuptools ];
