@@ -1,8 +1,5 @@
 { pkgs, device, lib, ... }:
 lib.mkIf (device == "desktop") {
-  home.packages = with pkgs; [
- 
-  ];
   home.shellAliases = {
     update = ''
       git -C ~nix pull

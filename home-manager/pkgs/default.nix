@@ -1,4 +1,5 @@
 { config, pkgs, lib, device, ... }:
+
 {
 
   home.packages = with pkgs; [
@@ -49,8 +50,37 @@
     nodejs.pkgs.nodemon
     nodejs.pkgs.pm2
 
-  ] ++ lib.optionals (device == "macmini") with pkgs; [
+  ] ++ (with pkgs; lib.optionals (device == "macmini") [
     caligula
-  ]
+
+  ]) ++ (with pkgs; lib.optionals (device == "x1g6") [
+    tldr
+    gemini-cli
+    gcc
+    caligula
+    feh
+    rofi
+
+    bitwarden-desktop
+    qutebrowser
+    nautilus
+    discord
+    vscode
+    telegram-desktop
+    localsend
+    slack
+    google-chrome
+    kitty
+    caprine
+    vlc
+
+  ]) ++ (with pkgs; lib.optionals (device == "server") [
+    ffmpeg
+    discordchatexporter-cli
+    xsel
+
+  ]) ++ (with pkgs; lib.optionals (device == "desktop") [
+
+  ])
   ;
 }
