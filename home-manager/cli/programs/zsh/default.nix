@@ -80,6 +80,7 @@
     sessionVariables = {
       NIX_CONFIG="extra-experimental-features = nix-command flakes";
       NIXPKGS_ALLOW_UNFREE = 1;
+      PATH="$HOME/.local/bin:$PATH";
     };
     initContent = ''
       zvm_after_init() {

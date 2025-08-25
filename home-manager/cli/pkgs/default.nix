@@ -40,6 +40,7 @@
     python3
     python3Packages.pip
     uv
+    # pipx
     micromamba
 
     # Node.js
