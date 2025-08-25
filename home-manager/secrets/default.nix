@@ -1,6 +1,12 @@
-{config, agenix, system, lib, device,...}:
-lib.mkIf (device != "server")
 {
+  config,
+  agenix,
+  system,
+  lib,
+  device,
+  ...
+}:
+lib.mkIf (device != "server") {
   home.packages = [
     agenix.packages.${system}.default
   ];
@@ -8,7 +14,7 @@ lib.mkIf (device != "server")
     secrets = {
       "secret".file = ./secret.age;
     };
-    identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ]; 
+    identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
   };
 
 }
