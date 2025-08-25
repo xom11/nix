@@ -1,9 +1,9 @@
 {pkgs, username, ...}:
 {
   imports = [
-    ./hibernate.nix
+    # ./hibernate.nix
     ./keyd.nix
-    ./ibus.nix
+    # ./ibus.nix
   ];
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = [ "docker" ];
@@ -23,5 +23,6 @@
   };
   # nature scrolling
   services.libinput.touchpad.naturalScrolling = true;
+
 
 }

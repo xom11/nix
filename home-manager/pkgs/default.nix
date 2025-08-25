@@ -60,6 +60,8 @@
     caligula
     feh
     rofi
+    haskellPackages.greenclip
+    picom
 
     bitwarden-desktop
     qutebrowser
