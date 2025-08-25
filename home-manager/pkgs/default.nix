@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, device, ... }:
 {
 
   home.packages = with pkgs; [
@@ -49,5 +49,8 @@
     nodejs.pkgs.nodemon
     nodejs.pkgs.pm2
 
-  ];
+  ] ++ lib.optionals (device == "macmini") with pkgs; [
+    caligula
+  ]
+  ;
 }
