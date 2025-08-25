@@ -45,7 +45,6 @@ for_window [class="^.*$"] border pixel 0
 # start a terminal
 bindsym $mod+Return exec kitty 
 bindsym $cap+t exec --no-startup-id uvx --python=3.11 raiseorlaunch -e kitty -s kitty -w k
-bindsym $mod+t exec --no-startup-id uvx --python=3.11 raiseorlaunch -e kitty -s kitty -c
 bindsym $cap+b exec --no-startup-id uvx --python=3.11 raiseorlaunch -e brave -s brave-browser -w b
 bindsym $cap+g exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w g
 bindsym $cap+k exec --no-startup-id uvx --python=3.11 raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w k
