@@ -12,9 +12,10 @@ python3Packages.buildPythonPackage {
     rev = "";
   };
   pyproject = true;
-  build-system = [
-    python3Packages.setuptools
-  ];
-  pythonPath = with python3Packages; [ i3ipc ];
+  build-system = with python3Packages; [ setuptools ];
 
+  pythonPath = with python3Packages; [ i3ipc ];
+  # no tests
+  doCheck = false;
+  pythonImportsCheck = [ "raiseorlaunch" ];
 }
