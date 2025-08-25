@@ -1,13 +1,15 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, device,... }:
 
-  # Import your custom package
   let
     raiseorlaunch = pkgs.callPackage ./raiseorlaunch.nix { };
   in
 {
 
   home.packages = [
-    # raiseorlaunch 
-  ];
+
+  ]++(lib.optionals (device == "x1g6" || device == "desktop") [
+    raiseorlaunch 
+
+  ]);
   
 }
