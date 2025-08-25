@@ -5,9 +5,12 @@ config.set('content.javascript.clipboard', 'access')
 c.content.blocking.method = "adblock"
 c.editor.command = ["vim", "{}"]
 c.fonts.web.size.default = 20
+c.zoom.default = '125%'
 
 config.bind('gq', 'cmd-set-text -s :quickmark-load')
 
+c.qt.force_software_rendering = "qt-quick"
+c.colors.webpage.darkmode.enabled = True
 
 c.tabs.padding = {'top': 5, 'bottom': 5, 'left': 9, 'right': 9}
 c.tabs.indicator.width = 0 # no tab indicators
@@ -30,7 +33,7 @@ c.completion.web_history.max_items = -1
 c.completion.open_categories = ['history', 'searchengines', 'quickmarks', 'bookmarks', 'filesystem']
 
 c.url.start_pages = ['https://start.duckduckgo.com/']
-c.url.default_page = "https://start.duckduckgo.com/"
+c.url.default_page = 'https://start.duckduckgo.com/'
 c.url.open_base_url = True;
 c.url.searchengines = {
     'DEFAULT': 'https://google.com/search?q={}',

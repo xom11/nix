@@ -77,7 +77,6 @@
   "vim.handleKeys": {
     "<C-w>": false,
     "<C-b>": false,
-    "<C-d>": false,
     "<C-z>": false
   },
   "vim.insertModeKeyBindings": [

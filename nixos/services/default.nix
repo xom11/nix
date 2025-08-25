@@ -22,7 +22,9 @@
     pulse.enable = true;
   };
   # nature scrolling
-  services.libinput.touchpad.naturalScrolling = true;
-
-
+  services.libinput.touchpad = {
+    # accelProfile = "flat";
+    naturalScrolling = true;
+    accelSpeed = "0.8";
+  };
 }
