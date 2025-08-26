@@ -1,0 +1,14 @@
+# Drag and drop via dragon
+[[mgr.prepend_keymap]]
+on  = "<C-n>"
+run = 'shell -- dragon-drop -x -i -T "$1"'
+
+# Linux: Copy selected files to the system clipboard while yanking
+[[mgr.prepend_keymap]]
+on  = "y"
+run = [ "shell -- echo '$1' | xclip -i -selection clipboard -t text/uri-list", "yank" ]
+
+# cd back to the root of the current Git repository
+[[mgr.prepend_keymap]]
+on = [ "g", "r" ]
+run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'

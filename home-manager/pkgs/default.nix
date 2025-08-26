@@ -70,6 +70,8 @@
     xclip
     brightnessctl
     clipmenu
+    dragon-drop
+    ripdrag
 
     bitwarden-desktop
     qutebrowser

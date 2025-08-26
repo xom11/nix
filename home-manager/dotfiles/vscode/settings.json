@@ -10,7 +10,6 @@
   "workbench.sideBar.location": "right",
   "editor.stickyScroll.enabled": false,
 
-  
   // Language specific settings
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -21,10 +20,10 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  
+
   // Auto sync settings
   "settingsSync.keybindingsPerPlatform": false,
-  
+
   // Editor settings
   "editor.fontFamily": "Fira Code",
   "editor.fontLigatures": true,
@@ -39,7 +38,7 @@
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.suggest.insertMode": "replace",
-  
+
   // Explorer settings
   "workbench.tree.enableStickyScroll": false,
   "workbench.tree.indent": 8,
@@ -179,5 +178,6 @@
     }
   },
   "workbench.editor.navigationScope": "editorGroup",
-  "workbench.secondarySideBar.defaultVisibility": "hidden"
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "explorer.confirmPasteNative": false
 }
