@@ -35,7 +35,7 @@ for_window [class="^.*$"] border pixel 0
 # pipx install git+https://github.com/khanhkhanhlele/raiseorlaunch.git
 bindsym $mod+Return exec kitty 
 bindsym $cap+t exec --no-startup-id raiseorlaunch -e kitty -s kitty -w kitty
-bindsym $cap+b exec --no-startup-id raiseorlaunch -e "brave --start-fullscreen" -s brave-browser -w brave
+bindsym $cap+b exec --no-startup-id raiseorlaunch -e "brave" -s brave-browser -w brave
 bindsym $cap+g exec --no-startup-id raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w gemini
 bindsym $cap+k exec --no-startup-id raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w keep
 bindsym $cap+y exec --no-startup-id raiseorlaunch -e "brave --app=https://www.youtube.com" -s "www.youtube.com" -w youtube
@@ -45,6 +45,7 @@ bindsym $cap+q exec --no-startup-id raiseorlaunch -e qutebrowser -s qutebrowser 
 bindsym $cap+m exec --no-startup-id raiseorlaunch -e caprine -s caprine -w caprine
 bindsym $cap+v exec --no-startup-id raiseorlaunch -e code -s code -w code 
 bindsym $cap+d exec --no-startup-id raiseorlaunch -e discord -s discord -w discord 
+bindsym $cap+f exec --no-startup-id raiseorlaunch -e nautilus -s nautilus
 
 for_window [instance="^code$"] move to workspace "code"
 for_window [instance="^code$"] focus 
@@ -63,7 +64,7 @@ bindsym $alt+Tab exec --no-startup-id rofi -show window
 
 bindsym $mod+Tab workspace back_and_forth
 
-exec --no-startup-id sh -c "sleep 0.5 && feh --bg-scale ~/.nix/home-manager/dotfiles/images/bg.jpg"
+exec --no-startup-id sh -c "sleep 0.5 && feh --bg-scale ~/.nix/home-manager/dotfiles/images/nix-waifu.png"
 
 exec --no-startup-id clipmenud
 bindsym $mod+v exec --no-startup-id "CM_LAUNCHER=rofi clipmenu"

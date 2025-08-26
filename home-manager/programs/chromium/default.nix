@@ -11,6 +11,7 @@ lib.mkIf (device == "x1g6")
         commandLineArgs = [
         "--enable-features=ParallelDownloading"
         "--extensions-on-chrome-urls"
+        "--start-fullscreen"
         ];
     };
 }

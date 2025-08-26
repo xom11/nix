@@ -1,0 +1,40 @@
+{
+  "name": "Vimium C",
+  "allBrowserUrls": true,
+  "exclusionRules": [],
+  "keyLayout": 2,
+  "keyMappings": [
+    "#!no-check",
+    "map d removeTab",
+    "map u restoreTab",
+    "map Q closeOtherTabs",
+    "map K previousTab",
+    "map J nextTab",
+    "map gh Vomnibar.activateHistory",
+    "map gH Vomnibar.activateHistoryInNewTab",
+    "map gb Vomnibar.activateBookmarks",
+    "map gB Vomnibar.activateHistoryInNewTab",
+    "map gt Vomnibar.activateTabs",
+    "map go Vomnibar.activateEditUrl",
+    "map gO Vomnibar.activateEditUrlInNewTab",
+    "map z visitPreviousTab",
+    "map pp openCopiedUrlInCurrentTab",
+    "map Pp openCopiedUrlInNewTab",
+    "map + zoomIn",
+    "unmap -",
+    "map - zoomOut",
+    "map : runKey",
+    ""
+  ],
+  "scrollStepSize": 200,
+  "searchEngines": [
+    "gg: https://www.google.com/search?q=%s \\",
+    "  blank=https://www.google.com/ Google",
+    "ddg: https://duckduckgo.com/?q=%s DuckDuckGo",
+    "  blank=https://duckduckgo.com/ DuckDuckGo",
+    "gh: https://github.com/search?q=$s \\",
+    "  blank=https://github.com/ GitHub Repo",
+    "vc: chrome-extension://hfjbmagddngcpeloejdejnfgbamkjaeg/pages/options.html"
+  ],
+  "vimSync": true
+}

@@ -58,6 +58,9 @@
     gemini-cli
     gcc
     caligula
+    
+    # i3wm
+    autorandr
     feh
     rofi
     picom
