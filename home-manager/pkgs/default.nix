@@ -73,7 +73,7 @@
 
     bitwarden-desktop
     qutebrowser
-    nautilus
+    xfce.thunar
     discord
     vscode
     telegram-desktop

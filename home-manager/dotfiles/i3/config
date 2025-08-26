@@ -41,12 +41,13 @@ bindsym $cap+k exec --no-startup-id raiseorlaunch -e "brave --app=https://keep.g
 bindsym $cap+y exec --no-startup-id raiseorlaunch -e "brave --app=https://www.youtube.com" -s "www.youtube.com" -w youtube
 bindsym $cap+shift+d exec --no-startup-id raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -w deepseek
 bindsym $cap+shift+m exec --no-startup-id raiseorlaunch -e "brave --app=https://mail.google.com/" -s "mail.google.com" -w mail 
+bindsym $cap+shift+n exec --no-startup-id raiseorlaunch -e "brave --app=https://www.notion.so/" -s "www.notion.so" -w notion 
 bindsym $cap+q exec --no-startup-id raiseorlaunch -e qutebrowser -s qutebrowser -w qute
 bindsym $cap+m exec --no-startup-id raiseorlaunch -e caprine -s caprine -w caprine
 bindsym $cap+v exec --no-startup-id raiseorlaunch -e code -s code -w code 
 bindsym $cap+d exec --no-startup-id raiseorlaunch -e discord -s discord -w discord 
-bindsym $cap+f exec --no-startup-id raiseorlaunch -e nautilus -s nautilus
-bindsym $cap+x exec --no-startup-id raiseorlaunch -e telegram -s telegram-desktop -w telegram
+bindsym $cap+f exec --no-startup-id raiseorlaunch -e thunar -s thunar
+bindsym $cap+x exec --no-startup-id raiseorlaunch -e Telegram -s Telegram -w telegram
 
 for_window [instance="^code$"] move to workspace "code"
 for_window [instance="^code$"] focus 
