@@ -46,6 +46,7 @@ bindsym $cap+m exec --no-startup-id raiseorlaunch -e caprine -s caprine -w capri
 bindsym $cap+v exec --no-startup-id raiseorlaunch -e code -s code -w code 
 bindsym $cap+d exec --no-startup-id raiseorlaunch -e discord -s discord -w discord 
 bindsym $cap+f exec --no-startup-id raiseorlaunch -e nautilus -s nautilus
+bindsym $cap+x exec --no-startup-id raiseorlaunch -e telegram -s telegram-desktop -w telegram
 
 for_window [instance="^code$"] move to workspace "code"
 for_window [instance="^code$"] focus 
