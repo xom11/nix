@@ -61,6 +61,7 @@
     feh
     rofi
     picom
+    bluetui
     scrot
     xdotool
     xclip
