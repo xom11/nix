@@ -63,20 +63,18 @@
     autorandr
     feh
     rofi
-    picom
     bluetui
-    scrot
     xdotool
     xclip
     brightnessctl
     clipmenu
     dragon-drop
-    ripdrag
+    maim
 
     bitwarden-desktop
     qutebrowser
-    xfce.thunar
     discord
+    nemo
     vscode
     telegram-desktop
     localsend
