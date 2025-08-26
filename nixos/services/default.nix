@@ -3,6 +3,7 @@
   imports = [
     # ./hibernate.nix
     ./keyd.nix
+    ./i3wm.nix
     # ./ibus.nix
   ];
   virtualisation.docker.enable = true;
@@ -13,18 +14,4 @@
   services.preload.enable = true;
   # services.flatpak.enable = true;
 
-  services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
-  security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-  # nature scrolling
-  services.libinput.touchpad = {
-    # accelProfile = "flat";
-    naturalScrolling = true;
-    accelSpeed = "0.8";
-  };
 }

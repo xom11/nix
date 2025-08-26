@@ -24,25 +24,6 @@
     LC_TIME = "vi_VN";
   };
 
-  services.xserver.enable = true;
-  # GNOME
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-  services.gnome.core-apps.enable = false;
-  services.gnome.gnome-keyring.enable = true;
-  # KDE
-  # services.displayManager.sddm.enable = true;
-  # services.displayManager.sddm.wayland.enable = true;
-  # services.desktopManager.plasma6.enable = true;
-  # Sway
-  # programs.sway = {
-  #   enable = true;
-  #   wrapperFeatures.gtk = true;
-  # };
-  # i3
-  services.xserver.windowManager.i3.enable = true;
-  services.xserver.dpi = 144;
-
   xdg.terminal-exec = {
     enable = true;
     settings = {
