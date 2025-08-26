@@ -60,8 +60,12 @@
     caligula
     feh
     rofi
-    haskellPackages.greenclip
     picom
+    scrot
+    xdotool
+    xclip
+    brightnessctl
+    clipmenu
 
     bitwarden-desktop
     qutebrowser

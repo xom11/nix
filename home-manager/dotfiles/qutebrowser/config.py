@@ -9,7 +9,7 @@ c.zoom.default = '125%'
 
 config.bind('gq', 'cmd-set-text -s :quickmark-load')
 
-c.qt.force_software_rendering = "qt-quick"
+c.qt.force_software_rendering = "chromium"
 c.colors.webpage.darkmode.enabled = True
 
 c.tabs.padding = {'top': 5, 'bottom': 5, 'left': 9, 'right': 9}

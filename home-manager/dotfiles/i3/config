@@ -33,6 +33,12 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDI
 bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- 
 bindsym XF86AudioMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 bindsym XF86AudioMicMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle 
+bindsym XF86MonBrightnessUp exec brightnessctl set 10%+  
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%- 
+bindsym Print exec "scrot -s '/tmp/screenshot.png' -e 'xclip -selection clipboard -t image/png -i /tmp/screenshot.png'"
+
+
+
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -68,8 +74,10 @@ bindsym $mod+space exec "rofi -modi drun,run -show drun"
 bindsym $mod+Tab workspace back_and_forth
 
 exec --no-startup-id sh -c "sleep 0.5 && feh --bg-scale ~/.nix/home-manager/dotfiles/images/bg.jpg"
-exec --no-startup-id greenclip daemon
-bindsym $mod+v exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard
+
+exec --no-startup-id clipmenud
+bindsym $mod+v exec --no-startup-id "CM_LAUNCHER=rofi clipmenu"
+
 # change focus
 # bindsym $mod+h focus left
 # bindsym $mod+j focus down
