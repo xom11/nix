@@ -36,7 +36,7 @@ c.input.insert_mode.leave_on_load = True
 
 c.editor.command = ["vim", "{}"]
 c.fonts.web.size.default = 20
-c.zoom.default = '150%'
+c.zoom.default = '130%'
 
 
 c.qt.force_software_rendering = "chromium"

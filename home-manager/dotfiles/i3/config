@@ -45,7 +45,6 @@ bindsym $cap+q exec --no-startup-id raiseorlaunch -e qutebrowser -s qutebrowser 
 bindsym $cap+m exec --no-startup-id raiseorlaunch -e caprine -s caprine -w caprine
 bindsym $cap+v exec --no-startup-id raiseorlaunch -e code -s code -w code 
 bindsym $cap+d exec --no-startup-id raiseorlaunch -e discord -s discord -w discord 
-bindsym $cap+f exec --no-startup-id raiseorlaunch -e "i3-sensible-terminal -e yazi" -s yazi -w yazi 
 
 for_window [instance="^code$"] move to workspace "code"
 for_window [instance="^code$"] focus 
