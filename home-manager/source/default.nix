@@ -7,7 +7,7 @@
 
   home.packages = [
 
-  ]++(lib.optionals (device == "x1g6" || device == "desktop") [
+  ]++(lib.optionals (device == "x1g6" ) [
     raiseorlaunch 
 
   ]);
