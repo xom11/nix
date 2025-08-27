@@ -6,7 +6,11 @@ lib.mkMerge [
     # services.podman.enable = true;
   }
 
-  (lib.mkIf (device == "x1g6") {
+  (lib.mkIf (device == "x1g6" || device == "desktop") {
     services.picom.enable = true;
   })
+
+  # (lib.mkIf (device == "x1g6") {
+  #   services.picom.enable = true;
+  # })
 ]
