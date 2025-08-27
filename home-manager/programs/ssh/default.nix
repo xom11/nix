@@ -10,10 +10,10 @@
       chmod 600 ~/.ssh/authorized_keys;
     '';
 
-    genSshKeyGen = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      if [ ! -f ~/.ssh/id_ed25519 ]; then
-        /usr/bin/ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
-      fi
-    '';
+    # genSshKeyGen = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    #   if [ ! -f ~/.ssh/id_ed25519 ]; then
+    #     /usr/bin/ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+    #   fi
+    # '';
   };
 }

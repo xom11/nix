@@ -25,7 +25,7 @@
     ripgrep
     ansible
 
-    # Pass
+    # Secret
     pass
     gnupg
     age
