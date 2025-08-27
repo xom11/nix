@@ -10,6 +10,9 @@
   ]++(lib.optionals (device == "x1g6" ) [
     raiseorlaunch 
 
+  ])++(lib.optionals (device == "desktop" ) [
+    raiseorlaunch 
   ]);
+
   
 }
