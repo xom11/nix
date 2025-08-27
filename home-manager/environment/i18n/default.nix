@@ -1,5 +1,5 @@
 {pkgs, lib, device, ...}:
-lib.mkIf (device == "x1g6") 
+lib.mkIf (device == "x1g6"|| device == "desktop") 
 {
   i18n.inputMethod = {
     enable = true;
