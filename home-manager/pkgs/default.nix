@@ -91,20 +91,6 @@
     xsel
 
   ]) ++ (with pkgs; lib.optionals (device == "desktop") [
-    # i3wm
-    autorandr
-    feh
-    rofi
-    bluetui
-    xdotool
-    xclip
-    brightnessctl
-    clipmenu
-    dragon-drop
-    maim
-
-    qutebrowser
-    brave
   ])
   ;
 }
