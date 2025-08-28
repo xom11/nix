@@ -129,7 +129,10 @@
             }
           ];
         };
-        "test" = nixpkgs.lib.nixosSystem {
+        "test" = let
+          specialArgs = args // {device = "test"; username = "test";};
+        in  
+        nixpkgs.lib.nixosSystem {
           inherit specialArgs;
           system = system;
           modules = [
