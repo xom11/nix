@@ -140,7 +140,7 @@
           system = system;
           modules = [
             /etc/nixos/hardware-configuration.nix
-            disko.nixosModules.default
+            disko.nixosModules.disko
             ./disko/disko-config.nix
             ./nixos
             home-manager.nixosModules.home-manager
