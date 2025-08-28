@@ -130,7 +130,7 @@
           ];
         };
         "test" = let
-          specialArgs = args // {device = "test";};
+          specialArgs = args // {device = "test"; username ="test";};
         in  
         nixpkgs.lib.nixosSystem {
           inherit specialArgs;
