@@ -49,9 +49,9 @@
     let
       system = builtins.currentSystem;
       username =
-        if builtins.getEnv "SUDO_USER" != "" then
+        if builtins.getEnv "SUDO_USER" != "" &&  builtins.getEnv "SUDO_USER" != "root" then
           builtins.getEnv "SUDO_USER"
-        else if (builtins.getEnv "USER" != "" && builtins.getEnv "USER" != "root") then
+        else if builtins.getEnv "USER" != "" && builtins.getEnv "USER" != "root" then
           builtins.getEnv "USER"
         else
           "kln";
