@@ -103,6 +103,7 @@
     dragon-drop
     maim
 
+    qutebrowser
   ])
   ;
 }
