@@ -57,22 +57,7 @@
     caligula
 
   ]) ++ (with pkgs; lib.optionals (device == "x1g6") [
-    gemini-cli
-    gcc
-    caligula
     
-    # i3wm
-    autorandr
-    feh
-    rofi
-    bluetui
-    xdotool
-    xclip
-    brightnessctl
-    clipmenu
-    dragon-drop
-    maim
-
     bitwarden-desktop
     qutebrowser
     discord
@@ -90,7 +75,22 @@
     discordchatexporter-cli
     xsel
 
-  ]) ++ (with pkgs; lib.optionals (device == "desktop") [
+  ]) ++ (with pkgs; lib.optionals (device == "desktop" || device == "x1g6") [
+    gemini-cli
+    gcc
+    caligula
+    
+    # i3wm
+    autorandr
+    feh
+    rofi
+    bluetui
+    xdotool
+    xclip
+    brightnessctl
+    clipmenu
+    dragon-drop
+    maim
   ])
   ;
 }
