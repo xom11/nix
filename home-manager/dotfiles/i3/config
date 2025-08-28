@@ -68,7 +68,7 @@ bindsym $alt+Tab exec --no-startup-id rofi -show window
 bindsym $mod+Tab workspace back_and_forth
 
 exec --no-startup-id sh -c "sleep 0.5 && feh --bg-scale ~/.nix/home-manager/dotfiles/images/nix-waifu.png"
-
+exec_always --no-startup-id autorandr --change
 exec --no-startup-id clipmenud
 bindsym $mod+v exec --no-startup-id "CM_LAUNCHER=rofi clipmenu"
 
@@ -157,5 +157,6 @@ bindsym $mod+r mode "resize"
 bindsym $mod+$alt+l exec i3lock
 bindsym $mod+$alt+Shift+l exec i3-msg exit
 bindsym $mod+$alt+Shift+r exec reboot 
-bindsym $mod+$alt+Shift+s exec shutdown -h now
+# bindsym $mod+$alt+Shift+s exec shutdown -h now
+bindsym $mod+$alt+Shift+s exec systemctl poweroff 
 
