@@ -41,6 +41,9 @@
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =
@@ -137,6 +140,7 @@
           system = system;
           modules = [
             /etc/nixos/hardware-configuration.nix
+            ./disko/disko-config.nix
             ./nixos
             home-manager.nixosModules.home-manager
             {
