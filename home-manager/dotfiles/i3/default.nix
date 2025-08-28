@@ -7,5 +7,8 @@ lib.mkIf pkgs.stdenv.isLinux {
     ".Xresources" = lib.mkIf (device == "desktop") {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/Xresources";
     };
+    ".xinitrc" = lib.mkIf (device == "desktop") {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/xinitrc";
+    };
   };
 }
