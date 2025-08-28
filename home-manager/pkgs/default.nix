@@ -104,6 +104,7 @@
     maim
 
     qutebrowser
+    brave
   ])
   ;
 }
