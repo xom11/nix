@@ -41,7 +41,6 @@
     python3
     python3Packages.pip
     uv
-    # pipx
     micromamba
 
     # Node.js
@@ -50,11 +49,14 @@
     nodejs.pkgs.nodemon
     nodejs.pkgs.pm2
 
+    # Other
+    tldr
+    ffmpeg
+
   ] ++ (with pkgs; lib.optionals (device == "macmini") [
     caligula
 
   ]) ++ (with pkgs; lib.optionals (device == "x1g6") [
-    tldr
     gemini-cli
     gcc
     caligula
@@ -85,7 +87,6 @@
     vlc
 
   ]) ++ (with pkgs; lib.optionals (device == "server") [
-    ffmpeg
     discordchatexporter-cli
     xsel
 
