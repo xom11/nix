@@ -129,19 +129,18 @@
             }
           ];
         };
-        "surface" = nixpkgs.lib.nixosSystem {
+        "test" = nixpkgs.lib.nixosSystem {
           inherit specialArgs;
           system = system;
           modules = [
-            ./hosts/surface/configuration.nix
-            nixos-hardware.nixosModules.microsoft-surface-pro-intel
+            /etc/nixos/hardware-configuration.nix
+            ./nixos
             home-manager.nixosModules.home-manager
             {
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = specialArgs;
               home-manager.users.${username}.imports = [
                 nix-flatpak.homeManagerModules.nix-flatpak
-                ./hosts/surface/home.nix
               ];
             }
           ];
