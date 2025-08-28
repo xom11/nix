@@ -51,7 +51,7 @@
       username =
         if builtins.getEnv "SUDO_USER" != "" then
           builtins.getEnv "SUDO_USER"
-        else if builtins.getEnv "USER" != "" then
+        else if builtins.getEnv "USER" != "" && builtins.getEnv "USER" != "root" then
           builtins.getEnv "USER"
         else
           "kln";
@@ -130,7 +130,7 @@
           ];
         };
         "test" = let
-          specialArgs = args // {device = "test"; username ="test";};
+          specialArgs = args // {device = "test";};
         in  
         nixpkgs.lib.nixosSystem {
           inherit specialArgs;
