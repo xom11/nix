@@ -1,18 +1,11 @@
-{ config, pkgs, lib, device,... }:
-
-  let
-    raiseorlaunch = pkgs.callPackage ./raiseorlaunch.nix { };
-  in
+{ lib, ... }:
+let
+  inherit (builtins) filter map toString;
+  inherit (lib.filesystem) listFilesRecursive;
+  inherit (lib.strings) hasSuffix;
+in
 {
-
-  home.packages = [
-
-  ]++(lib.optionals (device == "x1g6" ) [
-    raiseorlaunch 
-
-  ])++(lib.optionals (device == "desktop" ) [
-    raiseorlaunch 
-  ]);
-
-  
+  imports = filter (hasSuffix ".nix") (
+    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+  );
 }

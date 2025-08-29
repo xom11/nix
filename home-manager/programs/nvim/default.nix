@@ -1,22 +1,17 @@
 {lib, config, pkgs, ... }:
 let
   cfg = config.modules.programs.nvim;
+  inherit (builtins) filter map toString;
+  inherit (lib.filesystem) listFilesRecursive;
+  inherit (lib.strings) hasSuffix;
 in
 {
   options.modules.programs.nvim = {
     enable = lib.mkEnableOption "Enable and configure Neovim";
   };
-  imports = [
-    ./cmp.nix
-    ./treesitter.nix
-    ./lsp.nix
-    ./conform.nix
-    ./neotree.nix
-    ./telescope.nix
-    ./transparent.nix
-    ./keymaps.nix
-    ./which-keys.nix
-  ];
+  imports = filter (hasSuffix ".nix") (
+    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+  );
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       prettierd

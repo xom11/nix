@@ -33,6 +33,10 @@ lib.mkIf (device == "x1g6")
       zsh.enable = true;
       ssh.enable = true;
     };
+    secrets.enable = true;
+    source = {
+      raiseorlaunch.enable = true;
+    };
   };
   home.packages = [
   ];
