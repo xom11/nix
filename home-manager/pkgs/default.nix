@@ -1,7 +1,6 @@
 { config, pkgs, lib, device, ... }:
 
 {
-
   home.packages = with pkgs; [
     fastfetch
     vim
@@ -58,18 +57,6 @@
 
   ]) ++ (with pkgs; lib.optionals (device == "x1g6") [
     
-    bitwarden-desktop
-    qutebrowser
-    discord
-    nemo
-    vscode
-    telegram-desktop
-    localsend
-    slack
-    google-chrome
-    kitty
-    caprine
-    vlc
 
   ]) ++ (with pkgs; lib.optionals (device == "server") [
     discordchatexporter-cli
@@ -80,17 +67,6 @@
     gcc
     caligula
     
-    # i3wm
-    autorandr
-    feh
-    rofi
-    bluetui
-    xdotool
-    xclip
-    brightnessctl
-    clipmenu
-    dragon-drop
-    maim
   ])
   ;
 }

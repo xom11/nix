@@ -1,5 +1,4 @@
-{pkgs, lib, device, config, options, ...}:
-# lib.mkIf (device == "x1g6"|| device == "desktop") 
+{pkgs, lib, config, ...}:
 let 
   cfg = config.modules.i18n;
 in

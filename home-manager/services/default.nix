@@ -7,7 +7,6 @@ lib.mkMerge [
   }
 
   (lib.mkIf (device == "x1g6" || device == "desktop") {
-    services.picom.enable = true;
   })
 
   # (lib.mkIf (device == "x1g6") {

@@ -1,0 +1,38 @@
+{ pkgs, lib, config, ... }:
+let
+    cfg = config.modules.programs.apps;
+in
+{
+    options.modules.apps = {
+        enable = lib.mkEnableOption "Install common applications";
+    };
+    config = lib.mkIf cfg.enable {
+        home.packages = with pkgs; [
+            bitwarden-desktop
+            qutebrowser
+            discord
+            nemo
+            vscode
+            telegram-desktop
+            localsend
+            slack
+            google-chrome
+            kitty
+            caprine
+            vlc
+        ];
+        programs.chromium = {
+            enable = true;
+            package = pkgs.brave;
+            extensions = [
+            { id = "hfjbmagddngcpeloejdejnfgbamkjaeg"; } # vimium c
+            { id = "nacjakoppgmdcpemlfnfegmlhipddanj"; } # pdf for vimium c
+            ];
+            commandLineArgs = [
+            "--enable-features=ParallelDownloading"
+            "--extensions-on-chrome-urls"
+            "--start-fullscreen"
+            ];
+        };
+    };
+}
