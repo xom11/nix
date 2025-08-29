@@ -13,5 +13,9 @@ lib.mkIf (device == "macmini") {
       ssh.enable = true;
       yazi.enable = true;
     };
+    pkgs = {
+      cli.enable = true;
+      dev.enable = true;
+    };
   };
 }

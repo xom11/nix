@@ -11,9 +11,6 @@ lib.mkIf (device == "x1g6")
     i18n.enable = true;
     fonts.enable = true;
     x11.enable = true;
-    programs = {
-      apps.enable = true;
-    };
     dotfiles = {
       btop.enable = true;
       i3.enable = true;
@@ -24,7 +21,12 @@ lib.mkIf (device == "x1g6")
       ssh.enable = true;
       yazi.enable = true;
     };
+    pkgs = {
+      cli.enable = true;
+      gui.enable = true;
+      dev.enable = true;
+    };
   };
-  home.packages = with pkgs; [
+  home.packages = [
   ];
 }

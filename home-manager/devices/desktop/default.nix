@@ -27,6 +27,25 @@ lib.mkIf (device == "desktop") {
       export PATH="/run/system-manager/sw/bin/:$PATH"
     fi
   '';
+  modules = {
+    i18n.enable = true;
+    fonts.enable = true;
+    x11.enable = true;
+    dotfiles = {
+      btop.enable = true;
+      i3.enable = true;
+      kitty.enable = true;
+      qutebrowser.enable = true;
+      vscode.enable = true;
+      rofi.enable = true;
+      ssh.enable = true;
+      yazi.enable = true;
+    };
+    pkgs = {
+      cli.enable = true;
+      dev.enable = true;
+    };
+  };
 
 
 }
