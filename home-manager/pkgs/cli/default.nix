@@ -11,6 +11,12 @@ in
       caligula
       discordchatexporter-cli
       gemini-cli
+    
+      # Secret
+      pass
+      gnupg
+      age
+
     ];
   };
 }

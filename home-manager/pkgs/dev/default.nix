@@ -30,11 +30,6 @@ in
       ripgrep
       ansible
 
-      # Secret
-      pass
-      gnupg
-      age
-
       # Database
       minio-client
 
