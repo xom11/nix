@@ -11,8 +11,20 @@ lib.mkIf (device == "x1g6")
     i18n.enable = true;
     fonts.enable = true;
     x11.enable = true;
-    programs ={
+    programs = {
       apps.enable = true;
     };
+    dotfiles = {
+      btop.enable = true;
+      i3.enable = true;
+      kitty.enable = true;
+      qutebrowser.enable = true;
+      vscode.enable = true;
+      rofi.enable = true;
+      ssh.enable = true;
+      yazi.enable = true;
+    };
   };
+  home.packages = with pkgs; [
+  ];
 }

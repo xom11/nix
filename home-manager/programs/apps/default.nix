@@ -3,7 +3,7 @@ let
     cfg = config.modules.programs.apps;
 in
 {
-    options.modules.apps = {
+    options.modules.programs.apps = {
         enable = lib.mkEnableOption "Install common applications";
     };
     config = lib.mkIf cfg.enable {

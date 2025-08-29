@@ -7,7 +7,7 @@ let
 in
 {
   options.modules.dotfiles.qutebrowser = {
-    enable = config.lib.mkEnableOption "Enable qutebrowser dotfiles";
+    enable = lib.mkEnableOption "Enable qutebrowser dotfiles";
   };
   config = lib.mkIf cfg.enable {
     home.file = {

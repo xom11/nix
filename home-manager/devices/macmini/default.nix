@@ -5,5 +5,13 @@ lib.mkIf (device == "macmini") {
   };
   modules = {
     fonts.enable = true;
+    dotfiles = {
+      btop.enable = true;
+      kitty.enable = true;
+      qutebrowser.enable = true;
+      vscode.enable = true;
+      ssh.enable = true;
+      yazi.enable = true;
+    };
   };
 }

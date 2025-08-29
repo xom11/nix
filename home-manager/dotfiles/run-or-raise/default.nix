@@ -1,4 +1,4 @@
-{lib, pkgs, config, dotfileDir, ... }:
+{lib, config, dotfileDir, ... }:
 let
   cfg = config.modules.dotfiles.run-or-raise;
 in
