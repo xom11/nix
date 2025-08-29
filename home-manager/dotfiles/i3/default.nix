@@ -12,7 +12,8 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/config";
       };
       ".Xresources" =  {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/Xresources";
+        # source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/Xresources";
+        source = "Xft.dpi:144"; 
       };
       ".xinitrc" = {
         source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/xinitrc";
