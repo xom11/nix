@@ -45,7 +45,12 @@ lib.mkIf (device == "desktop") {
       cli.enable = true;
       dev.enable = true;
     };
+    programs = {
+      nvim.enable = true;
+      git.enable = true;
+      tmux.enable = true;
+      zsh.enable = true;
+      ssh.enable = true;
+    };
   };
-
-
 }

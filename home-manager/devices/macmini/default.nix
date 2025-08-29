@@ -12,6 +12,7 @@ lib.mkIf (device == "macmini") {
       vscode.enable = true;
       ssh.enable = true;
       yazi.enable = true;
+      conda.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -20,6 +21,9 @@ lib.mkIf (device == "macmini") {
     programs = {
       nvim.enable = true;
       git.enable = true;
+      tmux.enable = true;
+      zsh.enable = true;
+      ssh.enable = true;
     };
   };
 }

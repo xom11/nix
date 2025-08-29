@@ -8,5 +8,15 @@ lib.mkIf (device == "server") {
       cli.enable = true;
       dev.enable = true;
     };
+    programs = {
+      nvim.enable = true;
+      git.enable = true;
+      tmux.enable = true;
+      zsh.enable = true;
+      ssh.enable = true;
+    };
   };
+  home.packages = [
+    pkgs.discordchatexporter-cli
+  ];
 }

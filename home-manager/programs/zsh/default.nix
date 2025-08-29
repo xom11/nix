@@ -1,93 +1,97 @@
-{config, pkgs, ... }:
+{lib, config, pkgs, ... }:
+let
+  cfg = config.modules.programs.zsh;
+in
 {
-  # imports = [
-  #   ./aliases.nix
-  # ];
-
-  programs.zsh = {
-    enable = true;
-    dotDir = "${config.xdg.configHome}/zsh";
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-    # historySubstringSearch.enable = true;
-    history = {
-      ignoreDups = true;
-      ignoreAllDups = true;
-      save = 1000000;
-      size = 1000000;
-    };
-    oh-my-zsh = {
+  options.modules.programs.zsh = {
+    enable = lib.mkEnableOption "Enable zsh as shell";
+  };
+  config = lib.mkIf cfg.enable
+  {
+    programs.zsh = {
       enable = true;
-      # theme = "robbyrussell";
+      dotDir = "${config.xdg.configHome}/zsh";
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      # historySubstringSearch.enable = true;
+      history = {
+        ignoreDups = true;
+        ignoreAllDups = true;
+        save = 1000000;
+        size = 1000000;
+      };
+      oh-my-zsh = {
+        enable = true;
+        # theme = "robbyrussell";
+        plugins = [
+          "git"
+          "extract"
+          "copyfile"
+          "copypath"
+          "fzf"
+          "z"
+          "uv"
+          # "tmux"
+          "sudo"
+        ];
+      };
       plugins = [
-        "git"
-        "extract"
-        "copyfile"
-        "copypath"
-        "fzf"
-        "z"
-        "uv"
-        # "tmux"
-        "sudo"
+        {
+          name = "fzf-tab";
+          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+        }
+        # {
+        #   name = "zsh-vi-mode";
+        #   src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
+        # }
+        {
+          name = "powerlevel10k";
+          src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
+          file = "powerlevel10k.zsh-theme";
+        }
+        {
+          name = "p10k";
+          src = ./zshrc;
+          file = "p10k.zsh";
+        }
+        {
+          name = "func";
+          src = ./zshrc;
+          file = "func.zsh";
+        }
+        {
+          name = "py";
+          src = ./zshrc;
+          file = "py.zsh";
+        }
+        {
+          name = "alias";
+          src = ./zshrc;
+          file = "alias.zsh";
+        }
       ];
-    };
-    plugins = [
-      {
-        name = "fzf-tab";
-        src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-      }
-      # {
-      #   name = "zsh-vi-mode";
-      #   src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
-      # }
-      {
-        name = "powerlevel10k";
-        src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
-        file = "powerlevel10k.zsh-theme";
-      }
-      {
-        name = "p10k";
-        src = ./zshrc;
-        file = "p10k.zsh";
-      }
-      {
-        name = "func";
-        src = ./zshrc;
-        file = "func.zsh";
-      }
-      {
-        name = "py";
-        src = ./zshrc;
-        file = "py.zsh";
-      }
-      {
-        name = "alias";
-        src = ./zshrc;
-        file = "alias.zsh";
-      }
-    ];
-    dirHashes = {
-      # cd ~cfg
-      cfg = "$HOME/.config";
-      nix = "$HOME/.nix";
-      dev = "$HOME/Documents/dev";
-      pass = "$HOME/.password-store";
-      note = "$HOME/Documents/note";
-      test = "$HOME/Documents/test";
-    };
+      dirHashes = {
+        # cd ~cfg
+        cfg = "$HOME/.config";
+        nix = "$HOME/.nix";
+        dev = "$HOME/Documents/dev";
+        pass = "$HOME/.password-store";
+        note = "$HOME/Documents/note";
+        test = "$HOME/Documents/test";
+      };
 
-    sessionVariables = {
-      NIX_CONFIG="extra-experimental-features = nix-command flakes";
-      NIXPKGS_ALLOW_UNFREE = 1;
-      PATH="$HOME/.local/bin:$PATH";
-    };
-    initContent = ''
-      zvm_after_init() {
-        source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
-      }      
-      printf '\e[5 q'
-    '';
-  }; 
-  
+      sessionVariables = {
+        NIX_CONFIG="extra-experimental-features = nix-command flakes";
+        NIXPKGS_ALLOW_UNFREE = 1;
+        PATH="$HOME/.local/bin:$PATH";
+      };
+      initContent = ''
+        zvm_after_init() {
+          source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
+        }      
+        printf '\e[5 q'
+      '';
+    }; 
+  };
 }

@@ -9,7 +9,6 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       caligula
-      discordchatexporter-cli
       gemini-cli
     
       # Secret
