@@ -7,4 +7,5 @@ lib.mkIf (device == "x1g6")
       sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#x1g6
     '';
   };
+  modules.i18n.enable = true;
 }
