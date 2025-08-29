@@ -17,5 +17,9 @@ lib.mkIf (device == "macmini") {
       cli.enable = true;
       dev.enable = true;
     };
+    programs = {
+      nvim.enable = true;
+      git.enable = true;
+    };
   };
 }
