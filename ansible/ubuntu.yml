@@ -88,6 +88,8 @@
       loop:
         - src: keyd.conf
           dest: /etc/keyd/default.conf
+        - src: .Xresources
+          dest: "{{ ansible_user_dir }}/.Xresources" 
 
     - name: Enabled and start services 
       ansible.builtin.systemd:
