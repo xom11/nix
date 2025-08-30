@@ -55,7 +55,7 @@ lib.mkIf (device == "desktop") {
       zsh.enable = true;
       ssh.enable = true;
     };
-    source = {
+    sources = {
       raiseorlaunch.enable = true;
     };
   };

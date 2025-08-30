@@ -42,7 +42,7 @@ bindsym $cap+y exec --no-startup-id raiseorlaunch -e "brave --app=https://www.yo
 bindsym $cap+shift+d exec --no-startup-id raiseorlaunch -e "brave --app=https://chat.deepseek.com" -s "chat.deepseek.com" -w deepseek
 bindsym $cap+shift+m exec --no-startup-id raiseorlaunch -e "brave --app=https://mail.google.com/" -s "mail.google.com" -w mail 
 bindsym $cap+shift+n exec --no-startup-id raiseorlaunch -e "brave --app=https://www.notion.so/" -s "www.notion.so" -w notion 
-bindsym $cap+q exec --no-startup-id raiseorlaunch -e "qutebrowser --set zoom.default 150%"  -s qutebrowser -w qute
+bindsym $cap+q exec --no-startup-id raiseorlaunch -e qutebrowser  -s qutebrowser -w qute
 bindsym $cap+m exec --no-startup-id raiseorlaunch -e caprine -s caprine -w caprine
 bindsym $cap+v exec --no-startup-id raiseorlaunch -e code -s code -w code 
 bindsym $cap+d exec --no-startup-id raiseorlaunch -e discord -s discord -w discord 

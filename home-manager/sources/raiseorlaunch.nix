@@ -1,7 +1,7 @@
 { config, pkgs, lib, device, ... }:
 
 let
-  cfg = config.modules.source.raiseorlaunch;
+  cfg = config.modules.sources.raiseorlaunch;
   python3Packages = pkgs.python3Packages;
   raiseorlaunch = python3Packages.buildPythonApplication {
     pname = "raiseorlaunch";
@@ -20,7 +20,7 @@ let
   };
 in
 {
-  options.modules.source.raiseorlaunch = {
+  options.modules.sources.raiseorlaunch = {
     enable = lib.mkEnableOption "Enable raiseorlaunch utility";
   };
   config = lib.mkIf cfg.enable {
