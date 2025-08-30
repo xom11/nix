@@ -41,10 +41,10 @@ in
           name = "fzf-tab";
           src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
         }
-        # {
-        #   name = "zsh-vi-mode";
-        #   src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
-        # }
+        {
+          name = "zsh-vi-mode";
+          src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
+        }
         {
           name = "powerlevel10k";
           src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
