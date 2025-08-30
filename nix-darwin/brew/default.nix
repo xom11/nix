@@ -47,7 +47,7 @@
       "brave-browser"
       "qutebrowser"
       "google-chrome"
-      "kindavim"
+      # "kindavim"
       # "microsoft-edge"
       "xquartz"
       "kitty"
