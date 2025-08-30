@@ -87,9 +87,11 @@ in
         PATH="$HOME/.local/bin:$PATH";
       };
       initContent = ''
+        ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
         zvm_after_init() {
           source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
         }      
+
         printf '\e[5 q'
       '';
     }; 
