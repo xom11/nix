@@ -8,8 +8,13 @@ lib.mkIf cfg.enable
     toggleterm = {
       enable = true;
       settings = {
-        open_mapping = "[[<c-\\>]]";
         direction = "float";
+        float_opts = {
+          border = "curved";
+          height = 30;
+          width = 130;
+        };
+        open_mapping = "[[<c-\\>]]";
       };
     };
   };
