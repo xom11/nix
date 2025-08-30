@@ -1,4 +1,4 @@
-{lib, config, pkgs, ... }:
+{lib, config, pkgs, device, ... }:
 let
   cfg = config.modules.programs.zsh;
 in
@@ -42,10 +42,6 @@ in
           src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
         }
         {
-          name = "zsh-vi-mode";
-          src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
-        }
-        {
           name = "powerlevel10k";
           src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
           file = "powerlevel10k.zsh-theme";
@@ -70,7 +66,11 @@ in
           src = ./zshrc;
           file = "alias.zsh";
         }
-      ];
+      ] ++ lib.optional (device != "server") 
+        {
+          name = "zsh-vi-mode";
+          src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
+        };
       dirHashes = {
         # cd ~cfg
         cfg = "$HOME/.config";
