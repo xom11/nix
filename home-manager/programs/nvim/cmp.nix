@@ -17,19 +17,34 @@ lib.mkIf cfg.enable
           { name = "render-markdown"; }
         ];
 
-        settings.mapping = {
+      settings.mapping = {
         "<CR>" = "cmp.mapping.confirm({ select = true })";
-        "<Tab>" = "cmp.mapping.select_next_item()";
-        "<S-Tab>" = "cmp.mapping.select_prev_item()";
-        "<Down>" = "cmp.mapping.select_next_item()";
-        "<Up>" = "cmp.mapping.select_prev_item()";
+        "<Down>" = "cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, select = false })";
+        "<Up>" = "cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, select = false })";
 
         "<C-Space>" = "cmp.mapping.complete()";
         "<C-d>" = "cmp.mapping.scroll_docs(-4)";
         "<C-e>" = "cmp.mapping.close()";
         "<C-f>" = "cmp.mapping.scroll_docs(4)";
+      };
+      cmdline = {
+        ":" = {
+          mapping = {
+            "<CR>" = "cmp.mapping.confirm({ select = true })";
+            "<Down>" = "cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, select = false })";
+            "<Up>" = "cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, select = false })";
+          };
+          sources = [
+            {
+              name = "path";
+            }
+            {
+              name = "cmdline";
+            }
+          ];
         };
       };
     };
-  }
+  };
+}
 

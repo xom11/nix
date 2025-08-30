@@ -34,7 +34,7 @@ lib.mkIf (device == "x1g6")
       ssh.enable = true;
     };
     secrets.enable = true;
-    source = {
+    sources = {
       raiseorlaunch.enable = true;
     };
   };
