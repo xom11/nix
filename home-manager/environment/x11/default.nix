@@ -8,7 +8,7 @@ in
     screen.dpi = lib.mkOption {
       type = lib.types.int;
       default = 144;
-      description = "Set screen DPI";
+      description = "Set screen DPI [96, 144, 192]";
     };
   };
   config = lib.mkIf cfg.enable {
