@@ -1,9 +1,14 @@
-{pkgs, lib, config, ...}:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   cfg = config.modules.x11;
 in
 {
-  options.modules.x11 ={
+  options.modules.x11 = {
     enable = lib.mkEnableOption "Enable x11 settings";
     screen.dpi = lib.mkOption {
       type = lib.types.int;
@@ -13,6 +18,7 @@ in
   };
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
+      dunst
       autorandr
       feh
       rofi
