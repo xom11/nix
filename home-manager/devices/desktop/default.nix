@@ -30,7 +30,7 @@ lib.mkIf (device == "desktop") {
   modules = {
     i18n.enable = true;
     fonts.enable = true;
-    x11 ={
+    x11 = {
       enable = true;
       screen.dpi = 192;
     };
