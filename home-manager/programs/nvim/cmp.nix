@@ -30,9 +30,7 @@ lib.mkIf cfg.enable
       cmdline = {
         ":" = {
           mapping = {
-            "<CR>" = "cmp.mapping.confirm({ select = true })";
-            "<Down>" = "cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, select = false })";
-            "<Up>" = "cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, select = false })";
+            __raw = "cmp.mapping.preset.cmdline()";
           };
           sources = [
             {
