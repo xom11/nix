@@ -49,6 +49,7 @@
       "google-chrome"
       # "kindavim"
       # "microsoft-edge"
+      "deskreen"
       "xquartz"
       "kitty"
       "vmware-fusion"
