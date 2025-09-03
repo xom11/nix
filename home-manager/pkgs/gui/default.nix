@@ -10,6 +10,7 @@ in
     home.packages = with pkgs; [
       bitwarden-desktop
       deskreen
+      weylus
       qutebrowser
       discord
       nemo
