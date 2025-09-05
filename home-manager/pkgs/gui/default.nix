@@ -9,15 +9,14 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       bitwarden-desktop
-      deskreen
-      weylus
+      # deskreen
       qutebrowser
       discord
       nemo
       vscode
       telegram-desktop
       localsend
-      slack
+      # slack
       google-chrome
       kitty
       caprine

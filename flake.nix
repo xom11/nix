@@ -116,9 +116,10 @@
           specialArgs = specialArgs;
           system = system;
           modules = [
+            nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
+            disko.nixosModules.disko
             /etc/nixos/hardware-configuration.nix
             ./nixos
-            nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
             home-manager.nixosModules.home-manager
             {
               home-manager.useUserPackages = true;
