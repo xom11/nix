@@ -158,6 +158,6 @@ bindsym $mod+r mode "resize"
 bindsym $mod+$alt+l exec i3lock
 bindsym $mod+$alt+Shift+l exec i3-msg exit
 bindsym $mod+$alt+Shift+r exec reboot 
-# bindsym $mod+$alt+Shift+s exec shutdown -h now
 bindsym $mod+$alt+Shift+s exec systemctl poweroff 
+bindsym $mod+$alt+Shift+h exec systemctl hibernate 
 
