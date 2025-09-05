@@ -55,8 +55,12 @@ add-visudo && add-authkey && set-zsh
 ```
 ```bash
 sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix\#desktop
+```
 ---
 # Disko Setup
+```bash
+curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/scripts/setup-nixos.sh | sh
+```
 ```bash
 git clone https://github.com/kln-os/nix.git /tmp/nix -q --depth 1 
 sudo nix --extra-experimental-features 'nix-command flakes' run github:nix-community/disko -- --mode disko /tmp/nix/disko/disko-config.nix
