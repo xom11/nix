@@ -20,7 +20,10 @@ in
       secrets = {
         "secret".file = ./secret.age;
         "zsh".file = ./zsh.age;
-        "keys".file = ./keys.age;
+        "keys" = {
+          file = ./keys.age;
+          path = "${config.home.homeDirectory}/.config/environment.d/agenix-keys.conf";
+        };
         "git-credentials" = {
           file = ./git-credentials.age;
           path = "${config.home.homeDirectory}/.git-credentials";
@@ -28,18 +31,14 @@ in
       };
       identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     };
-    programs.zsh.initContent = ''
-      if [ -f "${config.age.secrets.zsh.path}" ]; then
-        source "${config.age.secrets.zsh.path}"
-      fi
+    # programs.zsh.initContent = ''
+    #   if [ -f "${config.age.secrets.zsh.path}" ]; then
+    #     source "${config.age.secrets.zsh.path}"
+    #   fi
 
-      if [ -f "${config.age.secrets.keys.path}" ]; then
-        source "${config.age.secrets.keys.path}"
-      fi
-    '';
-    # home.file = {
-    #   ".git-credentials".source = config.age.secrets.git-credentials.path;
-    # };
-
+    #   if [ -f "${config.age.secrets.keys.path}" ]; then
+    #     source "${config.age.secrets.keys.path}"
+    #   fi
+    # '';
   };  
 }
