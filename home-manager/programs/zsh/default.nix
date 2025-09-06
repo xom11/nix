@@ -82,10 +82,9 @@ in
       };
 
       sessionVariables = {
-        NIX_CONFIG="extra-experimental-features = nix-command flakes";
-        NIXPKGS_ALLOW_UNFREE = 1;
-        PATH="$HOME/.local/bin:$PATH";
+
       };
+
       initContent = ''
         ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
         zvm_after_init() {
@@ -93,6 +92,10 @@ in
         }      
 
         printf '\e[5 q'
+
+        ${lib.optionalString config.modules.secrets.enable 
+          "source \"${config.age.secrets.zsh.path}\""
+        }
       '';
     }; 
   };
