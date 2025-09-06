@@ -12,7 +12,7 @@ in
       gemini-cli
     
       # Secret
-      pass
+      # pass
       age
     ];
   };

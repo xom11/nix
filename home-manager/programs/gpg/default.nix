@@ -1,4 +1,3 @@
-
 {lib, config, ...}:
 let
   cfg = config.modules.programs.gpg;
