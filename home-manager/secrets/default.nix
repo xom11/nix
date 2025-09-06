@@ -19,8 +19,10 @@ in
     age = {
       secrets = {
         "secret".file = ./secret.age;
+        "zsh".file = ./zsh.age;
       };
       identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     };
+
   };  
 }
