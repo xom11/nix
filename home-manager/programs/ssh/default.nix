@@ -23,7 +23,7 @@ in
 
       genSshKeyGen = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [ ! -f ~/.ssh/id_ed25519 ]; then
-          $(which ssh-keygen) -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+          ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
         fi
       '';
     };
