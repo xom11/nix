@@ -1,6 +1,9 @@
 # =======================
 # Qutebrowser Config File
 # =======================
+# Reassign to avoid lsp(ruff_lsp) errors
+config = config  # noqa: F821
+c = c  # noqa: F821
 
 config.load_autoconfig()
 config.source('gruvbox.py')
@@ -83,5 +86,14 @@ c.scrolling.smooth = True
 # Change the default scrolling to scroll-px
 config.bind('j', 'scroll-px 0 200')
 config.bind('k', 'scroll-px 0 -200')
-
-config.bind('gq', 'cmd-set-text -s :quickmark-load')
+config.bind('q', 'cmd-set-text -s :quickmark-load')
+config.bind('b', 'cmd-set-text -s :bookmark-load')
+# Leader key as space
+config.bind(' h', 'history')
+config.bind(' H', 'help')
+config.bind(' r', 'config-source')
+# Password management
+config.bind("ee", "spawn --userscript qute-pass")
+config.bind("eu", "spawn --userscript qute-pass --username-only")
+config.bind("ep", "spawn --userscript qute-pass --password-only")
+config.bind("eo", "spawn --userscript qute-pass --otp-only")
