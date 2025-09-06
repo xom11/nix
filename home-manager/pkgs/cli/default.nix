@@ -13,9 +13,7 @@ in
     
       # Secret
       pass
-      gnupg
       age
-
     ];
   };
 }

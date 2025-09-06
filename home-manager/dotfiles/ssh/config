@@ -7,7 +7,7 @@ Host m4
   HostName 100.115.218.17
   User lenamkhanh
 Host x1
-  HostName 100.83.77.33
+  HostName x1g6-kln
   User kln
   ForwardAgent yes
 Host rog
