@@ -29,6 +29,7 @@ lib.mkIf (device == "x1g6")
     programs = {
       nvim.enable = true;
       git.enable = true;
+      gpg.enable = true;
       tmux.enable = true;
       zsh.enable = true;
       ssh.enable = true;
