@@ -93,9 +93,11 @@ in
 
         printf '\e[5 q'
 
-        ${lib.optionalString config.modules.secrets.enable 
-          "source \"${config.age.secrets.zsh.path}\""
-        }
+        ${lib.optionalString config.modules.secrets.enable ''
+          if [ -f "${config.age.secrets.zsh.path}" ]; then
+            source "${config.age.secrets.zsh.path}"
+          fi
+        ''}
       '';
     }; 
   };
