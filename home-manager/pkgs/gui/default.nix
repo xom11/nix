@@ -1,4 +1,9 @@
-{pkgs, lib, config, ...}:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   cfg = config.modules.pkgs.gui;
 in
@@ -26,15 +31,13 @@ in
       enable = true;
       package = pkgs.brave;
       extensions = [
-      { id = "hfjbmagddngcpeloejdejnfgbamkjaeg"; } # vimium c
-      { id = "nacjakoppgmdcpemlfnfegmlhipddanj"; } # pdf for vimium c
+        { id = "hfjbmagddngcpeloejdejnfgbamkjaeg"; } # vimium c
+        { id = "nacjakoppgmdcpemlfnfegmlhipddanj"; } # pdf for vimium c
       ];
       commandLineArgs = [
-      "--enable-features=ParallelDownloading"
-      "--extensions-on-chrome-urls"
-      "--start-fullscreen"
+        "--enable-features=ParallelDownloading"
+        "--extensions-on-chrome-urls"
       ];
     };
   };
 }
-

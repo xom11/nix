@@ -57,7 +57,7 @@ c.tabs.show = 'never'
 
 # Fonts
 c.fonts.default_family = []
-c.fonts.default_size = '25pt'
+c.fonts.default_size = '18pt'
 c.fonts.web.family.fixed = 'Inconsolata Nerd Font Mono'
 c.fonts.web.family.sans_serif = 'Inconsolata Nerd Font Mono'
 c.fonts.web.family.serif = 'Inconsolata Nerd Font Mono'
