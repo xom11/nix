@@ -23,6 +23,11 @@ in
       };
       identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     };
+    programs.zsh.initContent = ''
+      if [ -f "${config.age.secrets.zsh.path}" ]; then
+        source "${config.age.secrets.zsh.path}"
+      fi
+    '';
 
   };  
 }
