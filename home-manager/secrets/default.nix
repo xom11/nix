@@ -21,6 +21,7 @@ in
         "secret".file = ./secret.age;
         "zsh".file = ./zsh.age;
         "keys".file = ./keys.age;
+        "git-credentials".file = ./git-credentials.age;
       };
       identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     };
@@ -33,6 +34,9 @@ in
         source "${config.age.secrets.keys.path}"
       fi
     '';
+    home.file = {
+      ".git-credentials".source = cfg.age.secrets.secret.path;
+    };
 
   };  
 }

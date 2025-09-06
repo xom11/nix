@@ -8,4 +8,5 @@ in
   "secret.age".publicKeys = users;
   "zsh.age".publicKeys = users;
   "keys.age".publicKeys = users;
+  "git-credentials.age".publicKeys = users;
 }
