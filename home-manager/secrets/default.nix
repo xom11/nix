@@ -20,12 +20,17 @@ in
       secrets = {
         "secret".file = ./secret.age;
         "zsh".file = ./zsh.age;
+        "keys".file = ./keys.age;
       };
       identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     };
     programs.zsh.initContent = ''
       if [ -f "${config.age.secrets.zsh.path}" ]; then
         source "${config.age.secrets.zsh.path}"
+      fi
+
+      if [ -f "${config.age.secrets.keys.path}" ]; then
+        export KEYS_FILE="${config.age.secrets.keys.path}"
       fi
     '';
 
