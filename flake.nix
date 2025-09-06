@@ -53,7 +53,7 @@
       system = builtins.currentSystem;
       username =
         let
-          checkUser = user: user != "" && user != "root";
+          checkUser = user: user != "" && user != "root" && user != "nixos";
           sudoUser = builtins.getEnv "SUDO_USER";
           normalUser = builtins.getEnv "USER";
         in
