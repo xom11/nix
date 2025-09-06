@@ -25,5 +25,6 @@ lib.mkIf (device == "macmini") {
       zsh.enable = true;
       ssh.enable = true;
     };
+    secrets.enable = true;
   };
 }
