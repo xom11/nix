@@ -21,7 +21,7 @@ lib.mkIf (device == "macmini") {
     programs = {
       git.enable = true;
       gpg.enable = true;
-      password-store.enable = true;
+      pass.enable = true;
       nvim.enable = true;
       tmux.enable = true;
       zsh.enable = true;
