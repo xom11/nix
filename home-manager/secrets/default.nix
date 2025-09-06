@@ -35,7 +35,7 @@ in
       fi
     '';
     home.file = {
-      ".git-credentials".source = cfg.age.secrets.secret.path;
+      ".git-credentials".source = config.age.secrets.git-credentials.path;
     };
 
   };  
