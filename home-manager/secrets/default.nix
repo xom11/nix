@@ -30,7 +30,7 @@ in
       fi
 
       if [ -f "${config.age.secrets.keys.path}" ]; then
-        export KEYS_FILE="${config.age.secrets.keys.path}"
+        source "${config.age.secrets.keys.path}"
       fi
     '';
 
