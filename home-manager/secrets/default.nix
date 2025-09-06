@@ -3,6 +3,7 @@
   agenix,
   system,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -15,6 +16,9 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [
       agenix.packages.${system}.default
+      pkgs.age
+      pkgs.gnupg
+      pkgs.pass
     ];
     age = {
       secrets = {

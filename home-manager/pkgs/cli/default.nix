@@ -10,10 +10,6 @@ in
     home.packages = with pkgs; [
       caligula
       gemini-cli
-    
-      # Secret
-      # pass
-      age
     ];
   };
 }
