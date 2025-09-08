@@ -1,5 +1,8 @@
 { pkgs, device, lib, ... }:
-lib.mkIf (device == "desktop") {
+{
+  imports = [
+    ../../home-manager
+  ];
   home.shellAliases = {
     update = ''
       git -C ~nix pull

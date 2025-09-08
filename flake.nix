@@ -110,7 +110,7 @@
                 home-manager.users.${username}.imports = [
                   nixvim.homeModules.nixvim
                   agenix.homeManagerModules.default
-                  ./hosts/home.nix
+                  ./hosts/macmini/home.nix
                 ];
               }
             ];
