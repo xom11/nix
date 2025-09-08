@@ -13,7 +13,7 @@ lib.mkIf cfg.enable
           auto_refresh = true;
         };
         suggestion = {
-          enabled = true;
+          # enabled = true;
           auto_trigger = true;
           debounce = 75;
           keymap = {
