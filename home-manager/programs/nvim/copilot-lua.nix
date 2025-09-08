@@ -13,22 +13,13 @@ lib.mkIf cfg.enable
           auto_refresh = true;
         };
         suggestion = {
-          # enabled = true;
+          enabled = true;
           auto_trigger = true;
           debounce = 75;
           keymap = {
             accept = "<Tab>";
           };
         };
-        extraConfig = ''
-          require("copilot").setup({
-            suggestion = {
-              enabled = function()
-                return vim.g.copilot_login_success ~= nil
-              end,
-            },
-          })
-        '';
       };
     };
   };
