@@ -3,6 +3,9 @@ lib.mkIf (device == "macmini") {
   home.shellAliases = {
     update = "sudo darwin-rebuild switch --impure --flake ~/.nix#macmini";
   };
+  home.packages = [
+    pkgs.bws
+  ];
   modules = {
     fonts.enable = true;
     dotfiles = {
