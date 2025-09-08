@@ -92,7 +92,7 @@
             specialArgs = specialArgs;
             system = system;
             modules = [
-              ./nix-darwin
+              ./hosts/macmini/configuration.nix
               nix-homebrew.darwinModules.nix-homebrew
               {
                 nix-homebrew = {
@@ -176,7 +176,7 @@
             device = "server";
           };
           modules = [
-            ./home-manager
+            ./hosts/server/home.nix
             nixvim.homeModules.nixvim
             agenix.homeManagerModules.default
           ];
@@ -189,7 +189,7 @@
           modules = [
             nixvim.homeModules.nixvim
             agenix.homeManagerModules.default
-            ./home-manager
+            ./hosts/desktop/home.nix
           ];
         };
       };
