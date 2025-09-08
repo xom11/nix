@@ -110,7 +110,7 @@
                 home-manager.users.${username}.imports = [
                   nixvim.homeModules.nixvim
                   agenix.homeManagerModules.default
-                  ./home-manager
+                  ./hosts/home.nix
                 ];
               }
             ];
