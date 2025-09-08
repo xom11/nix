@@ -92,6 +92,7 @@ config.bind('b', 'cmd-set-text -s :bookmark-load')
 config.bind(' h', 'history')
 config.bind(' H', 'help')
 config.bind(' r', 'config-source')
+config.bind(' t', 'tab-focus')
 # Password management
 config.bind("ee", "spawn --userscript qute-pass")
 config.bind("eu", "spawn --userscript qute-pass --username-only")

@@ -11,17 +11,20 @@
     "map K previousTab",
     "map J nextTab",
     "map M addBookmark folder=vimium",
+
     "map <space>h Vomnibar.activateHistory",
     "map <space>H Vomnibar.activateHistoryInNewTab",
     "map <space>b Vomnibar.activateBookmarks",
     "map <space>B Vomnibar.activateHistoryInNewTab",
     "map <space>t Vomnibar.activateTabs",
-    "map <space>o Vomnibar.activateEditUrl",
-    "map <space>O Vomnibar.activateEditUrlInNewTab",
+
+    "map go Vomnibar.activateEditUrl",
+    "map gO Vomnibar.activateEditUrlInNewTab",
     "map gh openUrl brave://history/",
     "map gs openUrl brave://settings/",
     "map gb openUrl brave://bookmarks/",
     "map gv openUrl chrome-extension://hfjbmagddngcpeloejdejnfgbamkjaeg/pages/options.html",
+
     "map z visitPreviousTab",
     "map pp openCopiedUrlInCurrentTab",
     "map Pp openCopiedUrlInNewTab",
