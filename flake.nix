@@ -129,8 +129,7 @@
             modules = [
               nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
               disko.nixosModules.disko
-              /etc/nixos/hardware-configuration.nix
-              ./nixos
+              ./hosts/x1g6/configuration.nix
               home-manager.nixosModules.home-manager
               {
                 home-manager.useUserPackages = true;
@@ -139,7 +138,7 @@
                   nix-flatpak.homeManagerModules.nix-flatpak
                   agenix.homeManagerModules.default
                   nixvim.homeModules.nixvim
-                  ./home-manager
+                  ./hosts/x1g6/home.nix
                 ];
               }
             ];
