@@ -1,5 +1,4 @@
-{ pkgs, device, lib, ... }:
-lib.mkIf (device == "x1g6") 
+{ ... }:
 {
   imports = [
     ../../home-manager
