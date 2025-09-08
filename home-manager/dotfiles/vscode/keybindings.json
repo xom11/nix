@@ -32,6 +32,16 @@
     "when": "vim.mode == 'Normal' && editorTextFocus"
   },
   {
+    "command": "copyRelativeFilePath",
+    "key": "space y y",
+    "when": "vim.mode == 'Normal' && editorTextFocus"
+  },
+  {
+    "command": "copyFilePath",
+    "key": "space y p",
+    "when": "vim.mode == 'Normal' && editorTextFocus"
+  },
+  {
     "command": "workbench.action.gotoSymbol",
     "key": "space c s",
     "when": "vim.mode == 'Normal' && editorTextFocus"
@@ -87,7 +97,6 @@
     "key": "space space",
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
-
   // File Explorer
   {
     "command": "renameFile",
@@ -149,7 +158,6 @@
     "key": "enter",
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && explorerResourceIsFolder && !inputFocus"
   },
-
   //TERMINAL
   {
     "key": "ctrl+shift+t",
@@ -177,7 +185,6 @@
     "command": "workbench.action.terminal.focusNext",
     "when": "terminalFocus"
   },
-
   // TOGGLE
   {
     "key": "alt+t",
