@@ -20,6 +20,15 @@ lib.mkIf cfg.enable
             accept = "<Tab>";
           };
         };
+        extraConfig = ''
+          require("copilot").setup({
+            suggestion = {
+              enabled = function()
+                return vim.g.copilot_login_success ~= nil
+              end,
+            },
+          })
+        '';
       };
     };
   };
