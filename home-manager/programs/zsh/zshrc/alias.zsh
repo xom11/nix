@@ -25,5 +25,6 @@ alias spy='source .venv/bin/activate'
 alias m='micromamba'
 alias mamba='micromamba'
 
+# uvx
 alias nvitop='uvx nvitop'
 alias btcli='uvx --from bittensor-cli btcli'
