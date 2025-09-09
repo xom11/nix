@@ -50,41 +50,7 @@
     { ... }@inputs:
     with inputs;
     let
-      system = builtins.currentSystem;
-      username =
-        let
-          checkUser = user: user != "" && user != "root" && user != "nixos";
-          sudoUser = builtins.getEnv "SUDO_USER";
-          normalUser = builtins.getEnv "USER";
-        in
-        if checkUser sudoUser then
-          sudoUser
-        else if checkUser normalUser then
-          normalUser
-        else
-          "kln";
-      homeDir =
-        if builtins.match ".*-darwin" system != null then "/Users/${username}" else "/home/${username}";
-
-      dotfileDir =
-        let
-          absPath = "${homeDir}/.nix/home-manager/dotfiles";
-          relPath = "./home-manager/dotfiles";
-        in
-        if builtins.pathExists absPath then absPath else relPath;
-
-      device = "";
-
-      args = inputs // {
-        inherit
-          username
-          dotfileDir
-          system
-          homeDir
-          device
-          ;
-      };
-      libx = import ./lib { inherit inputs outputs args; }; 
+      libx = import ./lib { inherit inputs ; }; 
 
     in
     {
@@ -92,92 +58,10 @@
         "macmini" = libx.mkDarwin {
           device = "macmini";
         };
-        # "macmini" =
-        #   let
-        #     specialArgs = args // {
-        #       device = "macmini";
-        #     };
-        #   in
-        #   nix-darwin.lib.darwinSystem {
-        #     specialArgs = specialArgs;
-        #     system = system;
-        #     modules = [
-        #       ./hosts/macmini/configuration.nix
-        #       nix-homebrew.darwinModules.nix-homebrew
-        #       {
-        #         nix-homebrew = {
-        #           enable = true;
-        #           enableRosetta = true;
-        #           autoMigrate = true;
-        #           mutableTaps = true;
-        #           user = username;
-        #         };
-        #       }
-        #       home-manager.darwinModules.home-manager
-        #       {
-        #         home-manager.useUserPackages = true;
-        #         home-manager.extraSpecialArgs = specialArgs;
-        #         home-manager.users.${username}.imports = [
-        #           nixvim.homeModules.nixvim
-        #           agenix.homeManagerModules.default
-        #           ./hosts/macmini/home.nix
-        #         ];
-        #       }
-        #     ];
-        #   };
       };
       nixosConfigurations = {
-        "x1g6" =
-          let
-            specialArgs = args // {
-              device = "x1g6";
-            };
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = specialArgs;
-            system = system;
-            modules = [
-              nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
-              disko.nixosModules.disko
-              ./hosts/x1g6/configuration.nix
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = specialArgs;
-                home-manager.users.${username}.imports = [
-                  nix-flatpak.homeManagerModules.nix-flatpak
-                  agenix.homeManagerModules.default
-                  nixvim.homeModules.nixvim
-                  ./hosts/x1g6/home.nix
-                ];
-              }
-            ];
-          };
-        "test" =
-          let
-            specialArgs = args // {
-              device = "test";
-            };
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit specialArgs;
-            system = system;
-            modules = [
-              /etc/nixos/hardware-configuration.nix
-              disko.nixosModules.disko
-              ./disko/disko-config.nix
-              ./nixos
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = specialArgs;
-                home-manager.users.${username}.imports = [
-                  nix-flatpak.homeManagerModules.nix-flatpak
-                  ./home-manager/base
-                ];
-              }
-            ];
-          };
+        "x1g6" = libx.mkNixos {
+          device = "x1g6";
       };
       homeConfigurations = {
         "server" = home-manager.lib.homeManagerConfiguration {
