@@ -48,7 +48,6 @@
 
   outputs =
     { ... }@inputs:
-    with inputs;
     let
       libx = import ./lib { inherit inputs ; }; 
 
@@ -64,40 +63,39 @@
           device = "x1g6";
         };
       };
-      homeConfigurations = {
-        "server" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = args // {
-            device = "server";
-          };
-          modules = [
-            ./hosts/server/home.nix
-            nixvim.homeModules.nixvim
-            agenix.homeManagerModules.default
-          ];
-        };
-        "desktop" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = args // {
-            device = "desktop";
-          };
-          modules = [
-            nixvim.homeModules.nixvim
-            agenix.homeManagerModules.default
-            ./hosts/desktop/home.nix
-          ];
-        };
-      };
-      systemConfigs = {
-        "desktop" = system-manager.lib.makeSystemConfig {
-          extraSpecialArgs = specialArgs // {
-            device = "desktop";
-          };
-          modules = [
-            ./system-manager
-          ];
-        };
-      };
+      # homeConfigurations = {
+      #   "server" = home-manager.lib.homeManagerConfiguration {
+      #     pkgs = nixpkgs.legacyPackages.${system};
+      #     extraSpecialArgs = args // {
+      #       device = "server";
+      #     };
+      #     modules = [
+      #       ./hosts/server/home.nix
+      #       nixvim.homeModules.nixvim
+      #       agenix.homeManagerModules.default
+      #     ];
+      #   };
+      #   "desktop" = home-manager.lib.homeManagerConfiguration {
+      #     pkgs = nixpkgs.legacyPackages.${system};
+      #     extraSpecialArgs = args // {
+      #       device = "desktop";
+      #     };
+      #     modules = [
+      #       nixvim.homeModules.nixvim
+      #       agenix.homeManagerModules.default
+      #       ./hosts/desktop/home.nix
+      #     ];
+      #   };
+      # };
+      # systemConfigs = {
+      #   "desktop" = system-manager.lib.makeSystemConfig {
+      #     extraSpecialArgs = specialArgs // {
+      #       device = "desktop";
+      #     };
+      #     modules = [
+      #       ./system-manager
+      #     ];
+      #   };
+      # };
     };
-  };
-}
+  }
