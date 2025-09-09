@@ -5,6 +5,6 @@ in
 {
   inherit (mkConfigs)
     mkDarwin
-    # mkNixos
+    mkNixos
     ;
 }
