@@ -66,7 +66,13 @@
       homeDir =
         if builtins.match ".*-darwin" system != null then "/Users/${username}" else "/home/${username}";
 
-      dotfileDir = "${homeDir}/.nix/home-manager/dotfiles";
+      dotfileDir =
+        let
+          absPath = "${homeDir}/.nix/home-manager/dotfiles";
+          relPath = "./home-manager/dotfiles";
+        in
+        if builtins.pathExists absPath then absPath else relPath;
+
       device = "";
 
       args = inputs // {

@@ -61,10 +61,3 @@ sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/scripts/setup-nixos.sh | sh
 ```
-```bash
-git clone https://github.com/kln-os/nix.git /tmp/nix -q --depth 1 
-sudo nix --extra-experimental-features 'nix-command flakes' run github:nix-community/disko -- --mode disko /tmp/nix/disko/disko-config.nix
-nixos-generate-config --no-filesystems
-nixos-install --flake --impure  ./nix#kln
-nixos-rebuild switch --impure --flake /tmp/nix#kln
-```
