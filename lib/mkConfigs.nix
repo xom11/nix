@@ -87,7 +87,6 @@ in
     specialArgs = specialArgs;
     system = system;
     modules = [
-      # nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
       inputs.disko.nixosModules.disko
       ../hosts/${device}/configuration.nix
       inputs.home-manager.nixosModules.home-manager
