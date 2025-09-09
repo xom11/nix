@@ -1,4 +1,4 @@
-{ config, pkgs, lib, device, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   cfg = config.modules.sources.raiseorlaunch;

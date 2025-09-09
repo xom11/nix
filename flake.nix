@@ -84,43 +84,47 @@
           device
           ;
       };
+      libx = import ./lib { inherit inputs outputs args; }; 
 
     in
     {
       darwinConfigurations = {
-        "macmini" =
-          let
-            specialArgs = args // {
-              device = "macmini";
-            };
-          in
-          nix-darwin.lib.darwinSystem {
-            specialArgs = specialArgs;
-            system = system;
-            modules = [
-              ./hosts/macmini/configuration.nix
-              nix-homebrew.darwinModules.nix-homebrew
-              {
-                nix-homebrew = {
-                  enable = true;
-                  enableRosetta = true;
-                  autoMigrate = true;
-                  mutableTaps = true;
-                  user = username;
-                };
-              }
-              home-manager.darwinModules.home-manager
-              {
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = specialArgs;
-                home-manager.users.${username}.imports = [
-                  nixvim.homeModules.nixvim
-                  agenix.homeManagerModules.default
-                  ./hosts/macmini/home.nix
-                ];
-              }
-            ];
-          };
+        "macmini" = libx.mkDarwin {
+          device = "macmini";
+        };
+        # "macmini" =
+        #   let
+        #     specialArgs = args // {
+        #       device = "macmini";
+        #     };
+        #   in
+        #   nix-darwin.lib.darwinSystem {
+        #     specialArgs = specialArgs;
+        #     system = system;
+        #     modules = [
+        #       ./hosts/macmini/configuration.nix
+        #       nix-homebrew.darwinModules.nix-homebrew
+        #       {
+        #         nix-homebrew = {
+        #           enable = true;
+        #           enableRosetta = true;
+        #           autoMigrate = true;
+        #           mutableTaps = true;
+        #           user = username;
+        #         };
+        #       }
+        #       home-manager.darwinModules.home-manager
+        #       {
+        #         home-manager.useUserPackages = true;
+        #         home-manager.extraSpecialArgs = specialArgs;
+        #         home-manager.users.${username}.imports = [
+        #           nixvim.homeModules.nixvim
+        #           agenix.homeManagerModules.default
+        #           ./hosts/macmini/home.nix
+        #         ];
+        #       }
+        #     ];
+        #   };
       };
       nixosConfigurations = {
         "x1g6" =

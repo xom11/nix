@@ -1,4 +1,4 @@
-{ pkgs, device, lib, ... }:
+{ ... }:
 {
   imports = [
     ../../home-manager
