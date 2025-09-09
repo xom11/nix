@@ -6,5 +6,7 @@ in
   inherit (mkConfigs)
     mkDarwin
     mkNixos
+    mkHomeManager
+    mkSystemManager
     ;
 }

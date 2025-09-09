@@ -118,4 +118,19 @@ in
       inputs.agenix.homeManagerModules.default
     ];
   };
+  # =====================================================================
+  # System Manager
+  # =====================================================================
+  mkSystemManager = { device, }:
+  let
+    extraSpecialArgs = args // {
+      device = device;
+    };
+  in
+  inputs.system-manager.lib.systemManagerConfiguration {
+    inherit extraSpecialArgs;
+    modules = [
+      ./hosts/${device}/configuration.nix
+    ];
+  };
 }
