@@ -113,7 +113,7 @@ in
       device = device;
     };
     modules = [
-      ./hosts/${device}/home.nix
+      ../hosts/${device}/home.nix
       inputs.nixvim.homeModules.nixvim
       inputs.agenix.homeManagerModules.default
     ];
@@ -130,7 +130,7 @@ in
   inputs.system-manager.lib.systemManagerConfiguration {
     inherit extraSpecialArgs;
     modules = [
-      ./hosts/${device}/configuration.nix
+      ../hosts/${device}/configuration.nix
     ];
   };
 }
