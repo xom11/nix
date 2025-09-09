@@ -62,6 +62,7 @@
       nixosConfigurations = {
         "x1g6" = libx.mkNixos {
           device = "x1g6";
+        };
       };
       homeConfigurations = {
         "server" = home-manager.lib.homeManagerConfiguration {
