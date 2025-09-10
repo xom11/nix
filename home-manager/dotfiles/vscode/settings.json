@@ -44,7 +44,7 @@
   "workbench.tree.indent": 8,
   "material-icon-theme.hidesExplorerArrows": true,
   "explorer.confirmDelete": false,
-  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDragAndDrop": true,
   "explorer.compactFolders": false,
 
   // Files settings
