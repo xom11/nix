@@ -1,0 +1,22 @@
+
+---
+- name: Ubuntu Install
+  hosts: local
+  become: yes
+  tasks:
+    # --- Update the APT cache  ---
+    - name: Update apt cache 
+      ansible.builtin.apt:
+        update_cache: yes
+
+    # --- Install apt packages ---
+    - name: Install individual apt packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+        install_recommends: yes
+      loop:
+        - network-manager
+        - i3
+        - xorg
+        - xinit
