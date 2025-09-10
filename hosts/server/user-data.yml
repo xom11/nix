@@ -2,46 +2,125 @@
 autoinstall:
   version: 1
 
-  locale: en_US.UTF-8 # Ngôn ngữ và mã hóa
+  source:
+    id: ubuntu-server-minimal
 
+  locale: en_US.UTF-8
   keyboard:
-    layout: us # Bố cục bàn phím
-    variant: ''
-
-  timezone: Asia/Ho_Chi_Minh # Múi giờ, ví dụ: 'Asia/Ho_Chi_Minh' hoặc 'America/New_York'
-
-  early-commands:
-    - systemctl stop ssh
-    - hostnamectl set-hostname ubuntu-00
-    - dhclient
+    layout: us
+  timezone: Europe/Rome
 
   network:
     version: 2
     ethernets:
-      eth0:
-        dhcp4: yes
-
-  ssh:
-    install-server: yes
+      enp1s0:
+        dhcp4: true
 
   identity:
-    hostname: kln
-    password: $6$TyP8Yw1kCPC6IMdD$qPubRpANZd9768K.YAhDs6DZv75sWzx2/LH0P4KTwpC6qU1gkYPXPQagWuAQb3yBNW45RpU46lc/HMKLFuV2Q/
-    username: ubuntu
+    username: egidio
+    hostname: linuxconfig
+    password: '$6$TyP8Yw1kCPC6IMdD$qPubRpANZd9768K.YAhDs6DZv75sWzx2/LH0P4KTwpC6qU1gkYPXPQagWuAQb3yBNW45RpU46lc/HMKLFuV2Q/'
 
-  storage:
-    layout:
-      name: lvm
+  ssh:
+    install-server: true
+    allow-pw: true
+    authorized-keys: []
 
   packages:
-    - open-vm-tools
-    - ansible
     - git
+    - python3-pip
 
-  user-data:
-    disable_root: false
+  snaps:
+    - name: pycharm-community
+      channel: stable 
+      classic: true
 
-  late-commands:
-    - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/sysuser
-    - sed -ie 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/' /target/etc/default/grub
-    - curtin in-target --target /target update-grub2
+  shutdown: reboot
+  storage:
+    config:
+      - id: disk-vda
+        type: disk
+        ptable: gpt
+        path: /dev/vda
+        wipe: superblock-recursive
+
+      - id: efipart
+        type: partition
+        device: disk-vda
+        offset: 1048576
+        size: 600M
+        flag: boot
+        grub_device: true
+
+      - id: bootpart
+        type: partition
+        device: disk-vda
+        size: 1G
+
+      - id: pvpart
+        type: partition
+        device: disk-vda
+        size: -1
+
+      - id: pvpart-crypt
+        type: dm_crypt
+        volume: pvpart
+        key: mysecretpassword
+
+      - id: vg0
+        type: lvm_volgroup
+        name: vg0
+        devices:
+          - pvpart-crypt
+
+      - id: root_lv
+        type: lvm_partition
+        name: root_lv
+        volgroup: vg0
+        size: 45G
+ 
+      - id: home_lv
+        type: lvm_partition
+        name: home_lv
+        volgroup: vg0
+        size: 50G
+
+      - id: efipart_fs
+        type: format
+        volume: efipart
+        fstype: fat32
+
+      - id: bootpart_fs
+        type: format
+        volume: bootpart
+        fstype: ext4
+
+      - id: root_lv_fs
+        type: format
+        volume: root_lv
+        fstype: ext4
+
+      - id: home_lv_fs
+        type: format
+        volume: home_lv
+        fstype: ext4
+
+      - id: efipart-mount
+        type: mount
+        device: efipart_fs
+        path: /boot/efi
+
+      - id: bootpart-mount
+        type: mount
+        device: bootpart_fs
+        path: /boot
+
+      - id: root_lv_mount
+        type: mount
+        device: root_lv_fs
+        path: /
+
+      - id: home_lv_mount
+        type: mount
+        device: home_lv_fs
+        path: /home
