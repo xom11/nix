@@ -42,7 +42,8 @@
     "  blank=https://duckduckgo.com/ DuckDuckGo",
     "gh: https://github.com/search?q=$s \\",
     "  blank=https://github.com/ GitHub Repo",
-    "vc: chrome-extension://hfjbmagddngcpeloejdejnfgbamkjaeg/pages/options.html"
+    "tt: https://taostats.io/subnets/%s \\",
+    "  blank=https://taostats.io/ TAO Subnet"
   ],
   "vimSync": true
 }
