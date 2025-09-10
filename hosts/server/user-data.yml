@@ -26,7 +26,7 @@ autoinstall:
 
   identity:
     hostname: kln
-    password: $6$jCfWFbdxh1lK09sY$pxFnrW/yXewYFmgoaywu3WKhdPQg0e8DR8jvedAV.udXM0.i5M6wr4Up2S7ZCN9kNDmg.s7fmrOaXE6nEyzPb/
+    password: $6$TyP8Yw1kCPC6IMdD$qPubRpANZd9768K.YAhDs6DZv75sWzx2/LH0P4KTwpC6qU1gkYPXPQagWuAQb3yBNW45RpU46lc/HMKLFuV2Q/
     username: ubuntu
 
   storage:
