@@ -37,7 +37,7 @@
 
   security.polkit.enable = true;
   services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "kln";
+  services.displayManager.autoLogin.user = username;
 
   # Configure keymap in X11
   services.xserver.xkb = {
