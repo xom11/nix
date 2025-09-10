@@ -25,7 +25,7 @@ autoinstall:
     install-server: yes
 
   identity:
-    hostname: ubuntu-00
+    hostname: kln
     password: $6$jCfWFbdxh1lK09sY$pxFnrW/yXewYFmgoaywu3WKhdPQg0e8DR8jvedAV.udXM0.i5M6wr4Up2S7ZCN9kNDmg.s7fmrOaXE6nEyzPb/
     username: ubuntu
 

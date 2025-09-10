@@ -10,6 +10,7 @@ in
     home.packages = with pkgs; [
       caligula
       gemini-cli
+      mkpasswd
     ];
   };
 }
