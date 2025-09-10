@@ -1,0 +1,39 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  early-commands:
+    - systemctl stop ssh # otherwise packer tries to connect and exceed max attempts
+    - hostnamectl set-hostname ubuntu-00 # update hostname even for the installer environment
+    - dhclient # re-register the updated hostname
+
+  network:
+    version: 2
+    ethernets:
+      eth0:
+        dhcp4: yes
+
+  ssh:
+    install-server: yes
+
+  identity:
+    hostname: ubuntu-00 # hostname of the system
+    password: $6$jCfWFbdxh1lK09sY$pxFnrW/yXewYFmgoaywu3WKhdPQg0e8DR8jvedAV.udXM0.i5M6wr4Up2S7ZCN9kNDmg.s7fmrOaXE6nEyzPb/ # Welcome123
+    username: ubuntu # root doesn't work
+
+  storage:
+    layout:
+      name: lvm
+
+  packages:
+    - open-vm-tools # for vmware hypervisor
+    - ansible
+    - git
+
+  user-data:
+    disable_root: false
+
+  late-commands:
+    - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/sysuser # allow sudo without password
+    - sed -ie 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/' /target/etc/default/grub
+    - curtin in-target --target /target update-grub2
