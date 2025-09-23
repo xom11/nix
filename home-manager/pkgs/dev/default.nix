@@ -23,6 +23,7 @@ in
       bat
       eza
       yazi
+      yaziPlugins.smart-enter
       zoxide
       ncdu
       jq

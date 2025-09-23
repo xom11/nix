@@ -1,2 +1,7 @@
 [mgr]
 show_hidden = false
+
+# [openers]
+# video = [
+#     { run = "vlc \"$@\"", desc = "Open in VLC" }
+# ]

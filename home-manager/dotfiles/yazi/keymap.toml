@@ -13,7 +13,7 @@ run = [ "shell -- echo '$1' | xclip -i -selection clipboard -t text/uri-list", "
 on = [ "g", "r" ]
 run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
 
-[ui.openers]
-video = [
-    { run = "open -a VLC.app \"$@\"", desc = "Open in VLC" }
-]
+[[mgr.prepend_keymap]]
+on   = "l"
+run  = "plugin smart-enter"
+desc = "Enter the child directory, or open the file"
