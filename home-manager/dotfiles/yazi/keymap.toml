@@ -12,3 +12,8 @@ run = [ "shell -- echo '$1' | xclip -i -selection clipboard -t text/uri-list", "
 [[mgr.prepend_keymap]]
 on = [ "g", "r" ]
 run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
+
+[ui.openers]
+video = [
+    { run = "open -a VLC.app \"$@\"", desc = "Open in VLC" }
+]
