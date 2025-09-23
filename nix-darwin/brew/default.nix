@@ -50,7 +50,7 @@
       # "google-chrome"
       # "kindavim"
       # "microsoft-edge"
-      "deskreen"
+      # "deskreen"
       "xquartz"
       "kitty"
       "vmware-fusion"
