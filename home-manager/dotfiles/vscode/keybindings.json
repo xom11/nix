@@ -53,12 +53,12 @@
   },
   // BUFFER
   {
-    "key": "tab",
+    "key": "ctrl-o",
     "command": "workbench.action.navigateBack",
     "when": "canNavigateBack && vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
   {
-    "key": "shift+tab",
+    "key": "ctrl-i",
     "command": "workbench.action.navigateForward",
     "when": "canNavigateForward && vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
