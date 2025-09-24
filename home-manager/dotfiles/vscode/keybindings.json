@@ -32,13 +32,13 @@
     "when": "vim.mode == 'Normal' && editorTextFocus"
   },
   {
-    "command": "copyRelativeFilePath",
+    "command": "copyRelativePath",
     "key": "space y y",
     "when": "vim.mode == 'Normal' && editorTextFocus"
   },
   {
-    "command": "copyFilePath",
-    "key": "space y p",
+    "command": "copyRelativeFilePath",
+    "key": "space y Y",
     "when": "vim.mode == 'Normal' && editorTextFocus"
   },
   {
