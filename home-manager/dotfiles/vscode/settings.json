@@ -87,14 +87,14 @@
     }
   ],
   "vim.normalModeKeyBindings": [
-    {
-      "before": ["]", "]"],
-      "commands": ["workbench.action.nextEditor"]
-    },
-    {
-      "before": ["[", "["],
-      "commands": ["workbench.action.previousEditor"]
-    },
+    // {
+    //   "before": ["]", "]"],
+    //   "commands": ["workbench.action.nextEditor"]
+    // },
+    // {
+    //   "before": ["[", "["],
+    //   "commands": ["workbench.action.previousEditor"]
+    // },
     {
       "before": ["g", "r"],
       "commands": ["editor.action.goToReferences"]
