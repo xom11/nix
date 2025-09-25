@@ -181,5 +181,6 @@
   },
   "workbench.editor.navigationScope": "editorGroup",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
-  "explorer.confirmPasteNative": false
+  "explorer.confirmPasteNative": false,
+  "editor.accessibilitySupport": "on"
 }

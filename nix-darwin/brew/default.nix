@@ -28,10 +28,12 @@
       "redis"
       "docker"
       "colima"
+      "kanata"
     ];
 
     caskArgs.no_quarantine = true;
     casks = [
+      "karabiner-elements"
       "messenger"
       "zalo"
       "evkey"
@@ -51,6 +53,7 @@
       # "kindavim"
       # "microsoft-edge"
       # "deskreen"
+      "homerow"
       "xquartz"
       "kitty"
       "vmware-fusion"
