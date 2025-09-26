@@ -19,6 +19,7 @@
       ssh.enable = true;
       yazi.enable = true;
       conda.enable = true;
+      kanata.enable = true;
     };
     pkgs = {
       cli.enable = true;

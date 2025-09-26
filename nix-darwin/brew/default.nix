@@ -33,7 +33,7 @@
 
     caskArgs.no_quarantine = true;
     casks = [
-      "karabiner-elements"
+      # "karabiner-elements"
       "messenger"
       "zalo"
       "evkey"

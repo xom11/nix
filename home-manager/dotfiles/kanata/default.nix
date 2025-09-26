@@ -2,7 +2,7 @@
 let
   configDir = if pkgs.stdenv.hostPlatform.isLinux
     then ".config/kanata"
-    else "Library/Application Support/kanata/kanata.kbd"; 
+    else "Library/Application Support/kanata"; 
   cfg = config.modules.dotfiles.kanata;
 in
 {
