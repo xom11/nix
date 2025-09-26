@@ -66,6 +66,11 @@ in
           src = ./zshrc;
           file = "alias.zsh";
         }
+        {
+          name = "other";
+          src = ./zshrc;
+          file = "other.zsh";
+        }
       ]
       ++ lib.optional (device != "server") 
         {
@@ -92,8 +97,6 @@ in
         zvm_after_init() {
           source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
         }      
-
-        printf '\e[5 q'
 
       '';
     }; 
