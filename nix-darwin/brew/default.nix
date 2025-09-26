@@ -28,7 +28,6 @@
       "redis"
       "docker"
       "colima"
-      "kanata"
     ];
 
     caskArgs.no_quarantine = true;
