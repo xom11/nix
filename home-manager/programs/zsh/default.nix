@@ -66,11 +66,13 @@ in
           src = ./zshrc;
           file = "alias.zsh";
         }
-      ] ++ lib.optional (device != "server") 
+      ]
+      ++ lib.optional (device != "server") 
         {
           name = "zsh-vi-mode";
           src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
-        };
+        }
+      ;
       dirHashes = {
         # cd ~cfg
         cfg = "$HOME/.config";

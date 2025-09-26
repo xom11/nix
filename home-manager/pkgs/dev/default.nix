@@ -16,6 +16,7 @@ in
       lazydocker
       zip
       unzip
+      unrar
       wget
       curl
       tree
