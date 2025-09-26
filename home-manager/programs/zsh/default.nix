@@ -96,6 +96,36 @@ in
         ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
         zvm_after_init() {
           source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
+
+          # fix Alt + key not working
+          bindkey '\e[1;3D' backward-word 
+          bindkey '\e[1;3C' forward-word
+          bindkey '\e\x7f' backward-kill-word 
+
+          # fix other in https://github.com/jeffreytse/zsh-vi-mode/issues/288
+          bindkey '^[' zvm_readkeys_handler
+          bindkey '^[^[' sudo-command-line
+          bindkey '^[OA' up-line-or-beginning-search
+          bindkey '^[OB' down-line-or-beginning-search
+          bindkey '^[OC' vi-forward-char
+          bindkey '^[OD' vi-backward-char
+          bindkey '^[OF' end-of-line
+          bindkey '^[OH' beginning-of-line
+          bindkey '^[[1;5C' forward-word
+          bindkey '^[[1;5D' backward-word
+          bindkey '^[[200~' bracketed-paste
+          bindkey '^[[3;5~' kill-word
+          bindkey '^[[3~' delete-char
+          bindkey '^[[5~' up-line-or-history
+          bindkey '^[[6~' down-line-or-history
+          bindkey '^[[A' up-line-or-beginning-search
+          bindkey '^[[B' down-line-or-beginning-search
+          bindkey '^[[C' vi-forward-char
+          bindkey '^[[D' vi-backward-char
+          bindkey '^[[F' end-of-line
+          bindkey '^[[H' beginning-of-line
+          bindkey '^[[Z' reverse-menu-complete
+          bindkey '^[c' fzf-cd-widget
         }      
 
       '';
