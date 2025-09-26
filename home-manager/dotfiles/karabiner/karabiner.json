@@ -4,7 +4,6 @@
       "complex_modifications": {
         "rules": [
           {
-            "enabled": false,
             "manipulators": [
               {
                 "description": "Change caps_lock to command+control+option or escape",
@@ -14,8 +13,8 @@
                 },
                 "to": [
                   {
-                    "key_code": "left_command",
-                    "modifiers": ["left_control", "left_option"]
+                    "key_code": "right_command",
+                    "modifiers": ["right_control", "right_option"]
                   }
                 ],
                 "to_if_alone": [{ "key_code": "escape" }],
@@ -33,12 +32,440 @@
                 },
                 "to": [
                   {
-                    "key_code": "left_shift",
-                    "modifiers": ["left_command", "left_control", "left_option"]
+                    "key_code": "right_shift",
+                    "modifiers": ["right_command", "right_control", "right_option"]
                   }
                 ],
                 "to_if_alone": [{ "key_code": "tab" }],
                 "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Hyper Clipboard: hyper + number to copy to that clip, tab + number to paste from that clip",
+            "manipulators": [
+              {
+                "description": "hypr + 1 = copy to clip1",
+                "type": "basic",
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip1"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 1 = paste from clip1",
+                "type": "basic",
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip1 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 2 = copy to clip2",
+                "type": "basic",
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip2"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 2 = paste from clip2",
+                "type": "basic",
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip2 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 3 = copy to clip3",
+                "type": "basic",
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip3"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 3 = paste from clip3",
+                "type": "basic",
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip3 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 4 = copy to clip4",
+                "type": "basic",
+                "from": {
+                  "key_code": "4",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip4"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 4 = paste from clip4",
+                "type": "basic",
+                "from": {
+                  "key_code": "4",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip4 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 5 = copy to clip5",
+                "type": "basic",
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip5"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 5 = paste from clip5",
+                "type": "basic",
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip5 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 6 = copy to clip6",
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip6"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 6 = paste from clip6",
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip6 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 7 = copy to clip7",
+                "type": "basic",
+                "from": {
+                  "key_code": "7",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip7"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 7 = paste from clip7",
+                "type": "basic",
+                "from": {
+                  "key_code": "7",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip7 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 8 = copy to clip8",
+                "type": "basic",
+                "from": {
+                  "key_code": "8",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip8"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 8 = paste from clip8",
+                "type": "basic",
+                "from": {
+                  "key_code": "8",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip8 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
+              },
+              {
+                "description": "hypr + 9 = copy to clip9",
+                "type": "basic",
+                "from": {
+                  "key_code": "9",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "c",
+                    "modifiers": ["left_command"]
+                  },
+                  {
+                    "shell_command": "pbpaste > /tmp/clip9"
+                  }
+                ]
+              },
+              {
+                "description": "tab + 9 = paste from clip9",
+                "type": "basic",
+                "from": {
+                  "key_code": "9",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "cat /tmp/clip9 | pbcopy "
+                  },
+                  {
+                    "key_code": "v",
+                    "modifiers": ["left_command"]
+                  }
+                ]
               }
             ]
           }
