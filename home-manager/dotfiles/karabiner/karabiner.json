@@ -235,6 +235,36 @@
             ]
           },
           {
+            "description": "Other behavior",
+            "manipulators": [
+              {
+                "description": "tab + ` = area snap to desktop file",
+                "type": "basic",
+                "from": {
+                  "key_code": "grave_accent_and_tilde",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command",
+                      "right_control",
+                      "right_shift",
+                      "right_option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "4",
+                    "modifiers": [
+                      "left_command",
+                      "left_control",
+                      "left_shift"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "description": "Hyper Clipboard: hyper + number to copy to that clip, tab + number to paste from that clip",
             "manipulators": [
               {
