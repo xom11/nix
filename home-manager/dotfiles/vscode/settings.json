@@ -112,7 +112,7 @@
       "commands": ["workbench.view.scm"]
     },
     {
-      "before": ["<C-a>"],
+      "before": ["g", "a"],
       "after": ["g", "g", "V", "G"]
     }
   ],
