@@ -4,10 +4,14 @@
 
 ---
 ## System
-### Tab and Caplock behavior
+### Tap vs Hold modifier keys
 - Remap `Tab` to `Cmd + Ctrl + Opt + Shift` when holding
 - Remap `Caps Lock` to `Escape` when tapping
 - Remap `Caps Lock` to `Cmd + Ctrl + Opt` when holding
+- Remap `Right Shift` to `Shift + Ctrl` when holding
+- Remap `Right Shift` to `paste` when tapping
+- Remap `left Ctrl` to `copy` when tapping
+
 ### App launcher 
 - `Cap + <char>` to run or focus app
 ### Clipboard manager

@@ -2,9 +2,13 @@ profiles:
   - complex_modifications:
       rules:
         ################################################################
-        #             Capslock to Esc / Cmd+Ctrl+Opt                   #
+        #           Change modifier keys behavior                       #
         ################################################################
-        - manipulators:
+        - description: Change modifier keys behavior
+          manipulators:
+            #==========================================================#
+            #             Capslock to Esc / Cmd+Ctrl+Opt               #
+            #==========================================================#
             - description: Change caps_lock to command+control+option or escape
               from:
                 key_code: caps_lock
@@ -19,10 +23,9 @@ profiles:
               to_if_alone:
                 - key_code: escape
               type: basic
-        ################################################################
-        #                 Tab to Tab / Cmd+Ctrl+Opt+Shift              #
-        ################################################################
-        - manipulators:
+            #========================================================#
+            #                 Tab to Tab / Cmd+Ctrl+Opt+Shift        #
+            #========================================================#
             - description: Change tab to command+control+option+shift.
               from:
                 key_code: tab
@@ -38,6 +41,70 @@ profiles:
               to_if_alone:
                 - key_code: tab
               type: basic
+            #========================================================#
+            #          Right Shift to Paste / Shift + Ctrl           #
+            #========================================================#
+            - description: Change right_shift to Paste / shift + control
+              from:
+                key_code: right_shift
+                modifiers:
+                  optional:
+                    - any
+              to:
+                - key_code: right_shift
+                  modifiers:
+                    - right_control
+              to_if_alone:
+                - key_code: v
+                  modifiers:
+                    - left_command
+              type: basic
+            #========================================================#
+            #           Left Control to Copy, Left Opt to Paste      #
+            #========================================================#
+            - description: Change left_control to copy
+              from:
+                key_code: left_control
+                modifiers:
+                  optional:
+                    - any
+              to:
+                - key_code: left_control
+              to_if_alone:
+                - key_code: c
+                  modifiers:
+                    - left_command
+              type: basic
+            - description: Change left_option to paste
+              from:
+                key_code: left_option
+                modifiers:
+                  optional:
+                    - any
+              to:
+                - key_code: left_option
+              to_if_alone:
+                - key_code: v
+                  modifiers:
+                    - left_command
+              type: basic
+            #========================================================#
+            #               Right Ctrl to Copy / Ctrl                #
+            #========================================================#
+            - description: Change right_control to copy
+              from:
+                key_code: right_control
+                modifiers:
+                  optional:
+                    - any
+              to:
+                - key_code: right_control
+              to_if_alone:
+                - key_code: c
+                  modifiers:
+                    - left_command
+              type: basic
+
         ################################################################
         #                 Tab + H/J/K/L to arrow keys                  #
         ################################################################
@@ -263,7 +330,7 @@ profiles:
                     - right_shift
                     - right_option
               to:
-                - key_code: display_brightness_decrement  
+                - key_code: display_brightness_decrement
         ################################################################
         #                       Hyper Clipboard                        #
         ################################################################
