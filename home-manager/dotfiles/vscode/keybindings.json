@@ -16,10 +16,6 @@
     "command": "workbench.action.navigateDown",
     "key": "ctrl-j"
   },
-  {
-    "command": "workbench.action.openRecent",
-    "key": "ctrl-shift-r"
-  },
   // CODING
   {
     "command": "editor.action.codeAction",
@@ -28,7 +24,12 @@
   },
   {
     "command": "editor.action.rename",
-    "key": "space r",
+    "key": "space r n",
+    "when": "vim.mode == 'Normal' && editorTextFocus"
+  },
+  {
+    "command": "workbench.action.openRecent",
+    "key": "space r r",
     "when": "vim.mode == 'Normal' && editorTextFocus"
   },
   {
