@@ -182,5 +182,6 @@
   "workbench.editor.navigationScope": "editorGroup",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
   "explorer.confirmPasteNative": false,
-  "editor.accessibilitySupport": "on"
+  "editor.accessibilitySupport": "on",
+  "makefile.configureOnOpen": true
 }

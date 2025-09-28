@@ -97,6 +97,11 @@
     "key": "space space",
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
+  {
+    "command": "workbench.action.showCommandsquickOpen",
+    "key": "space p",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
+  },
   // File Explorer
   {
     "key": "alt+cmd+c",
