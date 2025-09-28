@@ -98,7 +98,7 @@
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
   {
-    "command": "workbench.action.showCommandsquickOpen",
+    "command": "workbench.action.showCommands",
     "key": "space p",
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
