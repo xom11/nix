@@ -86,10 +86,14 @@ exec --no-startup-id clipmenud
 
 # clipboard manager
 bindsym $alt+v exec --no-startup-id "CM_LAUNCHER=rofi clipmenu"
-bindsym $cap+1 exec --no-startup-id xclip -selection primary -o > /tmp/i3_clipboard_1
-# ???
-bindsym $mod+0 exec --no-startup-id xclip -selection c -i /tmp/i3_clipboard_1 
-
+bindsym $cap+1 exec --no-startup-id xclip -selection primary -o > /tmp/clipboard_1
+bindsym $tab+1 exec --no-startup-id xclip -selection c -i /tmp/clipboard_1 
+bindsym $cap+2 exec --no-startup-id xclip -selection primary -o > /tmp/clipboard_2
+bindsym $tab+2 exec --no-startup-id xclip -selection c -i /tmp/clipboard_2
+bindsym $cap+3 exec --no-startup-id xclip -selection primary -o > /tmp/clipboard_3
+bindsym $tab+3 exec --no-startup-id xclip -selection c -i /tmp/clipboard_3
+bindsym $cap+4 exec --no-startup-id xclip -selection primary -o > /tmp/clipboard_4
+bindsym $tab+4 exec --no-startup-id xclip -selection c -i /tmp/clipboard_4
 # change focus
 # bindsym $mod+h focus left
 # bindsym $mod+j focus down
