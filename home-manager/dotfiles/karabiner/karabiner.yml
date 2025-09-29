@@ -42,9 +42,9 @@ profiles:
                 - key_code: tab
               type: basic
             #========================================================#
-            #          Right Shift to Paste / Shift + Ctrl           #
+            #          Right Shift to Paste / Shift  .               #
             #========================================================#
-            - description: Change right_shift to Paste / shift + control
+            - description: Change right_shift to Paste / Shift 
               from:
                 key_code: right_shift
                 modifiers:
@@ -52,8 +52,6 @@ profiles:
                     - any
               to:
                 - key_code: right_shift
-                  modifiers:
-                    - right_control
               to_if_alone:
                 - key_code: v
                   modifiers:

@@ -183,5 +183,6 @@
   "workbench.secondarySideBar.defaultVisibility": "hidden",
   "explorer.confirmPasteNative": false,
   "editor.accessibilitySupport": "on",
-  "makefile.configureOnOpen": true
+  "makefile.configureOnOpen": true,
+  "git.blame.editorDecoration.enabled": true
 }

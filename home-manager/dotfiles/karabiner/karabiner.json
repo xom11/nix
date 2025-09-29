@@ -60,7 +60,7 @@
                 "type": "basic"
               },
               {
-                "description": "Change right_shift to Paste / shift + control",
+                "description": "Change right_shift to Paste / Shift",
                 "from": {
                   "key_code": "right_shift",
                   "modifiers": {
@@ -71,10 +71,7 @@
                 },
                 "to": [
                   {
-                    "key_code": "right_shift",
-                    "modifiers": [
-                      "right_control"
-                    ]
+                    "key_code": "right_shift"
                   }
                 ],
                 "to_if_alone": [
