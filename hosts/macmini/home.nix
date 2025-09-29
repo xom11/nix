@@ -28,6 +28,7 @@
     };
     programs = {
       git.enable = true;
+      bin.enable = true;
       nvim.enable = true;
       tmux.enable = true;
       zsh.enable = true;

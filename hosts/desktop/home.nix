@@ -57,6 +57,7 @@
       tmux.enable = true;
       zsh.enable = true;
       ssh.enable = true;
+      bin.enable = true;
     };
     sources = {
       raiseorlaunch.enable = true;

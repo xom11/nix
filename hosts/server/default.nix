@@ -13,6 +13,7 @@
     };
     programs = {
       nvim.enable = true;
+      bin.enable = true;
       git.enable = true;
       tmux.enable = true;
       zsh.enable = true;
