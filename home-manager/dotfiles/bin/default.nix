@@ -1,12 +1,9 @@
-{ lib, dotfileDir, config, ... }:
-
+{ pkgs, ... }:
 let
-  dir = builtins.readDir ./. ;
-  files = lib.filterAttrs (name: type: name != "default.nix") dir;
+  scripts = builtins.filter (name: name != "default.nix") (builtins.attrNames (builtins.readDir ./.) );
 in
 {
-  home.file = lib.mapAttrs (name: type: {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/bin/${name}";
-    target = ".local/bin/${name}";
-  }) files;
+  home.packages = builtins.map (name:
+    pkgs.writeShellScriptBin name (builtins.readFile (./. + "/${name}"))
+  ) scripts;
 }

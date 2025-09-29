@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Script đặt DPI (Dots Per Inch) cho phiên Xorg/i3wm hiện tại
 # Dựa trên tỷ lệ scale phổ biến: 200% (192), 150% (144), 125% (120), 100% (96)
