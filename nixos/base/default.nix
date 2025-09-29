@@ -86,9 +86,6 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  hardware = {
-    bluetooth.enable = true;
-    graphics.enable = true;
-  };
+  hardware.bluetooth.enable = true;
   system.stateVersion = "24.11";
 }
