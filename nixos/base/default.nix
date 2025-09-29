@@ -86,7 +86,13 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  hardware.bluetooth.enable = true;
-  hardware.opengl.enable = true;
+  hardware = {
+    bluetooth.enable = true;
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+  };
   system.stateVersion = "24.11";
 }
