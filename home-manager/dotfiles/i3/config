@@ -94,6 +94,7 @@ bindsym $cap+3 exec --no-startup-id xclip -selection primary -o > /tmp/clipboard
 bindsym $tab+3 exec --no-startup-id xclip -selection c -i /tmp/clipboard_3
 bindsym $cap+4 exec --no-startup-id xclip -selection primary -o > /tmp/clipboard_4
 bindsym $tab+4 exec --no-startup-id xclip -selection c -i /tmp/clipboard_4
+
 # change focus
 # bindsym $mod+h focus left
 # bindsym $mod+j focus down
