@@ -9,7 +9,7 @@
           main = {
             capslock = "overload(cap, esc)";
             tab = "overload(hyper, tab)";
-            leftcontrol = "overload(ctrol, C-c)";
+            leftcontrol = "overload(control, C-c)";
           };
           otherlayer = {};
         };
