@@ -16,9 +16,7 @@
         };
         extraConfig = ''
           [cap_layer:C-M-A]
-            equal = XF86AudioRaiseVolume
-            minus = XF86AudioLowerVolume
-            0 = XF86AudioMute
+
 
           [tab_layer:C-M-A-S]
             h = left
@@ -29,12 +27,6 @@
             u = pagedown
             i = pageup
             o = end
-
-            equal = X86MonBrightnessUp
-            minus = X86MonBrightnessDown
-            0 = XF86AudioMicMute
-            grave = Print
-            
         '';
       };
     };

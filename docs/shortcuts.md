@@ -28,6 +28,7 @@
 - `Cap + plus/minus` to volume up/down
 - `Cap + 0` to mute/unmute
 - `Tab + plus/minus` to brightness up/down
+- `Tab + 0` to mic mute/unmute
 
 ### Power and Lock
 - `Meta + Alt + l` to lock screen
