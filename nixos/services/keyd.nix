@@ -8,11 +8,13 @@
         settings = {
           main = {
             capslock = "overload(cap, esc)";
+            tab = "overload(hyper, tab)";
           };
           otherlayer = {};
         };
         extraConfig = ''
           [cap:C-M-A]
+          [hyper:C-M-A-S]
         '';
       };
     };
