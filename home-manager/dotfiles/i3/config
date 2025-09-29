@@ -137,7 +137,7 @@ bindsym $mod+Shift+4 move container to workspace number $ws4
 
 
 # reload the configuration file
-bindsym $mod+Shift+c exec i3-msg reload && dunstify "i3WM" "Configuration reloaded successfully!" -i system-devices-settings
+bindsym $mod+Shift+c exec i3-msg reload && dunstify "i3WM" "Configuration reloaded successfully!"
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
