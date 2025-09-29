@@ -21,6 +21,10 @@
             j = down
             k = up
             l = right
+            y = home
+            u = pagedown
+            i = pageup
+            o = end
         '';
       };
     };
