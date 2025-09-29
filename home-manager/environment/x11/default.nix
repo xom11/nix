@@ -12,7 +12,7 @@ let
     xorg.libX11
     xorg.libX11.dev
     zlib
-    pkgs.stdenv.cc.cc.lib
+    stdenv.cc.cc.lib
   ];
 in
 {
