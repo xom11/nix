@@ -1,6 +1,6 @@
 set $mod Mod4
 set $cap Mod4+Mod1+Ctrl
-set $tab Mod4+Shift+Ctrl+Mod1
+set $tab Mod4+Ctrl+Mod1+Shift
 set $alt Mod1
 
 
@@ -137,7 +137,7 @@ bindsym $mod+Shift+4 move container to workspace number $ws4
 
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+c i3-msg reload && dunstify "i3WM" "Configuration reloaded successfully!"
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
