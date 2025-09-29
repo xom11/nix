@@ -87,5 +87,6 @@
   security.sudo.wheelNeedsPassword = false;
 
   hardware.bluetooth.enable = true;
+  hardware.opengl.enable = true;
   system.stateVersion = "24.11";
 }
