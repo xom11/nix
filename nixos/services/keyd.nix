@@ -10,6 +10,7 @@
             capslock = "overload(cap, esc)";
             tab = "overload(hyper, tab)";
             leftcontrol = "overload(control, C-c)";
+            leftalt = "overload(alt, C-v)";
           };
           otherlayer = {};
         };
