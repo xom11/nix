@@ -88,10 +88,7 @@
 
   hardware = {
     bluetooth.enable = true;
-    graphics = {
-      enable = true;
-      driSupport32Bit = true;
-    };
+    graphics.enable = true;
   };
   system.stateVersion = "24.11";
 }
