@@ -17,6 +17,10 @@
         extraConfig = ''
           [cap:C-M-A]
           [hyper:C-M-A-S]
+            h = left
+            j = down
+            k = up
+            l = right
         '';
       };
     };
