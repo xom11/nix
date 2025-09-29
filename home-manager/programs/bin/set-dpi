@@ -22,4 +22,4 @@ fi
 
 # Set Xft.dpi for the current session
 echo "Xft.dpi: $target_dpi" | xrdb -merge -
-echo "DPI set to $target_dpi. Restart wm and applications."
+echo "DPI set to $target_dpi ($1 %). Restart wm and applications."
