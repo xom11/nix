@@ -16,6 +16,7 @@
         };
         extraConfig = ''
           [cap_layer:C-M-A]
+            equal = XF86AudioRaiseVolume
 
           [tab_layer:C-M-A-S]
             h = left

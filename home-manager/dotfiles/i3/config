@@ -18,7 +18,7 @@ exec --no-startup-id xset r rate 200 30
 exec --no-startup-id dunst
 
 # Volume control
-bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ && dunstify "Volume Up"
+# bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ && dunstify "Volume Up"
 bindsym $cap+equal exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%+ && dunstify "Volume Up"
 bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- && dunstify "Volume Down"
 bindsym $cap+minus exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- && dunstify "Volume Down"
