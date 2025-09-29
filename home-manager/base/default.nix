@@ -18,7 +18,6 @@
     BROWSER = "brave";
     TERMINAL = "kitty";
     SHELL = "${pkgs.zsh}/bin/zsh";
-    LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     DOTFILE_DIR = "${dotfileDir}";
     NIX_CONFIG="extra-experimental-features = nix-command flakes";
     NIXPKGS_ALLOW_UNFREE = 1;
