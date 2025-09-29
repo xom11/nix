@@ -67,12 +67,8 @@ bindsym $cap+f exec --no-startup-id "kitty -e yazi"
 bindsym $cap+x exec --no-startup-id raiseorlaunch -e Telegram -s Telegram -w telegram
 
 for_window [instance="^code$"] move to workspace "code"
-for_window [instance="^code$"] focus 
 for_window [instance="^brave-browser$"] move to workspace "brave"
-for_window [instance="^brave-browser$"] focus
-for_window [instance="^brave-browser$"] fullscreen enable
 for_window [instance="^qutebrowser$"] move to workspace "qute"
-for_window [instance="^qutebrowser$"] focus
 focus_on_window_activation focus
 
 bindsym $mod+q kill
