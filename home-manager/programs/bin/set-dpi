@@ -1,46 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 
-# Script đặt DPI (Dots Per Inch) cho phiên Xorg/i3wm hiện tại
-# Dựa trên tỷ lệ scale phổ biến: 200% (192), 150% (144), 125% (120), 100% (96)
+# DPI Scaling Script (Xft.dpi)
 
-# Giá trị DPI tương ứng với tỷ lệ phần trăm (So với 96 DPI chuẩn)
-declare -A dpi_map=(
-    [200]=192  # 200% scale
-    [150]=144  # 150% scale
-    [125]=120  # 125% scale
-    [100]=96   # 100% scale (mặc định)
-)
+# Map desired percentage scale to the actual DPI value
+declare -A dpi_map=( [200]=192 [150]=144 [125]=120 [100]=96 )
 
-# 1. Kiểm tra tham số đầu vào
+# --- Execution ---
+
 if [ -z "$1" ]; then
-    echo "Lỗi: Vui lòng cung cấp tỷ lệ scale mong muốn (ví dụ: 200, 150, 125, 100)."
-    echo "Cách dùng: $0 <TỶ_LỆ_SCALE>"
-    echo "Các tỷ lệ được hỗ trợ: ${!dpi_map[@]}"
+    echo "Usage: $0 <SCALE_PERCENT>"
+    echo "Supported: ${!dpi_map[@]}"
     exit 1
 fi
 
-# 2. Lấy giá trị DPI từ tỷ lệ
-scale_percent="$1"
-target_dpi="${dpi_map[$scale_percent]}"
+target_dpi="${dpi_map[$1]}"
 
 if [ -z "$target_dpi" ]; then
-    echo "Lỗi: Tỷ lệ scale '$scale_percent' không được hỗ trợ."
-    echo "Các tỷ lệ được hỗ trợ: ${!dpi_map[@]}"
+    echo "Error: Scale '$1' not supported. Use: ${!dpi_map[@]}"
     exit 1
 fi
 
-# 3. Đặt DPI bằng xrdb
-echo "Đang thiết lập Xft.dpi thành $target_dpi ($scale_percent% scale)..."
+# Set Xft.dpi for the current session
 echo "Xft.dpi: $target_dpi" | xrdb -merge -
-
-# 4. Kiểm tra và thông báo
-current_dpi=$(xrdb -query | grep Xft.dpi | awk '{print $2}')
-if [ "$current_dpi" = "$target_dpi" ]; then
-    echo "✅ Đặt DPI thành công: Xft.dpi = $current_dpi."
-    echo ""
-    echo "⚠️ HÀNH ĐỘNG CẦN THIẾT:"
-    echo "   1. Khởi động lại i3wm ngay bây giờ (Thường là: \$mod+Shift+r)."
-    echo "   2. Đóng và mở lại TẤT CẢ các ứng dụng đang chạy (Terminal, trình duyệt, v.v.) để áp dụng scaling."
-else
-    echo "❌ Lỗi: Không thể xác nhận DPI đã được đặt."
-fi
+echo "DPI set to $target_dpi. Restart wm and applications."
