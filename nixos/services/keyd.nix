@@ -7,16 +7,17 @@
         ids = [ "*" ];
         settings = {
           main = {
-            capslock = "overload(cap, esc)";
-            tab = "overload(hyper, tab)";
+            capslock = "overload(cap_layer, esc)";
+            tab = "overload(tab_layer, tab)";
             leftcontrol = "overload(control, C-c)";
             leftalt = "overload(alt, C-v)";
           };
           otherlayer = {};
         };
         extraConfig = ''
-          [cap:C-M-A]
-          [hyper:C-M-A-S]
+          [cap_layer:C-M-A]
+
+          [tab_layer:C-M-A-S]
             h = left
             j = down
             k = up
