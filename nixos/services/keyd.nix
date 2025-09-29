@@ -7,12 +7,14 @@
         ids = [ "*" ];
         settings = {
           main = {
-            capslock = "overload(hyper, esc)";
+            capslock = "overload(lcap esc)";
+            tab = "overload(ltab, tab)"; # Make tab work with hyper
           };
           otherlayer = {};
         };
         extraConfig = ''
-          [hyper:C-M-A]
+          [lcap:C-M-A]
+          [ltab:C-M-A-S]
         '';
       };
     };
