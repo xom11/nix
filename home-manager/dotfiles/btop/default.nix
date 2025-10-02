@@ -1,4 +1,4 @@
-{lib,config, dotfileDir, ...}:
+{lib,config, dotfileDir, pkgs, ...}:
 let
   cfg = config.modules.dotfiles.btop;
 in
@@ -12,6 +12,6 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/btop/btop.conf";
       };
     };
-    home.packages = [ config.pkgs.btop ];
+    home.packages = [ pkgs.btop ];
   };
 }

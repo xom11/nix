@@ -18,5 +18,9 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/yazi/keymap.toml";
       };
     };
+    home.packages = [
+      pkgs.yazi
+      pkgs.yaziPlugins.smart-enter
+    ];
   };
 }
