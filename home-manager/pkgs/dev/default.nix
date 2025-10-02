@@ -10,7 +10,7 @@ in
     home.packages = with pkgs; [
       fastfetch
       vim
-      htop
+      # htop
       btop
       lazygit
       lazydocker
@@ -23,8 +23,8 @@ in
       fzf
       bat
       eza
-      # yazi
-      # yaziPlugins.smart-enter
+      yazi
+      yaziPlugins.smart-enter
       zoxide
       ncdu
       jq

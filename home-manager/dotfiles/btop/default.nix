@@ -12,5 +12,6 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/btop/btop.conf";
       };
     };
+    home.packages = [ config.pkgs.btop ];
   };
 }
