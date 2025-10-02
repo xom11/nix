@@ -23,8 +23,8 @@ in
       fzf
       bat
       eza
-      yazi
-      yaziPlugins.smart-enter
+      # yazi
+      # yaziPlugins.smart-enter
       zoxide
       ncdu
       jq

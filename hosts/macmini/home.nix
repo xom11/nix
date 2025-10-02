@@ -17,7 +17,7 @@
       qutebrowser.enable = true;
       vscode.enable = true;
       ssh.enable = true;
-      yazi.enable = true;
+      # yazi.enable = true;
       conda.enable = true;
       # kanata.enable = true;
       karabiner.enable = true;
@@ -33,6 +33,7 @@
       tmux.enable = true;
       zsh.enable = true;
       ssh.enable = true;
+      yazi.enable = true;
     };
     secrets.enable = true;
   };
