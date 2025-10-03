@@ -16,7 +16,6 @@ alias ga='git add .'
 alias gl='git pull'
 alias gp='git push'
 alias gc='git commit -m'
-alias gu='git pull && git add . && git commit -m "update" && git push'
 
 
 # python

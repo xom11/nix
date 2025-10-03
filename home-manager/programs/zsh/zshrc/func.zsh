@@ -21,6 +21,19 @@ t() {
     fi
 }
 
+gu() {
+  if [ -z "$1" ]; then
+    commit_msg="update"
+  else
+    commit_msg="$@" 
+  fi
+
+  git pull && \
+  git add . && \
+  git commit -m "$commit_msg" && \
+  git push
+}
+
 _uv_run_mod() {
     if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
         _arguments '*:filename:_files -g "*.py"'
