@@ -273,6 +273,11 @@
     "key": "escape",
     "command": "workbench.action.toggleSidebarVisibility",
     "when": "sideBarFocus"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-lineBreakInsert",
+    "when": "textInputFocus && !editorReadonly"
   }
 
 ]
