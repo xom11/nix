@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+# Tên card âm thanh (thường là @DEFAULT_SINK@)
+SINK="@DEFAULT_SINK@"
+
+# Bước tăng/giảm âm lượng (ví dụ: 5%)
+VOLUME_STEP="5%"
+
+# 1. Tăng âm lượng
+pactl set-sink-volume "$SINK" "+$VOLUME_STEP"
+
+# 2. Lấy mức âm lượng hiện tại sau khi thay đổi
+# Lấy dòng chứa 'Volume'
+VOLUME_LINE=$(pactl get-sink-volume "$SINK" | grep 'Volume:')
+
+# Tách ra phần trăm âm lượng (thường là giá trị thứ 5)
+VOLUME_PERCENT=$(echo "$VOLUME_LINE" | awk '{print $5}' | sed 's/%//')
+
+# 3. Tạo thanh tiến trình (progress bar) cho thông báo
+# Chiều dài thanh
+BAR_LENGTH=20
+# Số lượng dấu '#' cần hiển thị
+FILLED_BLOCKS=$((VOLUME_PERCENT * BAR_LENGTH / 100))
+# Số lượng dấu '-' cần hiển thị
+EMPTY_BLOCKS=$((BAR_LENGTH - FILLED_BLOCKS))
+# Tạo thanh tiến trình
+BAR=$(printf '#%.0s' $(seq 1 $FILLED_BLOCKS))
+BAR+=$(printf '-%.0s' $(seq 1 $EMPTY_BLOCKS))
+
+# 4. Gửi thông báo
+notify-send \
+    -a "Volume" \
+    -h string:x-canonical-private-synchronous:volume_notification \
+    -u low \
+    "Volume: $VOLUME_PERCENT%" \
+    "$BAR"
