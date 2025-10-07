@@ -27,3 +27,6 @@ alias mamba='micromamba'
 # uvx
 alias nvitop='uvx nvitop'
 alias btcli='uvx --from bittensor-cli btcli'
+
+# kitty
+alias kitty-opacity='kitty @ set-background-opacity'

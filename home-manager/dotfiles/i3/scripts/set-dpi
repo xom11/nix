@@ -17,6 +17,7 @@ target_dpi="${dpi_map[$1]}"
 
 if [ -z "$target_dpi" ]; then
     echo "Error: Scale '$1' not supported. Use: ${!dpi_map[@]}"
+    echo "Example: set-dpi 150 for 150% scaling."
     exit 1
 fi
 
