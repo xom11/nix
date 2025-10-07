@@ -180,3 +180,5 @@ bindsym $mod+$alt+Shift+r exec reboot
 bindsym $mod+$alt+Shift+s exec systemctl poweroff 
 bindsym $mod+$alt+Shift+h exec systemctl hibernate 
 
+exec --no-startup-id /bin/sh -c "sleep 5 && check_battery &"
+
