@@ -51,6 +51,7 @@ for_window [class="^.*$"] border pixel 0
 # pipx install git+https://github.com/khanhkhanhlele/raiseorlaunch.git
 bindsym $mod+Return exec --no-startup-id kitty 
 bindsym $cap+t exec --no-startup-id raiseorlaunch -e kitty -s kitty -w kitty
+bindsym $cap+space exec --no-startup-id raiseorlaunch -e kitty -s kitty -w kitty
 bindsym $cap+b exec --no-startup-id raiseorlaunch -e "brave" -s brave-browser -w brave
 bindsym $cap+g exec --no-startup-id raiseorlaunch -e "brave --app=https://gemini.google.com" -s "gemini.google.com" -w gemini
 bindsym $cap+k exec --no-startup-id raiseorlaunch -e "brave --app=https://keep.google.com" -s "keep.google.com" -w keep

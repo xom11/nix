@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, pkgs, config, ... }:
 let
   cfg = config.modules.programs.nvim;
 in
@@ -16,6 +16,7 @@ lib.mkIf cfg.enable
         markdown = [ "prettierd" ];
         scss = [ "prettierd" ];
         css = [ "prettierd" ];
+        nix = ["alejandra" ];
 
         lua = [ "stylua" ];
         python = [ "black" ];
@@ -25,4 +26,11 @@ lib.mkIf cfg.enable
       };
     };
   };
+  home.packages = with pkgs; [
+    black
+    shfmt
+    stylua
+    alejandra
+    prettierd
+  ];
 }

@@ -14,12 +14,6 @@ in
   );
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      prettierd
-      black
-      shfmt 
-      stylua 
-      nixd
-      nixfmt
     ];
     programs.nixvim = {
       enable = true;

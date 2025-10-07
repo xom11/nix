@@ -1,10 +1,9 @@
-{ lib, config, ... }:
+{ lib, config, pkgs,  ... }:
 let
   cfg = config.modules.programs.nvim;
 in
-lib.mkIf cfg.enable
-{
-  programs.nixvim.plugins ={
+lib.mkIf cfg.enable {
+  programs.nixvim.plugins = {
     lsp = {
       enable = true;
       servers = {
@@ -27,8 +26,11 @@ lib.mkIf cfg.enable
         marksman.enable = true;
       };
     };
-    lsp-format = {
-      enable = true;
-    };
+    # lsp-format = {
+    #   enable = true;
+    # };
+    home.packages = with pkgs; [
+      nixd
+    ];
   };
 }

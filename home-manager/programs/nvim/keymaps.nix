@@ -29,7 +29,7 @@ lib.mkIf cfg.enable {
           action = "<gv";
         }
         {
-          key = "<C-a>";
+          key = "ga";
           action = "ggVG";
         }
         {
