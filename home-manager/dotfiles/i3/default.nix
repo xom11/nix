@@ -12,9 +12,9 @@ in
       ".config/i3/config" = {
         source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/i3/config";
       };
-    home.packages = builtins.map (name:
-      pkgs.writeShellScriptBin name (builtins.readFile (./. + "/${name}"))
-    ) scripts;
     };
+    home.packages = builtins.map (name:
+      pkgs.writeShellScriptBin name (builtins.readFile (./scripts + "/${name}"))
+    ) scripts;
   };
 }
