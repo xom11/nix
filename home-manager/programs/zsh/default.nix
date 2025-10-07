@@ -16,6 +16,7 @@ in
       syntaxHighlighting.enable = true;
       # historySubstringSearch.enable = true;
       history = {
+        path = "${config.xdg.configHome}/zsh/.zsh_history";
         ignoreDups = true;
         ignoreAllDups = true;
         save = 1000000;
