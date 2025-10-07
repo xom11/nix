@@ -43,7 +43,6 @@ in
         comment.enable = true;
         colorizer.enable = true;
         auto-save.enable = true;
-        gitsigns.enable = true;
         visual-multi.enable = true;
         image.enable = true;
         barbecue.enable = true;

@@ -1,4 +1,5 @@
 { lib, config, ... }:
+# Toggle teminall for nvim
 let
   cfg = config.modules.programs.nvim;
 in
