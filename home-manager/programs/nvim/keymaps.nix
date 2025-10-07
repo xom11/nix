@@ -2,8 +2,7 @@
 let
   cfg = config.modules.programs.nvim;
 in
-lib.mkIf cfg.enable
-{
+lib.mkIf cfg.enable {
   programs = {
     nixvim = {
       keymaps = [
@@ -38,7 +37,7 @@ lib.mkIf cfg.enable
           mode = "n";
           action = "<cmd>lua vim.lsp.buf.definition()<cr>";
         }
-	
+
       ];
     };
   };
