@@ -12,9 +12,9 @@ lib.mkIf cfg.enable
         float_opts = {
           border = "curved";
           height = 30;
-          width = 130;
+          width = 110;
         };
-        open_mapping = "[[<c-\\>]]";
+        open_mapping = "[[<a-t>]]";
       };
     };
   };
