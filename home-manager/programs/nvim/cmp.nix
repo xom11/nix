@@ -26,6 +26,18 @@ lib.mkIf cfg.enable
         "<C-d>" = "cmp.mapping.scroll_docs(-4)";
         "<C-e>" = "cmp.mapping.close()";
         "<C-f>" = "cmp.mapping.scroll_docs(4)";
+        "<Tab>" = ''
+          cmp.mapping(function(fallback)
+            if require("copilot.suggestion").is_visible() then
+              require("copilot.suggestion").accept()
+            elseif cmp.visible() then
+              cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+            else
+              fallback()
+            end
+          end
+        )
+        '';
       };
       cmdline = {
         ":" = {

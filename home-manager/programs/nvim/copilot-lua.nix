@@ -1,4 +1,5 @@
 { lib, config, ... }:
+# Keymap Tab (cmp.nix)
 let
   cfg = config.modules.programs.nvim;
 in
@@ -16,9 +17,6 @@ lib.mkIf cfg.enable
           enabled = true;
           auto_trigger = true;
           debounce = 75;
-          keymap = {
-            accept = "<Tab>";
-          };
         };
       };
     };

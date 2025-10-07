@@ -12,8 +12,16 @@ lib.mkIf cfg.enable
         direction = "float";
         float_opts = {
           border = "curved";
-          height = 30;
-          width = 110;
+          height = "
+            function()
+              return math.floor(vim.o.lines * 0.8)
+            end
+            ";
+          width = "
+            function()
+              return math.floor(vim.o.columns * 0.8)
+            end
+            ";
         };
         open_mapping = "[[<a-t>]]";
       };
