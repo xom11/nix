@@ -39,7 +39,7 @@ in
           {
             key = "<leader>yr";
             mode = "n";
-            action = ":let @+ = expand('%:f;)<CR>";
+            action = ":let @+ = expand('%:f';)<CR>";
             options.desc = "Copy relative path to clipboard";
           }
           {
