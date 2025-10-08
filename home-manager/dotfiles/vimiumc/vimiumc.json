@@ -42,7 +42,9 @@
     "tt: https://taostats.io/subnets/%s \\",
     "  blank=https://taostats.io/ TAO Subnet",
     "pkgs: https://search.nixos.org/packages?channel=unstable&query=%s \\",
-    "  blank=https://search.nixos.org/packages?channel=unstable&"
+    "  blank=https://search.nixos.org/packages?channel=unstable&",
+    "nixvim: https://nix-community.github.io/nixvim/?search=%s \\",
+    "  blank=https://nix-community.github.io/nixvim/"
   ],
   "vimSync": true
 }

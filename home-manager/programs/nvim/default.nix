@@ -43,6 +43,7 @@ in
         comment.enable = true;
         colorizer.enable = true;
         auto-save.enable = true;
+        # auto-session.enable = true;
         visual-multi.enable = true;
         image.enable = true;
         barbecue.enable = true;
