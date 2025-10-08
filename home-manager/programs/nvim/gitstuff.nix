@@ -8,13 +8,18 @@
 in
   lib.mkIf cfg.enable
   {
-    programs.nixvim.plugins.gitsigns = {
-      enable = true;
-      settings = {
-        current_line_blame = true;
-        current_line_blame_opts = {
-          delay = 500;
+    programs.nixvim.plugins = { 
+      gitsigns = {
+        enable = true;
+        settings = {
+          current_line_blame = true;
+          current_line_blame_opts = {
+            delay = 500;
+          };
         };
+      };
+      diffview = {
+        enable = true;
       };
     };
     programs.nixvim.keymaps = [
