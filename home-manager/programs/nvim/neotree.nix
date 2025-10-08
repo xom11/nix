@@ -1,59 +1,61 @@
-{ lib, config, ... }:
-let
+{
+  lib,
+  config,
+  ...
+}: let
   cfg = config.modules.programs.nvim;
 in
-lib.mkIf cfg.enable
-{
-  programs.nixvim.plugins.neo-tree = {
-    enable = true;
-    autoCleanAfterSessionRestore = true;
-    closeIfLastWindow = true;
+  lib.mkIf cfg.enable
+  {
+    programs.nixvim.plugins.neo-tree = {
+      enable = true;
+      autoCleanAfterSessionRestore = true;
+      closeIfLastWindow = true;
 
-    window = {
-      position = "right";
-      mappings = {
-         "<bs>" = "navigate_up";
-         "." = "set_root";
-         "f" = "fuzzy_finder";
-         "/" = "filter_on_submit";
-         "h" = "show_help";
+      window = {
+        position = "right";
+        mappings = {
+          "<bs>" = "navigate_up";
+          "." = "set_root";
+          "f" = "fuzzy_finder";
+          "/" = "filter_on_submit";
+          "h" = "show_help";
+          "c" = "copy_to_clipboard";
+        };
       };
+
+      filesystem = {
+        followCurrentFile.enabled = true;
+        filteredItems = {
+          hideHidden = false;
+          hideDotfiles = false;
+          forceVisibleInEmptyFolder = false;
+          hideGitignored = false;
+        };
+      };
+
+      # eventHandlers =
+      #   {
+      #     neo_tree_buffer_enter = ''
+      #         function()
+      #       vim.cmd 'highlight! Cursor blend=100'
+      #       end
+      #     '';
+      #     neo_tree_buffer_leave = ''
+      #         function()
+      #       vim.cmd 'highlight! Cursor guibg=#5f87af blend=0'
+      #       end
+      #     '';
+      #   };
     };
+    programs.nixvim.keymaps = [
+      {
+        key = "<A-e>";
+        action = "<CMD>Neotree toggle<NL>";
 
-    filesystem = {
-      followCurrentFile.enabled = true;
-      filteredItems = {
-        hideHidden = false;
-        hideDotfiles = false;
-        forceVisibleInEmptyFolder = false;
-        hideGitignored = false;
-      };
-    };
-
-
-    # eventHandlers =
-    #   {
-    #     neo_tree_buffer_enter = ''
-    #         function()
-    #       vim.cmd 'highlight! Cursor blend=100'
-    #       end
-    #     '';
-    #     neo_tree_buffer_leave = ''
-    #         function()
-    #       vim.cmd 'highlight! Cursor guibg=#5f87af blend=0'
-    #       end
-    #     '';
-    #   };
-
-  };
-  programs.nixvim.keymaps = [
-    {
-      key = "<A-e>";
-      action = "<CMD>Neotree toggle<NL>";
-
-      options = {
-        silent = true;
-      };
-    }
-  ];
-}
+        options = {
+          silent = true;
+        };
+      }
+    ];
+  }

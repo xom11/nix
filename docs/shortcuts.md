@@ -37,3 +37,6 @@
 - `Meta + Alt + Shift + h` to hibernate
 - `Meta + Alt + Shift + r` to reboot
 
+### Screenshot
+- `Tab + ~` to take Screenshot
+
