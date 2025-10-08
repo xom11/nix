@@ -7,11 +7,9 @@ lib.mkIf cfg.enable
   programs.nixvim.plugins.telescope = {
     enable = true;
 
-    enabledExtensions = [ "ui-select" ];
     extensions.ui-select.enable = true;
-    extensions.frecency.enable = false;
+    extensions.frecency.enable = true;
     extensions.fzf-native.enable = true;
-
     extensions.file-browser = {
       enable = true;
       settings.hidden = true;
@@ -19,7 +17,6 @@ lib.mkIf cfg.enable
       settings.auto_depth = true;
     };
     keymaps = {
-      "<leader><leader>" = "find_files";
       "<leader>ff" = "find_files";
       "<leader>fb" = "buffers";
       "<leader>fp" = "git_files";
@@ -39,4 +36,10 @@ lib.mkIf cfg.enable
       ];
     };
   };
+  programs.nixvim.keymaps = [
+    {
+      key = "<leader><leader>";
+      action = "<cmd>Telescope frecency workspace=CWD<cr>";
+    }
+  ];
 }

@@ -45,10 +45,21 @@ in
         tmux-fzf
         {
           plugin = tmux-floax;
+          # https://github.com/omerxx/tmux-floax
           extraConfig = ''
-            set -g @floax-bind '-n M-t'
+            set -g @floax-bind 't'
             set -g @floax-width '80%'
             set -g @floax-height '80%'
+          '';
+        }
+        {
+          plugin = tmux-sessionx;
+          # https://github.com/omerxx/tmux-sessionx
+          extraConfig = ''
+            set -g @sessionx-bind 's'
+            set -g @sessionx-prefix 'on'
+            set -g @sessionx-window-height '90%'
+            set -g @sessionx-window-width '90%'
           '';
         }
       ];
