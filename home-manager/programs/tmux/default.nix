@@ -56,7 +56,7 @@ in
           plugin = tmux-sessionx;
           # https://github.com/omerxx/tmux-sessionx
           extraConfig = ''
-            set -g @sessionx-bind 'o'
+            set -g @sessionx-bind 's'
             set -g @sessionx-window-height '90%'
             set -g @sessionx-window-width '90%'
           '';
