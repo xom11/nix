@@ -44,5 +44,15 @@ lib.mkIf cfg.enable
     #       end
     #     '';
     #   };
+    programs.nixvvim.keymaps = [
+      {
+        key = "<A-e>";
+        action = "<CMD>Neotree toggle<NL>";
+
+        options = {
+          silent = true;
+        };
+      }
+    ];
   };
 }

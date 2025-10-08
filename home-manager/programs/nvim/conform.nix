@@ -29,6 +29,16 @@ in
         };
       };
     };
+    programs.nixvvim.keymaps = [
+      {
+        key = "<leader>lf";
+        action = "<cmd>lua require('conform').format({ lsp_fallback = true, async = false, timeout_ms = 500 })<CR>";
+
+        options = {
+          silent = true;
+        };
+      }
+    ];
     home.packages = with pkgs; [
       black
       shfmt
