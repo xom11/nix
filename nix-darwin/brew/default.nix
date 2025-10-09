@@ -55,7 +55,7 @@
       "homerow"
       "xquartz"
       "kitty"
-      "vmware-fusion"
+      # "vmware-fusion"
       # "miniconda"
       # "Tunnelblick"
       # "chromedriver"

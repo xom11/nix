@@ -2,6 +2,130 @@ profiles:
   - complex_modifications:
       rules:
         ################################################################
+        #                        Homerow mode                          #
+        ################################################################
+        - description: Homerow mode
+          manipulators:
+            #==========================================================#
+            #              f : left_ctrl / j right_ctrl                #    
+            #==========================================================#
+            - description: f = left_control
+              from:
+                key_code: f
+                modifiers:
+                  optional:
+                    - any
+              to_if_alone:
+                - key_code: f
+                  halt: true
+              to_if_held_down:
+                - key_code: left_control
+                  halt: true
+              to_delayed_action:
+                to_if_invoked:
+                  - key_code: vk_none
+                to_if_canceled:
+                  - key_code: f
+              type: basic
+            - description: j = right_control
+              from:
+                key_code: j
+                modifiers:
+                  optional:
+                    - any
+              to_if_alone:
+                - key_code: j
+                  halt: true
+              to_if_held_down:
+                - key_code: right_control
+                  halt: true
+              to_delayed_action:
+                to_if_invoked:
+                  - key_code: vk_none
+                to_if_canceled:
+                  - key_code: j
+              type: basic
+            #==========================================================#
+            #             d : left_command / k right_command           #
+            #==========================================================#
+            - description: d = left_command
+              from:
+                key_code: d
+                modifiers:
+                  optional:
+                    - any
+              to_if_alone:
+                - key_code: d
+                  halt: true
+              to_if_held_down:
+                - key_code: left_command
+                  halt: true
+              to_delayed_action:
+                to_if_invoked:
+                  - key_code: vk_none
+                to_if_canceled:
+                  - key_code: d
+              type: basic
+            - description: k = right_command
+              from:
+                key_code: k
+                modifiers:
+                  optional:
+                    - any
+              to_if_alone:
+                - key_code: k
+                  halt: true
+              to_if_held_down:
+                - key_code: right_command
+                  halt: true
+              to_delayed_action:
+                to_if_invoked:
+                  - key_code: vk_none
+                to_if_canceled:
+                  - key_code: k
+              type: basic
+            #==========================================================#
+            #             s : left_option / l right_option             #
+            #==========================================================#
+            - description: s = left_option
+              from:
+                key_code: s
+                modifiers:
+                  optional:
+                    - any
+              to_if_alone:
+                - key_code: s
+                  halt: true
+              to_if_held_down:
+                - key_code: left_option
+                  halt: true
+              to_delayed_action:
+                to_if_invoked:
+                  - key_code: vk_none
+                to_if_canceled:
+                  - key_code: s
+              type: basic
+            - description: l = right_option
+              from:
+                key_code: l
+                modifiers:
+                  optional:
+                    - any
+              to_if_alone:
+                - key_code: l
+                  halt: true
+              to_if_held_down:
+                - key_code: right_option
+                  halt: true
+              to_delayed_action:
+                to_if_invoked:
+                  - key_code: vk_none
+                to_if_canceled:
+                  - key_code: l
+              type: basic
+
+            
+        ################################################################
         #           Change modifier keys behavior                       #
         ################################################################
         - description: Change modifier keys behavior
@@ -476,122 +600,6 @@ profiles:
                     - right_option
               to:
                 - shell_command: "cat /tmp/clip5 | pbcopy "
-                - key_code: v
-                  modifiers:
-                    - left_command
-            - description: hypr + 6 = copy to clip6
-              type: basic
-              from:
-                key_code: "6"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_option
-              to:
-                - key_code: c
-                  modifiers:
-                    - left_command
-                - shell_command: pbpaste > /tmp/clip6
-            - description: tab + 6 = paste from clip6
-              type: basic
-              from:
-                key_code: "6"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_shift
-                    - right_option
-              to:
-                - shell_command: "cat /tmp/clip6 | pbcopy "
-                - key_code: v
-                  modifiers:
-                    - left_command
-            - description: hypr + 7 = copy to clip7
-              type: basic
-              from:
-                key_code: "7"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_option
-              to:
-                - key_code: c
-                  modifiers:
-                    - left_command
-                - shell_command: pbpaste > /tmp/clip7
-            - description: tab + 7 = paste from clip7
-              type: basic
-              from:
-                key_code: "7"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_shift
-                    - right_option
-              to:
-                - shell_command: "cat /tmp/clip7 | pbcopy "
-                - key_code: v
-                  modifiers:
-                    - left_command
-            - description: hypr + 8 = copy to clip8
-              type: basic
-              from:
-                key_code: "8"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_option
-              to:
-                - key_code: c
-                  modifiers:
-                    - left_command
-                - shell_command: pbpaste > /tmp/clip8
-            - description: tab + 8 = paste from clip8
-              type: basic
-              from:
-                key_code: "8"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_shift
-                    - right_option
-              to:
-                - shell_command: "cat /tmp/clip8 | pbcopy "
-                - key_code: v
-                  modifiers:
-                    - left_command
-            - description: hypr + 9 = copy to clip9
-              type: basic
-              from:
-                key_code: "9"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_option
-              to:
-                - key_code: c
-                  modifiers:
-                    - left_command
-                - shell_command: pbpaste > /tmp/clip9
-            - description: tab + 9 = paste from clip9
-              type: basic
-              from:
-                key_code: "9"
-                modifiers:
-                  mandatory:
-                    - right_command
-                    - right_control
-                    - right_shift
-                    - right_option
-              to:
-                - shell_command: "cat /tmp/clip9 | pbcopy "
                 - key_code: v
                   modifiers:
                     - left_command
