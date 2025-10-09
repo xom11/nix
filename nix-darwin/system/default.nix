@@ -32,6 +32,10 @@
         ShowPathbar = true;
         ShowStatusBar = true;
       };
+      trackpad = {
+        Clicking = true;
+        Dragging = true;
+      };
       controlcenter = {
         AirDrop = false;
         Bluetooth = false;

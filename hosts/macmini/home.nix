@@ -20,7 +20,7 @@
       yazi.enable = true;
       conda.enable = true;
       # kanata.enable = true;
-      karabiner.enable = true;
+      # karabiner.enable = true;
     };
     pkgs = {
       cli.enable = true;
