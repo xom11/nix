@@ -31,6 +31,8 @@
       finder = {
         ShowPathbar = true;
         ShowStatusBar = true;
+        AppleShowAllFiles = true;
+        AppleShowAllExtensions = true;
       };
       trackpad = {
         Clicking = true;
@@ -57,6 +59,10 @@
       CustomUserPreferences = {
         NSGlobalDomain = {
           AppleLanguages = ["en"];
+          # Whether to enable moving window by holding anywhere on it like on Linux
+          NSWindowShouldDragOnGesture = true;
+          # Whether to enable smooth scrolling
+          NSScrollAnimationEnabled = true;
         };
         "com.apple.symbolichotkeys" = {
           AppleSymbolicHotKeys = {

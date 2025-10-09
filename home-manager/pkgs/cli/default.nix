@@ -12,7 +12,6 @@ in
       gemini-cli
       mkpasswd
       yq-go
-      # yq
     ];
   };
 }
