@@ -10,6 +10,8 @@
         modifiers:
           mandatory:
             - fn
+          optional:
+            - any
       to:
         - key_code: left_arrow
     #==========================================================#
@@ -22,6 +24,8 @@
         modifiers:
           mandatory:
             - fn
+          optional:
+            - any
       to:
         - key_code: down_arrow
     #==========================================================#
@@ -34,6 +38,8 @@
         modifiers:
           mandatory:
             - fn
+          optional:
+            - any
       to:
         - key_code: up_arrow
     #==========================================================#
@@ -46,6 +52,8 @@
         modifiers:
           mandatory:
             - fn
+          optional:
+            - any
       to:
         - key_code: right_arrow
 
