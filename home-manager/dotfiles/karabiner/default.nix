@@ -20,6 +20,7 @@ in
             load("'${rules_dir}'/homerow.yml") +
             load("'${rules_dir}'/audio_brightness.yml") +
             load("'${rules_dir}'/clipboard_number.yml") +
+            load("'${rules_dir}'/tab_shortcuts.yml") +
             load("'${rules_dir}'/other.yml") +
             []
           ' ${dotfileDir}/karabiner/main.yml -o=json > $HOME/.config/karabiner/karabiner.json
