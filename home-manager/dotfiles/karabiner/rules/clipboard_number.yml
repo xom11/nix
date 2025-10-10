@@ -1,0 +1,147 @@
+- description: "Hyper Clipboard: hyper + number to copy to that clip, tab + number to paste from that clip"
+  manipulators:
+    - description: hypr + 1 = copy to clip1
+      type: basic
+      from:
+        key_code: "1"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: c
+          modifiers:
+            - left_command
+        - shell_command: pbpaste > /tmp/clip1
+    - description: tab + 1 = paste from clip1
+      type: basic
+      from:
+        key_code: "1"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - shell_command: "cat /tmp/clip1 | pbcopy "
+        - key_code: v
+          modifiers:
+            - left_command
+    - description: hypr + 2 = copy to clip2
+      type: basic
+      from:
+        key_code: "2"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: c
+          modifiers:
+            - left_command
+        - shell_command: pbpaste > /tmp/clip2
+    - description: tab + 2 = paste from clip2
+      type: basic
+      from:
+        key_code: "2"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - shell_command: "cat /tmp/clip2 | pbcopy "
+        - key_code: v
+          modifiers:
+            - left_command
+    - description: hypr + 3 = copy to clip3
+      type: basic
+      from:
+        key_code: "3"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: c
+          modifiers:
+            - left_command
+        - shell_command: pbpaste > /tmp/clip3
+    - description: tab + 3 = paste from clip3
+      type: basic
+      from:
+        key_code: "3"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - shell_command: "cat /tmp/clip3 | pbcopy "
+        - key_code: v
+          modifiers:
+            - left_command
+    - description: hypr + 4 = copy to clip4
+      type: basic
+      from:
+        key_code: "4"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: c
+          modifiers:
+            - left_command
+        - shell_command: pbpaste > /tmp/clip4
+    - description: tab + 4 = paste from clip4
+      type: basic
+      from:
+        key_code: "4"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - shell_command: "cat /tmp/clip4 | pbcopy "
+        - key_code: v
+          modifiers:
+            - left_command
+    - description: hypr + 5 = copy to clip5
+      type: basic
+      from:
+        key_code: "5"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: c
+          modifiers:
+            - left_command
+        - shell_command: pbpaste > /tmp/clip5
+    - description: tab + 5 = paste from clip5
+      type: basic
+      from:
+        key_code: "5"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - shell_command: "cat /tmp/clip5 | pbcopy "
+        - key_code: v
+          modifiers:
+            - left_command

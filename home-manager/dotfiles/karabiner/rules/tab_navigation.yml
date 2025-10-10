@@ -1,0 +1,123 @@
+- description: Tab + Y/U/I/O to home/PgDn/PgUp/End
+  manipulators:
+    #==========================================================#
+    #                Tab + H -> left_arrow                     #
+    #==========================================================#
+    - description: tab + h = left_arrow
+      type: basic
+      from:
+        key_code: h
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: left_arrow
+    #==========================================================#
+    #                Tab + J -> down_arrow                     #
+    #==========================================================#
+    - description: tab + j = down_arrow
+      type: basic
+      from:
+        key_code: j
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: down_arrow
+    #==========================================================#
+    #                Tab + K -> up_arrow                       #
+    #==========================================================#
+    - description: tab + k = up_arrow
+      type: basic
+      from:
+        key_code: k
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: up_arrow
+    #==========================================================#
+    #                Tab + L -> right_arrow                    #
+    #==========================================================#
+    - description: tab + l = right_arrow
+      type: basic
+      from:
+        key_code: l
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: right_arrow
+
+    #==========================================================#
+    #                Tab + Y -> home                           #
+    #==========================================================#
+    - description: tab + y = home
+      type: basic
+      from:
+        key_code: y
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: home
+    #==========================================================#
+    #                Tab + U -> page_down                      #
+    #==========================================================#
+    - description: tab + u = page_down
+      type: basic
+      from:
+        key_code: u
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: page_down
+    #==========================================================#
+    #                Tab + I -> page_up                        #
+    #==========================================================#
+    - description: tab + i = page_up
+      type: basic
+      from:
+        key_code: i
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: page_up
+    #==========================================================#
+    #                Tab + O -> end                            #
+    #==========================================================#
+    - description: tab + o = end
+      type: basic
+      from:
+        key_code: o
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: end

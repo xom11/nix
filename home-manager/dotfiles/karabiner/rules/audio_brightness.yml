@@ -1,0 +1,69 @@
+- description: Audio and Brightness Controls
+  manipulators:
+    #==========================================================#
+    #           Cap + plus/minus to volume up/down          #
+    #==========================================================#
+    - description: "cap + plus = volume_up"
+      type: basic
+      from:
+        key_code: equal_sign
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: volume_increment
+    - description: "cap + minus = volume_down"
+      type: basic
+      from:
+        key_code: hyphen
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: volume_decrement
+    #==========================================================#
+    #               Cap + 0 to mute/unmute                     #
+    #==========================================================#
+    - description: "cap + 0 = mute/unmute"
+
+      type: basic
+      from:
+        key_code: "0"
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_option
+      to:
+        - key_code: mute
+    #==========================================================#
+    #         Tab + plus/minus to brightness up/down          #
+    #==========================================================#
+    - description: "tab + plus = brightness_up"
+      type: basic
+      from:
+        key_code: equal_sign
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: display_brightness_increment
+    - description: "tab + minus = brightness_down"
+      type: basic
+      from:
+        key_code: hyphen
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: display_brightness_decrement

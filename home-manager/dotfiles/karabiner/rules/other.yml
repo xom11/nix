@@ -1,0 +1,21 @@
+- description: Other behavior
+  manipulators:
+    #==========================================================#
+    #           tab + ` --> area selection snapshot            #
+    #==========================================================#
+    - description: "tab + ` = area snap to desktop file"
+      type: basic
+      from:
+        key_code: grave_accent_and_tilde
+        modifiers:
+          mandatory:
+            - right_command
+            - right_control
+            - right_shift
+            - right_option
+      to:
+        - key_code: "4"
+          modifiers:
+            - left_command
+            - left_control
+            - left_shift
