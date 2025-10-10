@@ -37,7 +37,7 @@ profiles:
             #==========================================================#
             #         j: right_control ; double tap j to send j        # 
             #==========================================================#
-            - description: jj
+            - description: double tap j to send j
               from:
                 key_code: j
                 modifiers:
@@ -105,23 +105,52 @@ profiles:
                 to_if_canceled:
                   - key_code: d
               type: basic
+            - description: double tap k to send k
+              from:
+                key_code: k
+                modifiers:
+                  optional:
+                  - any
+              to:
+              - set_variable:
+                  name: k pressed
+                  value: false
+              - key_code: k
+              conditions:
+              - type: variable_if
+                name: k pressed
+                value: true
+              type: basic
             - description: k = right_command
               from:
                 key_code: k
                 modifiers:
                   optional:
                     - any
+              to:
+                - set_variable:
+                    name: k pressed
+                    value: true
               to_if_alone:
                 - key_code: k
                   halt: true
               to_if_held_down:
+                - set_variable:
+                    name: k pressed
+                    value: false
                 - key_code: right_command
                   halt: true
               to_delayed_action:
                 to_if_invoked:
                   - key_code: vk_none
+                  - set_variable:
+                      name: k pressed
+                      value: false
                 to_if_canceled:
                   - key_code: k
+                  - set_variable:
+                      name: k pressed
+                      value: false
               type: basic
             #==========================================================#
             #             s : left_option / l right_option             #
