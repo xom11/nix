@@ -33,23 +33,56 @@ profiles:
                 to_if_canceled:
                   - key_code: f
               type: basic
+
+            #==========================================================#
+            #         j: right_control ; double tap j to send j        # 
+            #==========================================================#
+            - description: jj
+              from:
+                key_code: j
+                modifiers:
+                  optional:
+                  - any
+              to:
+              - set_variable:
+                  name: j pressed
+                  value: false
+              - key_code: j
+              conditions:
+              - type: variable_if
+                name: j pressed
+                value: true
+              type: basic
             - description: j = right_control
               from:
                 key_code: j
                 modifiers:
                   optional:
                     - any
+              to:
+                - set_variable:
+                    name: j pressed
+                    value: true
               to_if_alone:
                 - key_code: j
                   halt: true
               to_if_held_down:
+                - set_variable:
+                    name: j pressed
+                    value: false
                 - key_code: right_control
                   halt: true
               to_delayed_action:
                 to_if_invoked:
                   - key_code: vk_none
+                  - set_variable:
+                      name: j pressed
+                      value: false
                 to_if_canceled:
                   - key_code: j
+                  - set_variable:
+                      name: j pressed
+                      value: false
               type: basic
             #==========================================================#
             #             d : left_command / k right_command           #
