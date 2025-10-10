@@ -30,3 +30,9 @@ alias btcli='uvx --from bittensor-cli btcli'
 
 # kitty
 alias kitty-opacity='kitty @ set-background-opacity'
+
+# tmux
+alias tls='tmux ls'
+alias ta='tmux attach -t'
+alias tk='tmux kill-session -t'
+alias tn='tmux new -s'

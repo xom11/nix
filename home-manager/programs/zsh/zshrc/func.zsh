@@ -7,19 +7,19 @@ y() {
     rm -f -- "$tmp"
 }
 
-t() {
-    if [ -z "$1" ]; then
-        SESSION_NAME="0"
-    else
-        SESSION_NAME="$1"
-    fi
-
-    if [ -z "$TMUX" ]; then
-        tmux attach -t "$SESSION_NAME" || tmux new -s "$SESSION_NAME"
-    else
-        tmux new-window -n "$SESSION_NAME"
-    fi
-}
+# t() {
+#     if [ -z "$1" ]; then
+#         SESSION_NAME="0"
+#     else
+#         SESSION_NAME="$1"
+#     fi
+#
+#     if [ -z "$TMUX" ]; then
+#         tmux attach -t "$SESSION_NAME" || tmux new -s "$SESSION_NAME"
+#     else
+#         tmux new-window -n "$SESSION_NAME"
+#     fi
+# }
 
 gu() {
   if [ -z "$1" ]; then

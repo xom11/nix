@@ -36,6 +36,11 @@
       };
       trackpad = {
         Clicking = true;
+        # For normal click: 0 for light clicking, 1 for medium, 2 for firm
+        FirstClickThreshold = 0;
+        # For force touch: 0 for light clicking, 1 for medium, 2 for firm
+        SecondClickThreshold = 1;
+        TrackpadThreeFingerDrag = false;
         Dragging = true;
       };
       controlcenter = {
@@ -60,10 +65,13 @@
       CustomUserPreferences = {
         NSGlobalDomain = {
           AppleLanguages = ["en"];
-          # Whether to enable moving window by holding anywhere on it like on Linux
+          #  moving window by holding anywhere on it like on Linux
           NSWindowShouldDragOnGesture = true;
-          # Whether to enable smooth scrolling
+          #  smooth scrolling
           NSScrollAnimationEnabled = true;
+          #  natural scrolling
+          com.apple.swipescrolldirection = true;
+          com.apple.trackpad.scaling = 3;
         };
         "com.apple.symbolichotkeys" = {
           AppleSymbolicHotKeys = {
@@ -76,6 +84,13 @@
               enabled = false;
             };
           };
+        };
+        "com.apple.screensaver" = {
+          askForPassword = 1;
+          askForPasswordDelay = 0;
+        };
+        "com.apple.hitoolbox" = {
+          AppleFnUsageType = 0;
         };
       };
     };

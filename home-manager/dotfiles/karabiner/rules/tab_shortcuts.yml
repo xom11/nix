@@ -9,10 +9,7 @@
         key_code: a
         modifiers:
           mandatory:
-            - right_command
-            - right_control
-            - right_shift
-            - right_option
+            - fn
       to:
         - key_code: "a"
           modifiers:
@@ -26,10 +23,7 @@
         key_code: c
         modifiers:
           mandatory:
-            - right_command
-            - right_control
-            - right_shift
-            - right_option
+            - fn
       to:
         - key_code: "c"
           modifiers:
@@ -43,10 +37,7 @@
         key_code: x
         modifiers:
           mandatory:
-            - right_command
-            - right_control
-            - right_shift
-            - right_option
+            - fn
       to:
         - key_code: "x"
           modifiers:
@@ -60,10 +51,7 @@
         key_code: v
         modifiers:
           mandatory:
-            - right_command
-            - right_control
-            - right_shift
-            - right_option
+            - fn
       to:
         - key_code: "v"
           modifiers:

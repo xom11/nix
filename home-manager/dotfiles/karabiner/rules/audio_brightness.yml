@@ -1,7 +1,7 @@
 - description: Audio and Brightness Controls
   manipulators:
     #==========================================================#
-    #           Cap + plus/minus to volume up/down          #
+    #           Cap + plus/minus to volume up/down             #
     #==========================================================#
     - description: "cap + plus = volume_up"
       type: basic
@@ -49,10 +49,7 @@
         key_code: equal_sign
         modifiers:
           mandatory:
-            - right_command
-            - right_control
-            - right_shift
-            - right_option
+            - fn
       to:
         - key_code: display_brightness_increment
     - description: "tab + minus = brightness_down"
@@ -61,9 +58,6 @@
         key_code: hyphen
         modifiers:
           mandatory:
-            - right_command
-            - right_control
-            - right_shift
-            - right_option
+            - fn
       to:
         - key_code: display_brightness_decrement
