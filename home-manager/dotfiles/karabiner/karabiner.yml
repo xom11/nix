@@ -105,6 +105,9 @@ profiles:
                 to_if_canceled:
                   - key_code: d
               type: basic
+            #==========================================================#
+            #         k: right_command ; double tap k to send k        #
+            #==========================================================#
             - description: double tap k to send k
               from:
                 key_code: k
@@ -173,25 +176,56 @@ profiles:
                 to_if_canceled:
                   - key_code: s
               type: basic
+            #==========================================================#
+            #         l: right_option ; double tap l to send l        #
+            #==========================================================#
+            - description: double tap l to send l
+              from:
+                key_code: l
+                modifiers:
+                  optional:
+                  - any
+              to:
+              - set_variable:
+                  name: l pressed
+                  value: false
+              - key_code: l
+              conditions:
+              - type: variable_if
+                name: l pressed
+                value: true
+              type: basic
             - description: l = right_option
               from:
                 key_code: l
                 modifiers:
                   optional:
                     - any
+              to:
+                - set_variable:
+                    name: l pressed
+                    value: true
               to_if_alone:
                 - key_code: l
                   halt: true
               to_if_held_down:
+                - set_variable:
+                    name: l pressed
+                    value: false
                 - key_code: right_option
                   halt: true
               to_delayed_action:
                 to_if_invoked:
                   - key_code: vk_none
+                  - set_variable:
+                      name: l pressed
+                      value: false
                 to_if_canceled:
                   - key_code: l
+                  - set_variable:
+                      name: l pressed
+                      value: false
               type: basic
-
             
         ################################################################
         #           Change modifier keys behavior                       #
