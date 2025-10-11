@@ -32,25 +32,29 @@ map('K', 'E');
 map('H', 'S');
 map('L', 'D');
 
+// Close all tab
+map('gx', 'gxx');
+// Open a URL in current tab
+map('<Space><Space>', 'go');
+
 api.removeSearchAlias('w');
 api.removeSearchAlias('s');
 api.removeSearchAlias('g');
 api.removeSearchAlias('e');
 api.removeSearchAlias('b');
-api.addSearchAlias('G', 'google', 'https://www.google.com/search?q=');
 api.addSearchAlias('gg', 'google', 'https://www.google.com/search?q=');
 api.addSearchAlias('tt', 'taostats', 'https://taostats.io/subnets/%s');
 api.addSearchAlias('gh', 'github', 'https://github.com/search?q=');
-api.addSearchAlias('gs', 'githubStars', 'https://github.com/khanhkhanhlele?page=1&q=face&tab=stars&utf8=%E2%9C%93&utf8=%E2%9C%93&q=');
-
-// map(<Space><Space>, 'ogg');
 
 api.mapkey('on', '#3Open newtab', function () {
-    api.tabOpenLink("www.google.com"); // TODO: addded api, but not work
+    api.tabOpenLink("www.google.com");
 });
 
-api.mapkey('oGi', '#7 open gist', function () {
-    window.location.replace("https://gist.github.com/")
+api.mapkey('ogH', 'Open Github', function () {
+    window.location.replace("https://github.com/khanhkhanhlele?tab=repositories");
+});
+api.mapkey('ogS', 'Open github stars page ', function () {
+    window.location.replace("https://github.com/khanhkhanhlele?tab=stars")
 });
 
 // Passthrough mode
