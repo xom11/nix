@@ -48,7 +48,7 @@
       # "slack"
       "brave-browser"
       "qutebrowser"
-      # "google-chrome"
+      "google-chrome"
       # "kindavim"
       # "microsoft-edge"
       # "deskreen"
