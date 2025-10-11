@@ -11,7 +11,7 @@ Host x1
   User kln
   ForwardAgent yes
 Host rog
-  HostName ubuntu
+  HostName 100.71.234.89
   User rog
   ForwardAgent yes
 Host 250

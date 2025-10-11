@@ -70,7 +70,7 @@
           #  smooth scrolling
           NSScrollAnimationEnabled = true;
           #  natural scrolling
-          com.apple.swipescrolldirection = true;
+          com.apple.swipescrolldirection = false;
           com.apple.trackpad.scaling = 3;
         };
         "com.apple.symbolichotkeys" = {
