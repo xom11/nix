@@ -11,6 +11,16 @@
             tab = "overload(tab_layer, tab)";
             leftcontrol = "overload(control, C-c)";
             leftalt = "overload(alt, C-v)";
+
+            a = "overloadt(shift, a, 200)";
+            s = "overloadt(alt, s, 200)";
+            d = "overloadt(meta, d, 200)";
+            f = "overloadt(control, f, 200)";
+            j = "overloadt(control, j, 200)";
+            k = "overloadt(meta, k, 200)";
+            l = "overloadt(alt, l, 200)";
+            ";" = "overloadt(shift, ;, 200)";
+            
           };
           otherlayer = {};
         };

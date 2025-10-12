@@ -8,7 +8,6 @@
         [main]
         capslock=overload(cap_layer, esc)
         tab=overload(tab_layer, tab)
-        a = overloadt(control, a, 200)
 
         [cap_layer:C-M-A]
         
