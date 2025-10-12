@@ -17,7 +17,7 @@ in
           .profiles[].complex_modifications.rules += 
             load("'${rules_dir}'/modifier_keys.yml") +
             load("'${rules_dir}'/tab_navigation.yml") +
-            load("'${rules_dir}'/homerow.yml") +
+            load("'${rules_dir}'/home_row.yml") +
             load("'${rules_dir}'/audio_brightness.yml") +
             load("'${rules_dir}'/clipboard_number.yml") +
             load("'${rules_dir}'/tab_shortcuts.yml") +

@@ -79,20 +79,6 @@ in
         options.desc = "Toggle line blame";
       }
 
-      # Diff
-      {
-        mode = "n";
-        key = "<leader>hd";
-        action = "<cmd>Gitsigns diffthis<CR>";
-        options.desc = "Diff this";
-      }
-      {
-        mode = "n";
-        key = "<leader>hD";
-        action = "<cmd>Gitsigns diffthis ~<CR>";
-        options.desc = "Diff this ~";
-      }
-
       # Text object
       {
         mode = ["o" "x"];
@@ -101,14 +87,20 @@ in
         options.desc = "Gitsigns select hunk";
       }
 
-      # Diffview Toggle
+      # Diff
       {
         mode = "n";
-        key = "<leader>dv";
+        key = "<leader>hd";
         action = ''
           <cmd>lua if next(require("diffview.lib").views) == nil then vim.cmd("DiffviewOpen") else vim.cmd("DiffviewClose") end<CR>
         '';
         options.desc = "Toggle Diffview";
       }
+      {
+        mode = "n";
+        key = "<leader>hp";
+        action = "<cmd>Gitsigns preview_hunk<CR>";
+        options.desc = "File history";
+    }
     ];
   }
