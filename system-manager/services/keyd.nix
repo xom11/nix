@@ -6,8 +6,21 @@
         [ids]
         *
         [main]
-        capslock=overload(hyper, esc)
-        [hyper:C-M-A]
+        capslock=overload(cap_layer, esc)
+        tab=overload(tab_layer, tab)
+        a = overloadt(control, a, 200)
+
+        [cap_layer:C-M-A]
+        
+        [tab_layer:C-M-A-S]
+        h = left
+        j = down
+        k = up
+        l = right
+        y = home
+        u = pgup
+        i = pgdown
+        o = end
       '';
     };
     systemPackages = with pkgs; [

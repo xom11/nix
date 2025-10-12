@@ -26,10 +26,12 @@ in
   };
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
+      xorg.xmodmap
       libnotify
       acpi
       dunst
       autorandr
+      arandr
       feh
       rofi
       bluetui
