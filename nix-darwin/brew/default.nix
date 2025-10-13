@@ -28,10 +28,12 @@
       "redis"
       "docker"
       "colima"
+      "kanata"
     ];
 
     caskArgs.no_quarantine = true;
     casks = [
+      # "scroll-reverser"
       "karabiner-elements"
       "messenger"
       "zalo"

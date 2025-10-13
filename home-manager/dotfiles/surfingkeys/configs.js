@@ -65,8 +65,23 @@ api.mapkey('<Space>c', 'Go to the Code tab', function() {
 }, {
     domain: /github\.com/i
 });
-api.mapkey('<Space>i', 'Go to the Code tab', function() {
+api.mapkey('<Space>i', 'Go to the Issues tab', function() {
     document.querySelector('a[id="issues-tab"]').click();
+}, {
+    domain: /github\.com/i
+});
+api.mapkey('<Space>d', 'Go to the Discussions tab', function() {
+    document.querySelector('a[id="discussions-tab"]').click();
+}, {
+    domain: /github\.com/i
+});
+api.mapkey('<Space>w', 'Go to the Wiki tab', function() {
+    document.querySelector('a[id="wiki-tab"]').click();
+}, {
+    domain: /github\.com/i
+});
+api.mapkey('<Space>p', 'Go to the Pull requests tab', function() {
+    document.querySelector('a[id="pull-requests-tab"]').click();
 }, {
     domain: /github\.com/i
 });
