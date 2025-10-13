@@ -1,6 +1,6 @@
 {dotfileDir, ...}:
 {
-  launchd.agents."kanata.plist" = {
+  launchd.daemons."kanata.plist" = {
     command = "/opt/homebrew/bin/kanata -c /etc/kanata/kanata.kbd";
     serviceConfig = {
       RunAtLoad = true;
@@ -9,5 +9,5 @@
       StandardErrorPath = "/Library/Logs/Kanata/kanata.err.log";
     };
   };
-  environment.etc."kanata/kanata.kbd".source = "${dotfileDir}/kanata.kbd";
+  environment.etc."kanata/kanata.kbd".source = "${dotfileDir}/kanata/kanata.kbd";
 }
