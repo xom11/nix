@@ -1,5 +1,6 @@
 {dotfileDir, ...}:
 {
+  # https://github.com/jtroo/kanata/discussions/1537
   launchd.daemons."kanata" = {
     command = "/opt/homebrew/bin/kanata -c /etc/kanata/kanata.kbd";
     serviceConfig = {

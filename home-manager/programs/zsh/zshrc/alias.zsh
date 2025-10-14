@@ -36,3 +36,6 @@ alias tls='tmux ls'
 alias ta='tmux attach -t'
 alias tk='tmux kill-session -t'
 alias tn='tmux new -s'
+
+# kanata
+alias rk='sudo launchctl unload /Library/LaunchDaemons/org.nixos.kanata.plist; sudo launchctl load /Library/LaunchDaemons/org.nixos.kanata.plist'
