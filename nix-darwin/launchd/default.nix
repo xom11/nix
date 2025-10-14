@@ -1,6 +1,6 @@
 {dotfileDir, ...}:
 {
-  launchd.daemons."kanata.plist" = {
+  launchd.daemons."kanata" = {
     command = "/opt/homebrew/bin/kanata -c /etc/kanata/kanata.kbd";
     serviceConfig = {
       RunAtLoad = true;

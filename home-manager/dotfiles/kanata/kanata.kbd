@@ -89,8 +89,8 @@
   ;; y ins
 
   y home
-  u pgup
-  i pgdn
+  u pgdn
+  i pgup
   o end
 
   a lmet
@@ -111,7 +111,8 @@
   v pp
   n tab
   m bspc
-  , spc
+  , bspc
+  ;; , spc
   . del
   / ret
 )
