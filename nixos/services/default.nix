@@ -3,7 +3,6 @@
   imports = [
     # ./hibernate.nix
     # ./keyd.nix
-    ./i3wm.nix
     # ./ibus.nix
   ];
   virtualisation.docker.enable = true;

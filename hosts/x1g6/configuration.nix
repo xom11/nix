@@ -7,6 +7,9 @@
     ./hardware.nix
   ];
   modules = {
-    services.kanata.enable = true;
+    services = {
+      desktop-environment.enable = true;
+      kanata.enable = true;
+    };
   };
 }

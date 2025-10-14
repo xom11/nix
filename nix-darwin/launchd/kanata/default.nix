@@ -10,5 +10,5 @@
       StandardErrorPath = "/Library/Logs/Kanata/kanata.err.log";
     };
   };
-  environment.etc."kanata/kanata.kbd".source = "${dotfileDir}/kanata/kanata.kbd";
+  environment.etc."kanata/kanata.kbd".source = builtins.toString ./kanata.macos.kbd;
 }

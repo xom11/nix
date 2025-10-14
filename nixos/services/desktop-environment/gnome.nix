@@ -1,12 +1,9 @@
 {lib, config, ...}:
 let
-  cfg = config.services.gnome;
+  cfg = config.services.desktop-environment;
 in
 {
-  options.services.gnome = {
-    enable = lib.mkEnableOption "Enable GNOME desktop environment";
-  };
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && cfg.type == "gnome") {
     services.displayManager.gdm.enable = true;
     services.desktopManager.gnome.enable = true;
     # Delete core apps
