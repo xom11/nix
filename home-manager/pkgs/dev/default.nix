@@ -41,6 +41,7 @@ in
       python3Packages.pip
       uv
       micromamba
+      # mamba
 
       # Node.js
       nodejs.pkgs.npm
