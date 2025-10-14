@@ -1,6 +1,6 @@
 {config, lib, ...}:
 let
-  cfg = config.services.desktop-environment;
+  cfg = config.modules.services.desktop-environment;
 in
 {
   config = lib.mkIf (cfg.enable && cfg.type == "i3wm") {

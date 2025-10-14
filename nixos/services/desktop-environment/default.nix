@@ -1,9 +1,15 @@
 {config, lib, ...}:
 let
-  cfg = config.services.desktop-environment;
+  cfg = config.modules.services.desktop-environment;
+  inherit (builtins) filter map toString;
+  inherit (lib.filesystem) listFilesRecursive;
+  inherit (lib.strings) hasSuffix;
 in
 {
-  options.services.desktop-environment = {
+  imports = filter (hasSuffix ".nix") (
+    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+  );
+  options.modules.services.desktop-environment = {
     enable = lib.mkEnableOption "Enable desktop environment services";
     type = lib.mkOption {
       type = lib.types.enum [ "i3wm" "gnome" "kde" ];
@@ -12,9 +18,4 @@ in
     };
   };
   
-  imports = [
-  ./i3wm.nix
-  ./gnome.nix
-  ./kde.nix
-  ];
-};
+}
