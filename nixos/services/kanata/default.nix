@@ -1,3 +1,4 @@
+
 {lib,config, dotfileDir, pkgs, ...}:
 let
   cfg = config.modules.services.kanata;
@@ -11,7 +12,8 @@ in
     enable = true;
     keyboards = {
       default = {
-        configFile = "${dotfileDir}/kanata/kanata.kbd";
+        config = builtins.readFile ./kanata.kbd;
+        # configFile = "${dotfileDir}/kanata/kanata.kbd";
         };
       };
     };
