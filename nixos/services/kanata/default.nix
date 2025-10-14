@@ -12,7 +12,7 @@ in
     enable = true;
     keyboards = {
       default = {
-        config = builtins.readFile ./kanata.kbd;
+        config = builtins.readFile ./kanata.nixos.kbd;
         # configFile = "${dotfileDir}/kanata/kanata.kbd";
         };
       };
