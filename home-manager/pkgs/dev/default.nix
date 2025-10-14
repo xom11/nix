@@ -40,8 +40,8 @@ in
       python3
       python3Packages.pip
       uv
-      micromamba
-      # mamba
+      # micromamba
+      mamba
 
       # Node.js
       nodejs.pkgs.npm

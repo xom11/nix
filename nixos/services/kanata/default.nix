@@ -1,5 +1,5 @@
 
-{lib,config, dotfileDir, pkgs, ...}:
+{lib,config, ...}:
 let
   cfg = config.modules.services.kanata;
 in

@@ -6,4 +6,7 @@
     ./disko.nix
     ./hardware.nix
   ];
+  modules = {
+    services.kanata.enable = true;
+  };
 }
