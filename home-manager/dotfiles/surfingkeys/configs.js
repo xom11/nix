@@ -98,7 +98,7 @@ api.mapkey('<space>y', '#7 git clone', function () {
 settings.defaultLLMProvider = "gemini";
 settings.llm = {
     gemini: {
-        apiKey: 'AIzaSyC4wEi3aDUL5WHW1hFbjEKKe3Uy203CRjk',
+        apiKey: 'AIzaSyAzXHG5UuUVLSQCIAyrwG4KZ_x8F6WY5iQ',
     },
     deepseek: {
         apiKey: '***********************************',
