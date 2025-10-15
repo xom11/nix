@@ -32,7 +32,6 @@ map('K', 'E');
 map('H', 'S');
 map('L', 'D');
 
-map('đ', 'd');
 // Close all tab
 map('gx', 'gxx');
 // Open a URL in current tab
