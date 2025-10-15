@@ -23,7 +23,9 @@ const {
   vunmap
 } = api;
 
-settings.scrollStepSize = 140;
+// Scroll speed
+settings.scrollStepSize = 200;
+
 // Open Clipboard URL in new tab
 map('P', 'cc');
 
@@ -93,3 +95,13 @@ api.mapkey('<space>y', '#7 git clone', function () {
     domain: /github\.com/i
 });
 
+settings.defaultLLMProvider = "gemini";
+settings.llm = {
+    gemini: {
+        apiKey: 'AIzaSyC4wEi3aDUL5WHW1hFbjEKKe3Uy203CRjk',
+    },
+    deepseek: {
+        apiKey: '***********************************',
+        model: 'deepseek-chat',
+    },
+};
