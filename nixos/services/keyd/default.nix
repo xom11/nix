@@ -1,10 +1,10 @@
 
 {config, lib, ...}:
 let
-  cfg = config.services.keyd;
+  cfg = config.modules.services.keyd;
 in  
 {
-  options.services.keyd = {
+  options.modules.services.keyd = {
     enable = lib.mkEnableOption "Enable keyd service";
   };
   config = lib.mkIf cfg.enable {
