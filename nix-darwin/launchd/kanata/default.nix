@@ -1,4 +1,4 @@
-{dotfileDir, ...}:
+{...}:
 {
   # https://github.com/jtroo/kanata/discussions/1537
   launchd.daemons."kanata" = {
