@@ -9,7 +9,8 @@
   modules = {
     services = {
       desktop-environment.enable = true;
-      kanata.enable = true;
+      # kanata.enable = true;
+      keyd.enable = true;
     };
   };
 }
