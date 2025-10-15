@@ -29,11 +29,13 @@
       "docker"
       "colima"
       "kanata"
+      "micromamba"
     ];
 
     caskArgs.no_quarantine = true;
     casks = [
       # "scroll-reverser"
+      "aerospace"
       "karabiner-elements"
       "messenger"
       "zalo"

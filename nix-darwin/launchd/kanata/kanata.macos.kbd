@@ -8,6 +8,7 @@
 )
 
 (defsrc
+1 2 3 4 5 6 7 8 9 0 - = bspc
  tab q w e r t y u i o p
  caps a s d f g h j k l ;
   z x c v b n m , . /
@@ -94,9 +95,9 @@
   i pgup
   o end
 
-  a lmet
+  a lsft
   s lalt
-  d lsft
+  d lmet
   f lctl
 ;;g comp ;; Enable if not MacOS.
   ;; h esc
@@ -106,16 +107,30 @@
   k up
   l rght
 
-  z mute
-  x vold
-  c volu
-  v pp
+  z M-z
+  x M-x
+  c M-c
+  v M-v
+
   n tab
   m bspc
   , bspc
   ;; , spc
   . del
   / ret
+
+  1 f1
+  2 f2  
+  3 f3
+  4 f4
+  5 f5
+  6 f6
+  7 f7
+  8 f8
+  9 f9
+  0 f10
+  - f11
+  = f12
 )
 
 (defchords ftl $chord-timeout
@@ -143,22 +158,19 @@
 )
 
 (deflayermap (fumbol)
-  q f1
+  0 mute
+  - vold
+  = volu
+  ;; bspc pp
+
   w (chord ftl w)
   e (chord ftl e)
-  r f4
-  t f5
-  y f6
-  u f7
   i (chord ftr i)
   o (chord ftr o)
-  p f10
-  a (t! charmod 1 lmet)
+  a (t! charmod 1 lsft)
   s (t! charmod 2 lalt)
-  d (t! charmod 3 lsft)
+  d (t! charmod 3 lmet)
   f (t! charmod 4 lctl)
-  g 5
-  h 6
   j (t! charmod 7 rctl)
   k (t! charmod 8 rsft)
   l (t! charmod 9 lalt)
@@ -167,8 +179,6 @@
   x (chord fbl x)
   c (chord fbl c)
   v =
-  b f11
-  n f12
   m '
   , (chord fbr ,)
   . (chord fbr .)

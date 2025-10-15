@@ -100,7 +100,7 @@ in
         mode = "n";
         key = "<leader>hp";
         action = "<cmd>Gitsigns preview_hunk<CR>";
-        options.desc = "File history";
+        options.desc = "Preview hunk";
     }
     ];
   }
