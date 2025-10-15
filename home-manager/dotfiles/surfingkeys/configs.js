@@ -23,6 +23,7 @@ const {
   vunmap
 } = api;
 
+settings.scrollStepSize = 140;
 // Open Clipboard URL in new tab
 map('P', 'cc');
 
