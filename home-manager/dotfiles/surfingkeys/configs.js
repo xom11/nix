@@ -65,6 +65,9 @@ api.mapkey('ogS', 'Open github stars page ', function () {
     window.location.replace("https://github.com/khanhkhanhlele?tab=stars")
 });
 
+api.mapkey('ofB', 'Open facebook ', function () {
+    window.location.replace("https://www.facebook.com/")
+});
 // Passthrough mode
 api.map('<Ctrl-v>', '<Alt-i>');
 
