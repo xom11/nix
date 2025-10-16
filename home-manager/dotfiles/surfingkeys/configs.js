@@ -48,8 +48,10 @@ api.removeSearchAlias('b');
 api.addSearchAlias('gg', 'google', 'https://www.google.com/search?q=');
 api.addSearchAlias('tt', 'taostats', 'https://taostats.io/subnets/%s');
 api.addSearchAlias('gh', 'github', 'https://github.com/search?q=');
+api.addSearchAlias('np', 'nixpkgs', 'https://search.nixos.org/packages?channel=unstable&query=%s');
+api.addSearchAlias('no', 'mynixos', 'https://search.nixos.org/packages?channel=unstable&query=%s');
 
-api.mapkey('on', '#3Open newtab', function () {
+api.mapkey('ont', 'Open newtab', function () {
     api.tabOpenLink("www.google.com");
 });
 
