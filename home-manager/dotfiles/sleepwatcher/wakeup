@@ -1,0 +1,2 @@
+sudo launchctl unload /Library/LaunchDaemons/org.nixos.kanata.plist 
+sudo launchctl load /Library/LaunchDaemons/org.nixos.kanata.plist
