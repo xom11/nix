@@ -37,7 +37,7 @@
     casks = [
       # "scroll-reverser"
       "drawpen"
-      "aerospace"
+      # "aerospace"
       "karabiner-elements"
       "messenger"
       "zalo"
@@ -53,7 +53,7 @@
       "localsend"
       # "slack"
       "brave-browser"
-      "qutebrowser"
+      # "qutebrowser"
       "google-chrome"
       # "kindavim"
       # "microsoft-edge"

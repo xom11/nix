@@ -10,5 +10,13 @@
       StandardErrorPath = "/Library/Logs/Kanata/kanata.err.log";
     };
   };
+  # launchd.daemons."karabiner-driverkit" = {
+  #   command = "/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon";
+  #   serviceConfig = {
+  #     KeepAlive = true;
+  #     ProcessType = "Interactive";
+  #   };
+  # };
+
   environment.etc."kanata/kanata.kbd".source = builtins.toString ./kanata.macos.kbd;
 }

@@ -1,10 +1,10 @@
 (defcfg
 ;; You can set the value below to no if you only use the keys defined in defsrc.
-  process-unmapped-keys yes
-  danger-enable-cmd yes
-  macos-dev-names-exclude (
-    "MX Master 3 Mac"
-  )
+  ;; process-unmapped-keys yes
+  ;; danger-enable-cmd yes
+  ;; macos-dev-names-exclude (
+  ;;   "MX Master 3 Mac"
+  ;; )
 )
 
 (defsrc

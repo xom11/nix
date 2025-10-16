@@ -14,12 +14,12 @@
     dotfiles = {
       btop.enable = true;
       kitty.enable = true;
-      qutebrowser.enable = true;
+      # qutebrowser.enable = true;
       vscode.enable = true;
       ssh.enable = true;
       yazi.enable = true;
       conda.enable = true;
-      karabiner.enable = true;
+      # karabiner.enable = true;
       sleepwatcher.enable = true;
     };
     pkgs = {

@@ -1,2 +1,5 @@
-sudo launchctl unload /Library/LaunchDaemons/org.nixos.kanata.plist 
-sudo launchctl load /Library/LaunchDaemons/org.nixos.kanata.plist
+# sudo launchctl unload /Library/LaunchDaemons/org.nixos.kanata.plist 
+# sudo launchctl load /Library/LaunchDaemons/org.nixos.kanata.plist
+
+sudo '/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon' &
+sudo kanata -c /etc/kanata/kanata.kbd & 
