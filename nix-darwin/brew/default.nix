@@ -30,11 +30,13 @@
       "colima"
       "kanata"
       "micromamba"
+      "sleepwatcher"
     ];
 
     caskArgs.no_quarantine = true;
     casks = [
       # "scroll-reverser"
+      "drawpen"
       "aerospace"
       "karabiner-elements"
       "messenger"
