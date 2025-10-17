@@ -1,9 +1,9 @@
-{lib, device, ... }:
+{lib, config, ... }:
 let
-  cfg = device.services.modules.syncthing;
+  cfg = config.modules.services.syncthing;
 in
 {
-  options.services.modules.syncthing = {
+  options.modules.services.syncthing = {
     enable = lib.mkEnableOption "Enable Syncthing service";
   };
   config = lib.mkIf cfg.enable {
