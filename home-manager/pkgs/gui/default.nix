@@ -36,7 +36,7 @@ in
       ];
       commandLineArgs = [
         "--enable-features=ParallelDownloading"
-        "--extensions-on-chrome-urls"
+        # "--extensions-on-chrome-urls"
       ];
     };
   };

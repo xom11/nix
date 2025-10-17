@@ -34,6 +34,9 @@
       zsh.enable = true;
       ssh.enable = true;
     };
+    services = {
+      syncthing.enable = true;
+    };
     secrets.enable = true;
   };
 }
