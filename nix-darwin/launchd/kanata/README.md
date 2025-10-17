@@ -6,7 +6,11 @@ sudo '/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice
 https://github.com/argenkiwi/kenkyo?tab=readme-ov-file
 
 
+```bash
+sudo vim /Library/LaunchDaemons/org.pqrs.service.daemon.Karabiner-VirtualHIDDevice-Daemon.plist
+```
 
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -23,3 +27,4 @@ https://github.com/argenkiwi/kenkyo?tab=readme-ov-file
     </array>
   </dict>
 </plist>
+```

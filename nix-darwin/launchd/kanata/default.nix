@@ -1,8 +1,8 @@
-{...}:
+{username, ...}:
 {
   # https://github.com/jtroo/kanata/discussions/1537
   launchd.daemons."kanata" = {
-    command = "/opt/homebrew/bin/kanata -c /etc/kanata/kanata.kbd";
+    command = "sudo /opt/homebrew/bin/kanata -c /Users/${username}/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd -n";
     serviceConfig = {
       RunAtLoad = true;
       KeepAlive = true;
@@ -10,13 +10,15 @@
       StandardErrorPath = "/Library/Logs/Kanata/kanata.err.log";
     };
   };
-  # launchd.daemons."karabiner-driverkit" = {
-  #   command = "/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon";
-  #   serviceConfig = {
-  #     KeepAlive = true;
-  #     ProcessType = "Interactive";
-  #   };
-  # };
+  launchd.daemons."karabiner-driverkit" = {
+    script = ''
+      /Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon
+      '';
+    serviceConfig = {
+      KeepAlive = true;
+      ProcessType = "Interactive";
+    };
+  };
 
-  environment.etc."kanata/kanata.kbd".source = builtins.toString ./kanata.macos.kbd;
+  # environment.etc."kanata/kanata.kbd".source = builtins.toString ./kanata.macos.kbd;
 }
