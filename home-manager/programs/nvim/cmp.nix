@@ -18,7 +18,16 @@ lib.mkIf cfg.enable
         ];
 
       settings.mapping = {
-        "<CR>" = "cmp.mapping.confirm({ select = true })";
+        # "<CR>" = "cmp.mapping.confirm({ select = true })";
+        "<CR>" = ''
+          cmp.mapping(function(fallback)
+            if cmp.get_selected_entry() then
+              cmp.confirm({ select = true })
+            else
+              fallback()
+            end
+          end)
+        '';
         "<Down>" = "cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, select = false })";
         "<Up>" = "cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, select = false })";
 
