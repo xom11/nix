@@ -58,6 +58,7 @@
       };
       nixosConfigurations = {
         x1g6 = lib.mkNixos { device = "x1g6"; };
+        vm = lib.mkNixos { device = "vm"; };
       };
       homeConfigurations = {
         server = lib.mkHomeManager { device = "server"; };

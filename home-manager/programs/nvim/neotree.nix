@@ -24,6 +24,7 @@ in
             "c" = "copy_to_clipboard";
           };
         };
+      };
 
         filesystem = {
           followCurrentFile.enabled = true;
@@ -34,7 +35,7 @@ in
             hideGitignored = false;
           };
         };
-      };
+      # };
 
     };
     programs.nixvim.keymaps = [
