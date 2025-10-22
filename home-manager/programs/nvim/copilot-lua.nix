@@ -21,4 +21,10 @@ lib.mkIf cfg.enable
       };
     };
   };
+  programs.nixvim.highlight = {
+    CopilotSuggestion = {
+      italic = true;
+      fg = "#555555";
+    };
+  };
 }
