@@ -1,10 +1,10 @@
-{ pkgs, lib, ... }:
+{ pkgs, device, ... }:
 {
   imports = [
     ../../home-manager
   ];
   home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#macmini";
+    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
   };
   home.packages = [
     pkgs.bws
