@@ -1,4 +1,19 @@
+{ lib, username, device, ... }:
 {
+  networking = {
+    computerName = lib.mkDefault device;
+    hostName = lib.mkDefault device;
+    localHostName = lib.mkDefault device;
+    wakeOnLan.enable = true;
+  };
+  power.sleep = {
+    # Amount of idle time (in minutes) until the computer sleeps
+    computer = lib.mkDefault 60;
+    # Amount of idle time (in minutes) until displays sleep
+    display = lib.mkDefault 60;
+    # Amount of idle time (in minutes) until hard disks sleep
+    harddisk = lib.mkDefault 60;
+  };
   system = {
     defaults = {
       dock = {
