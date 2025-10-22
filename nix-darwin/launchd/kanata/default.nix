@@ -9,7 +9,10 @@ in
   config = lib.mkIf cfg.enable {
     # https://github.com/jtroo/kanata/discussions/1537
     launchd.daemons."kanata" = {
-      command = "sudo /opt/homebrew/bin/kanata -c /Users/${username}/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd -n";
+      # command = "sudo /opt/homebrew/bin/kanata -c /Users/${username}/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd -n";
+      script = ''
+        ${./script.sh}
+      '';
       serviceConfig = {
         RunAtLoad = true;
         KeepAlive = true;
