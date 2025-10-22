@@ -12,7 +12,7 @@
     # Amount of idle time (in minutes) until displays sleep
     display = lib.mkDefault 60;
     # Amount of idle time (in minutes) until hard disks sleep
-    harddisk = lib.mkDefault 60;
+    # harddisk = lib.mkDefault 60; # ignore because of SSD
   };
   system = {
     defaults = {

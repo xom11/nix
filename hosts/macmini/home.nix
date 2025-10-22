@@ -32,7 +32,6 @@
       nvim.enable = true;
       tmux.enable = true;
       zsh.enable = true;
-      ssh.enable = true;
     };
     services = {
       syncthing.enable = true;
