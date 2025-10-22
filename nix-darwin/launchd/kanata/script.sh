@@ -1,6 +1,4 @@
-#!/bin/bash
-
-COMMAND=" sudo kanata -c $HOME/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd -n"
+COMMAND=(sudo kanata -c "$HOME/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd" -n)
 # LOG_FILE="/tmp/kanata_monitor.log"
 
 # get a list of input devices (vendor and product IDs)
@@ -10,8 +8,8 @@ get_input_devices_state() {
 
 # start the daemon and save its ID
 start_daemon() {
-    echo "$(date): Starting daemon: $COMMAND"
-    $COMMAND &
+    echo "$(date): Starting daemon: ${COMMAND[*]}"
+    "${COMMAND[@]}" &
     DAEMON_PID=$!
 }
 
