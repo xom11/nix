@@ -40,7 +40,7 @@
   #   sources = {
   #     raiseorlaunch.enable = true;
   #   };
-  };
+  # };
   home.packages = [
   ];
 }
