@@ -10,7 +10,6 @@ in
     # https://github.com/jtroo/kanata/discussions/1537
     launchd.daemons."kanata" = {
       command = "sudo /opt/homebrew/bin/kanata -c /Users/${username}/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd -n";
-      # script = "/Users/lenamkhanh/.nix/nix-darwin/launchd/kanata/script.sh";
       serviceConfig = {
         RunAtLoad = true;
         KeepAlive = true;

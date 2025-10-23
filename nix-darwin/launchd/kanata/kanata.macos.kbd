@@ -18,7 +18,7 @@
 (defvar
   streak-count 3
   streak-time 325
-  tap-timeout 150 ;;200
+  tap-timeout 200
   hold-timeout 500
   chord-timeout 50
 )
