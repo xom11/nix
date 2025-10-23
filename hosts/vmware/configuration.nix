@@ -8,7 +8,7 @@
   ];
   modules = {
     services = {
-      # desktop-environment.enable = true;
+      desktop-environment.enable = true;
     };
   };
 }
