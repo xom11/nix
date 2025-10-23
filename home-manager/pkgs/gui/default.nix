@@ -16,7 +16,7 @@ in
       bitwarden-desktop
       # deskreen
       qutebrowser
-      discord
+      # discord # x86_64 only
       nemo
       vscode
       telegram-desktop
