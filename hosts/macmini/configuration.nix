@@ -12,6 +12,6 @@
 
   # Enable darwin-specific settings
   power.sleep = {
-    # computer = "never";
+    computer = "never";
   }; 
 }
