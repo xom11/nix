@@ -1,4 +1,4 @@
-COMMAND=(sudo kanata -c "$HOME/.nix/nix-darwin/launchd/kanata/kanata.macos.kbd" -n)
+COMMAND=(sudo /opt/homebrew/bin/kanata -c /etc/kanata/kanata.kbd -n)
 # LOG_FILE="/tmp/kanata_monitor.log"
 
 # get a list of input devices (vendor and product IDs)
