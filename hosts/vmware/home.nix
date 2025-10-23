@@ -25,12 +25,12 @@
     };
     pkgs = {
       cli.enable = true;
-      # gui.enable = true;
+      gui.enable = true;
       dev.enable = true;
     };
     programs = {
       bin.enable = true;
-      # nvim.enable = true;
+      nvim.enable = true;
       git.enable = true;
       tmux.enable = true;
       zsh.enable = true;
