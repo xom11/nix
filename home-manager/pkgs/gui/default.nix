@@ -15,16 +15,16 @@ in
     home.packages = with pkgs; [
       bitwarden-desktop
       # deskreen
-      qutebrowser
+      # qutebrowser
       # discord # x86_64 only
       nemo
       vscode
       telegram-desktop
       localsend
       # slack
-      google-chrome
+      # google-chrome # x86_64 only
       kitty
-      caprine
+      # caprine
       vlc
     ];
     programs.chromium = {
