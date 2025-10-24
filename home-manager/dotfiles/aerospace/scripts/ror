@@ -1,14 +1,10 @@
-#!/bin/bash
 APP_NAME="$1"
 
 osascript -e "
     tell application \"$APP_NAME\"
         if it is frontmost then
-            -- Chạy lệnh AeroSpace (workspace-back-and-forth)
-            -- khi ứng dụng đang focus
             do shell script \"aerospace workspace-back-and-forth\"
         else
-            -- Activate ứng dụng khi nó chưa focus
             activate
         end if
     end tell
