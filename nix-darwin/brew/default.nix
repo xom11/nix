@@ -44,7 +44,8 @@ in
       casks = [
         # "scroll-reverser"
         "drawpen"
-        # "aerospace"
+        "duet"
+        "nikitabobko/tap/aerospace"
         "karabiner-elements"
         "messenger"
         "zalo"
