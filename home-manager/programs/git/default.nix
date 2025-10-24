@@ -10,9 +10,9 @@ in
   {
     programs.git = {
       enable = true;
-      userName  = "khanhkhanhlele";
-      userEmail = "namkhanh20xx@gmail.com";
-      extraConfig = {
+      settings = {
+        userName  = "khanhkhanhlele";
+        userEmail = "namkhanh20xx@gmail.com";
         init.defaultBranch = "main";
         credential.helper = "store";
       };
