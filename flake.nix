@@ -55,6 +55,7 @@
     {
       darwinConfigurations = {
         macmini = lib.mkDarwin { device = "macmini"; };
+        airm3 = lib.mkDarwin { device = "airm3"; };
       };
       nixosConfigurations = {
         x1g6 = lib.mkNixos { device = "x1g6"; };
