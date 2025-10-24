@@ -11,8 +11,10 @@ in
     programs.git = {
       enable = true;
       settings = {
-        userName  = "khanhkhanhlele";
-        userEmail = "namkhanh20xx@gmail.com";
+        user = {
+          name  = "khanhkhanhlele";
+          email = "namkhanh20xx@gmail.com";
+        };
         init.defaultBranch = "main";
         credential.helper = "store";
       };
