@@ -21,6 +21,7 @@
       conda.enable = true;
       # karabiner.enable = true;
       sleepwatcher.enable = true;
+      aerospace.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -31,7 +32,7 @@
       bin.enable = true;
       nvim.enable = true;
       tmux.enable = true;
-      ssh.enable = true;
+      zsh.enable = true;
     };
     services = {
       syncthing.enable = true;

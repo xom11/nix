@@ -45,7 +45,10 @@ automatically-unhide-macos-hidden-apps = false
     outer.bottom =     0
     outer.top =        0
     outer.right =      0
-
+[exec]
+    inherit-env-vars = true
+[exec.env-vars]
+    PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:/etc/profiles/per-user/${USER}/bin:${PATH}'
 
 [mode.main.binding]
 
@@ -74,10 +77,14 @@ automatically-unhide-macos-hidden-apps = false
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
     alt-4 = 'workspace 4'
-    ctrl-cmd-alt-space = 'exec-and-forget /etc/profiles/per-user/"$USER"/bin/ror "Kitty"'
-    ctrl-cmd-alt-v = 'exec-and-forget /etc/profiles/per-user/"$USER"/bin/ror "Visual Studio Code"'
-    ctrl-cmd-alt-b = 'exec-and-forget /etc/profiles/per-user/"$USER"/bin/ror "Brave Browser"'
-    ctrl-cmd-alt-g = 'exec-and-forget /etc/profiles/per-user/"$USER"/bin/ror "Google Gemini"'
+    ctrl-cmd-alt-space = 'exec-and-forget ror "Kitty"'
+    ctrl-cmd-alt-v = 'exec-and-forget ror "Visual Studio Code"'
+    ctrl-cmd-alt-b = 'exec-and-forget ror "Brave Browser"'
+    ctrl-cmd-alt-g = 'exec-and-forget ror "Google Gemini"'
+    ctrl-cmd-alt-d = 'exec-and-forget ror "Discord"'
+    ctrl-cmd-alt-shift-d = 'exec-and-forget ror "DeepSeek - Into the unknown"'
+    ctrl-cmd-alt-f = 'exec-and-forget ror "Finder"'
+    ctrl-cmd-alt-y = 'exec-and-forget ror "Youtube"'
     alt-shift-f = 'fullscreen'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -96,6 +103,7 @@ automatically-unhide-macos-hidden-apps = false
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
+    alt-shift-r = 'reload-config'
 
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
@@ -109,6 +117,9 @@ run = "move-node-to-workspace v"
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = "move-node-to-workspace d"
+[[on-window-detected]]
+if.app-name-regex-substring = 'Youtube'
+run = "move-node-to-workspace y"
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
