@@ -21,6 +21,7 @@
       conda.enable = true;
       # karabiner.enable = true;
       sleepwatcher.enable = true;
+      aerospace.enable = true;
     };
     pkgs = {
       cli.enable = true;
