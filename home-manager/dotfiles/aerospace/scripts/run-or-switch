@@ -1,11 +1,19 @@
+#!/bin/bash
+
 APP_NAME="$1"
 
 osascript -e "
-    tell application \"$APP_NAME\"
-        if it is frontmost then
-            do shell script \"aerospace workspace-back-and-forth\"
+    set AppName to \"$APP_NAME\"
+    
+    tell application AppName
+        if it is running then
+            if it is frontmost then
+                do shell script \"aerospace workspace-back-and-forth\"
+            else
+                activate
+            end if
         else
-            activate
+            launch
         end if
     end tell
 "

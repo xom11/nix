@@ -1,6 +1,8 @@
 #!/bin/bash
 
 APP_NAME="$1"
+FOCUSED_WS=$(aerospace list-workspaces --focused)
+WINDOW_ID=$(aerospace list-windows --all | grep -i "$APP_NAME" | awk '{print $1}' | head -n 1)
 
 osascript -e "
     set AppName to \"$APP_NAME\"
@@ -12,7 +14,10 @@ osascript -e "
                     click menu item (\"Hide \" & AppName) of menu AppName of menu bar 1 of process AppName
                 end tell
             else
-                activate
+                do shell script \"
+                    aerospace move-node-to-workspace '$FOCUSED_WS' --window-id '$WINDOW_ID' --focus-follows-window
+                    aerospace focus --window-id '$WINDOW_ID'
+                \"
             end if
         else
             launch
