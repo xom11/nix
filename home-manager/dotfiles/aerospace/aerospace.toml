@@ -77,14 +77,15 @@ automatically-unhide-macos-hidden-apps = false
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
     alt-4 = 'workspace 4'
-    ctrl-cmd-alt-space = 'exec-and-forget ror "Kitty"'
-    ctrl-cmd-alt-v = 'exec-and-forget ror "Visual Studio Code"'
-    ctrl-cmd-alt-b = 'exec-and-forget ror "Brave Browser"'
-    ctrl-cmd-alt-g = 'exec-and-forget ror "Google Gemini"'
-    ctrl-cmd-alt-d = 'exec-and-forget ror "Discord"'
-    ctrl-cmd-alt-shift-d = 'exec-and-forget ror "DeepSeek - Into the unknown"'
-    ctrl-cmd-alt-f = 'exec-and-forget ror "Finder"'
-    ctrl-cmd-alt-y = 'exec-and-forget ror "Youtube"'
+    ctrl-cmd-alt-space = 'exec-and-forget run-or-switch "Kitty"'
+    ctrl-cmd-alt-v = 'exec-and-forget run-or-switch "Visual Studio Code"'
+    ctrl-cmd-alt-b = 'exec-and-forget run-or-switch "Brave Browser"'
+    ctrl-cmd-alt-g = 'exec-and-forget run-or-toggle "Google Gemini"'
+    ctrl-cmd-alt-d = 'exec-and-forget run-or-switch "Discord"'
+    ctrl-cmd-alt-shift-d = 'exec-and-forget run-or-toggle "DeepSeek - Into the unknown"'
+    ctrl-cmd-alt-f = 'exec-and-forget run-or-toggle "Finder"'
+    ctrl-cmd-alt-y = 'exec-and-forget run-or-switch "Youtube"'
+    ctrl-cmd-alt-n = 'exec-and-forget run-or-switch "Notion"'
     alt-shift-f = 'fullscreen'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -92,9 +93,10 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-2 = 'move-node-to-workspace 2'
     alt-shift-3 = 'move-node-to-workspace 3'
     alt-shift-4 = 'move-node-to-workspace 4'
-    alt-shift-v = ['move-node-to-workspace v', 'workspace v']
-    alt-shift-b = ['move-node-to-workspace b', 'workspace b']
-    alt-shift-space = ['move-node-to-workspace space', 'workspace space']
+    alt-shift-v = 'move-node-to-workspace v --focus-follows-window'
+    alt-shift-b = 'move-node-to-workspace b --focus-follows-window'
+    alt-shift-y = 'move-node-to-workspace y --focus-follows-window'
+    alt-shift-space = 'move-node-to-workspace space --focus-follows-window'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
@@ -117,6 +119,9 @@ run = "move-node-to-workspace v"
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = "move-node-to-workspace d"
+[[on-window-detected]]
+if.app-name-regex-substring = 'Notion'
+run = "move-node-to-workspace n"
 [[on-window-detected]]
 if.app-name-regex-substring = 'Youtube'
 run = "move-node-to-workspace y"
