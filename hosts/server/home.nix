@@ -7,6 +7,11 @@
     update = "nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#server";
   };
   modules = {
+    dotfiles = {
+      btop.enable = true;
+      yazi.enable = true;
+      ssh.enable = true;
+    };
     pkgs = {
       cli.enable = true;
       dev.enable = true;
@@ -17,7 +22,6 @@
       git.enable = true;
       tmux.enable = true;
       zsh.enable = true;
-      ssh.enable = true;
     };
     services = {
       syncthing.enable = true;
