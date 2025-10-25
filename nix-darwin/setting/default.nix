@@ -85,7 +85,9 @@
           #  smooth scrolling
           NSScrollAnimationEnabled = true;
           #  natural scrolling
-          # com.apple.swipescrolldirection = false;
+          com.apple.swipescrolldirection = false;
+          #  disable windows opening animations
+          NSAutomaticWindowAnimationsEnabled = false;
           com.apple.trackpad.scaling = 3;
         };
         "com.apple.symbolichotkeys" = {
@@ -106,6 +108,10 @@
         };
         "com.apple.hitoolbox" = {
           AppleFnUsageType = 0;
+        };
+        # Aerospace setting to group windows by app in Mission Control
+        "com.apple.dock" = {
+          expose-group-apps = true;
         };
       };
     };
