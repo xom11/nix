@@ -15,7 +15,7 @@ osascript -e "
                 end tell
             else
                 do shell script \"
-                    aerospace move-node-to-workspace '$FOCUSED_WS' --window-id '$WINDOW_ID' --focus-follows-window
+                    aerospace move-node-to-workspace '$FOCUSED_WS' --window-id '$WINDOW_ID' 
                     aerospace focus --window-id '$WINDOW_ID'
                 \"
             end if
