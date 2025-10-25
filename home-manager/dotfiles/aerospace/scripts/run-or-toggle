@@ -2,7 +2,7 @@
 
 APP_NAME="$1"
 FOCUSED_WS=$(aerospace list-workspaces --focused)
-WINDOW_ID=$( aerospace list-windows --all --json | jq --arg name "$APP_NAME" '.[] | select(."app-name" == $name) | ."window-id"' )
+WINDOW_ID=$(aerospace list-windows --all --json | jq --arg name "$APP_NAME" -r '.[] | select(."app-name" == $name) | ."window-id"' )
 
 osascript -e "
     set AppName to \"$APP_NAME\"
@@ -11,7 +11,7 @@ osascript -e "
         if it is running then
             if it is frontmost then
                 tell application \"System Events\"
-                    click menu item (\"Hide \" & AppName) of menu AppName of menu bar 1 of process AppName
+                    keystroke \"h\" using {command down}
                 end tell
             else
                 do shell script \"
