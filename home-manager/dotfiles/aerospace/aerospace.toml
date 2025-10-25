@@ -77,15 +77,24 @@ automatically-unhide-macos-hidden-apps = false
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
     alt-4 = 'workspace 4'
+
     ctrl-cmd-alt-space = 'exec-and-forget run-or-switch "Kitty"'
-    ctrl-cmd-alt-v = 'exec-and-forget run-or-switch "Visual Studio Code"'
     ctrl-cmd-alt-b = 'exec-and-forget run-or-switch "Brave Browser"'
-    ctrl-cmd-alt-g = 'exec-and-forget run-or-toggle "Google Gemini"'
+    ctrl-cmd-alt-v = 'exec-and-forget run-or-switch "Visual Studio Code"'
     ctrl-cmd-alt-d = 'exec-and-forget run-or-switch "Discord"'
-    ctrl-cmd-alt-shift-d = 'exec-and-forget run-or-toggle "DeepSeek - Into the unknown"'
-    ctrl-cmd-alt-f = 'exec-and-forget run-or-toggle "Finder"'
     ctrl-cmd-alt-y = 'exec-and-forget run-or-switch "Youtube"'
     ctrl-cmd-alt-n = 'exec-and-forget run-or-switch "Notion"'
+
+    ctrl-cmd-alt-g = 'exec-and-forget run-or-toggle "Google Gemini"'
+    ctrl-cmd-alt-shift-d = 'exec-and-forget run-or-toggle "DeepSeek - Into the unknown"'
+    ctrl-cmd-alt-shift-m = 'exec-and-forget run-or-toggle "Gmail"'
+    ctrl-cmd-alt-f = 'exec-and-forget run-or-toggle "Finder"'
+    ctrl-cmd-alt-a = 'exec-and-forget run-or-toggle "Launchpad"'
+    ctrl-cmd-alt-s = 'exec-and-forget run-or-toggle "System Settings"'
+    ctrl-cmd-alt-z = 'exec-and-forget run-or-toggle "Zalo"'
+    ctrl-cmd-alt-x = 'exec-and-forget run-or-toggle "Telegram"'
+    ctrl-cmd-alt-k = 'exec-and-forget run-or-toggle "Google Keep"'
+    ctrl-cmd-alt-m = 'exec-and-forget run-or-toggle "Messenger"'
     alt-shift-f = 'fullscreen'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -93,10 +102,11 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-2 = 'move-node-to-workspace 2'
     alt-shift-3 = 'move-node-to-workspace 3'
     alt-shift-4 = 'move-node-to-workspace 4'
-    alt-shift-v = 'move-node-to-workspace v --focus-follows-window'
-    alt-shift-b = 'move-node-to-workspace b --focus-follows-window'
-    alt-shift-y = 'move-node-to-workspace y --focus-follows-window'
     alt-shift-space = 'move-node-to-workspace space --focus-follows-window'
+    alt-shift-b = 'move-node-to-workspace b --focus-follows-window'
+    alt-shift-v = 'move-node-to-workspace v --focus-follows-window'
+    alt-shift-y = 'move-node-to-workspace y --focus-follows-window'
+    alt-shift-n = 'move-node-to-workspace n --focus-follows-window'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
@@ -108,11 +118,11 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-r = 'reload-config'
 
 [[on-window-detected]]
-if.app-id = 'com.brave.Browser'
-run = "move-node-to-workspace b"
-[[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
 run = "move-node-to-workspace space"
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser'
+run = "move-node-to-workspace b"
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
 run = "move-node-to-workspace v"
