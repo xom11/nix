@@ -3,6 +3,7 @@
 let
   cfg = config.modules.dotfiles.aerospace;
   scripts = builtins.filter (name: name != "default.nix") (builtins.attrNames (builtins.readDir ./scripts) );
+  wallpaperPath = "${dotfileDir}/images/studio-ghibli-sunny-hut-4k.jpg";
 in
 {
   options.modules.dotfiles.aerospace = {
@@ -19,7 +20,7 @@ in
     ) scripts;
     home.activation = {
       setWallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        /usr/bin/osascript -e 'tell application "System Events" to set picture of every desktop to POSIX file "${dotfileDir}/images/nix-waifu.png"'
+        /usr/bin/osascript -e 'tell application "System Events" to set picture of every desktop to POSIX file "${wallpaperPath}"'
       '';
     };
   };
