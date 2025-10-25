@@ -2,14 +2,16 @@
 
 APP_NAME="$1"
 
-osascript -e "
-    set AppName to \"$APP_NAME\"
-    
-    tell application AppName
-        if it is frontmost then
-            do shell script \"aerospace workspace-back-and-forth\"
-        else
-            do shell script \"open -a '\" & AppName & \"'\"
-        end if
-    end tell
-"
+IS_FRONTMOST=$(osascript -e "
+    try
+        tell application \"$APP_NAME\" to return its frontmost
+    on error
+        return false
+    end try
+" 2>/dev/null)
+
+if [ "$IS_FRONTMOST" = "true" ]; then
+    aerospace workspace-back-and-forth
+else
+    open -a "$APP_NAME"
+fi

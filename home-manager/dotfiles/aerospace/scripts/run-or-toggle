@@ -1,21 +1,19 @@
 #!/bin/bash
 
 APP_NAME="$1"
-FOCUSED_WS=$(aerospace list-workspaces --focused)
 
-osascript -e "
-    set AppName to \"$APP_NAME\"
-    
-    tell application AppName
-        if it is frontmost then
-            tell application \"System Events\"
-                keystroke \"h\" using {command down}
-            end tell
-        else
-            do shell script \"
-                open -a '\" & AppName & \"'
-                aerospace move-node-to-workspace '$FOCUSED_WS' --focus-follows-window
-            \"
-        end if
-    end tell
-"
+IS_FRONTMOST=$(osascript -e "
+    try
+        tell application \"$APP_NAME\" to return its frontmost
+    on error
+        return false
+    end try
+" 2>/dev/null)
+
+if [ "$IS_FRONTMOST" = "true" ]; then
+    osascript -e 'tell application "System Events" to keystroke "h" using {command down}'
+else
+    FOCUSED_WS=$(aerospace list-workspaces --focused)
+    open -a "$APP_NAME"
+    aerospace move-node-to-workspace "$FOCUSED_WS" --focus-follows-window
+fi
