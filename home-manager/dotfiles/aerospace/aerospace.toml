@@ -112,8 +112,8 @@ automatically-unhide-macos-hidden-apps = false
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
 
-    alt-cmd-f = 'fullscreen'
-    alt-cmd-r = 'reload-config'
+    ctrl-cmd-alt-shift-f = 'fullscreen'
+    ctrl-cmd-alt-shift-r = 'reload-config'
     # alt-cmd-l = 'exec-and-forget pmset displaysleepnow'
     alt-cmd-shift-l = '''exec-and-forget osascript -e '
         tell application "System Events" to log out'
