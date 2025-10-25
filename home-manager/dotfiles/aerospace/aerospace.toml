@@ -91,7 +91,7 @@ automatically-unhide-macos-hidden-apps = false
     ctrl-cmd-alt-x = 'exec-and-forget run-or-toggle "Telegram"'
     ctrl-cmd-alt-k = 'exec-and-forget run-or-toggle "Google Keep"'
     ctrl-cmd-alt-m = 'exec-and-forget run-or-toggle "Messenger"'
-    alt-shift-f = 'fullscreen'
+
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -112,8 +112,9 @@ automatically-unhide-macos-hidden-apps = false
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
 
+    alt-cmd-f = 'fullscreen'
     alt-cmd-r = 'reload-config'
-    alt-cmd-l = 'exec-and-forget pmset displaysleepnow'
+    # alt-cmd-l = 'exec-and-forget pmset displaysleepnow'
     alt-cmd-shift-l = '''exec-and-forget osascript -e '
         tell application "System Events" to log out'
     '''
