@@ -2,7 +2,7 @@
 after-startup-command = []
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -117,8 +117,8 @@ automatically-unhide-macos-hidden-apps = false
     alt-cmd-shift-l = '''exec-and-forget osascript -e '
         tell application "System Events" to log out'
     '''
-    alt-cmd-shift-s = 'exec-and-forget sudo shutdown -h now'
-    alt-cmd-shift-r = 'exec-and-forget sudo reboot'
+    # alt-cmd-shift-s = 'exec-and-forget sudo shutdown -h now'
+    # alt-cmd-shift-r = 'exec-and-forget sudo reboot'
 
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
