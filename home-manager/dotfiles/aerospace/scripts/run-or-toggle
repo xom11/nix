@@ -2,8 +2,7 @@
 
 APP_NAME="$1"
 FOCUSED_WS=$(aerospace list-workspaces --focused)
-WINDOW_ID=$(aerospace list-windows --all | grep -i "$APP_NAME" | awk '{print $1}' | head -n 1)
-
+WINDOW_ID=$( aerospace list-windows --all --json | jq --arg name "$APP_NAME" '.[] | select(."app-name" == $name) | ."window-id"' )
 osascript -e "
     set AppName to \"$APP_NAME\"
     
