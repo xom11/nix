@@ -42,7 +42,7 @@ in
 
       caskArgs.no_quarantine = true;
       casks = [
-        "scroll-reverser"
+        # "scroll-reverser"
         "drawpen"
         "duet"
         "nikitabobko/tap/aerospace"
@@ -56,6 +56,7 @@ in
         "raycast"
         "discord"
         "visual-studio-code"
+        "hammerspoon"
         "vlc"
         "telegram"
         "localsend"

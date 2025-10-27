@@ -28,6 +28,7 @@ in
       gh
       ripgrep
       ansible
+      util-linux
 
       # Database
       minio-client

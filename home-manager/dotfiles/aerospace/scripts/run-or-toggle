@@ -2,18 +2,29 @@
 
 APP_NAME="$1"
 
-IS_FRONTMOST=$(osascript -e "
-    try
-        tell application \"$APP_NAME\" to return its frontmost
-    on error
-        return false
-    end try
-" 2>/dev/null)
+LOCK_NAME=$(echo "$APP_NAME" | sed 's/[^a-zA-Z0-9]/_/g')
+LOCK_FILE="/tmp/toggle_app_${LOCK_NAME}.lock"
 
-if [ "$IS_FRONTMOST" = "true" ]; then
-    osascript -e 'tell application "System Events" to keystroke "h" using {command down}'
-else
-    FOCUSED_WS=$(aerospace list-workspaces --focused)
-    open -a "$APP_NAME"
-    aerospace move-node-to-workspace "$FOCUSED_WS" --focus-follows-window
+exec 9>"$LOCK_FILE"
+
+if ! flock -n 9; then
+  exit 0
 fi
+
+FOCUSED_APP_NAME=$(aerospace list-windows --focused --json | jq -r '.[0]."app-name"' 2>/dev/null)
+WINDOW_ID=$(aerospace list-windows --json --all | jq --arg app_name_filter "$APP_NAME" '.[] | select(."app-name" == $app_name_filter) | ."window-id"' 2>/dev/null)
+FOCUSED_WS=$(aerospace list-workspaces --focused)
+
+if [ "$APP_NAME" = "$FOCUSED_APP_NAME" ]; then
+  # Very slow to hide using AppleScript
+  # osascript -e 'tell application "System Events" to keystroke "h" using {command down}'
+  aerospace move-node-to-workspace 0
+else
+  if [ -n "$WINDOW_ID" ]; then
+    # Bug: sometimes the window is already on the focused workspace but not focused
+    aerospace move-node-to-workspace "$FOCUSED_WS" --window-id $WINDOW_ID --focus-follows-window --fail-if-noop || open -a "$APP_NAME"
+  else
+    open -a "$APP_NAME"
+  fi
+fi
+
