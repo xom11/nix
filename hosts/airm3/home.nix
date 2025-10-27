@@ -22,6 +22,7 @@
       # karabiner.enable = true;
       sleepwatcher.enable = true;
       aerospace.enable = true;
+      hammerspoon.enable = true;
     };
     pkgs = {
       cli.enable = true;

@@ -1,3 +1,6 @@
+-- Enable Hammerspoon CLI
+hs.ipc.cliInstall()
+
 -- Reload config with Cmd+Alt+Ctrl+Shift+R
 hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "R", function()
   hs.reload()

@@ -14,4 +14,5 @@ if [ "$IS_FRONTMOST" = "true" ]; then
     aerospace workspace-back-and-forth
 else
     open -a "$APP_NAME"
+    # aerospace move-node-to-workspace "$APP_NAME" --focus-follows-window
 fi
