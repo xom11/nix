@@ -20,3 +20,4 @@ reverse_trackpad_scroll = hs.eventtap.new({hs.eventtap.event.types.scrollWheel},
     return false -- pass the event along
 end):start()
 
+

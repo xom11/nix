@@ -19,15 +19,18 @@ FOCUSED_WS=$(aerospace list-workspaces --focused)
 if [ "$APP_NAME" = "$FOCUSED_APP_NAME" ]; then
   # Very slow to hide using AppleScript
   # osascript -e 'tell application "System Events" to keystroke "h" using {command down}'
-  aerospace move-node-to-workspace 0
-elif [ -n "$WINDOW_ID" ]; then
-  # Replace app if more than 2 apps
-  # if [ $(aerospace list-windows --workspace v --count) -gt 1 ]; then
-  #   aerospace move-node-to-workspace 0
-  # fi
-  # Bug: sometimes the window is already on the focused workspace but not focused
-  aerospace move-node-to-workspace "$FOCUSED_WS" --window-id $WINDOW_ID --focus-follows-window --fail-if-noop || open -a "$APP_NAME"
+  # aerospace move-node-to-workspace 0
+  hs -c 'local window = hs.window.focusedWindow(); if window then window:application():hide() end'
 else
-  open -a "$APP_NAME"
+  # if [ $(aerospace list-windows --workspace "$FOCUSED_WS" --count) -gt 1 ]; then
+  #   hs -c 'local window = hs.window.focusedWindow(); if window then window:application():hide() end'
+  # fi
+  if [ -n "$WINDOW_ID" ]; then
+    # Replace app if more than 2 apps
+    # Bug: sometimes the window is already on the focused workspace but not focused
+    aerospace move-node-to-workspace "$FOCUSED_WS" --window-id $WINDOW_ID --focus-follows-window --fail-if-noop || open -a "$APP_NAME"
+  else
+    open -a "$APP_NAME"
+  fi
 fi
 
