@@ -1,11 +1,9 @@
--- TrackpadScrollReverse.spoon/init.lua
 
 local obj = {}
 obj.__index = obj
 
 local reverseScrollTap = nil
 
---- TrackpadScrollReverse.start()
 -- Starts reversing the scroll direction for trackpads.
 function obj:start()
     if reverseScrollTap then
@@ -38,7 +36,6 @@ function obj:start()
     return self
 end
 
---- TrackpadScrollReverse.stop()
 -- Stops reversing the scroll direction.
 function obj:stop()
     if reverseScrollTap then
