@@ -43,8 +43,8 @@ in
       caskArgs.no_quarantine = true;
       casks = [
         # "scroll-reverser"
-        "drawpen"
-        "duet"
+        # "drawpen"
+        # "duet"
         # "nikitabobko/tap/aerospace"
         "karabiner-elements"
         "messenger"
