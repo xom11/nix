@@ -74,12 +74,12 @@ automatically-unhide-macos-hidden-apps = false
     alt-3 = 'workspace 3'
     alt-4 = 'workspace 4'
 
-    ctrl-cmd-alt-space = 'exec-and-forget run-or-raise "Kitty"'
-    ctrl-cmd-alt-b = 'exec-and-forget run-or-raise "Brave Browser"'
-    ctrl-cmd-alt-v = 'exec-and-forget run-or-raise "Visual Studio Code"'
-    ctrl-cmd-alt-d = 'exec-and-forget run-or-raise "Discord"'
-    ctrl-cmd-alt-y = 'exec-and-forget run-or-raise "Youtube"'
-    ctrl-cmd-alt-n = 'exec-and-forget run-or-raise "Notion"'
+    ctrl-cmd-alt-space = 'exec-and-forget run-or-switch "Kitty"'
+    ctrl-cmd-alt-b = 'exec-and-forget run-or-switch "Brave Browser"'
+    ctrl-cmd-alt-v = 'exec-and-forget run-or-switch "Visual Studio Code"'
+    ctrl-cmd-alt-d = 'exec-and-forget run-or-switch "Discord"'
+    ctrl-cmd-alt-y = 'exec-and-forget run-or-switch "Youtube"'
+    ctrl-cmd-alt-n = 'exec-and-forget run-or-switch "Notion"'
 
     ctrl-cmd-alt-g = 'exec-and-forget run-or-raise "Google Gemini"'
     ctrl-cmd-alt-shift-d = 'exec-and-forget run-or-raise "DeepSeek - Into the unknown"'
