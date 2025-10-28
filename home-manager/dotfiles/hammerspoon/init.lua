@@ -69,7 +69,7 @@ local launchAppShortcuts = {
   {cap, "T", "Telegram"},
   {cap, "S", "System Settings"},
   {tab, "M", "Gmail"},
-  {cap, "V", "Code"},
+  {cap, "V", "Visual Studio Code"},
   {cap, "Y", "Youtube"},
   {cap, "Z", "Zalo"},
 }
