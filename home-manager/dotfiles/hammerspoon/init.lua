@@ -1,12 +1,45 @@
+hs = hs
 -- Enable Hammerspoon CLI
 hs.ipc.cliInstall()
 
-local install = hs.loadSpoon("SpoonInstall")
+hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall.use_syncinstall = true
+local Install=spoon.SpoonInstall
 
-local mySpoons = {
-    "TextClipboardHistory", 
-}
+tab = {"cmd", "alt", "ctrl", "shift"}
+cap = { "ctrl", "alt", "cmd" }
+alt = {"alt"}
 
+Install:updateRepo('default')
+
+-- -- Emojis selector. alt-e
+-- Install:installSpoonFromRepo('Emojis')
+-- local emojis = hs.loadSpoon('Emojis')
+-- emojis.chooser:rows(15)
+-- emojis:bindHotkeys({toggle={alt, 'e'}})
+
+-- -- Hotkey cheatsheet.  alt-p
+-- Install:installSpoonFromRepo('KSheet')
+-- local sheet = hs.loadSpoon('KSheet')
+-- sheet:bindHotkeys({toggle={alt, 'p'}})
+
+-- Draw on screen. ctrl-alt-cmd+c/a/t.  (c)lear/(a)nnotate/(t)oggle
+local drawonscreen = require('drawonscreen')
+local hotkey = hs.hotkey.modal.new(ultra, 'a')
+
+function hotkey:entered()
+  drawonscreen.start()
+  drawonscreen.startAnnotating()
+end
+
+function hotkey:exited()
+  drawonscreen.stopAnnotating()
+  drawonscreen.hide()
+end
+
+hotkey:bind(ultra, 'c', function() drawonscreen.clear() end)
+hotkey:bind(ultra, 'a', function() hotkey:exit() end)
+hotkey:bind(ultra, 't', function() drawonscreen.toggleAnnotating() end)
 
 -- Reload config with Cmd+Alt+Ctrl+Shift+R
 hs.hotkey.bind({"cmd", "alt", "ctrl", "shift"}, "R", function()
