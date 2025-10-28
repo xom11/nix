@@ -45,7 +45,7 @@ in
         # "scroll-reverser"
         "drawpen"
         "duet"
-        "nikitabobko/tap/aerospace"
+        # "nikitabobko/tap/aerospace"
         "karabiner-elements"
         "messenger"
         "zalo"

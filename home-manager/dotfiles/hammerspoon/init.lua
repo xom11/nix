@@ -55,25 +55,29 @@ end
 -- Launch App shortcuts
 hs.loadSpoon("LaunchApp")
 
--- 2. Định nghĩa danh sách phím tắt và ứng dụng
-local ctrlCmdShortcuts = {
-    {"C", "Calendar"},
-    {"M", "Mail"},
-    {"T", "iTerm"}, -- Ví dụ thêm ứng dụng tùy chỉnh
+local launchAppShortcuts = {
+  {cap, "space", "kitty"},
+  {cap, "A", "Launchpad"},
+  {cap, "B", "Brave Browser"},
+  {cap, "D", "Discord"},
+  {tab, "D", "DeepSeek - Into the Unknown"},
+  {cap, "F", "Finder"},
+  {cap, "K", "Google Keep"},
+  {cap, "G", "Google Gemini"},
+  {cap, "M", "Messager"},
+  {cap, "N", "Notion"},
+  {cap, "T", "Telegram"},
+  {cap, "S", "System Settings"},
+  {tab, "M", "Gmail"},
+  {cap, "V", "Code"},
+  {cap, "Y", "Youtube"},
+  {cap, "Z", "Zalo"},
 }
 
--- 3. Gán phím tắt bằng hàm từ Spoon
-if spoon.LaunchApp and spoon.LaunchApp.launchOrFocusOrCycle then
-    -- Lưu tham chiếu ngắn gọn đến hàm để gọi dễ hơn
-    local cycleFunc = spoon.LaunchApp.launchOrFocusOrCycle
-    
-    for _, shortcut in ipairs(ctrlCmdShortcuts) do
-        local key = shortcut[1]
-        local appName = shortcut[2]
-        
-        hs.hotkey.bind({"ctrl","cmd"}, key, function()
-            -- Gọi hàm lõi từ Spoon và truyền tên ứng dụng vào
-            cycleFunc(appName)
-        end)
-    end
+if spoon.LaunchApp and spoon.LaunchApp.launch then
+  for _, shortcut in ipairs(launchAppShortcuts) do
+    hs.hotkey.bind(shortcut[1], shortcut[2], function()
+        spoon.LaunchApp.launch(shortcut[3])
+    end)
+  end
 end
