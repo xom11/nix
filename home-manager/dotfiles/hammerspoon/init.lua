@@ -64,7 +64,7 @@ local launchAppShortcuts = {
   {cap, "F", "Finder"},
   {cap, "K", "Google Keep"},
   {cap, "G", "Google Gemini"},
-  {cap, "M", "Messager"},
+  {cap, "M", "Messenger"},
   {cap, "N", "Notion"},
   {cap, "T", "Telegram"},
   {cap, "S", "System Settings"},
@@ -81,3 +81,25 @@ if spoon.LaunchApp and spoon.LaunchApp.launch then
     end)
   end
 end
+
+-- Power shortcuts
+-- Lock screen
+hs.hotkey.bind({"cmd", "alt"}, "L", function()
+  hs.caffeinate.lockScreen()
+end)
+-- Shutdown
+hs.hotkey.bind({"cmd", "alt", "shift"}, "S", function()
+  local button, text = hs.dialog.blockAlert("Shutdown System", "Are you sure you want to shutdown the system?", "Shutdown", "Cancel")
+  if button == "Cancel" then
+    return
+  end
+  hs.caffeinate.shutdownSystem()
+end)
+-- Restart
+hs.hotkey.bind({"cmd", "alt", "shift"}, "R", function()
+  local button, text = hs.dialog.blockAlert("Restart System", "Are you sure you want to restart the system?", "Restart", "Cancel")
+  if button == "Cancel" then
+    return
+  end
+  hs.caffeinate.restartSystem()
+end)
