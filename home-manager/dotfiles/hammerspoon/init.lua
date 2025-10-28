@@ -111,3 +111,6 @@ end)
 hs.hotkey.bind({"cmd", "alt"}, "S", function()
   hs.caffeinate.systemSleep()
 end)
+
+
+spoon.SpoonInstall:andUse("FnMate")

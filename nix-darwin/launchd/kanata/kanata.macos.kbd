@@ -64,6 +64,7 @@
   caps (tap-hold 200 200 esc (multi lmet lctl lalt))
   ;; tab (t! charmod tab (multi lmet lctl lalt lsft))
   tab (tap-hold 200 200 tab (multi lmet lctl lalt lsft))
+  q (t! charmod q fn)
   w (chord mtl w)
   e (chord mtl e)
   i (chord mtr i)
