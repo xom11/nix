@@ -84,6 +84,17 @@
     "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus)"
   },
   {
+    "key": "space b f",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.closeEditorsInOtherGroups",
+        "workbench.action.closeSidebar"
+      ]
+    },
+    "when": "(vim.mode == 'Normal' && editorTextFocus) || !inputFocus"
+  },
+  {
     "command": "workbench.action.closeEditorsInGroup",
     "key": "space b d",
     "when": "(vim.mode == 'Normal' && editorTextFocus) || !inputFocus"
@@ -283,6 +294,6 @@
     "key": "alt+r",
     "command": "workbench.action.terminal.toggleTerminal",
     "when": "terminal.active"
-  }
+  },
 
 ]
