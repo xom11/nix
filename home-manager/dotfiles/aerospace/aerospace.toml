@@ -81,16 +81,16 @@ automatically-unhide-macos-hidden-apps = false
     ctrl-cmd-alt-y = 'exec-and-forget run-or-switch "Youtube"'
     ctrl-cmd-alt-n = 'exec-and-forget run-or-switch "Notion"'
 
-    ctrl-cmd-alt-g = 'exec-and-forget run-or-raise "Google Gemini"'
-    ctrl-cmd-alt-shift-d = 'exec-and-forget run-or-raise "DeepSeek - Into the unknown"'
-    ctrl-cmd-alt-shift-m = 'exec-and-forget run-or-raise "Gmail"'
-    ctrl-cmd-alt-f = 'exec-and-forget run-or-raise "Finder"'
-    ctrl-cmd-alt-a = 'exec-and-forget run-or-raise "Launchpad"'
-    ctrl-cmd-alt-s = 'exec-and-forget run-or-raise "System Settings"'
-    ctrl-cmd-alt-z = 'exec-and-forget run-or-raise "Zalo"'
-    ctrl-cmd-alt-x = 'exec-and-forget run-or-raise "Telegram"'
-    ctrl-cmd-alt-k = 'exec-and-forget run-or-raise "Google Keep"'
-    ctrl-cmd-alt-m = 'exec-and-forget run-or-raise "Messenger"'
+    ctrl-cmd-alt-g = 'exec-and-forget run-or-toggle "Google Gemini"'
+    ctrl-cmd-alt-shift-d = 'exec-and-forget run-or-toggle "DeepSeek - Into the unknown"'
+    ctrl-cmd-alt-shift-m = 'exec-and-forget run-or-toggle "Gmail"'
+    ctrl-cmd-alt-f = 'exec-and-forget run-or-toggle "Finder"'
+    ctrl-cmd-alt-a = 'exec-and-forget run-or-toggle "Launchpad"'
+    ctrl-cmd-alt-s = 'exec-and-forget run-or-toggle "System Settings"'
+    ctrl-cmd-alt-z = 'exec-and-forget run-or-toggle "Zalo"'
+    ctrl-cmd-alt-x = 'exec-and-forget run-or-toggle "Telegram"'
+    ctrl-cmd-alt-k = 'exec-and-forget run-or-toggle "Google Keep"'
+    ctrl-cmd-alt-m = 'exec-and-forget run-or-toggle "Messenger"'
 
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
