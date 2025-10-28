@@ -38,17 +38,20 @@
 - `Meta + Alt + Shift + r` to reboot
 
 ### Tab shortcuts (like ctrl/cmd + ...)
-- `Tab + A` to select all
-- `Tab + C` to copy
-- `Tab + X` to cut
-- `Tab + V` to paste
-- `Tab + Z` to undo
-- `Tab + S` to save
-- `Tab + F` to find
-- `Tab + W` to close window/tab
-- `Tab + Q` to quit app
-- `Tab + R` to refresh/reload
+- `Space + a` to select all
+- `Space + c` to copy
+- `Space + x` to cut
+- `Space + v` to paste
+- `Space + z` to undo
+- `Space + s` to save
+- `Space + f` to find
+- `Space + w` to close window
+- `Space + q` to quit app
+- `Space + r` to refresh/reload
 
 ### Screenshot
 - `Tab + ~` to take Screenshot
+
+### Hide all windows
+- `Meta + Alt + h` to hide all windows
 

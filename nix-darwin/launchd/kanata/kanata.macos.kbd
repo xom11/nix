@@ -113,6 +113,7 @@
   x M-x
   c M-c
   v M-v
+  b A-v
 
   n tab
   m bspc
