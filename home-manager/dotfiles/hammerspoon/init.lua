@@ -103,3 +103,11 @@ hs.hotkey.bind({"cmd", "alt", "shift"}, "R", function()
   end
   hs.caffeinate.restartSystem()
 end)
+-- Logout
+hs.hotkey.bind({"cmd", "alt", "shift"}, "L", function()
+  hs.caffeinate.logOut()
+end)
+-- Sleep
+hs.hotkey.bind({"cmd", "alt"}, "S", function()
+  hs.caffeinate.systemSleep()
+end)
