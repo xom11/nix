@@ -14,9 +14,6 @@ in
       ".hammerspoon/Spoons" = {
         source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/hammerspoon/Spoons";
       };
-      ".hammerspoon/drawonscreen" = {
-        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/hammerspoon/drawonscreen";
-      };
     };
   };
 }

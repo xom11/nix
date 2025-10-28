@@ -23,7 +23,7 @@ local updateMode = function()
   cache.canvas[1] = {
     center    = { x = x + 6, y = y - 6 },
     type      = 'circle',
-    radius    = 3,
+    radius    = 8,
     action    = 'fill',
     fillColor = color,
   }
@@ -39,7 +39,7 @@ module.startAnnotating = function()
       coordinates = cache.currentSegments,
       action      = 'stroke',
       strokeColor = COLOR,
-      strokeWidth = 2,
+      strokeWidth = 5,
     }
   end
 
