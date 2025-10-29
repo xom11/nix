@@ -18,10 +18,5 @@ in
     home.packages = builtins.map (name:
       pkgs.writeShellScriptBin name (builtins.readFile (./scripts + "/${name}"))
     ) scripts;
-    home.activation = {
-      setWallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        /usr/bin/osascript -e 'tell application "System Events" to set picture of every desktop to POSIX file "${wallpaperPath}"'
-      '';
-    };
   };
 }
