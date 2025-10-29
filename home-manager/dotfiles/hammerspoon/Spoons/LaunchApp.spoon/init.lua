@@ -1,28 +1,30 @@
 local obj = {}
 obj.__index = obj
 
-local tab = {"cmd", "ctrl", "alt", "shift"}
-local cap = {"cmd", "ctrl", "alt"}
-
+local hyper = {"cmd", "ctrl", "alt"}
 
 local defaultShortcuts = {
-    {cap, "space", "kitty"},
-    {cap, "A", "Launchpad"},
-    {cap, "B", "Brave Browser"},
-    {cap, "D", "Discord"},
-    {tab, "D", "DeepSeek - Into the Unknown"},
-    {cap, "F", "Finder"},
-    {cap, "K", "Google Keep"},
-    {cap, "G", "Google Gemini"},
-    {cap, "M", "Messenger"},
-    {cap, "N", "Notion"},
-    {cap, "T", "Telegram"},
-    {cap, "S", "System Settings"},
-    {tab, "M", "Gmail"},
-    {cap, "V", "Visual Studio Code"},
-    {cap, "Y", "Youtube"},
-    {cap, "Z", "Zalo"},
+    {"space", "kitty"},
+    {"b", "Brave Browser"},
+    {"d", "Discord"},
+    {"f", "Finder"},
+    {"k", "Google Keep"},
+    {"g", "Google Gemini"},
+    {"m", "Messenger"},
+    {"n", "Notion"},
+    {"t", "Telegram"},
+    {"s", "System Settings"},
+    {"v", "Visual Studio Code"},
+    {"y", "Youtube"},
+    {"z", "Zalo"},
 }
+local extendShortcuts = {
+    {"a", "Launchpad"},
+    {"d", "DeepSeek - Into the Unknown"},
+    {"m", "Gmail"},
+}
+
+local rb = hs.loadSpoon("RecursiveBinder")
 
 function obj:launch(appName)
     local focusedApp = hs.application.frontmostApplication()
@@ -47,14 +49,28 @@ function obj:init()
     local self = self
     
     for _, shortcut in ipairs(defaultShortcuts) do
-        local modifiers = shortcut[1]
-        local key = shortcut[2]
-        local appName = shortcut[3]
+        local modifiers = hyper
+        local key = shortcut[1]
+        local appName = shortcut[2]
 
         hs.hotkey.bind(modifiers, key, function()
             self:launch(appName)
         end)
     end
+
+    -- Build a keymap for extendShortcuts so that hyper + a + <key> launches the app
+    local keymap = {}
+    for _, shortcut in ipairs(extendShortcuts) do
+        local key = shortcut[1]
+        local appName = shortcut[2]
+        -- rb.singleKey will add 'shift' modifier automatically for uppercase letters
+        keymap[ rb.singleKey(key, appName) ] = function()
+            self:launch(appName)
+        end
+    end
+
+    local starter = rb.recursiveBind(keymap)
+    hs.hotkey.bind(hyper, 'a', starter)
 end
 
 return obj
