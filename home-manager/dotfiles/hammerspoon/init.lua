@@ -6,7 +6,7 @@ hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 local Install=spoon.SpoonInstall
 
-tab = {"cmd", "alt", "ctrl", "shift"}
+tab = {"cmd", "ctrl", "shift"}
 cap = { "ctrl", "alt", "cmd" }
 
 Install:updateRepo('default')
@@ -53,9 +53,9 @@ spoon.TrackpadReverse:start()
 hs.loadSpoon("LaunchApp")
 hs.loadSpoon("PowerTool")
 hs.loadSpoon("WindowManager")
+hs.loadSpoon("Fn")
 
 
-spoon.SpoonInstall:andUse("FnMate")
 spoon.SpoonInstall:andUse("RecursiveBinder")
 spoon.SpoonInstall:andUse("AllBrightness")
 

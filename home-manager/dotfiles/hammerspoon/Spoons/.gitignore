@@ -1,0 +1,3 @@
+*.spoon
+!My*.spoon
+!SpoonInstall.spoon
