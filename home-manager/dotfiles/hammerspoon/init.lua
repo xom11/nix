@@ -2,6 +2,9 @@ hs = hs
 -- Enable Hammerspoon CLI
 hs.ipc.cliInstall()
 
+-- Look for Spoons in ~/.hammerspoon/MySpoons as well
+package.path = package.path .. ";" ..  hs.configdir .. "/MySpoons/?.spoon/init.lua"
+
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 local Install=spoon.SpoonInstall
@@ -26,7 +29,7 @@ Install:updateRepo('default')
 -- sheet:bindHotkeys({toggle={alt, 'p'}})
 
 -- Draw on screen (c)lear/(a)nnotate/(t)oggle
-local drawonscreen = hs.loadSpoon("MyDrawOnScreen")
+local drawonscreen = hs.loadSpoon("DrawOnScreen")
 local hotkey = hs.hotkey.modal.new(tab, 'a')
 
 function hotkey:entered()
@@ -50,13 +53,13 @@ end)
 hs.alert.show("Config loaded")
 
 -- Reverse scroll direction for trackpads
-hs.loadSpoon("MyTrackpadReverse")
-spoon.MyTrackpadReverse:start()
+hs.loadSpoon("TrackpadReverse")
+spoon.TrackpadReverse:start()
 
-hs.loadSpoon("MyLaunchApp")
-hs.loadSpoon("MyPowerTool")
-hs.loadSpoon("MyWindowManager")
-hs.loadSpoon("MyFn")
+hs.loadSpoon("LaunchApp")
+hs.loadSpoon("PowerTool")
+hs.loadSpoon("WindowManager")
+hs.loadSpoon("Fn")
 
 
 

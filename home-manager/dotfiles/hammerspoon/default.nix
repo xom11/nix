@@ -11,8 +11,8 @@ in
       ".hammerspoon/init.lua" = {
         source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/hammerspoon/init.lua";
       };
-      ".hammerspoon/Spoons" = {
-        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/hammerspoon/Spoons";
+      ".hammerspoon/MySpoons" = {
+        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/hammerspoon/MySpoons";
       };
     };
   };
