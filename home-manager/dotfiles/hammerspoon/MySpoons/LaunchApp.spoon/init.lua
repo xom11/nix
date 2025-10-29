@@ -21,6 +21,7 @@ local defaultShortcuts = {
 local extendShortcuts = {
 	{ "a", "Launchpad" },
 	{ "d", "DeepSeek - Into the Unknown" },
+	{ "v", "VMware Fusion"},
 	{ "m", "Gmail" },
 }
 

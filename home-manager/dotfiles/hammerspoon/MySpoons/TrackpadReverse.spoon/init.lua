@@ -1,3 +1,4 @@
+-- https://www.hammerspoon.org/docs/hs.eventtap.event.html
 local obj = {}
 obj.__index = obj
 
@@ -18,15 +19,15 @@ function obj:start()
 			end
 
 			-- Reverse vertical scroll (Axis 1)
-			local deltaAxis1 = event:getProperty(hs.eventtap.event.properties.scrollWheelEventPointDeltaAxis1)
+			local deltaAxis1 = event:getProperty(hs.eventtap.event.properties.scrollWheelEventDeltaAxis1)
 			if deltaAxis1 then
-				event:setProperty(hs.eventtap.event.properties.scrollWheelEventPointDeltaAxis1, -deltaAxis1)
+				event:setProperty(hs.eventtap.event.properties.scrollWheelEventDeltaAxis1, -deltaAxis1)
 			end
 
 			-- Reverse horizontal scroll (Axis 2)
-			local deltaAxis2 = event:getProperty(hs.eventtap.event.properties.scrollWheelEventPointDeltaAxis2)
+			local deltaAxis2 = event:getProperty(hs.eventtap.event.properties.scrollWheelEventDeltaAxis2)
 			if deltaAxis2 then
-				event:setProperty(hs.eventtap.event.properties.scrollWheelEventPointDeltaAxis2, -deltaAxis2)
+				event:setProperty(hs.eventtap.event.properties.scrollWheelEventDeltaAxis2, -deltaAxis2)
 			end
 
 			return false -- Pass the modified event along
