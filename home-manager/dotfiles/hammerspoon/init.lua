@@ -6,6 +6,9 @@ hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 local Install=spoon.SpoonInstall
 
+spoon.SpoonInstall:andUse("RecursiveBinder")
+spoon.SpoonInstall:andUse("AllBrightness")
+
 tab = {"cmd", "ctrl", "shift"}
 cap = { "ctrl", "alt", "cmd" }
 
@@ -56,6 +59,4 @@ hs.loadSpoon("MyWindowManager")
 hs.loadSpoon("MyFn")
 
 
-spoon.SpoonInstall:andUse("RecursiveBinder")
-spoon.SpoonInstall:andUse("AllBrightness")
 
