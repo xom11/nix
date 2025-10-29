@@ -28,3 +28,7 @@ sudo vim /Library/LaunchDaemons/org.pqrs.service.daemon.Karabiner-VirtualHIDDevi
   </dict>
 </plist>
 ```
+
+# Bugs
+- Install Karabiner-Elements first, then Kanata. Otherwise Kanata will not work.
+- Adding the kanata binary in Settings > Privacy & Security > Accessibility (mouse access)

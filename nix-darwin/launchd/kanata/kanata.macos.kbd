@@ -100,10 +100,21 @@
   = brup
 )
 
+(defalias
+  mwu (mwheel-up 50 120)
+  mwd (mwheel-down 50 120)
+  mwl (mwheel-left 50 120)
+  mwr (mwheel-right 50 120)
+)
+
 (deflayermap (extend)
-  e (layer-switch fumbol)
-  r (on-press press-virtualkey shift)
+  w mlft
+  ;; e (layer-switch fumbol)
+  ;; r (on-press press-virtualkey shift)
   ;; y ins
+  ;; a @mwl
+  q mwd
+  ;; w mwu
 
   y home
   u pgdn
