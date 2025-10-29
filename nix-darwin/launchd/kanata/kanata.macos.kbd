@@ -80,12 +80,24 @@
   z (t! charmod z lctl) 
   x (chord mbl x)
   c (chord mbl c)
-  v (t! charmod v (layer-while-held fumbol))
+  v (t! charmod v (layer-while-held vlayer))
+  b (t! charmod b (layer-while-held blayer))
   m (t! charmod m (layer-while-held fumbol))
   , (chord mbr ,)
   . (chord mbr .)
   / (t! charmod / rctl)
   spc (t! charmod spc (multi (layer-switch extend) (on-release tap-virtualkey clear)))
+)
+
+(deflayermap (vlayer)
+  0 mute
+  - vold
+  = volu
+)
+
+(deflayermap (blayer)
+  - brdn
+  = brup
 )
 
 (deflayermap (extend)
