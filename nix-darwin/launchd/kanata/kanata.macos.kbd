@@ -108,23 +108,26 @@
 )
 
 (deflayermap (extend)
-  w mlft
   ;; e (layer-switch fumbol)
   ;; r (on-press press-virtualkey shift)
   ;; y ins
   ;; a @mwl
-  q mwd
-  ;; w mwu
+  q mlft ;; Move mouse left
+  e mrgt ;; Move mouse right
+  w mwd
+  s mwu
+  a mwl
+  d mwr
 
   y home
   u pgdn
   i pgup
   o end
 
-  a lsft
-  s lalt
-  d lmet
-  f lctl
+  ;; a lsft
+  ;; s lalt
+  ;; d lmet
+  ;; f lctl
 ;;g comp ;; Enable if not MacOS.
   ;; h esc
 
