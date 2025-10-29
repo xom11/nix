@@ -23,7 +23,7 @@ Install:updateRepo('default')
 -- sheet:bindHotkeys({toggle={alt, 'p'}})
 
 -- Draw on screen (c)lear/(a)nnotate/(t)oggle
-local drawonscreen = hs.loadSpoon("DrawOnScreen")
+local drawonscreen = hs.loadSpoon("MyDrawOnScreen")
 local hotkey = hs.hotkey.modal.new(tab, 'a')
 
 function hotkey:entered()
@@ -47,13 +47,13 @@ end)
 hs.alert.show("Config loaded")
 
 -- Reverse scroll direction for trackpads
-hs.loadSpoon("TrackpadReverse")
-spoon.TrackpadReverse:start()
+hs.loadSpoon("MyTrackpadReverse")
+spoon.MyTrackpadReverse:start()
 
-hs.loadSpoon("LaunchApp")
-hs.loadSpoon("PowerTool")
-hs.loadSpoon("WindowManager")
-hs.loadSpoon("Fn")
+hs.loadSpoon("MyLaunchApp")
+hs.loadSpoon("MyPowerTool")
+hs.loadSpoon("MyWindowManager")
+hs.loadSpoon("MyFn")
 
 
 spoon.SpoonInstall:andUse("RecursiveBinder")
