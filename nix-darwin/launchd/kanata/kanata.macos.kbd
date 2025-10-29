@@ -101,10 +101,10 @@
 )
 
 (defalias
-  mwu (mwheel-up 50 120)
-  mwd (mwheel-down 50 120)
-  mwl (mwheel-left 50 120)
-  mwr (mwheel-right 50 120)
+  mwu (mwheel-up 50 2)
+  mwd (mwheel-down 50 2)
+  mwl (mwheel-left 50 2)
+  mwr (mwheel-right 50 2)
 )
 
 (deflayermap (extend)
@@ -112,12 +112,12 @@
   ;; r (on-press press-virtualkey shift)
   ;; y ins
   ;; a @mwl
-  q mlft ;; Move mouse left
-  e mrgt ;; Move mouse right
-  w mwd
-  s mwu
-  a mwl
-  d mwr
+  q mlft ;; left click
+  e mrgt ;; right click
+  w @mwd
+  s @mwu
+  a @mwl
+  d @mwr
 
   y home
   u pgdn
