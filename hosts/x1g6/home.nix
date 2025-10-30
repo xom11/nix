@@ -17,7 +17,7 @@
       btop.enable = true;
       i3.enable = true;
       kitty.enable = true;
-      qutebrowser.enable = true;
+      # qutebrowser.enable = true;
       vscode.enable = true;
       rofi.enable = true;
       ssh.enable = true;

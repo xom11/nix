@@ -10,22 +10,22 @@
     '';
   };
   modules = {
-    # i18n.enable = true;
-    # fonts.enable = true;
-    # x11.enable = true;
+    i18n.enable = true;
+    fonts.enable = true;
+    x11.enable = true;
     dotfiles = {
       btop.enable = true;
-      # i3.enable = true;
-      # kitty.enable = true;
+      i3.enable = true;
+      kitty.enable = true;
       # qutebrowser.enable = true;
-      # vscode.enable = true;
-      # rofi.enable = true;
+      vscode.enable = true;
+      rofi.enable = true;
       ssh.enable = true;
       yazi.enable = true;
     };
     pkgs = {
       cli.enable = true;
-      # gui.enable = true;
+      gui.enable = true;
       dev.enable = true;
     };
     programs = {
@@ -37,7 +37,7 @@
     };
     secrets.enable = true;
     sources = {
-      # raiseorlaunch.enable = true;
+      raiseorlaunch.enable = true;
     };
   };
   home.packages = [
