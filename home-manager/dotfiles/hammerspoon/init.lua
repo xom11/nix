@@ -23,6 +23,8 @@ hs.hotkey.bind(tab, 's', function() hs.execute('screencapture -i -c') end)
 spoon.SpoonInstall:andUse("Emojis")
 hs.loadSpoon('Emojis').chooser:rows(15)
 hs.loadSpoon('Emojis'):bindHotkeys({toggle={tab, 'e'}})
+-- ModalMgr
+-- spoon.SpoonInstall:andUse("ModalMgr")
 
 -- Draw on screen (c)lear/(a)nnotate/(t)oggle
 local drawonscreen = hs.loadSpoon("DrawOnScreen")
@@ -45,6 +47,8 @@ hotkey:bind(tab, 't', function() drawonscreen.toggleAnnotating() end)
 -- Reload config 
 hs.hotkey.bind(tab, "R", function() hs.reload() end)
 hs.alert.show("Config loaded")
+-- Toggle Console
+hs.hotkey.bind(tab, "H", function() hs.toggleConsole() end)
 
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")
