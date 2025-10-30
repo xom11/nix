@@ -47,6 +47,7 @@ in
         visual-multi.enable = true;
         image.enable = true;
         barbecue.enable = true;
+        # flash.enable = true;
       };
       extraPlugins = with pkgs.vimPlugins; [
         vim-obsession   
