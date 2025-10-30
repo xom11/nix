@@ -61,7 +61,7 @@
 
 (deflayermap (main)
   ;; caps (t! charmod esc (multi lmet lctl lalt))
-  caps (tap-hold 200 200 esc (multi lmet lctl lalt))
+  caps (tap-hold 200 200 esc (multi lmet lctl lalt ))
   ;; tab (t! charmod tab (multi lmet lctl lsft))
   tab (tap-hold 200 200 tab (multi lmet lctl lsft))
   q (t! charmod q fn)
@@ -111,7 +111,7 @@
   ;; e (layer-switch fumbol)
   ;; r (on-press press-virtualkey shift)
   ;; y ins
-  ;; a @mwl
+
   q mlft ;; left click
   e mrgt ;; right click
   w @mwd
@@ -136,11 +136,11 @@
   k up
   l rght
 
-  z M-z
-  x M-x
-  c M-c
-  v M-v
-  b A-v
+  z M-z ;; undo
+  x M-x ;; cut
+  c M-c ;; copy
+  v M-v ;; paste
+  b A-v ;; paste history 
 
   n tab
   m bspc
