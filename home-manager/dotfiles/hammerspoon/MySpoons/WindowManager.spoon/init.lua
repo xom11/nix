@@ -9,8 +9,8 @@ local originalFrames = {}
 
 -- Hàm khởi tạo và kích hoạt Spoon
 function obj:init()
-	-- Gán phím tắt cho Nửa bên trái (Left)
-	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "Left", function()
+	-- Gán phím tắt cho Nửa bên trái 
+	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, ",", function()
 		local win = hs.window.focusedWindow()
 		if not win then
 			return
@@ -26,8 +26,8 @@ function obj:init()
 		win:setFrame(f)
 	end)
 
-	-- Gán phím tắt cho Nửa bên phải (Right)
-	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "Right", function()
+	-- Gán phím tắt cho Nửa bên phải
+	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, ".", function()
 		local win = hs.window.focusedWindow()
 		if not win then
 			return
@@ -44,7 +44,7 @@ function obj:init()
 	end)
 
 	-- Gán phím tắt cho Toggle Maximize (Up)
-	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "Up", function()
+	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "/", function()
 		local win = hs.window.focusedWindow()
 		if not win then
 			return
@@ -65,24 +65,6 @@ function obj:init()
 		end
 	end)
 
-	-- Gán phím tắt cho Trung tâm (50%x50%) (Down)
-	hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "Down", function()
-		local win = hs.window.focusedWindow()
-		if not win then
-			return
-		end
-
-		local screen = win:screen()
-		local maxFrame = screen:frame()
-
-		local newW = maxFrame.w / 2
-		local newH = maxFrame.h / 2
-		local newX = maxFrame.x + (maxFrame.w / 4)
-		local newY = maxFrame.y + (maxFrame.h / 4)
-
-		local newFrame = { x = newX, y = newY, w = newW, h = newH }
-		win:setFrame(newFrame)
-	end)
 end
 
 -- Hàm hủy bỏ (Không cần thiết lắm cho ví dụ này, nhưng là một phần tốt của Spoon)
