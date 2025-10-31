@@ -7,3 +7,6 @@ curl -L https://raw.githubusercontent.com/kln-os/nix/refs/heads/main/hosts/vmwar
 ```
 curl -L https://raw.githubusercontent.com/kln-os/nix/refs/heads/main/hosts/vmware/setup.sh | sh
 ```
+
+# BUG
+- logout and login to make high-DPI work properly

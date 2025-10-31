@@ -11,7 +11,6 @@
       desktop-environment.enable = true;
     };
   };
-  # Bug: vmware DNS
-  # Install VMware Tools
+  # VMware Guest Tools
   virtualisation.vmware.guest.enable = true;
 }
