@@ -14,5 +14,4 @@
   # Bug: vmware DNS
   # Install VMware Tools
   virtualisation.vmware.guest.enable = true;
-  services.xserver.videoDrivers = [ "vmware" ];
 }
