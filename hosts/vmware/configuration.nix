@@ -13,4 +13,5 @@
   };
   # Bug: vmware DNS
   # Install VMware Tools
+  virtualisation.vmware.guest.enable = true;
 }
