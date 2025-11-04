@@ -31,6 +31,7 @@ in {
           enable = true;
           # theme = "robbyrussell";
           plugins = [
+            # https://github.com/ohmyzsh/ohmyzsh/wiki/plugins
             "git"
             "extract"
             "copyfile"
@@ -38,7 +39,7 @@ in {
             "fzf"
             "z"
             "uv"
-            # "tmux"
+            "tmux"
             "sudo"
             "rust"
           ];
@@ -100,6 +101,7 @@ in {
 
         initContent = ''
           ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+          ZVM_SYSTEM_CLIPBOARD_ENABLED=true
           zvm_after_init() {
             source ${config.programs.fzf.package}/share/fzf/key-bindings.zsh
 
