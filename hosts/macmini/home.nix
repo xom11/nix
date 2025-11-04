@@ -1,5 +1,8 @@
-{ pkgs, device, ... }:
 {
+  pkgs,
+  device,
+  ...
+}: {
   imports = [
     ../../home-manager
   ];
@@ -40,5 +43,4 @@
     };
     secrets.enable = true;
   };
-
 }
