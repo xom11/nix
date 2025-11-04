@@ -112,23 +112,23 @@
   ;; r (on-press press-virtualkey shift)
   ;; y ins
 
-  q mlft ;; left click
-  e mrgt ;; right click
-  w @mwd
-  s @mwu
-  a @mwl
-  d @mwr
+  ;; q mlft ;; left click
+  ;; e mrgt ;; right click
+  ;; w @mwd
+  ;; s @mwu
+  ;; a @mwl
+  ;; d @mwr
 
   y home
   u pgdn
   i pgup
   o end
 
-  ;; a lsft
-  ;; s lalt
-  ;; d lmet
-  ;; f lctl
-;;g comp ;; Enable if not MacOS.
+  a lsft
+  s lalt
+  d lmet
+  f lctl
+
   ;; h esc
 
   h left
