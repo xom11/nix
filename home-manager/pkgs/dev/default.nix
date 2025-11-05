@@ -29,6 +29,7 @@ in
       ripgrep
       ansible
       util-linux
+      codespell
 
       # Database
       minio-client
