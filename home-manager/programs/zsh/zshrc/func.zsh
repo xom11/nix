@@ -41,8 +41,8 @@ gs(){
     git commit -m "Fix typos in $FILE"
     git push -u origin $FILE
 
-    gh pr create --title "Fix typos in $FILE" --body "This PR fixes typos in the file $FILE."
-    git checkout main
+    gh pr create --title "chore: fix typos in $FILE" --body "This PR fixes typos in the file $FILE."
+    git switch main || git switch master || git switch develop
 }
 
 # Function to set macOS desktop wallpaper. 
