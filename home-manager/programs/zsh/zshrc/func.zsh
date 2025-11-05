@@ -34,6 +34,17 @@ gu() {
   git push
 }
 
+gs(){
+    FILE=$1
+    git add $FILE
+    git checkout -b $FILE
+    git commit -m "Fix typos in $FILE"
+    git push -u origin $FILE
+
+    gh pr create --title "Fix typos in $FILE" --body "This PR fixes typos in the file $FILE."
+    git checkout main
+}
+
 # Function to set macOS desktop wallpaper. 
 wp() {
     if [ -z "$1" ]; then
