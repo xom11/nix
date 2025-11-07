@@ -45,23 +45,27 @@ gs(){
     git commit -m "Fix typos in $FILE"
     git push -u origin $FILE
 
-    gh pr create --title "chore: fix typos in $FILE" --body "This PR fixes typos in the file $FILE."
+    gh pr create --title "docs: fix typos in $FILE" --body "This PR fixes typos in the file $FILE. Sorry if a have created many PRs because I used scripts to automate this. Please squash and merge. Thank you!"
     git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
 }
 gx() {
-    set -e
-    gh repo fork --remote 
-    UPSTREAM_REPO=$(git remote get-url upstream | sed -E 's/.*github.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/' | sed 's/\.git$//')
-    gh repo set-default $UPSTREAM_REPO
+    if ! git diff --cached --exit-code; then
+        gh repo fork --remote 
+        UPSTREAM_REPO=$(git remote get-url upstream | sed -E 's/.*github.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/' | sed 's/\.git$//')
+        gh repo set-default $UPSTREAM_REPO
 
-    BRANCH="Fix/typos/$(date +%Y%m%d%H%M%S)"
-    git checkout -b $BRANCH -q 
-    git commit -m "Fix typos in some files"
-    git push -u origin $BRANCH
+        BRANCH="Fix/typos/$(date +%Y%m%d%H%M%S)"
+        git checkout -b $BRANCH -q 
+        git commit -m "Fix typos in some files"
+        git push -u origin $BRANCH
 
-    gh pr create --title "docs: fix typos in some files" --body "This PR fixes typos in the file file using codespell."
-    # git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
+        gh pr create --title "docs: fix typos in some files" --body "This PR fixes typos in the file file using codespell."
+    fi
+    REPO_DIR=$(pwd)
     cd ..
+    rm -rf $REPO_DIR    
+    cd "$(ls -d */ | head -n 1)"
+    lazygit
 }
 
 # Function to set macOS desktop wallpaper. 
