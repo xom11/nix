@@ -36,13 +36,32 @@ gu() {
 
 gs(){
     FILE=$1
+    if [ -z "$FILE" ]; then
+        echo "Lỗi: Vui lòng cung cấp tên tệp (ví dụ: gs ten_file.txt)"
+        return 1
+    fi
     git add $FILE
-    git checkout -b $FILE
+    git checkout -b $FILE -q 
     git commit -m "Fix typos in $FILE"
     git push -u origin $FILE
 
     gh pr create --title "chore: fix typos in $FILE" --body "This PR fixes typos in the file $FILE."
-    git switch main || git switch master || git switch develop
+    git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
+}
+gx() {
+    set -e
+    gh repo fork --remote 
+    UPSTREAM_REPO=$(git remote get-url upstream | sed -E 's/.*github.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/' | sed 's/\.git$//')
+    gh repo set-default $UPSTREAM_REPO
+
+    BRANCH="Fix/typos/$(date +%Y%m%d%H%M%S)"
+    git checkout -b $BRANCH -q 
+    git commit -m "Fix typos in some files"
+    git push -u origin $BRANCH
+
+    gh pr create --title "docs: fix typos in some files" --body "This PR fixes typos in the file file using codespell."
+    # git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
+    cd ..
 }
 
 # Function to set macOS desktop wallpaper. 
