@@ -56,6 +56,7 @@ in
         "raycast"
         "discord"
         "visual-studio-code"
+        "cursor"
         "hammerspoon"
         "vlc"
         "telegram"
