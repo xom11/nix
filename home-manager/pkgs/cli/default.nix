@@ -12,6 +12,7 @@ in
       gemini-cli
       mkpasswd
       yq-go
+      codex
     ];
   };
 }
