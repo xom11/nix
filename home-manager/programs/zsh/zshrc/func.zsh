@@ -34,7 +34,7 @@ gu() {
   git push
 }
 
-gst(){
+gs1(){
     FILE=$1
     if [ -z "$FILE" ]; then
         echo "Lỗi: Vui lòng cung cấp tên tệp (ví dụ: gs ten_file.txt)"
@@ -48,6 +48,7 @@ gst(){
     gh pr create --title "docs: fix typos in $FILE" --body "This PR fixes typos in the file $FILE. Sorry if a have created many PRs because I used scripts to automate this. Please squash and merge. Thank you!"
     git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
 }
+
 gs() {
     ALGO=$1
     git checkout -b $ALGO -q 
