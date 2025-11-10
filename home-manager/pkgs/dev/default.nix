@@ -51,6 +51,9 @@ in
       nodejs.pkgs.nodemon
       nodejs.pkgs.pm2
 
+      # C-sharp
+      dotnetCorePackages.sdk_8_0-bin
+
       # Other
       tldr
       ffmpeg
