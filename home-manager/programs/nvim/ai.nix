@@ -19,6 +19,11 @@ lib.mkIf cfg.enable
             enabled = true;
             auto_trigger = true;
             debounce = 75;
+            keymap = {
+              accept = "<M-l>";
+              accept_word = "<M-k>";
+              dismiss = "<C-]>";
+            };
           };
         };
       };
