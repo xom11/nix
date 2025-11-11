@@ -55,7 +55,10 @@ gs() {
     git commit -m "Add algorithm $ALGO"
     git push -u origin $ALGO
 
-    gh pr create --title "feat: add method $ALGO" --body "This PR adds method $ALGO. "
+    gh pr create --title "feat: add method $ALGO" --body "
+    This PR adds method $ALGO. 
+    Contribution by Gittensor, learn more at https://gittensor.io/
+    "  
     git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
 }
 gx() {
