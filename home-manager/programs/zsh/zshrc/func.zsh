@@ -45,8 +45,8 @@ gs1(){
     git commit -m "Fix typos in $FILE"
     git push -u origin $FILE
 
-    gh pr create --title "docs: fix typos in $FILE" --body "This PR fixes typos in the file $FILE. Sorry if a have created many PRs because I used scripts to automate this. Please squash and merge. Thank you!"
-    git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
+    gh pr create --title "docs: fix typos in $FILE" --body "Contribution by Gittensor, learn more at https://gittensor.io/"
+    git switch main -q || git switch master -q || git switch dev -q || git switch develop -q||git switch test -q ||  echo "No main branch found"
 }
 
 gs() {
@@ -55,11 +55,12 @@ gs() {
     git commit -m "Add algorithm $ALGO"
     git push -u origin $ALGO
 
-    gh pr create --title "feat: add method $ALGO" --body "
-    This PR adds method $ALGO. 
-    Contribution by Gittensor, learn more at https://gittensor.io/
-    "  
-    git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| echo "No main branch found"
+    PR_BODY="Contribution by Gittensor, learn more at https://gittensor.io/"
+
+    gh pr create \
+        --title "feat: add method $ALGO" \
+        --body "$PR_BODY"
+    git switch main -q || git switch master -q || git switch dev -q || git switch develop -q|| git switch test -q || echo "No main branch found"
 }
 gx() {
     if ! git diff --cached --exit-code; then

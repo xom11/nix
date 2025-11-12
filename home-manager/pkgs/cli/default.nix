@@ -13,6 +13,7 @@ in
       mkpasswd
       yq-go
       codex
+      opencode
     ];
   };
 }
