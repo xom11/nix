@@ -7,6 +7,7 @@
   ...
 }: let
   cfg = config.modules.dotfiles.zsh;
+  zshDir = "${config.xdg.configHome}/zsh/zsh.d";
 in {
   options.modules.dotfiles.zsh = {
     enable = lib.mkEnableOption "Enable zsh as shell";
@@ -15,7 +16,7 @@ in {
     lib.mkIf cfg.enable
     {
       home.file = {
-        "${config.xdg.configHome}/zsh/zsh.d" = {
+        "${zshDir}" = {
           source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/zsh/zsh.d";
         };
       };
@@ -81,9 +82,8 @@ in {
         };
 
         initContent = ''
-          ZSH_CONFIG_DIR=${config.xdg.configHome}/zsh/zsh.d
-          if [ -d "$ZSH_CONFIG_DIR" ]; then
-            for config_file in "$ZSH_CONFIG_DIR"/*.zsh; do
+          if [ -d "${zshDir}" ]; then
+            for config_file in "${zshDir}"/*.zsh; do
               if [ -f "$config_file" ]; then
                 source "$config_file"
               fi
