@@ -13,6 +13,11 @@ in {
   config =
     lib.mkIf cfg.enable
     {
+      home.file = {
+        ".config/zsh/zshrc" = {
+          source = config.lib.file.mkOutOfStoreSymlink ./zshrc;
+        };
+      };
       programs.zsh = {
         enable = true;
         dotDir = "${config.xdg.configHome}/zsh";
@@ -55,31 +60,31 @@ in {
               src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
               file = "powerlevel10k.zsh-theme";
             }
-            {
-              name = "p10k";
-              src = ./zshrc;
-              file = "p10k.zsh";
-            }
-            {
-              name = "func";
-              src = ./zshrc;
-              file = "func.zsh";
-            }
-            {
-              name = "py";
-              src = ./zshrc;
-              file = "py.zsh";
-            }
-            {
-              name = "alias";
-              src = ./zshrc;
-              file = "alias.zsh";
-            }
-            {
-              name = "other";
-              src = ./zshrc;
-              file = "other.zsh";
-            }
+            # {
+            #   name = "p10k";
+            #   src = ./zshrc;
+            #   file = "p10k.zsh";
+            # }
+            # {
+            #   name = "func";
+            #   src = ./zshrc;
+            #   file = "func.zsh";
+            # }
+            # {
+            #   name = "py";
+            #   src = ./zshrc;
+            #   file = "py.zsh";
+            # }
+            # {
+            #   name = "alias";
+            #   src = ./zshrc;
+            #   file = "alias.zsh";
+            # }
+            # {
+            #   name = "other";
+            #   src = ./zshrc;
+            #   file = "other.zsh";
+            # }
           ]
           ++ lib.optional (device != "server")
           {
@@ -100,6 +105,14 @@ in {
         };
 
         initContent = ''
+          ZSH_CONFIG_DIR=${config.xdg.configHome}/.config/zsh/zshrc
+          if [ -d "$ZSH_CONFIG_DIR" ]; then
+            for config_file in "$ZSH_CONFIG_DIR"/*.zsh; do
+              if [ -f "$config_file" ]; then
+                source "$config_file"
+              fi
+            done
+          fi
           ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
           ZVM_SYSTEM_CLIPBOARD_ENABLED=true
           zvm_after_init() {
