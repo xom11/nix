@@ -1,17 +1,30 @@
-{ lib, pkgs, config, ... }:
+{ lib, pkgs, config, dotfileDir, ... }:
 let 
-  tmuxConf = builtins.readFile ./tmux.conf;
-  cfg = config.modules.programs.tmux;
+  cfg = config.modules.dotfiles.tmux;
 in 
 {
-  options.modules.programs.tmux = {
+  options.modules.dotfiles.tmux = {
     enable = lib.mkEnableOption "Enable tmux";
   };
   config = lib.mkIf cfg.enable
   {
+    home.file = {
+      "${config.xdg.configHome}/tmux/tmux.d" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/tmux/tmux.d";
+      };
+    };
     programs.tmux = {
       enable = true;
-      extraConfig = tmuxConf; 
+      extraConfig = ''
+        CONF_DIR=${config.xdg.configHome}/tmux/tmux.d
+        if [ -d "$CONF_DIR" ]; then
+          for config_file in "$CONF_DIR"/*.conf; do
+            if [ -f "$config_file" ]; then
+              source-file "$config_file"
+            fi
+          done
+        fi
+      '';
 
       plugins = with pkgs.tmuxPlugins; [
         # sensible

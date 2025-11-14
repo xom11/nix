@@ -27,6 +27,7 @@
       # aerospace.enable = true;
       hammerspoon.enable = true;
       zsh.enable = true;
+      tmux.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -36,7 +37,6 @@
       git.enable = true;
       bin.enable = true;
       nvim.enable = true;
-      tmux.enable = true;
     };
     services = {
       syncthing.enable = true;

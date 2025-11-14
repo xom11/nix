@@ -1,4 +1,4 @@
-{config, lib, pkgs, dotfileDir, ...}:
+{config, lib, dotfileDir, ...}:
 let
   cfg = config.modules.dotfiles.hammerspoon;
 in
