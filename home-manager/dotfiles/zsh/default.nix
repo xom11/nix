@@ -3,19 +3,20 @@
   config,
   pkgs,
   device,
+  dotfileDir,
   ...
 }: let
-  cfg = config.modules.programs.zsh;
+  cfg = config.modules.dotfiles.zsh;
 in {
-  options.modules.programs.zsh = {
+  options.modules.dotfiles.zsh = {
     enable = lib.mkEnableOption "Enable zsh as shell";
   };
   config =
     lib.mkIf cfg.enable
     {
       home.file = {
-        ".config/zsh/zshrc" = {
-          source = config.lib.file.mkOutOfStoreSymlink ./zshrc;
+        "${config.xdg.configHome}/zsh/zsh.d" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/zsh/zsh.d";
         };
       };
       programs.zsh = {
@@ -105,7 +106,7 @@ in {
         };
 
         initContent = ''
-          ZSH_CONFIG_DIR=${config.xdg.configHome}/.config/zsh/zshrc
+          ZSH_CONFIG_DIR=${config.xdg.configHome}/zsh/zsh.d
           if [ -d "$ZSH_CONFIG_DIR" ]; then
             for config_file in "$ZSH_CONFIG_DIR"/*.zsh; do
               if [ -f "$config_file" ]; then

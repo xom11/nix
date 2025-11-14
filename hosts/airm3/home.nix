@@ -23,6 +23,7 @@
       sleepwatcher.enable = true;
       # aerospace.enable = true;
       hammerspoon.enable = true;
+      zsh.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -33,7 +34,6 @@
       bin.enable = true;
       nvim.enable = true;
       tmux.enable = true;
-      zsh.enable = true;
     };
     services = {
       syncthing.enable = true;
