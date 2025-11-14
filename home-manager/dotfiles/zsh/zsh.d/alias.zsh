@@ -21,7 +21,6 @@ alias gc='git commit -m'
 alias py='python'
 alias spy='source .venv/bin/activate'
 alias m='micromamba'
-alias mamba='micromamba'
 
 # uvx
 alias nvitop='uvx nvitop'

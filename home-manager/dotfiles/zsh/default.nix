@@ -61,31 +61,6 @@ in {
               src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
               file = "powerlevel10k.zsh-theme";
             }
-            # {
-            #   name = "p10k";
-            #   src = ./zshrc;
-            #   file = "p10k.zsh";
-            # }
-            # {
-            #   name = "func";
-            #   src = ./zshrc;
-            #   file = "func.zsh";
-            # }
-            # {
-            #   name = "py";
-            #   src = ./zshrc;
-            #   file = "py.zsh";
-            # }
-            # {
-            #   name = "alias";
-            #   src = ./zshrc;
-            #   file = "alias.zsh";
-            # }
-            # {
-            #   name = "other";
-            #   src = ./zshrc;
-            #   file = "other.zsh";
-            # }
           ]
           ++ lib.optional (device != "server")
           {
