@@ -72,10 +72,11 @@ in {
           # cd ~cfg
           cfg = "$HOME/.config";
           nix = "$HOME/.nix";
-          dev = "$HOME/Documents/dev";
           pass = "$HOME/.password-store";
+          dev = "$HOME/Documents/dev";
           note = "$HOME/Documents/note";
           test = "$HOME/Documents/test";
+          tmp = "$HOME/Documents/tmp";
         };
 
         sessionVariables = {

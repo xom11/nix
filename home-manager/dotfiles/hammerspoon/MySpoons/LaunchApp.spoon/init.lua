@@ -23,6 +23,7 @@ local extendShortcuts = {
 	{ "d", "DeepSeek - Into the Unknown" },
 	{ "v", "VMware Fusion"},
 	{ "m", "Gmail" },
+	{ "c", "Google Chrome" },
 }
 
 local rb = hs.loadSpoon("RecursiveBinder")
