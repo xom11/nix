@@ -73,7 +73,7 @@ gx() {
         git commit -m "Fix typos in some files"
         git push -u origin $BRANCH
 
-        gh pr create --title "Contribution by Gittensor, learn more at https://gittensor.io/"
+        gh pr create --title "docs: fix typos in some files" --body "Contribution by Gittensor, learn more at https://gittensor.io/"
     fi
     REPO_DIR=$(pwd)
     cd ..
