@@ -11,6 +11,8 @@
       btop.enable = true;
       yazi.enable = true;
       ssh.enable = true;
+      tmux.enable = true;
+      zsh.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -20,8 +22,6 @@
       nvim.enable = true;
       bin.enable = true;
       git.enable = true;
-      tmux.enable = true;
-      zsh.enable = true;
     };
     services = {
       syncthing.enable = true;
