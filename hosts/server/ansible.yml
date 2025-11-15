@@ -1,6 +1,6 @@
 ---
 - name: Ubuntu Install
-  hosts: local
+  hosts: localhost
   become: yes
   roles:
     - role: geerlingguy.docker
