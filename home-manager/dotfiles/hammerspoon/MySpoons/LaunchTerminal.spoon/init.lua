@@ -2,21 +2,13 @@ local obj = {}
 obj.__index = obj
 
 local hyper = { "cmd", "ctrl", "alt" }
+local terminal = "kitty"
 
 local defaultShortcuts = {
-	{ "space", "kitty" },
-	{ "b", "Brave Browser" },
-	{ "d", "Discord" },
-	{ "f", "Finder" },
-	{ "k", "Google Keep" },
-	{ "g", "Google Gemini" },
-	{ "m", "Messenger" },
-	{ "n", "Notion" },
-	{ "t", "Telegram" },
-	{ "s", "System Settings" },
-	{ "v", "Visual Studio Code" },
-	{ "y", "Youtube" },
-	{ "z", "Zalo" },
+  -- shortcut, title, command
+	{ "r", "rog", "open -na 'kitty' --args --title 'rog' -- ssh rog" },
+	{ "m", "macmini", "open -na 'kitty' --args --title 'macmini' -- ssh macmini" },
+
 }
 
 local rb = hs.loadSpoon("RecursiveBinder")
@@ -38,37 +30,42 @@ local function moveCursorToCenter()
 	end
 end
 
-local function launch(appName)
+local function launch(title, command)
 	-- Error when using window instead of application: pwa
-	local focusedApp = hs.application.frontmostApplication()
-	local _, focusedBundleID = hs.osascript.applescript([[id of app (path to frontmost application as text)]])
-	local _, targetBundleID = hs.osascript.applescript([[id of app "]] .. appName .. [["]])
-
-	if not targetBundleID then
-		hs.alert.show("Application '" .. appName .. "' not found!")
-		return
+	local focusedID = hs.window.frontmostWindow():id()
+	local windows = hs.window.allWindows()
+	for _, win in ipairs(windows) do
+		if win:application():name() == terminal and win:title() == title then
+      print("Found window: " .. win:title())
+			if win:id() == focusedID then
+				hs.application.frontmostApplication():hide()
+        -- hs.alert.show("Hiding " .. title)
+        return
+			else
+				win:focus()
+				moveCursorToCenter()
+        -- hs.alert.show("Focusing " .. title)
+        return
+			end
+		end
 	end
-
-	-- print("Focused Bundle ID: " .. tostring(focusedBundleID))
-	-- print("Target Bundle ID: " .. tostring(targetBundleID))
-	if focusedBundleID == targetBundleID then
-		focusedApp:hide()
-	else
-		hs.application.launchOrFocusByBundleID(targetBundleID)
-		moveCursorToCenter()
-	end
+	-- true to use user shell environment
+	hs.execute(command,true)
+  -- hs.alert.show("Launching " .. title)
+  -- return
+	--
 end
 
 function obj:init()
-
 	-- Build a keymap for shortcuts so that hyper + x + <key> launches the app
 	local keymap = {}
 	for _, shortcut in ipairs(defaultShortcuts) do
 		local key = shortcut[1]
-		local appName = shortcut[2]
+		local title = shortcut[2]
+		local command = shortcut[3]
 		-- rb.singleKey will add 'shift' modifier automatically for uppercase letters
-		keymap[rb.singleKey(key, appName)] = function()
-			launch(appName)
+		keymap[rb.singleKey(key, title)] = function()
+			launch(title, command)
 		end
 	end
 
