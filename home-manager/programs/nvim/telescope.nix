@@ -10,6 +10,7 @@ lib.mkIf cfg.enable
     extensions.ui-select.enable = true;
     extensions.frecency = {
       enable = true;
+      # FIX: issue #270
       settings.db_safe_mode = false;
     };
     extensions.fzf-native.enable = true;

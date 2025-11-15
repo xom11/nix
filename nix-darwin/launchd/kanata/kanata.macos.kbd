@@ -144,10 +144,13 @@
 
   n tab
   m bspc
-  , bspc
   ;; , spc
+
+  , bspc
   . del
   / ret
+  [ A-bspc
+  ] A-del
 
   1 f1
   2 f2  

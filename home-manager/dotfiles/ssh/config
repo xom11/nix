@@ -3,10 +3,10 @@ Host *
 Host dk
   HostName 100.126.180.8
   User dk
-Host m4
+Host macmini
   HostName 100.115.218.17
   User lenamkhanh
-Host m3
+Host airm3
   HostName 100.115.218.17
   User kln
 Host x1
