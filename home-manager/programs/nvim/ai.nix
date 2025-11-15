@@ -38,9 +38,9 @@ lib.mkIf cfg.enable
     # Avante Configuration
     plugins.avante = {
       enable = true;
-      settings = {
-        provider = "copilot";
-      };
+      # settings = {
+      #   provider = "copilot";
+      # };
     };
   };
 }
