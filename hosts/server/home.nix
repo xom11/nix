@@ -9,7 +9,7 @@ in
   home.shellAliases = {
     update = ''
       git -C ~nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ${cfgDir}
+      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
     '';
     galaxy-update = ''
       ansible-galaxy install -r  ${cfgDir}/ansible.requirements.yml

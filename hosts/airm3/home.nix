@@ -7,7 +7,7 @@ in
     ../../home-manager
   ];
   home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ${cfgDir}";
+    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
   };
   home.packages = [
     pkgs.bws
