@@ -81,7 +81,7 @@ gx() {
     cd "$(ls -d */ | head -n 1)"
     lazygit
 }
-alias cs="codespell -w **/*.(asm|bash|c|cc|cmake|cpp|cs|cxx|go|groovy|h|hh|hpp|hxx|ino|java|js|jsx|lua|php|ps1|py|r|rb|rs|s|scala|sh|sql|svelte|swift|ts|tsx|vue)"
+alias cs="codespell -w . --skip='*.txt,*.md,*.json,*.yaml,*.yml,*.csv,*.png,*.jpg,*.jpeg,*.gif,*.svg,*.lock'"
 
 # Function to set macOS desktop wallpaper. 
 wp() {

@@ -33,6 +33,7 @@ in
 
       # Database
       minio-client
+      # postgresql
 
       # Rust
       maturin
