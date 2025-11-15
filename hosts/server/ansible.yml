@@ -1,6 +1,7 @@
 ---
 - name: Ubuntu Install
   hosts: localhost
+  connection: local
   become: yes
   roles:
     - role: geerlingguy.docker
@@ -20,3 +21,4 @@
         install_recommends: yes
       loop:
         - tailscale
+        - postgresql

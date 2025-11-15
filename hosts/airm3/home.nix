@@ -1,10 +1,13 @@
 { pkgs, device, ... }:
+let
+  cfgDir = "~/.nix/hosts/${device}";
+in
 {
   imports = [
     ../../home-manager
   ];
   home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
+    update = "sudo darwin-rebuild switch --impure --flake ${cfgDir}";
   };
   home.packages = [
     pkgs.bws

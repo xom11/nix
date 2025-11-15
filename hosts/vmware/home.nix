@@ -1,4 +1,7 @@
 { pkgs, device, ... }:
+let
+  cfgDir = "~/.nix/hosts/${device}";
+in
 {
   imports = [
     ../../home-manager
@@ -6,7 +9,7 @@
   home.shellAliases = {
     update = ''
       git -C ~nix pull
-      sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#${device}
+      sudo nixos-rebuild switch --impure --refresh --flake ${cfgDir}
     '';
   };
   modules = {

@@ -1,4 +1,7 @@
-{ pkgs, device, lib, ... }:
+{ pkgs, device, ... }:
+let
+  cfgDir = "~/.nix/hosts/${device}";
+in
 {
   imports = [
     ../../home-manager
@@ -6,7 +9,13 @@
   home.shellAliases = {
     update = ''
       git -C ~nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#server
+      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ${cfgDir}
+    '';
+    galaxy-update = ''
+      ansible-galaxy install -r  ${cfgDir}/ansible.requirements.yml
+    '';
+    ansible-update = ''
+      ansible-playbook -i "localhost," ${cfgDir}/ansible.yml
     '';
   };
   modules = {
