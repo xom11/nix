@@ -39,10 +39,17 @@ lib.mkIf cfg.enable
     plugins.avante = {
       enable = true;
       settings = {
-        # provider = "copilot";
-        # acp_providers = {
-        #   provider = "copilot";
-        # };
+        provider = "copilot";
+        acp_providers = ''{
+          ["gemini-cli"] = {
+            command = "gemini",
+            args = { "--experimental-acp" },
+            env = {
+              NODE_NO_WARNINGS = "1",
+              GEMINI_API_KEY = os.getenv("GEMINI_API_KEY"),
+            },
+          },
+        '';
       };
     };
   };
