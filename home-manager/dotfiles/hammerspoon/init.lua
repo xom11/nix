@@ -56,7 +56,7 @@ hs.loadSpoon("TrackpadReverse")
 spoon.TrackpadReverse:start()
 
 hs.loadSpoon("LaunchApp")
-hs.loadSpoon("LaunchTerminal")
+-- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerTool")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")

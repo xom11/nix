@@ -10,8 +10,10 @@ lib.mkIf cfg.enable
     extensions.ui-select.enable = true;
     extensions.frecency = {
       enable = true;
-      # FIX: issue #270
+      # FIX: issue https://github.com/nvim-telescope/telescope-frecency.nvim/issues/270
       settings.db_safe_mode = false;
+      # Fix: issue https://github.com/nvim-telescope/telescope-frecency.nvim/issues/105
+      settings.db_validate_threshold = 1;
     };
     extensions.fzf-native.enable = true;
     extensions.file-browser = {
@@ -41,9 +43,6 @@ lib.mkIf cfg.enable
     };
   };
   programs.nixvim.keymaps = [
-    # BUG: https://github.com/nvim-telescope/telescope-frecency.nvim/issues/270
-    # On first Telescope frecency there is a A pretyped in telescope #270
-    # Resolve: `FrecencyValidate`
     {
       key = "<leader><leader>";
       action = "<cmd>Telescope frecency workspace=CWD<cr>";
