@@ -58,6 +58,11 @@ local function launch(title, command)
 end
 
 function obj:init()
+  -- default terninal shortcuts
+  hs.hotkey.bind(hyper, "space", function()
+    launch("terminal", "open -na 'kitty' --args --title 'terminal'")
+  end)
+
 	-- Build a keymap for shortcuts so that hyper + x + <key> launches the app
 	local keymap = {}
 	for _, shortcut in ipairs(defaultShortcuts) do

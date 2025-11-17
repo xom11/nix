@@ -4,7 +4,7 @@ obj.__index = obj
 local hyper = { "cmd", "ctrl", "alt" }
 
 local defaultShortcuts = {
-	{ "space", "kitty" },
+	-- { "space", "kitty" },
 	{ "b", "Brave Browser" },
 	{ "d", "Discord" },
 	{ "f", "Finder" },
@@ -21,7 +21,7 @@ local defaultShortcuts = {
 local extendShortcuts = {
 	{ "a", "Launchpad" },
 	{ "d", "DeepSeek - Into the Unknown" },
-	{ "v", "VMware Fusion"},
+	{ "v", "VMware Fusion" },
 	{ "m", "Gmail" },
 	{ "c", "Google Chrome" },
 }
@@ -68,23 +68,17 @@ end
 
 function obj:init()
 	for _, shortcut in ipairs(defaultShortcuts) do
-		local modifiers = hyper
-		local key = shortcut[1]
-		local appName = shortcut[2]
-
-		hs.hotkey.bind(modifiers, key, function()
-			launch(appName)
+		hs.hotkey.bind(hyper, shortcut[1], function()
+			launch(shortcut[2])
 		end)
 	end
 
 	-- Build a keymap for extendShortcuts so that hyper + a + <key> launches the app
 	local keymap = {}
 	for _, shortcut in ipairs(extendShortcuts) do
-		local key = shortcut[1]
-		local appName = shortcut[2]
 		-- rb.singleKey will add 'shift' modifier automatically for uppercase letters
-		keymap[rb.singleKey(key, appName)] = function()
-			launch(appName)
+		keymap[rb.singleKey(shortcut[1], shortcut[2])] = function()
+			launch(shortcut[2])
 		end
 	end
 
