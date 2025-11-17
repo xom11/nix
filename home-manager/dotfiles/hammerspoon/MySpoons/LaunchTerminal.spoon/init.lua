@@ -8,6 +8,7 @@ local defaultShortcuts = {
   -- shortcut, title, command
 	{ "r", "rog", "open -na 'kitty' --args --title 'rog' -- ssh rog" },
 	{ "m", "macmini", "open -na 'kitty' --args --title 'macmini' -- ssh macmini" },
+	{ "n", "nix", "open -na 'kitty' --args --title 'nix' -- tmux attach -t nix" },
 
 }
 

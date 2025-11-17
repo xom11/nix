@@ -8,8 +8,8 @@ in
   };
   config = lib.mkIf cfg.enable {
     home.file = {
-      ".config/kitty/kitty.conf" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/kitty/kitty.conf";
+      ".config/kitty/kitty.d" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/kitty";
       };
     };
   };
