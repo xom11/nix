@@ -52,6 +52,7 @@ api.addSearchAlias('tt', 'taostats', 'https://taostats.io/subnets/%s');
 api.addSearchAlias('gh', 'github', 'https://github.com/search?q=');
 api.addSearchAlias('np', 'nixpkgs', 'https://search.nixos.org/packages?channel=unstable&query=%s');
 api.addSearchAlias('nm', 'mynixos', 'https://mynixos.com/search?q=%s');
+api.addSearchAlias('nv', 'nixvim', 'https://nix-community.github.io/nixvim/?search=%s');
 api.addSearchAlias('yt', 'youtube', 'https://www.youtube.com/results?search_query=%s');
 
 api.mapkey('ont', 'Open newtab', function () {
