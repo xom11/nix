@@ -82,6 +82,10 @@ gx() {
     lazygit
 }
 alias cs="codespell -w . --skip='*.txt,*.md,*.json,*.yaml,*.yml,*.csv,*.png,*.jpg,*.jpeg,*.gif,*.svg,*.lock'"
+# delete all git fork remotes
+# gh repo list --fork --json nameWithOwner --limit 200 | \
+# jq -r '.[].nameWithOwner' | \
+# xargs -I {} gh repo delete {} --yes
 
 # Function to set macOS desktop wallpaper. 
 wp() {

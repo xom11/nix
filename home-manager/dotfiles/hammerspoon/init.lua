@@ -29,7 +29,7 @@ hs.loadSpoon('Emojis'):bindHotkeys({toggle={tab, 'e'}})
 
 -- Draw on screen (c)lear/(a)nnotate/(t)oggle
 local drawonscreen = hs.loadSpoon("DrawOnScreen")
-local hotkey = hs.hotkey.modal.new(tab, 'a')
+local hotkey = hs.hotkey.modal.new(tab, 'd')
 
 function hotkey:entered()
   drawonscreen.start()
@@ -42,7 +42,7 @@ function hotkey:exited()
 end
 
 hotkey:bind(tab, 'c', function() drawonscreen.clear() end)
-hotkey:bind(tab, 'a', function() hotkey:exit() end)
+hotkey:bind(tab, 'd', function() hotkey:exit() end)
 hotkey:bind(tab, 't', function() drawonscreen.toggleAnnotating() end)
 
 -- Reload config 
