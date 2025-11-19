@@ -29,18 +29,18 @@ in
       brave
     ];
 
-    #NOTE: Replace vimiumc with surfiingkeys 
-    # programs.chromium = {
-    #   enable = true;
-    #   package = pkgs.brave;
-    #   extensions = [
-    #     { id = "hfjbmagddngcpeloejdejnfgbamkjaeg"; } # vimium c
-    #     { id = "nacjakoppgmdcpemlfnfegmlhipddanj"; } # pdf for vimium c
-    #   ];
-    #   commandLineArgs = [
-    #     "--enable-features=ParallelDownloading"
-    #     "--extensions-on-chrome-urls"
-    #   ];
-    # };
+    #NOTE: Replace vimiumc with surfingkeys 
+    programs.chromium = {
+      enable = false;
+      package = pkgs.brave;
+      extensions = [
+        { id = "hfjbmagddngcpeloejdejnfgbamkjaeg"; } # vimium c
+        { id = "nacjakoppgmdcpemlfnfegmlhipddanj"; } # pdf for vimium c
+      ];
+      commandLineArgs = [
+        "--enable-features=ParallelDownloading"
+        "--extensions-on-chrome-urls"
+      ];
+    };
   };
 }

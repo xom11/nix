@@ -9,7 +9,7 @@ lib.mkIf cfg.enable
     # Copilot-lua Configuration   
     plugins = {
       copilot-lua = {
-        enable = true;
+        enable = true; #NOTE: check
         settings = {
           panel = {
             enabled = true;
@@ -37,10 +37,16 @@ lib.mkIf cfg.enable
 
     # Avante Configuration
     plugins.avante = {
-      enable = true;
+      enable = false;
       settings = {
         # provider = "copilot";
       };
+    };
+
+    # CodeCompanion Configuration
+    plugins.codecompanion = {
+      enable = true;
+      # settings = {
     };
   };
 }

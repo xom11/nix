@@ -31,10 +31,6 @@ in
       util-linux
       codespell
 
-      # Database
-      minio-client
-      # postgresql
-
       # Rust
       maturin
       rustup
