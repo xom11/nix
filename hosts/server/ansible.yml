@@ -8,7 +8,6 @@
       vars:
         docker_users:
           - "{{ ansible_env.SUDO_USER }}"
-    - role: Stouts.mongodb 
   tasks:
 
     # --- Install apt packages ---
@@ -19,4 +18,3 @@
         install_recommends: yes
       loop:
         - tailscale
-        - postgresql
