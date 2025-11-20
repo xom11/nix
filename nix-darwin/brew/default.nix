@@ -33,6 +33,7 @@ in
         "podman"
         "openssl@3"
         "redis"
+        "docker-compose"
         "docker"
         "colima"
         "kanata"
