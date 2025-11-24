@@ -35,13 +35,18 @@ let
 
   device = "";
 
-  getPath = path:
+  getRelPath = path:
     let
       # Step 1: /nix/store/* -> /nix/store/*/relPath
       nixPath = builtins.toString path;
       # Step 2: split by "-source/"  
       relPath = builtins.elemAt (lib.strings.splitString "-source/" nixPath) 1;
-      # Step 3: concatenate with rootPath
+    in 
+    relPath;
+
+  getPath = path:
+    let
+      relPath = getRelPath path;
       absPath = "${rootPath}/${relPath}";
     in 
     absPath;
@@ -53,6 +58,7 @@ let
       system
       homeDir
       device
+      getRelPath
       getPath
       ;
   };
