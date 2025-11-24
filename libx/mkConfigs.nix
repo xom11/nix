@@ -1,6 +1,8 @@
 { inputs, ... }:
 let
   system = builtins.currentSystem;
+  pkgs = import <nixpkgs> {};
+  lib = pkgs.lib;
 
   username =
     let
@@ -24,8 +26,26 @@ let
     in
     if builtins.pathExists absPath then absPath else relPath;
 
+  rootPath = 
+    let
+      absPath = "${homeDir}/.nix";
+      relPath = "../.nix";
+    in
+    if builtins.pathExists absPath then absPath else relPath;
+
   device = "";
 
+  getPath = path:
+    let
+      # Step 1: /nix/store/* -> /nix/store/*/relPath
+      nixPath = builtins.toString path;
+      # Step 2: split by "-source/"  
+      relPath = builtins.elemAt (lib.strings.splitString "-source/" nixPath) 1;
+      # Step 3: concatenate with rootPath
+      absPath = "${rootPath}/${relPath}";
+    in 
+    absPath;
+    
   args = inputs // {
     inherit
       username
@@ -33,6 +53,7 @@ let
       system
       homeDir
       device
+      getPath
       ;
   };
 

@@ -1,5 +1,6 @@
-{lib, config, dotfileDir, ...}:
+{lib, config, getPath, ...}:
 let
+  pwd = getPath  ./.;
   cfg = config.modules.dotfiles.kitty;
 in
 {
@@ -9,7 +10,7 @@ in
   config = lib.mkIf cfg.enable {
     home.file = {
       ".config/kitty" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/kitty/kitty.d";
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/kitty.d";
       };
     };
   };
