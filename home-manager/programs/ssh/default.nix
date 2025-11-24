@@ -1,10 +1,10 @@
 {lib, config, getPath, pkgs, ...}:
 let
-  cfg = config.modules.modules.ssh;
+  cfg = config.modules.programs.ssh;
   pwd = getPath  ./.;
 in
 {
-  options.modules.modules.ssh = {
+  options.modules.programs.ssh = {
     enable = lib.mkEnableOption "Enable ssh";
   };
   config = lib.mkIf cfg.enable{
