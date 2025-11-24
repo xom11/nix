@@ -13,7 +13,7 @@ in
       settings = {
         user = {
           name  = "khanhkhanhlele";
-          email = "namkhanh20xx@gmail.com";
+          email = "namkhanh2172@gmail.com";
         };
         init.defaultBranch = "main";
         credential.helper = "store";

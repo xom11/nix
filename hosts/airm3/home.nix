@@ -28,6 +28,7 @@ in
       hammerspoon.enable = true;
       zsh.enable = true;
       tmux.enable = true;
+      secrets.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -39,8 +40,7 @@ in
       nvim.enable = true;
     };
     services = {
-      syncthing.enable = true;
+      # syncthing.enable = true;
     };
-    secrets.enable = true;
   };
 }

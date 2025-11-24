@@ -7,7 +7,7 @@
   ...
 }:
 let
-  cfg = config.modules.secrets;
+  cfg = config.dotfiles.secrets;
 in
 {
   options.modules.secrets = {
@@ -22,13 +22,13 @@ in
     ];
     age = {
       secrets = {
-        "secret".file = ./secret.age;
-        "zsh".file = ./zsh.age;
+        "secret".file = ./secrects.d/secret.age;
+        "zsh".file = ./secrects.d/zsh.age;
         "zsh-keys" = {
-          file = ./zsh-keys.age;
+          file = ./secrects.d/zsh-keys.age;
         };
         "git-credentials" = {
-          file = ./git-credentials.age;
+          file = ./secrects.d/git-credentials.age;
           path = "${config.home.homeDirectory}/.git-credentials";
         };
       };
