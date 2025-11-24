@@ -1,10 +1,11 @@
-{lib, config, dotfileDir, pkgs, ...}:
+{lib, config, getPath, pkgs, ...}:
 let
-  cfg = config.modules.dotfiles.ssh;
+  cfg = config.modules.modules.ssh;
+  pwd = getPath  ./.;
 in
 {
-  options.modules.dotfiles.ssh = {
-    enable = lib.mkEnableOption "Enable ssh dotfiles";
+  options.modules.modules.ssh = {
+    enable = lib.mkEnableOption "Enable ssh";
   };
   config = lib.mkIf cfg.enable{
     home.activation = {
@@ -23,7 +24,7 @@ in
     };
     home.file = {
       ".ssh/config" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/ssh/config";
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
       };
     };
   };

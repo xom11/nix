@@ -1,11 +1,11 @@
 {lib,config, getPath, pkgs, ...}:
 let
-  cfg = config.modules.dotfiles.btop;
+  cfg = config.modules.programs.btop;
   pwd = getPath  ./.;
 in
 {
-  options.modules.dotfiles.btop = {
-    enable = lib.mkEnableOption "Enable btop dotfiles";
+  options.modules.programs.btop = {
+    enable = lib.mkEnableOption "Enable btop";
   };
   config = lib.mkIf cfg.enable{
     home.file = {

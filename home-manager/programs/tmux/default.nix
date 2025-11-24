@@ -1,17 +1,18 @@
-{ lib, pkgs, config, dotfileDir, ... }:
+{ lib, pkgs, config, getPath, ... }:
 let 
-  cfg = config.modules.dotfiles.tmux;
+  cfg = config.modules.programs.tmux;
   tmuxDir = "${config.xdg.configHome}/tmux/tmux.d";
+  pwd = getPath  ./.;
 in 
 {
-  options.modules.dotfiles.tmux = {
+  options.modules.programs.tmux = {
     enable = lib.mkEnableOption "Enable tmux";
   };
   config = lib.mkIf cfg.enable
   {
     home.file = {
       "${tmuxDir}" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/tmux/tmux.d";
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/tmux.d";
       };
     };
     programs.tmux = {

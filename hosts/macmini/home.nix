@@ -12,19 +12,14 @@
   modules = {
     fonts.enable = true;
     dotfiles = {
-      btop.enable = true;
       kitty.enable = true;
       # qutebrowser.enable = true;
       vscode.enable = true;
-      ssh.enable = true;
-      yazi.enable = true;
       conda.enable = true;
       # karabiner.enable = true;
       sleepwatcher.enable = true;
       # aerospace.enable = true;
       hammerspoon.enable = true;
-      zsh.enable = true;
-      tmux.enable = true;
       secrets.enable = true;
     };
     pkgs = {
@@ -32,9 +27,14 @@
       dev.enable = true;
     };
     programs = {
+      yazi.enable = true;
+      btop.enable = true;
       git.enable = true;
       bin.enable = true;
       nvim.enable = true;
+      zsh.enable = true;
+      tmux.enable = true;
+      ssh.enable = true;
     };
     services = {
       # syncthing.enable = true;

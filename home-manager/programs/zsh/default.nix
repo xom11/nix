@@ -3,13 +3,14 @@
   config,
   pkgs,
   device,
-  dotfileDir,
+  getPath,
   ...
 }: let
-  cfg = config.modules.dotfiles.zsh;
+  cfg = config.modules.programs.zsh;
   zshDir = "${config.xdg.configHome}/zsh/zsh.d";
+  pwd = getPath  ./.;
 in {
-  options.modules.dotfiles.zsh = {
+  options.modules.programs.zsh = {
     enable = lib.mkEnableOption "Enable zsh as shell";
   };
   config =
@@ -17,7 +18,7 @@ in {
     {
       home.file = {
         "${zshDir}" = {
-          source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/zsh/zsh.d";
+          source = config.lib.file.mkOutOfStoreSymlink "${pwd}/zsh.d";
         };
       };
       programs.zsh = {
