@@ -71,12 +71,14 @@ in {
         dirHashes = {
           # cd ~cfg
           cfg = "$HOME/.config";
-          nix = "$HOME/.nix";
           pass = "$HOME/.password-store";
           dev = "$HOME/Documents/dev";
           note = "$HOME/Documents/note";
           test = "$HOME/Documents/test";
           tmp = "$HOME/Documents/tmp";
+          nix = "$HOME/.nix";
+          dotfiles = "$HOME/.nix/home-manager/dotfiles";
+          secrets = "$HOME/.nix/home-manager/dotfiles/secrets";
         };
 
         sessionVariables = {

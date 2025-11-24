@@ -7,10 +7,10 @@
   ...
 }:
 let
-  cfg = config.dotfiles.secrets;
+  cfg = config.modules.dotfiles.secrets;
 in
 {
-  options.modules.secrets = {
+  options.modules.dotfiles.secrets = {
     enable = lib.mkEnableOption "Enable secrets management";
   };
   config = lib.mkIf cfg.enable {
