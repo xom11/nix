@@ -36,7 +36,7 @@ in
       git.enable = true;
     };
     services = {
-      syncthing.enable = true;
+      syncthing.enable = false;
     };
   };
   home.packages = [
