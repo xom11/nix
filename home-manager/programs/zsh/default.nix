@@ -40,9 +40,8 @@ in
           "copyfile"    # copyfile <filename>
           "copypath"    # copypath <file_or_directory>
           "fzf"
-          "uv"
-          # "zoxide"
-          # "tmux"
+          # "uv"
+          "zoxide"      # z (like cd)
           "sudo"        # press esec twice
           "rust"
         ];

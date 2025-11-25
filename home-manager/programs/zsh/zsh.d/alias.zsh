@@ -10,7 +10,7 @@ alias v='nvim'
 alias vcf='cd ~/.config/nvim && nvim'
 alias rsyncgit='rsync -av --exclude ".git/" --exclude-from=".gitignore"'
 
-# git
+# git https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/git/README.md
 alias g='git'
 alias ga='git add'
 alias gl='git pull'
@@ -26,10 +26,21 @@ alias m='micromamba'
 alias nvitop='uvx nvitop'
 alias btcli='uvx --from bittensor-cli btcli'
 
+# uv https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/uv/README.md
+alias uva='uv add'
+alias uvl='uv lock'
+alias uvi='uv init'
+alias uvr='uv run'
+alias uvrm='uv remove'
+alias uvs='uv sync'
+alias uvsr='uv sync --refresh'
+alias uvsu='uv sync --upgrade'
+alias uvv='uv venv'
+
 # kitty
 alias kitty-opacity='kitty @ set-background-opacity'
 
-# tmux
+# tmux https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/tmux/README.md
 alias tl='tmux ls'
 alias ta='tmux attach -t '
 alias tn='tmux new -s '
