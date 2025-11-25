@@ -1,21 +1,21 @@
-{ lib, config, ... }:
-let
-  cfg = config.modules.programs.nvim;
-in
-lib.mkIf cfg.enable
+{
+  config,
+  ckModule,
+  ...
+}:
+ckModule config ./.
 {
   programs.nixvim.plugins = {
     cmp = {
       enable = true;
       autoEnableSources = true;
-      settings.sources =
-        [
-          { name = "luasnip"; }
-          { name = "nvim_lsp"; }
-          { name = "path"; }
-          { name = "buffer"; }
-          { name = "render-markdown"; }
-        ];
+      settings.sources = [
+        {name = "luasnip";}
+        {name = "nvim_lsp";}
+        {name = "path";}
+        {name = "buffer";}
+        {name = "render-markdown";}
+      ];
 
       settings.mapping = {
         # "<CR>" = "cmp.mapping.confirm({ select = true })";
@@ -36,16 +36,16 @@ lib.mkIf cfg.enable
         "<C-e>" = "cmp.mapping.close()";
         "<C-f>" = "cmp.mapping.scroll_docs(4)";
         "<Tab>" = ''
-          cmp.mapping(function(fallback)
-            if require("copilot.suggestion").is_visible() then
-              require("copilot.suggestion").accept()
-            elseif cmp.visible() then
-              cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-            else
-              fallback()
+            cmp.mapping(function(fallback)
+              if require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").accept()
+              elseif cmp.visible() then
+                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+              else
+                fallback()
+              end
             end
-          end
-        )
+          )
         '';
       };
       cmdline = {
@@ -94,4 +94,3 @@ lib.mkIf cfg.enable
     };
   };
 }
-

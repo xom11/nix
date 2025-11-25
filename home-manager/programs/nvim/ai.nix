@@ -1,12 +1,13 @@
-{ lib, config, ... }:
+{
+  config,
+  ckModule,
+  ...
+}:
 # Keymap Tab (cmp.nix)
-let
-  cfg = config.modules.programs.nvim;
-in
-lib.mkIf cfg.enable
+ckModule config ./.
 {
   programs.nixvim = {
-    # Copilot-lua Configuration   
+    # Copilot-lua Configuration
     plugins = {
       copilot-lua = {
         enable = true;

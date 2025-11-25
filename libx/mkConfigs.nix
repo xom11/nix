@@ -46,18 +46,27 @@
 
   getPath = path: "${rootPath}/${getRelPath path}";
 
-  mkModule = config: path: moduleContent:
-    let
-      relPath = getRelPath path; 
-      pathList = ["modules"] ++ (lib.splitString "/" relPath);
-      cfg = lib.getAttrFromPath pathList config;
-    in {
-      options = lib.setAttrByPath pathList {
-        enable = lib.mkEnableOption "Enable ${relPath}";
-      };
-
-      config = lib.mkIf cfg.enable moduleContent;
+  # Create module: option + config
+  mkModule = config: path: moduleContent: let
+    relPath = getRelPath path;
+    pathList = ["modules"] ++ (lib.splitString "/" relPath);
+    cfg = lib.getAttrFromPath pathList config;
+  in {
+    options = lib.setAttrByPath pathList {
+      enable = lib.mkEnableOption "Enable ${relPath}";
     };
+
+    config = lib.mkIf cfg.enable moduleContent;
+  };
+
+  # Check module: check cfg in not default.nix <nixvim/modules>
+  ckModule = config: path: cfgContent: let
+    relPath = getRelPath path;
+    pathList = ["modules"] ++ (lib.splitString "/" relPath);
+    cfg = lib.getAttrFromPath pathList config;
+  in {
+    config = lib.mkIf cfg.enable cfgContent;
+  };
 
   args =
     inputs
@@ -71,6 +80,7 @@
         getRelPath
         getPath
         mkModule
+        ckModule
         ;
     };
 in {

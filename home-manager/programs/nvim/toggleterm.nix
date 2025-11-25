@@ -1,9 +1,10 @@
-{ lib, config, ... }:
+{
+  config,
+  ckModule,
+  ...
+}:
 # Toggle teminall for nvim
-let
-  cfg = config.modules.programs.nvim;
-in
-lib.mkIf cfg.enable
+ckModule config ./.
 {
   programs.nixvim.plugins = {
     toggleterm = {

@@ -1,12 +1,9 @@
 {
-  lib,
-  pkgs,
   config,
+  ckModule,
   ...
-}: let
-  cfg = config.modules.programs.nvim;
-in
-  lib.mkIf cfg.enable
+}: 
+ckModule config ./.
   {
     programs.nixvim.plugins = {
       gitsigns = {

@@ -1,8 +1,9 @@
-{ lib, config, ... }:
-let
-  cfg = config.modules.programs.nvim;
-in
-lib.mkIf cfg.enable
+{
+  config,
+  ckModule,
+  ...
+}:
+ckModule config ./.
 {
   programs.nixvim.plugins.telescope = {
     enable = true;

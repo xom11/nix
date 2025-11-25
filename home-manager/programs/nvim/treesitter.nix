@@ -1,8 +1,10 @@
-{ lib, config, pkgs, ... }:
-let
-  cfg = config.modules.programs.nvim;
-in
-lib.mkIf cfg.enable
+{
+  config,
+  pkgs,
+  ckModule,
+  ...
+}:
+ckModule config ./.
 {
   programs.nixvim.plugins = {
     treesitter = {
