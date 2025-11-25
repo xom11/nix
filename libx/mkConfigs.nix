@@ -18,14 +18,6 @@
     then "/Users/${username}"
     else "/home/${username}";
 
-  dotfileDir = let
-    absPath = "${homeDir}/.nix/home-manager/dotfiles";
-    relPath = "../home-manager/dotfiles";
-  in
-    if builtins.pathExists absPath
-    then absPath
-    else relPath;
-
   rootPath = let
     absPath = "${homeDir}/.nix";
     relPath = "../.nix";
@@ -73,7 +65,6 @@
     // {
       inherit
         username
-        dotfileDir
         system
         homeDir
         device

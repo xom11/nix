@@ -5,7 +5,7 @@
   mkModule,
   ...
 }: let
-  configDir =
+  targetDir =
     if pkgs.stdenv.hostPlatform.isLinux
     then ".config/Code/User"
     else "Library/Application Support/Code/User";
@@ -13,10 +13,10 @@
 in
   mkModule config ./. {
     home.file = {
-      "${configDir}/keybindings.json" = {
+      "${targetDir}/keybindings.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/keybindings.json";
       };
-      "${configDir}/settings.json" = {
+      "${targetDir}/settings.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/settings.json";
       };
     };

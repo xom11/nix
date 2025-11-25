@@ -1,13 +1,12 @@
-{username,lib, config, ...}:
-let 
-  cfg = config.modules.launchd.kanata;
-  pwd = "/Users/${username}/.nix/nix-darwin/launchd/kanata";
-in 
 {
-  options.modules.launchd.kanata = {
-    enable = lib.mkEnableOption "Enable kanata launchd service";
-  };
-  config = lib.mkIf cfg.enable {
+  config,
+  mkModule,
+  getPath,
+  ...
+}: let
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
     # https://github.com/jtroo/kanata/discussions/1537
     launchd.daemons."kanata" = {
       # command = "sudo /opt/homebrew/bin/kanata -c ${pwd}/kanata.macos.kbd -n";
@@ -22,12 +21,11 @@ in
     launchd.daemons."karabiner-driverkit" = {
       script = ''
         /Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon
-        '';
+      '';
       serviceConfig = {
         KeepAlive = true;
         ProcessType = "Interactive";
       };
     };
     # environment.etc."kanata/kanata.kbd".source = builtins.toString ./kanata.macos.kbd;
-  };
-}
+  }

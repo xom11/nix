@@ -2,7 +2,6 @@
   pkgs,
   lib,
   username,
-  dotfileDir,
   ...
 }:
 {
@@ -18,7 +17,6 @@
     BROWSER = "brave";
     TERMINAL = "kitty";
     SHELL = "${pkgs.zsh}/bin/zsh";
-    DOTFILE_DIR = "${dotfileDir}";
     NIX_CONFIG="extra-experimental-features = nix-command flakes";
     NIXPKGS_ALLOW_UNFREE = 1;
   };

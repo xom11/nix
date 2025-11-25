@@ -1,28 +1,29 @@
-{config, lib, pkgs, dotfileDir, ...}:
-let
-  configDir = if pkgs.stdenv.hostPlatform.isLinux
-    then ".config/qutebrowser"
-    else ".qutebrowser"; 
-  cfg = config.modules.dotfiles.qutebrowser;
-in
 {
-  options.modules.dotfiles.qutebrowser = {
-    enable = lib.mkEnableOption "Enable qutebrowser dotfiles";
-  };
-  config = lib.mkIf cfg.enable {
+  config,
+  pkgs,
+  mkModule,
+  getPath,
+  ...
+}: let
+  targetDir =
+    if pkgs.stdenv.hostPlatform.isLinux
+    then ".config/qutebrowser"
+    else ".qutebrowser";
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
     home.file = {
-      "${configDir}/config.py" = {
-        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/config.py";
+      "${targetDir}/config.py" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config.py";
       };
-      "${configDir}/gruvbox.py" = {
-        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/gruvbox.py";
+      "${targetDir}/gruvbox.py" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/gruvbox.py";
       };
-      "${configDir}/quickmarks" = {
-        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/quickmarks";
+      "${targetDir}/quickmarks" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/quickmarks";
       };
-      "${configDir}/bookmarks/urls" = {
-        source = config.lib.file.mkOutOfStoreSymlink  "${dotfileDir}/qutebrowser/bookmarks/urls";
+      "${targetDir}/bookmarks/urls" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/bookmarks/urls";
       };
     };
-  };
-}
+  }
