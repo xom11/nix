@@ -49,24 +49,24 @@
   outputs =
     { ... }@inputs:
     let
-      libx = import ./libx { inherit inputs ; }; 
+      lib = import ./lib { inherit inputs ; }; 
 
     in
     {
       darwinConfigurations = {
-        macmini = libx.mkDarwin { device = "macmini"; };
-        airm3 = libx.mkDarwin { device = "airm3"; };
+        macmini = lib.mkDarwin { device = "macmini"; };
+        airm3 = lib.mkDarwin { device = "airm3"; };
       };
       nixosConfigurations = {
-        x1g6 = libx.mkNixos { device = "x1g6"; };
-        vmware = libx.mkNixos { device = "vmware"; };
+        x1g6 = lib.mkNixos { device = "x1g6"; };
+        vmware = lib.mkNixos { device = "vmware"; };
       };
       homeConfigurations = {
-        server = libx.mkHomeManager { device = "server"; };
-        desktop = libx.mkHomeManager { device = "desktop"; };
+        server = lib.mkHomeManager { device = "server"; };
+        desktop = lib.mkHomeManager { device = "desktop"; };
       };
       systemConfigs = {
-        desktop = libx.mkSystemManager { device = "desktop"; };
+        desktop = lib.mkSystemManager { device = "desktop"; };
       };
     };
   }
