@@ -9,10 +9,12 @@
       sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#x1g6
     '';
   };
-  modules = {
-    i18n.enable = true;
-    fonts.enable = true;
-    x11.enable = true;
+  modules.home-manager = {
+    environment = {
+      i18n.enable = true;
+      fonts.enable = true;
+      x11.enable = true;
+    };
     dotfiles = {
       btop.enable = true;
       i3.enable = true;

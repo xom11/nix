@@ -1,22 +1,23 @@
-{lib, config, getPath, pkgs, ...}:
-let
-  cfg = config.modules.programs.ssh;
-  pwd = getPath  ./.;
-in
 {
-  options.modules.programs.ssh = {
-    enable = lib.mkEnableOption "Enable ssh";
-  };
-  config = lib.mkIf cfg.enable{
+  lib,
+  config,
+  getPath,
+  pkgs,
+  mkModule,
+  ...
+}: let
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
     home.activation = {
-      copyAuthorizedKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      copyAuthorizedKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
         rm -rf ~/.ssh/authorized_keys;
         mkdir -p ~/.ssh;
         cp ${./authorized_keys} ~/.ssh/authorized_keys;
         chmod 600 ~/.ssh/authorized_keys;
       '';
 
-      genSshKeyGen = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      genSshKeyGen = lib.hm.dag.entryAfter ["writeBoundary"] ''
         if [ ! -f ~/.ssh/id_ed25519 ]; then
           ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
         fi
@@ -27,5 +28,4 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
       };
     };
-  };
-}
+  }

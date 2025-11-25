@@ -1,63 +1,60 @@
-{ config, pkgs, lib, ... }:
-let
-  cfg = config.modules.pkgs.dev;
-in
 {
-  options.modules.pkgs.dev = {
-    enable = lib.mkEnableOption "Install development tools";
-  };
-  config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      fastfetch
-      vim
-      htop
-      lazygit
-      lazydocker
-      zip
-      unzip
-      unrar
-      wget
-      curl
-      tree
-      fzf
-      bat
-      eza
-      zoxide
-      ncdu
-      jq
-      gh
-      ripgrep
-      ansible
-      util-linux
-      codespell
+  config,
+  pkgs,
+  mkModule,
+  ...
+}:
+mkModule config ./. {
+  home.packages = with pkgs; [
+    fastfetch
+    vim
+    htop
+    lazygit
+    lazydocker
+    zip
+    unzip
+    unrar
+    wget
+    curl
+    tree
+    fzf
+    bat
+    eza
+    zoxide
+    ncdu
+    jq
+    gh
+    ripgrep
+    ansible
+    util-linux
+    codespell
 
-      # Rust
-      maturin
-      rustup
+    # Rust
+    maturin
+    rustup
 
-      # Python
-      python3
-      python3Packages.pip
-      uv
-      # micromamba
-      # mamba
+    # Python
+    python3
+    python3Packages.pip
+    uv
+    # micromamba
+    # mamba
 
-      # Node.js
-      nodejs.pkgs.npm
-      nodejs.pkgs.yarn
-      nodejs.pkgs.nodemon
-      nodejs.pkgs.pm2
+    # Node.js
+    nodejs.pkgs.npm
+    nodejs.pkgs.yarn
+    nodejs.pkgs.nodemon
+    nodejs.pkgs.pm2
 
-      # C-sharp
-      dotnetCorePackages.sdk_8_0-bin
+    # C-sharp
+    dotnetCorePackages.sdk_8_0-bin
 
-      # Other
-      tldr
-      ffmpeg
+    # Other
+    tldr
+    ffmpeg
 
-      # BUG: conflicts with macOS clang
-      # https://github.com/NixOS/nixpkgs/issues/306279#issuecomment-2634075103
-      # gcc
-    ];
-  };
+    # BUG: conflicts with macOS clang
+    # https://github.com/NixOS/nixpkgs/issues/306279#issuecomment-2634075103
+    # gcc
+  ];
 }

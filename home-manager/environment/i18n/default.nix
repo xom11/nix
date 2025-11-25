@@ -1,12 +1,5 @@
-{pkgs, lib, config, ...}:
-let 
-  cfg = config.modules.i18n;
-in
-{
-  options.modules.i18n ={
-    enable = lib.mkEnableOption "Enable i18n settings";
-  };
-  config = lib.mkIf cfg.enable {
+{pkgs, lib, config, mkModule, ...}:
+mkModule config ./. {
     i18n.inputMethod = {
       enable = true;
       type = "fcitx5";
@@ -35,5 +28,4 @@ in
         };
       };
     };
-  };
 }

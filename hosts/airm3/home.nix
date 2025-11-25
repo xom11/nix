@@ -12,8 +12,10 @@ in
   home.packages = [
     pkgs.bws
   ];
-  modules = {
-    fonts.enable = true;
+  modules.home-manager = {
+    environment = {
+      fonts.enable = true;
+    };
     dotfiles = {
       kitty.enable = true;
       # qutebrowser.enable = true;

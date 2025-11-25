@@ -1,15 +1,14 @@
-{ lib, pkgs, config, getPath, ... }:
-let 
-  cfg = config.modules.programs.tmux;
-  tmuxDir = "${config.xdg.configHome}/tmux/tmux.d";
-  pwd = getPath  ./.;
-in 
 {
-  options.modules.programs.tmux = {
-    enable = lib.mkEnableOption "Enable tmux";
-  };
-  config = lib.mkIf cfg.enable
-  {
+  pkgs,
+  config,
+  getPath,
+  mkModule,
+  ...
+}: let
+  tmuxDir = "${config.xdg.configHome}/tmux/tmux.d";
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
     home.file = {
       "${tmuxDir}" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/tmux.d";
@@ -47,7 +46,7 @@ in
           plugin = continuum;
           extraConfig = ''
             set -g @continuum-restore 'on'
-            '';
+          '';
         }
         tmux-fzf
         {
@@ -70,5 +69,4 @@ in
         }
       ];
     };
-  };
-}
+  }

@@ -24,16 +24,12 @@
       hammerspoon.enable = true;
       secrets.enable = true;
     };
-    programs = {
-      yazi.enable = true;
-    };
-  };
-  modules = {
     pkgs = {
-      cli.enable = true;
+      test.enable = true;
       dev.enable = true;
     };
     programs = {
+      yazi.enable = true;
       btop.enable = true;
       git.enable = true;
       bin.enable = true;

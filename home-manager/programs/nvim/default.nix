@@ -1,18 +1,15 @@
-{lib, config, pkgs, ... }:
-let
-  cfg = config.modules.programs.nvim;
+{
+  lib,
+  config,
+  pkgs,
+  mkModule,
+  ...
+}: let
   inherit (builtins) filter map toString;
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.strings) hasSuffix;
 in
-{
-  options.modules.programs.nvim = {
-    enable = lib.mkEnableOption "Enable and configure Neovim";
-  };
-  imports = filter (hasSuffix ".nix") (
-    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
-  );
-  config = lib.mkIf cfg.enable {
+  mkModule config ./. {
     home.packages = with pkgs; [
     ];
     programs.nixvim = {
@@ -50,8 +47,7 @@ in
         # flash.enable = true;
       };
       extraPlugins = with pkgs.vimPlugins; [
-        vim-obsession   
+        vim-obsession
       ];
     };
-  };
-}
+  }
