@@ -31,9 +31,13 @@ alias kitty-opacity='kitty @ set-background-opacity'
 
 # tmux
 alias tl='tmux ls'
-alias ta='tmux attach -t'
-alias tkss='tmux kill-session -t'
-alias ts='tmux new -s'
+alias ta='tmux attach -t '
+alias tn='tmux new -s '
+alias ts='tmux switch -t '
+alias tl='stmux list-windows -t '
+alias tksv='tmux kill-server'
+alias tkss='tmux kill-session -t '
+
 
 # kanata
 alias rk='sudo launchctl unload /Library/LaunchDaemons/org.nixos.kanata.plist; sudo launchctl load /Library/LaunchDaemons/org.nixos.kanata.plist'

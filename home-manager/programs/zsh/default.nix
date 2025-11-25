@@ -36,14 +36,14 @@ in
         plugins = [
           # https://github.com/ohmyzsh/ohmyzsh/wiki/plugins
           "git"
-          "extract"
-          "copyfile"
-          "copypath"
+          "extract"     # extract <filename>
+          "copyfile"    # copyfile <filename>
+          "copypath"    # copypath <file_or_directory>
           "fzf"
-          "z"
           "uv"
-          "tmux"
-          "sudo"
+          # "zoxide"
+          # "tmux"
+          "sudo"        # press esec twice
           "rust"
         ];
       };
