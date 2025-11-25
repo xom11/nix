@@ -1,17 +1,15 @@
-{lib, config, dotfileDir, ...}:
-let
-  cfg = config.modules.dotfiles.kitty;
-in
 {
-  options.modules.dotfiles.conda = {
-    enable = lib.mkEnableOption "Enable conda dotfiles";
-  };
-  config = lib.mkIf cfg.enable
-  {
+  config,
+  getPath,
+  mkModule,
+  ...
+}: let
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
     home.file = {
       ".condarc" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfileDir}/conda/condarc";
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/condarc";
       };
     };
-  };
-}
+  }

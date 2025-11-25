@@ -1,20 +1,22 @@
-
-{lib, config, dotfileDir, pkgs, ...}:
-let
-  cfg = config.modules.dotfiles.karabiner;
-  rules_dir = "${dotfileDir}/karabiner/rules";
-in
 {
-  options.modules.dotfiles.karabiner = {
-    enable = lib.mkEnableOption "Enable karabiner dotfiles";
-  };
-  config = lib.mkIf cfg.enable {
+  lib,
+  config,
+  pkgs,
+  getPath,
+  mkModule,
+  ...
+}: let
+  cfg = config.modules.dotfiles.karabiner;
+  pwd = getPath ./.;
+  rules_dir = "${pwd}/rules";
+in
+  mkModule config ./. {
     home.activation = {
-      karabiner = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      karabiner = lib.hm.dag.entryAfter ["writeBoundary"] ''
         mkdir -p $HOME/.config/karabiner
-        ${pkgs.yq-go}/bin/yq eval ${dotfileDir}/karabiner/karabiner.yml -o=json > $HOME/.config/karabiner/karabiner.json
+        ${pkgs.yq-go}/bin/yq eval ${pwd}/karabiner.yml -o=json > $HOME/.config/karabiner/karabiner.json
         ${pkgs.yq-go}/bin/yq eval '
-          .profiles[].complex_modifications.rules += 
+          .profiles[].complex_modifications.rules +=
             load("'${rules_dir}'/modifier_keys.yml") +
             load("'${rules_dir}'/tab_navigation.yml") +
             load("'${rules_dir}'/home_row.yml") +
@@ -23,9 +25,8 @@ in
             load("'${rules_dir}'/tab_shortcuts.yml") +
             load("'${rules_dir}'/other.yml") +
             []
-          ' ${dotfileDir}/karabiner/main.yml -o=json > $HOME/.config/karabiner/karabiner.json
+          ' ${pwd}/main.yml -o=json > $HOME/.config/karabiner/karabiner.json
         /opt/homebrew/bin/karabiner_cli --select-profile "Default profile"
       '';
     };
-  };
-}
+  }

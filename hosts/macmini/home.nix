@@ -9,8 +9,10 @@
   home.packages = [
     pkgs.bws
   ];
-  modules = {
-    fonts.enable = true;
+  modules.home-manager = {
+    environment = {
+      fonts.enable = true;
+    };
     dotfiles = {
       kitty.enable = true;
       # qutebrowser.enable = true;
@@ -22,12 +24,16 @@
       hammerspoon.enable = true;
       secrets.enable = true;
     };
+    programs = {
+      yazi.enable = true;
+    };
+  };
+  modules = {
     pkgs = {
       cli.enable = true;
       dev.enable = true;
     };
     programs = {
-      yazi.enable = true;
       btop.enable = true;
       git.enable = true;
       bin.enable = true;

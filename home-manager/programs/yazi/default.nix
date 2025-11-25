@@ -1,13 +1,13 @@
-{lib, pkgs, config, getPath, ... }:
-let
-  cfg = config.modules.programs.yazi;
-  pwd = getPath  ./.;
-in
 {
-  options.modules.programs.yazi = {
-    enable = lib.mkEnableOption "Enable yazi dotfiles";
-  };
-  config = lib.mkIf cfg.enable {
+  pkgs,
+  config,
+  mkModule,
+  getPath,
+  ...
+}: let
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
     home.file = {
       ".config/yazi" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/yazi.d";
@@ -17,5 +17,4 @@ in
       pkgs.yazi
       pkgs.yaziPlugins.smart-enter
     ];
-  };
-}
+  }
