@@ -60,8 +60,6 @@
     config = lib.mkIf cfg.enable cfgContent;
   };
 
-  libx = builtins.import ./libx.nix {inherit inputs; };
-
   args =
     inputs
     // {
@@ -74,7 +72,6 @@
         getPath
         mkModule
         ckModule
-        libx
         ;
     };
 in {
