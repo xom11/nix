@@ -1,13 +1,13 @@
 {
-  lib,
+  libx,
   config,
   getPath,
   mkModule,
   ...
 }: let
-  pwd = getPath ./.;
+  pwd = libx.getPath ./.;
 in
-  mkModule config ./. {
+  libx.mkModule config ./. {
     home.file = {
       ".config/kitty" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/kitty.d";
