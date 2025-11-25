@@ -2,10 +2,13 @@
   pkgs,
   lib,
   config,
+  getRelPath,
   ...
 }:
 let
-  cfg = config.modules.x11;
+  relPath = getRelPath ./.;
+  pathList = ["modules"] ++ (lib.splitString "/" relPath);
+  cfg = lib.getAttrFromPath pathList config;
   lb_libs = with pkgs; [
     fontconfig
     mono6
@@ -16,7 +19,7 @@ let
   ];
 in
 {
-  options.modules.x11 = {
+  options = lib.setAttrByPath pathList {
     enable = lib.mkEnableOption "Enable x11 settings";
     screen.dpi = lib.mkOption {
       type = lib.types.int;
