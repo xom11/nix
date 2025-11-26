@@ -9,27 +9,18 @@
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.strings) hasSuffix;
 in
-{
-  imports = filter (hasSuffix ".nix") (
-    map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
-  );
-} //
-  mkModule config ./. {
+  {
+    imports = filter (hasSuffix ".nix") (
+      map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+    );
+  }
+  // mkModule config ./. {
     home.packages = with pkgs; [
     ];
     programs.nixvim = {
       enable = true;
       globals.mapleader = " ";
       clipboard.register = "unnamedplus";
-      opts = {
-        expandtab = true;
-        tabstop = 2;
-        softtabstop = 2;
-        shiftwidth = 2;
-        number = false;
-        relativenumber = false;
-      };
-
       colorschemes.catppuccin.enable = true;
 
       plugins = {
