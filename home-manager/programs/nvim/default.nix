@@ -38,6 +38,7 @@ in
         image.enable = true;
         barbecue.enable = true;
         # flash.enable = true;
+        lazygit.enable = true;
       };
       extraPlugins = with pkgs.vimPlugins; [
         vim-obsession
