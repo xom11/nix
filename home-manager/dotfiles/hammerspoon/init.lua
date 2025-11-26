@@ -60,6 +60,8 @@ hs.loadSpoon("LaunchApp")
 hs.loadSpoon("PowerTool")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
-hs.loadSpoon("LanguageSwitcher")
+
+-- macos telex very bad
+-- hs.loadSpoon("LanguageSwitcher")
 
 

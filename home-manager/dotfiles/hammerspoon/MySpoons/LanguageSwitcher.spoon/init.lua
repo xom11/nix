@@ -1,7 +1,7 @@
 local obj = {}
 obj.__index = obj
 
-local vn = "Simple Telex"
+local vn = "Telex"
 local en = "Unicode Hex Input"
 
 function obj:init()
