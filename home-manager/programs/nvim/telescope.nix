@@ -43,7 +43,7 @@ ckModule config ./.
         layout_strategy = "flex";
         layout_config = {
           horizontal = {
-            prompt_position = "bottom";
+            prompt_position = "top";
           };
         };
         sorting_strategy = "ascending";
