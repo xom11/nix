@@ -41,12 +41,12 @@ ckModule config ./.
           action = "\"_dP";
           options.desc = "Paste without overwriting clipboard";
         }
-        {
-          key = "gd";
-          mode = "n";
-          action = "<cmd>lua vim.lsp.buf.definition()<cr>";
-          options.desc = "Go to definition";
-        }
+        # {
+        #   key = "gd";
+        #   mode = "n";
+        #   action = "<cmd>lua vim.lsp.buf.definition()<cr>";
+        #   options.desc = "Go to definition";
+        # }
         {
           key = "<leader>yy";
           mode = "n";

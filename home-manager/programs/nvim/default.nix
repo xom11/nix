@@ -15,8 +15,6 @@ in
     );
   }
   // mkModule config ./. {
-    home.packages = with pkgs; [
-    ];
     programs.nixvim = {
       enable = true;
 
@@ -40,8 +38,25 @@ in
         # flash.enable = true;
         lazygit.enable = true;
       };
+
       extraPlugins = with pkgs.vimPlugins; [
         vim-obsession
+        clipboard-image-nvim
       ];
+
+      extraConfigVim = ''
+      '';
+
+      extraConfigLuaPre = ''
+        if vim.g.have_nerd_font then
+          require('nvim-web-devicons').setup {}
+        end
+      '';
+
+      extraConfigLuaPost = ''
+      '';
+
+      extraConfigLua = ''
+      '';
     };
   }

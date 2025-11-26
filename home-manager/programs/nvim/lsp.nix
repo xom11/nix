@@ -22,17 +22,56 @@ ckModule config ./.
             };
           };
         };
-        nixd.enable = true;
-        lua_ls.enable = true;
-        jsonls.enable = true;
-        yamlls.enable = true;
-        marksman.enable = true;
+        nixd.enable = true; # Nix
+        jsonls.enable = true; # JSON
+        yamlls.enable = true; # YAML
+        marksman.enable = true; # Markdown
+        ts_ls.enable = true; # TS/JS
+        cssls.enable = true; # CSS
+        tailwindcss.enable = true; # TailwindCSS
+        html.enable = true; # HTML
+        astro.enable = true; # AstroJS
+        phpactor.enable = true; # PHP
+        svelte.enable = false; # Svelte
+        dockerls.enable = true; # Docker
+        bashls.enable = true; # Bash
+        clangd.enable = true; # C/C++
+        # csharp_ls.enable = true; # C#
+        gopls.enable = true; # Go
+
+        lua_ls = {
+          enable = true;
+          settings.telemetry.enable = false;
+        };
+
+        rust_analyzer = {
+          enable = true;
+          installRustc = true;
+          installCargo = true;
+        };
+      };
+      keymaps = {
+        silent = true;
+        lspBuf = {
+          gd = {
+            action = "definition";
+            desc = "Go to Definition";
+          };
+          gr = {
+            action = "references";
+            desc = "Go to References";
+          };
+          gD = {
+            action = "declaration";
+            desc = "Go to Declaration";
+          };
+          "<leader>rn" = {
+            action = "rename";
+            desc = "Rename";
+          };
+        };
       };
     };
-    # Replace by conform.nix
-    # lsp-format = {
-    #   enable = true;
-    # };
   };
   home.packages = with pkgs; [
     nixd

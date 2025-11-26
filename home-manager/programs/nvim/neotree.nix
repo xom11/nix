@@ -33,6 +33,5 @@ ckModule config ./.
         hideGitignored = false;
       };
     };
-    # };
   };
 }
