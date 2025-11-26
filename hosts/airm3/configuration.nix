@@ -3,7 +3,7 @@
   imports = [
     ../../nix-darwin
   ];
-  modules = {
+  modules.nix-darwin = {
     brew.enable = true;
     launchd = {
       kanata.enable = true;

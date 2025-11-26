@@ -28,7 +28,7 @@ in
       secrets.enable = true;
     };
     pkgs = {
-      cli.enable = true;
+      test.enable = true;
       dev.enable = true;
     };
     programs = {
