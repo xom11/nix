@@ -19,7 +19,7 @@ ckModule config ./.
           mode = "v";
           action = "<gv";
         }
-        # Move selected lines 
+        # Move selected lines
         {
           key = "J";
           mode = "v";
@@ -106,10 +106,19 @@ ckModule config ./.
         }
         {
           mode = "n";
-          key = "<leader>ee";
+          key = "<leader>es";
           action.__raw = "vim.diagnostic.open_float";
           options = {
             desc = "Show diagnostic error message";
+            silent = true;
+          };
+        }
+        {
+          key = "<leader>ee";
+          action = "<CMD>Neotree toggle<NL>";
+
+          options = {
+            desc = "Toggle Neotree file explorer";
             silent = true;
           };
         }

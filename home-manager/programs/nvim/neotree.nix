@@ -35,14 +35,4 @@ ckModule config ./.
     };
     # };
   };
-  programs.nixvim.keymaps = [
-    {
-      key = "<A-e>";
-      action = "<CMD>Neotree toggle<NL>";
-
-      options = {
-        silent = true;
-      };
-    }
-  ];
 }
