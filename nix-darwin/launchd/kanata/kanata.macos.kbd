@@ -24,7 +24,7 @@
 )
 
 (deftemplate charmod (char mod)
-  (switch 
+  (switch
     ((key-timing $streak-count less-than $streak-time)) $char break
     () (tap-hold-release-timeout $tap-timeout $hold-timeout $char $mod $char) break
   )
@@ -77,7 +77,7 @@
   k (t! charmod k rmet)
   l (t! charmod l lalt)
   ; (t! charmod ; rsft)
-  z (t! charmod z lctl) 
+  z (t! charmod z lctl)
   x (chord mbl x)
   c (chord mbl c)
   v (t! charmod v (layer-while-held vlayer))
@@ -140,7 +140,7 @@
   x M-x ;; cut
   c M-c ;; copy
   v M-v ;; paste
-  b A-v ;; paste history 
+  b A-v ;; paste history
 
   n tab
   m bspc
@@ -153,7 +153,7 @@
   ] A-del
 
   1 f1
-  2 f2  
+  2 f2
   3 f3
   4 f4
   5 f5
