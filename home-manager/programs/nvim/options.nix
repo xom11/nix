@@ -5,6 +5,10 @@
 }:
 ckModule config ./. {
   programs.nixvim = {
+    globals.mapleader = " ";
+    clipboard.register = "unnamedplus";
+    colorschemes.catppuccin.enable = true;
+
     opts = {
       expandtab = true;
       tabstop = 2;
@@ -46,5 +50,17 @@ ckModule config ./. {
       # Start scrolling when the cursor is X lines away from the top/bottom
       scrolloff = 5;
     };
+
+    diagnostics = {
+      update_in_insert = true;
+      severity_sort = true;
+      float = {
+        border = "rounded";
+      };
+      jump = {
+        severity.__raw = "vim.diagnostic.severity.WARN";
+      };
+    };
+
   };
 }

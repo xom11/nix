@@ -19,9 +19,6 @@ in
     ];
     programs.nixvim = {
       enable = true;
-      globals.mapleader = " ";
-      clipboard.register = "unnamedplus";
-      colorschemes.catppuccin.enable = true;
 
       plugins = {
         lualine.enable = true;
