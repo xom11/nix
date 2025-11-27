@@ -1,7 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-let
-  cfg = config.modules.sources.raiseorlaunch;
+{
+  config,
+  pkgs,
+  mkModule,
+  ...
+}: let
   python3Packages = pkgs.python3Packages;
   raiseorlaunch = python3Packages.buildPythonApplication {
     pname = "raiseorlaunch";
@@ -13,19 +15,14 @@ let
       hash = "sha256-JqcT9sCSuKkHbhqvIrriPl/dPgc0awu6+8pvEmy2Qbg=";
     };
     pyproject = true;
-    build-system = with python3Packages; [ setuptools ];
-    pythonPath = with python3Packages; [ i3ipc ];
+    build-system = with python3Packages; [setuptools];
+    pythonPath = with python3Packages; [i3ipc];
     doCheck = false;
-    pythonImportsCheck = [ "raiseorlaunch" ];
+    pythonImportsCheck = ["raiseorlaunch"];
   };
 in
-{
-  options.modules.sources.raiseorlaunch = {
-    enable = lib.mkEnableOption "Enable raiseorlaunch utility";
-  };
-  config = lib.mkIf cfg.enable {
+  mkModule config ./. {
     home.packages = [
       raiseorlaunch
     ];
-  };
-}
+  }
