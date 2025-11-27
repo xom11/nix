@@ -1,5 +1,8 @@
 { pkgs, device, ...}:
 {
+  nixpkgs.overlays = [
+    (import ../../overlays)
+  ];
   imports = [
     ../../home-manager
   ];
@@ -8,6 +11,8 @@
   };
   home.packages = [
     pkgs.bws
+
+    pkgs.fcitx5-macos
   ];
   modules.home-manager = {
     environment = {
