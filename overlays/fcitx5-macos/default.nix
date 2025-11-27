@@ -1,61 +1,37 @@
 {
-  fetchzip,
-  gitUpdater,
-  installShellFiles,
   lib,
-  stdenv,
-  versionCheckHook,
+  stdenvNoCC,
+  fetchurl,
+  unzip,
 }:
 
-let
-  appName = "AeroSpace.app";
-  version = "0.20.0-Beta";
-in
-stdenv.mkDerivation {
-  pname = "aerospace";
+stdenvNoCC.mkDerivation rec {
+  pname = "fcitx5-macos-installer";
+  version = "0.2.8";
 
-  inherit version;
-
-  src = fetchzip {
-    url = "https://github.com/nikitabobko/AeroSpace/releases/download/v${version}/AeroSpace-v${version}.zip";
-    sha256 = "sha256-bPcVgTPvskit0/LeqmWoOOnlwwyzPoa48P8Vooaqlig=";
+  src = fetchurl {
+    url = "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/${version}/Fcitx5Installer.zip";
+    hash = "sha256-mBuurTYDycXTAhpG2Afu1tnpTHQcc8wsglV1cHoibeo="; 
   };
 
-  nativeBuildInputs = [ installShellFiles ];
+  nativeBuildInputs = [ unzip ];
+
+  unpackPhase = ''
+    unzip $src
+  '';
 
   installPhase = ''
     runHook preInstall
     mkdir -p $out/Applications
-    mv ${appName} $out/Applications
-    cp -R bin $out
-    mkdir -p $out/share
+    cp -r Fcitx5Installer.app $out/Applications/
     runHook postInstall
   '';
 
-  postInstall = ''
-    installManPage manpage/*
-    installShellCompletion --bash shell-completion/bash/aerospace
-    installShellCompletion --fish shell-completion/fish/aerospace.fish
-    installShellCompletion --zsh  shell-completion/zsh/_aerospace
-  '';
-
-  doInstallCheck = true;
-  nativeInstallCheckInputs = [
-    versionCheckHook
-  ];
-
-  passthru.updateScript = gitUpdater {
-    url = "https://github.com/nikitabobko/AeroSpace.git";
-    rev-prefix = "v";
-  };
-
-  meta = {
-    license = lib.licenses.mit;
-    mainProgram = "aerospace";
-    homepage = "https://github.com/nikitabobko/AeroSpace";
-    description = "i3-like tiling window manager for macOS";
-    platforms = lib.platforms.darwin;
-    maintainers = with lib.maintainers; [ alexandru0-dev ];
-    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
+  meta = with lib; {
+    description = "Installer of Fcitx5 macOS";
+    homepage = "https://github.com/fcitx-contrib/fcitx5-macos-installer";
+    license = licenses.mpl20;
+    platforms = platforms.darwin;
+    maintainers = [ ];
   };
 }

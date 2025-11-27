@@ -11,7 +11,6 @@
   };
   home.packages = [
     pkgs.bws
-
     pkgs.fcitx5-macos
   ];
   modules.home-manager = {
