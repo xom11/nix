@@ -7,19 +7,19 @@
 mkModule config ./. {
   home.packages = with pkgs; [
     bitwarden-desktop
+    brave
+    # caprine
     # deskreen
-    # qutebrowser
     # discord # x86_64 only
-    nemo
-    vscode
-    telegram-desktop
-    localsend
-    # slack
     # google-chrome # x86_64 only
     kitty
-    # caprine
+    localsend
+    nemo
+    # qutebrowser
+    # slack
+    telegram-desktop
     vlc
-    brave
+    vscode
   ];
 
   #NOTE: Replace vimiumc with surfingkeys

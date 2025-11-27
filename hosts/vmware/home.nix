@@ -1,48 +1,48 @@
-{ pkgs, device, ... }:
-let
-  cfgDir = "~/.nix/hosts/${device}";
-in
 {
+  pkgs,
+  device,
+  ...
+}: {
   imports = [
     ../../home-manager
   ];
   home.shellAliases = {
     update = ''
       git -C ~nix pull
-      sudo nixos-rebuild switch --impure --refresh --flake ${cfgDir}
+      sudo nixos-rebuild switch --impure --refresh --flake ~/.nix${device}
     '';
   };
-  modules = {
-    i18n.enable = true;
-    fonts.enable = true;
-    x11.enable = true;
+  modules.home-manager = {
+    environment = {
+      i18n.enable = true;
+      fonts.enable = true;
+      x11.enable = true;
+    };
     dotfiles = {
       btop.enable = true;
       i3.enable = true;
       kitty.enable = true;
       # qutebrowser.enable = true;
-      vscode.enable = true;
       rofi.enable = true;
       ssh.enable = true;
+      vscode.enable = true;
       yazi.enable = true;
     };
     pkgs = {
       cli.enable = true;
-      gui.enable = true;
       dev.enable = true;
+      gui.enable = true;
     };
     programs = {
       bin.enable = true;
-      nvim.enable = true;
       git.enable = true;
+      nvim.enable = true;
       tmux.enable = true;
       zsh.enable = true;
     };
     secrets.enable = true;
-    sources = {
-      raiseorlaunch.enable = true;
-    };
   };
   home.packages = [
   ];
 }
+

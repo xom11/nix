@@ -6,28 +6,28 @@
 }:
 mkModule config ./. {
   home.packages = with pkgs; [
-    fastfetch
-    vim
-    htop
-    lazygit
-    lazydocker
-    zip
-    unzip
-    unrar
-    wget
-    curl
-    tree
-    fzf
-    bat
-    eza
-    zoxide
-    ncdu
-    jq
-    gh
-    ripgrep
     ansible
-    util-linux
+    bat
     codespell
+    curl
+    eza
+    fastfetch
+    fzf
+    gh
+    htop
+    jq
+    lazydocker
+    lazygit
+    ncdu
+    ripgrep
+    tree
+    unrar
+    unzip
+    util-linux
+    vim
+    wget
+    zip
+    zoxide
 
     # Rust
     maturin
@@ -41,17 +41,17 @@ mkModule config ./. {
     # mamba
 
     # Node.js
-    nodejs.pkgs.npm
-    nodejs.pkgs.yarn
     nodejs.pkgs.nodemon
+    nodejs.pkgs.npm
     nodejs.pkgs.pm2
+    nodejs.pkgs.yarn
 
     # C-sharp
     dotnetCorePackages.sdk_8_0-bin
 
     # Other
-    tldr
     ffmpeg
+    tldr
 
     # BUG: conflicts with macOS clang
     # https://github.com/NixOS/nixpkgs/issues/306279#issuecomment-2634075103

@@ -7,10 +7,10 @@
 mkModule config ./. {
   home.packages = with pkgs; [
     caligula
+    codex
     gemini-cli
     mkpasswd
-    yq-go
-    codex
     opencode
+    yq-go
   ];
 }

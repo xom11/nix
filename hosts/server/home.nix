@@ -26,14 +26,14 @@ in
       dev.enable = true;
     };
     programs = {
+      bin.enable = true;
       btop.enable = true;
-      yazi.enable = true;
+      git.enable = true;
+      nvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
+      yazi.enable = true;
       zsh.enable = true;
-      nvim.enable = true;
-      bin.enable = true;
-      git.enable = true;
     };
     services = {
       syncthing.enable = false;

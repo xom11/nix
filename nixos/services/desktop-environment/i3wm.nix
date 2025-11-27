@@ -1,6 +1,8 @@
-{config, lib, ...}:
+{config, lib, getRelPath, ...}:
 let
-  cfg = config.modules.services.desktop-environment;
+  relPath = getRelPath ./.;
+  pathList = ["modules"] ++ (lib.splitString "/" relPath);
+  cfg = lib.getAttrFromPath pathList config;
 in
 {
   config = lib.mkIf (cfg.enable && cfg.type == "i3wm") {

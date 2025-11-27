@@ -1,34 +1,29 @@
-
-{config, lib, ...}:
-let
-  cfg = config.modules.services.keyd;
-in  
 {
-  options.modules.services.keyd = {
-    enable = lib.mkEnableOption "Enable keyd service";
-  };
-  config = lib.mkIf cfg.enable {
-    services.keyd = {
-      enable = true;
-      keyboards = {
-        default = {
-          ids = [ "*" ];
-          # settings = {
-          #   main = {
-          #   };
-          #   otherlayer = {};
-          # };
-          extraConfig = builtins.readFile ./keyd.nix.conf;
-        };
+  config,
+  mkModule,
+  ...
+}:
+mkModule config ./. {
+  services.keyd = {
+    enable = true;
+    keyboards = {
+      default = {
+        ids = ["*"];
+        # settings = {
+        #   main = {
+        #   };
+        #   otherlayer = {};
+        # };
+        extraConfig = builtins.readFile ./keyd.nix.conf;
       };
     };
-    # Optional, but makes sure that when you type the make palm rejection work with keyd
-    # https://github.com/rvaiya/keyd/issues/723
-    environment.etc."libinput/local-overrides.quirks".text = ''
-      [Serial Keyboards]
-      MatchUdevType=keyboard
-      MatchName=keyd virtual keyboard
-      AttrKeyboardIntegration=internal
-    '';
   };
+  # Optional, but makes sure that when you type the make palm rejection work with keyd
+  # https://github.com/rvaiya/keyd/issues/723
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Serial Keyboards]
+    MatchUdevType=keyboard
+    MatchName=keyd virtual keyboard
+    AttrKeyboardIntegration=internal
+  '';
 }
