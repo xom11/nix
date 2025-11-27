@@ -1,10 +1,13 @@
-{config, lib, getRelPath, ...}:
-let
+{
+  config,
+  lib,
+  getRelPath,
+  ...
+}: let
   relPath = getRelPath ./.;
   pathList = ["modules"] ++ (lib.splitString "/" relPath);
   cfg = lib.getAttrFromPath pathList config;
-in
-{
+in {
   config = lib.mkIf (cfg.enable && cfg.type == "gnome") {
     services.displayManager.gdm.enable = true;
     services.desktopManager.gnome.enable = true;

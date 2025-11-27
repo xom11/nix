@@ -1,19 +1,15 @@
 {
   config,
   pkgs,
-  lib,
+  mkModule,
   ...
 }: let
   hibernateEnvironment = {
     HIBERNATE_SECONDS = "600";
     HIBERNATE_LOCK = "/var/run/autohibernate.lock";
   };
-  cfg = config.modules.services.hibernate;
-in {
-  options.modules.services.hibernate = {
-    enable = lib.mkEnableOption "Enable hibernate services";
-  };
-  config = lib.mkIf cfg.enable {
+in
+  mkModule config ./. {
     powerManagement.enable = true;
     swapDevices = [
       {
@@ -51,5 +47,4 @@ in {
       '';
       serviceConfig.Type = "simple";
     };
-  };
-}
+  }

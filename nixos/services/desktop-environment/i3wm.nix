@@ -1,10 +1,13 @@
-{config, lib, getRelPath, ...}:
-let
+{
+  config,
+  lib,
+  getRelPath,
+  ...
+}: let
   relPath = getRelPath ./.;
   pathList = ["modules"] ++ (lib.splitString "/" relPath);
   cfg = lib.getAttrFromPath pathList config;
-in
-{
+in {
   config = lib.mkIf (cfg.enable && cfg.type == "i3wm") {
     services.xserver.enable = true;
     services.xserver.windowManager.i3.enable = true;
