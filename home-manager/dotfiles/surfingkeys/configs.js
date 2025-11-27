@@ -47,6 +47,7 @@ api.removeSearchAlias('e');
 api.removeSearchAlias('b');
 api.removeSearchAlias('y');
 unmap('on');
+api.addSearchAlias('o', 'google', 'https://www.google.com/search?q=');
 api.addSearchAlias('gg', 'google', 'https://www.google.com/search?q=');
 api.addSearchAlias('tt', 'taostats', 'https://taostats.io/subnets/%s');
 api.addSearchAlias('gh', 'github', 'https://github.com/search?q=');
