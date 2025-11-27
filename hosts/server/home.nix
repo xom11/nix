@@ -18,7 +18,7 @@ in
       ansible-playbook -i "localhost," ${cfgDir}/ansible.yml
     '';
   };
-  modules = {
+  modules.home-manager = {
     dotfiles = {
     };
     pkgs = {
@@ -36,7 +36,7 @@ in
       zsh.enable = true;
     };
     services = {
-      syncthing.enable = false;
+      # syncthing.enable = true;
     };
   };
   home.packages = [
