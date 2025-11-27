@@ -1,11 +1,12 @@
-{ lib, ... }:
-let
-  inherit (builtins) filter map toString;
-  inherit (lib.filesystem) listFilesRecursive;
-  inherit (lib.strings) hasSuffix;
-in
 {
-  # imports = filter (hasSuffix ".nix") (
-  #   map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
-  # );
+  pkgs,
+  ...
+}: let
+  fcitx5-macos = pkgs.callPackage ./fcitx5-macos/package.nix {};
+  raiseorlaunch = pkgs.callPackage ./raiseorlaunch/package.nix {};
+in {
+  home.packages = [
+    fcitx5-macos
+  ];
 }
+

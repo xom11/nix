@@ -1,11 +1,10 @@
 {
-  config,
   pkgs,
-  mkModule,
   ...
 }: let
   python3Packages = pkgs.python3Packages;
-  raiseorlaunch = python3Packages.buildPythonApplication {
+in
+  python3Packages.buildPythonApplication {
     pname = "raiseorlaunch";
     version = "0.0.1";
     src = pkgs.fetchFromGitHub {
@@ -19,10 +18,4 @@
     pythonPath = with python3Packages; [i3ipc];
     doCheck = false;
     pythonImportsCheck = ["raiseorlaunch"];
-  };
-in
-  mkModule config ./. {
-    home.packages = [
-      raiseorlaunch
-    ];
   }
