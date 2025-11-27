@@ -22,7 +22,7 @@ in
     dotfiles = {
     };
     pkgs = {
-      cli.enable = true;
+      test.enable = true;
       dev.enable = true;
     };
     programs = {
