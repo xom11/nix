@@ -8,6 +8,8 @@
       vars:
         docker_users:
           - "{{ ansible_env.SUDO_USER }}"
+        docker_install_compose: true
+        docker_install_compose_plugin: true
   tasks:
 
     # --- Install apt packages ---
