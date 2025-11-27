@@ -86,7 +86,8 @@
   , (chord mbr ,)
   . (chord mbr .)
   / (t! charmod / rctl)
-  spc (t! charmod spc (multi (layer-switch extend) (on-release tap-virtualkey clear)))
+  ;; spc (t! charmod spc (multi (layer-switch extend) (on-release tap-virtualkey clear)))
+  spc (t! charmod spc (layer-while-held extend))
 )
 
 (deflayermap (vlayer)

@@ -1,5 +1,9 @@
-{ lib, username, device, ... }:
 {
+  lib,
+  username,
+  device,
+  ...
+}: {
   networking = {
     computerName = lib.mkDefault device;
     hostName = lib.mkDefault device;
@@ -92,12 +96,30 @@
         };
         "com.apple.symbolichotkeys" = {
           AppleSymbolicHotKeys = {
+            # To find the ID of a specific shortcut, you can use:
+            # ============================
+            # defaults read com.apple.symbolichotkeys > before.txt
+            # edit ...
+            # defaults read com.apple.symbolichotkeys > after.txt
+            # diff -C 5 before.txt after.txt
+            # ============================
+
             # Disable 'Cmd + Space' for Spotlight Search
             "64" = {
               enabled = false;
             };
             # Disable 'Cmd + Alt + Space' for Finder search window
             "65" = {
+              enabled = false;
+            };
+            # Using Fcitx5 for macos
+            # Disable 'Select the previous input source'
+            "60" = {
+              enabled = false;
+            };
+
+            # Disable 'Select the next input source' 
+            "61" = {
               enabled = false;
             };
           };
@@ -116,4 +138,4 @@
       };
     };
   };
-}  
+}
