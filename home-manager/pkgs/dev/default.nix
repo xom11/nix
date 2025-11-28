@@ -49,6 +49,9 @@ mkModule config ./. {
     # C-sharp
     dotnetCorePackages.sdk_8_0-bin
 
+    # golang
+    go
+
     # Other
     ffmpeg
     tldr
