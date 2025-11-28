@@ -52,6 +52,9 @@ mkModule config ./. {
     # golang
     go
 
+    # mongo
+    mongosh
+
     # Other
     ffmpeg
     tldr

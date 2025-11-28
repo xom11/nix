@@ -55,11 +55,30 @@ local function launch(appName)
 		hs.alert.show("Application '" .. appName .. "' not found!")
 		return
 	end
+  -- print("Focused Bundle ID: " .. tostring(focusedBundleID))
+  -- print("Target Bundle ID: " .. tostring(targetBundleID))
 
-	-- print("Focused Bundle ID: " .. tostring(focusedBundleID))
-	-- print("Target Bundle ID: " .. tostring(targetBundleID))
 	if focusedBundleID == targetBundleID then
-		focusedApp:hide()
+		-- focusedApp:hide()
+    -- ERROR: browser not using vimium/surfingkeys when hiding and focusing again
+    -- FIX: Switch to another app window if possible, else hide
+		local windows = hs.window.orderedWindows()
+		local foundOtherApp = false
+
+		for i = 2, #windows do
+			local win = windows[i]
+			local winApp = win:application()
+			if winApp and winApp:bundleID() ~= focusedBundleID and win:isStandard() then
+				win:focus()
+				foundOtherApp = true
+				break
+			end
+		end
+
+		if not foundOtherApp then
+      focusedApp:hide()
+		end
+
 	else
 		hs.application.launchOrFocusByBundleID(targetBundleID)
 		moveCursorToCenter()
