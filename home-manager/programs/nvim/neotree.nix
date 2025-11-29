@@ -33,16 +33,10 @@ ckModule config ./.
         hideGitignored = false;
       };
     };
-  };
-  programs.nixvim.keymaps = [
-    {
-      key = "<leader>ee";
-      action = "<CMD>Neotree toggle<NL>";
 
-      options = {
-        desc = "Toggle Neotree file explorer";
-        silent = true;
-      };
-    }
-  ];
+    luaConfig.post = ''
+      local map = vim.keymap.set
+      map("n", "<leader>ee", "<CMD>Neotree toggle<CR>", { silent = true, desc = "Toggle Neotree file explorer" })
+    '';
+  };
 }

@@ -65,6 +65,7 @@ ckModule config ./.
           action = ":let @+ = expand('%:t')<CR>";
           options.desc = "Copy filename to clipboard";
         }
+        # Diagnostic keymaps
         {
           mode = "n";
           key = "<leader>ey";
