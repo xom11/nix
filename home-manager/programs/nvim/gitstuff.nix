@@ -52,9 +52,6 @@ ckModule config ./.
 
     lazygit = {
       enable = true;
-      luaConfig.post = ''
-        vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = "Open LazyGit" })
-      '';
     };
   };
 }
