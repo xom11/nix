@@ -36,10 +36,13 @@ ckModule config ./.
       };
     };
     luaConfig.post = ''
-      local map = vim.keymap.set
-      map.{'n', 'lf', function()
-        require('conform').format({ lsp_fallback = true, async = false, timeout_ms = 500 })
-      end, { desc = "Format with Conform" })
+      vim.keymap.set("n", "<leader>lf", function()
+        require("conform").format({
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 500,
+        })
+      end, { silent = true, desc = "Format file" })
     '';
   };
   home.packages = with pkgs; [

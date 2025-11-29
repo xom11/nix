@@ -21,10 +21,14 @@ ckModule config ./.
       enable = true;
       luaConfig.post = ''
         local map = vim.keymap.set
+        -- quick jumping
         map({'n', 'x', 'o'}, 's', function() require("flash").jump() end, { desc = "Flash" })
+        -- code block jumping
         map({'n', 'x', 'o'}, 'S', function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
+        -- remote jumping
         map({'o'}, 'r', function() require("flash").remote() end, { desc = "Remote Flash" })
         map({'o', 'x'}, 'R', function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
+        -- c: command-line /?
         map({'c'}, '<c-s>', function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
       '';
       settings = {
