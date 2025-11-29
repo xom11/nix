@@ -65,6 +65,8 @@ local function launch(appName)
 		local windows = hs.window.orderedWindows()
 		local foundOtherApp = false
 
+    -- BUG: windows[2] maybe not work
+    -- FIX: loop through all windows
 		for i = 2, #windows do
 			local win = windows[i]
 			local winApp = win:application()
