@@ -114,15 +114,6 @@ ckModule config ./.
           };
         }
         {
-          key = "<leader>ee";
-          action = "<CMD>Neotree toggle<NL>";
-
-          options = {
-            desc = "Toggle Neotree file explorer";
-            silent = true;
-          };
-        }
-        {
           mode = "n";
           key = "<leader>gg";
           action = "<cmd>LazyGit<CR>";

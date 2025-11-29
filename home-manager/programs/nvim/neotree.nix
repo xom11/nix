@@ -34,4 +34,15 @@ ckModule config ./.
       };
     };
   };
+  programs.nixvim.keymaps = [
+    {
+      key = "<leader>ee";
+      action = "<CMD>Neotree toggle<NL>";
+
+      options = {
+        desc = "Toggle Neotree file explorer";
+        silent = true;
+      };
+    }
+  ];
 }

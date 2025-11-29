@@ -25,7 +25,10 @@ in
         colorizer.enable = true;
         comment.enable = true;
         dashboard.enable = true;
+
+        # https://github.com/folke/flash.nvim/
         # flash.enable = true;
+
         friendly-snippets.enable = true;
         image.enable = true;
         lazygit.enable = true;
