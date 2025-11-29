@@ -31,7 +31,6 @@ in
 
         friendly-snippets.enable = true;
         image.enable = true;
-        lazygit.enable = true;
         lualine.enable = true;
         luasnip.enable = true;
         noice.enable = true;
