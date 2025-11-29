@@ -35,17 +35,13 @@ ckModule config ./.
         "_" = ["trim_whitespace"];
       };
     };
+    luaConfig.post = ''
+      local map = vim.keymap.set
+      map.{'n', 'lf', function()
+        require('conform').format({ lsp_fallback = true, async = false, timeout_ms = 500 })
+      end, { desc = "Format with Conform" })
+    '';
   };
-  programs.nixvim.keymaps = [
-    {
-      key = "<leader>lf";
-      action = "<cmd>lua require('conform').format({ lsp_fallback = true, async = false, timeout_ms = 500 })<CR>";
-
-      options = {
-        silent = true;
-      };
-    }
-  ];
   home.packages = with pkgs; [
     black
     shfmt
