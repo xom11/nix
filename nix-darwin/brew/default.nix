@@ -50,7 +50,7 @@ mkModule config ./. {
       "discord"
       # "drawpen"
       # "duet"
-      "evkey"
+      # "evkey"
       "google-chrome"
       "hammerspoon"
       "homerow"
