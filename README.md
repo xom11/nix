@@ -19,6 +19,10 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 nix run github:nix-community/home-manager -- switch --impure -b backup  --refresh --flake github:kln-os/nix/main#server
 add-visudo && add-authkey && set-zsh
 ```
+# WSL2
+```bash
+sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+```
 ```bash
 nix run --extra-experimental-features 'nix-command flakes' github:nix-community/home-manager -- switch --impure -b backup  --refresh --flake github:kln-os/nix/main#server
 add-visudo && add-authkey && set-zsh
