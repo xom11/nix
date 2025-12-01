@@ -24,8 +24,7 @@ add-visudo && add-authkey && set-zsh
 sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
 ```
 ```bash
-nix run --extra-experimental-features 'nix-command flakes' github:nix-community/home-manager -- switch --impure -b backup  --refresh --flake github:kln-os/nix/main#server
-add-visudo && add-authkey && set-zsh
+NIX_CONFIG="experimental-features = nix-command flakes" nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#server
 ```
 ---
 # Nixos
