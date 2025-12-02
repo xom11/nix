@@ -14,7 +14,7 @@
     pkgs.fcitx5-macos
   ];
   modules.home-manager = {
-    environment = {
+    environments = {
       fonts.enable = true;
     };
     dotfiles = {

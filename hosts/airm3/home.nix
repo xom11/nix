@@ -13,7 +13,7 @@
     pkgs.bws
   ];
   modules.home-manager = {
-    environment = {
+    environments = {
       fonts.enable = true;
     };
     dotfiles = {
