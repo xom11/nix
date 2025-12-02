@@ -18,7 +18,7 @@
     then "/Users/${username}"
     else "/home/${username}";
 
-  rootPath = let
+  repoPath = let
     absPath = "${homeDir}/.nix";
     relPath = "../.nix";
   in
@@ -36,7 +36,7 @@
   in
     relPath;
 
-  getPath = path: "${rootPath}/${getRelPath path}";
+  getPath = path: "${repoPath}/${getRelPath path}";
 
   # Create module: option + config
   mkModule = config: path: moduleContent: let
@@ -67,6 +67,7 @@
         username
         system
         homeDir
+        repoPath
         device
         getRelPath
         getPath

@@ -2,6 +2,7 @@
   config,
   mkModule,
   getPath,
+  repoPath,
   ...
 }: let
   pwd = getPath ./.;
@@ -10,7 +11,7 @@ in
     # https://github.com/jtroo/kanata/discussions/1537
     launchd.daemons."kanata" = {
       # command = "sudo /opt/homebrew/bin/kanata -c ${pwd}/kanata.macos.kbd -n";
-      command = "${pwd}/script.sh ${pwd}/kanata.macos.kbd";
+      command = "${pwd}/script.sh ${repoPath}/dotfiles/kanata/kanata.kbd";
       serviceConfig = {
         RunAtLoad = true;
         KeepAlive = true;
