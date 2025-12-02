@@ -21,6 +21,8 @@ in
   modules.home-manager = {
     dotfiles = {
     };
+    environment = {
+    };
     pkgs = {
       test.enable = true;
       dev.enable = true;
