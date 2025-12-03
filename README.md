@@ -68,3 +68,7 @@ sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/scripts/setup-nixos.sh | sh
 ```
+# Bug
+```bash
+mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
+```
