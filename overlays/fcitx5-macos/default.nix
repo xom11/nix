@@ -11,7 +11,7 @@ stdenvNoCC.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/${version}/Fcitx5Installer.zip";
-    hash = "sha256-mBuurTYDycXTAhpG2Afu1tnpTHQcc8wsglV1cHoibeo="; 
+    hash = "sha256-IFYn4FW+wVavBLdbKjC+toHoVTg+6FaNnkftgEQHTQ0="; 
   };
 
   nativeBuildInputs = [ unzip ];
