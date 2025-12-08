@@ -6,7 +6,7 @@ gs1(){
         return 1
     fi
     git add $FILE
-    git checkout -b $FILE -q 
+    git checkout -b $FILE -q
     git commit -m "Fix typos in $FILE"
     git push -u origin $FILE
 
@@ -16,7 +16,7 @@ gs1(){
 
 gs() {
     ALGO=$1
-    git checkout -b $ALGO -q 
+    git checkout -b $ALGO -q
     git commit -m "Add algorithm $ALGO"
     git push -u origin $ALGO
 
@@ -29,12 +29,12 @@ gs() {
 }
 gx() {
     if ! git diff --cached --exit-code; then
-        gh repo fork --remote 
+        gh repo fork --remote
         UPSTREAM_REPO=$(git remote get-url upstream | sed -E 's/.*github.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/' | sed 's/\.git$//')
         gh repo set-default $UPSTREAM_REPO
 
         BRANCH="Fix/typos/$(date +%Y%m%d%H%M%S)"
-        git checkout -b $BRANCH -q 
+        git checkout -b $BRANCH -q
         git commit -m "Fix typos in some files"
         git push -u origin $BRANCH
 
@@ -42,9 +42,19 @@ gx() {
     fi
     REPO_DIR=$(pwd)
     cd ..
-    rm -rf $REPO_DIR    
+    rm -rf $REPO_DIR
     cd "$(ls -d */ | head -n 1)"
     lazygit
+}
+g123() {
+  # gh repo fork --remote
+  UPSTREAM_REPO=$(git remote get-url upstream | sed -E 's/.*github.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/' | sed 's/\.git$//')
+  gh repo set-default $UPSTREAM_REPO
+
+  BRANCH="kln/$(date +%Y%m%d%H%M%S)"
+  git checkout -b $BRANCH -q
+  git commit -m "Fix typos in some files"
+  git push -u origin $BRANCH
 }
 alias cs="codespell -w . --skip='*.txt,*.md,*.json,*.yaml,*.yml,*.csv,*.png,*.jpg,*.jpeg,*.gif,*.svg,*.lock'"
 
