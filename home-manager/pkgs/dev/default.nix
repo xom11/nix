@@ -16,8 +16,6 @@ mkModule config ./. {
     gh
     htop
     jq
-    lazydocker
-    lazygit
     ncdu
     ripgrep
     tree
@@ -28,6 +26,11 @@ mkModule config ./. {
     wget
     zip
     zoxide
+
+    # Tui
+    lazydocker
+    lazygit
+    gobang
 
     # Rust
     maturin
