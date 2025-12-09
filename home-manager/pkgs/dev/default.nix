@@ -31,6 +31,7 @@ mkModule config ./. {
     lazydocker
     lazygit
     gobang
+    # mongo-tui
 
     # Rust
     maturin
