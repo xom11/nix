@@ -72,6 +72,7 @@ in
         test = "$HOME/Documents/test";
         tmp = "$HOME/Documents/tmp";
         nix = "$HOME/.nix";
+        ssd = "/Volumes/ssd";
         dotfiles = "$HOME/.nix/home-manager/dotfiles";
         secrets = "$HOME/.nix/home-manager/dotfiles/secrets";
       };
