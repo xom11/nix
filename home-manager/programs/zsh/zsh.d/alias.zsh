@@ -42,10 +42,17 @@ alias kitty-opacity='kitty @ set-background-opacity'
 
 # tmux https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/tmux/README.md
 alias tl='tmux ls'
-alias ta='tmux attach -t '
-alias tn='tmux new -s '
+# alias tn='tmux new -s '
+tn() {
+  if [ -n "$TMUX" ]; then
+    tmux new-session -d -s "$1"
+    tmux switch-client -t "$1"
+  else
+    tmux new-session -s "$1"
+  fi
+}
 alias ts='tmux switch -t '
-alias tl='stmux list-windows -t '
+alias ta='tmux attach -t '
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t '
 
