@@ -4,7 +4,7 @@
   ckModule,
   ...
 }:
-ckModule config ./.
+ckModule config ./..
 {
   programs.nixvim = {
     plugins = {

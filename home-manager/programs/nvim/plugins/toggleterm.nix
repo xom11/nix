@@ -4,7 +4,7 @@
   ...
 }:
 # Toggle teminall for nvim
-ckModule config ./.
+ckModule config ./..
 {
   programs.nixvim.plugins = {
     toggleterm = {

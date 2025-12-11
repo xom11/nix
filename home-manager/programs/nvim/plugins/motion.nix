@@ -4,7 +4,7 @@
   ...
 }:
 # Keymap Tab (cmp.nix)
-ckModule config ./.
+ckModule config ./..
 {
   programs.nixvim.plugins = {
     leap = {

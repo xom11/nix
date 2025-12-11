@@ -4,7 +4,7 @@
   pkgs,
   ...
 }:
-ckModule config ./.
+ckModule config ./..
 {
   programs.nixvim.plugins.telescope = {
     enable = true;
