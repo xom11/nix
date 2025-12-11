@@ -14,7 +14,7 @@ local defaultShortcuts = {
 	{ "n", "Notion" },
 	{ "t", "Telegram" },
 	{ "s", "System Settings" },
-	{ "v", "Visual Studio Code" },
+	-- { "v", "Visual Studio Code" },
 	{ "y", "Youtube" },
 	{ "z", "Zalo" },
 }
