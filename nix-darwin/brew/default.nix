@@ -22,6 +22,7 @@ mkModule config ./. {
 
     taps = [
       # "homebrew-zathura/zathura"
+      laishulu/homebrew # macism
     ];
 
     brews = [
@@ -35,6 +36,7 @@ mkModule config ./. {
       "redis"
       "sleepwatcher"
       "tailscale"
+      "macism"
       # "zathura"
     ];
 

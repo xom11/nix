@@ -1,30 +1,30 @@
 local obj = {}
 obj.__index = obj
 
-local vn = "Telex"
-local en = "Unicode Hex Input"
+local vn = "Fcitx5"
+local en = "ABC"
 
 function obj:init()
 	hs.loadSpoon("InputSourceSwitch")
 
 	spoon.InputSourceSwitch:setApplications({
-    ["kitty"] = en,
-    ["iTerm2"] = en,
-    ["Alacritty"] = en,
-    ["Google Chrome"] = vn,
-    ["Firefox"] = vn,
-    ["Brave Browser"] = vn,
 		["Google Gemini"] = vn,
+    ["Alacritty"] = en,
+    ["Brave Browser"] = vn,
     ["DeepSeek - Into the Unknown"] = vn,
-    ["Telegram"] = vn,
-    ["Messenger"] = vn,
-    ["Zalo"] = vn,
-    ["Visual Studio Code"] = en,
-    ["System Settings"] = en,
-    ["Notion"] = vn,
-    ["Google Keep"] = vn,
-    ["Youtube"] = vn,
     ["Finder"] = en,
+    ["Firefox"] = vn,
+    ["Google Chrome"] = vn,
+    ["Google Keep"] = vn,
+    ["Messenger"] = vn,
+    ["Notion"] = vn,
+    ["System Settings"] = en,
+    ["Telegram"] = vn,
+    ["Visual Studio Code"] = en,
+    ["Youtube"] = vn,
+    ["Zalo"] = vn,
+    ["iTerm2"] = en,
+    ["kitty"] = en,
 	})
 
 	spoon.InputSourceSwitch:start()

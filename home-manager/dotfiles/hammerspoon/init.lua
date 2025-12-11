@@ -15,6 +15,7 @@ spoon.SpoonInstall:updateRepo('default')
 
 spoon.SpoonInstall:andUse("RecursiveBinder")
 spoon.SpoonInstall:andUse("AllBrightness")
+spoon.SpoonInstall:andUse("InputSourceSwitch")
 -- Analog clock
 spoon.SpoonInstall:andUse("AClock")
 hs.hotkey.bind(tab, 't', function() spoon.AClock:toggleShow() end)
@@ -61,7 +62,7 @@ hs.loadSpoon("PowerTool")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
 
--- macos telex very bad
--- hs.loadSpoon("LanguageSwitcher")
+-- macos telex very bad, Fcitx5 much better
+hs.loadSpoon("LanguageSwitcher")
 
 

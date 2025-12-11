@@ -104,23 +104,23 @@
             # diff -C 5 before.txt after.txt
             # ============================
 
-            # Disable 'Cmd + Space' for Spotlight Search
+            # 'Cmd + Space' for Spotlight Search
             "64" = {
               enabled = false;
             };
-            # Disable 'Cmd + Alt + Space' for Finder search window
+            # 'Cmd + Alt + Space' for Finder search window
             "65" = {
               enabled = false;
             };
-            # Using Fcitx5 for macos
-            # Disable 'Select the previous input source'
+            # Install fcitx5-for-mac better for vietnamese input method
+            # 'Ctrl + Space' Select the previous input source
             "60" = {
-              enabled = false;
+              enabled = true;
             };
 
-            # Disable 'Select the next input source' 
+            # 'Ctrl + Opt + Space' Select the next input source 
             "61" = {
-              enabled = false;
+              enabled = true;
             };
           };
         };
