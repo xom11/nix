@@ -12,6 +12,7 @@
   home.packages = [
     pkgs.bws
     pkgs.fcitx5-macos
+    pkgs.neofetch2
   ];
   modules.home-manager = {
     environments = {

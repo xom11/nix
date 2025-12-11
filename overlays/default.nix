@@ -1,4 +1,7 @@
-final: prev: {
-  fcitx5-macos  = prev.callPackage ./fcitx5-macos {};
-  raiseorlaunch = prev.callPackage ./raiseorlaunch {};
-}
+final: prev:
+let
+  contents = builtins.readDir ./.;
+  dirs = prev.lib.filterAttrs (name: type: type == "directory") contents;
+  mkPackage = name: _: prev.callPackage (./. + "/${name}") {};
+in
+  prev.lib.mapAttrs mkPackage dirs
