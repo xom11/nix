@@ -22,7 +22,7 @@ mkModule config ./. {
 
     taps = [
       # "homebrew-zathura/zathura"
-      laishulu/homebrew # macism
+      "laishulu/homebrew"
     ];
 
     brews = [
