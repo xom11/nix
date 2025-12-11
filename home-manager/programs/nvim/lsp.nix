@@ -57,10 +57,10 @@ ckModule config ./.
             action = "definition";
             desc = "Go to Definition";
           };
-          gr = {
-            action = "references";
-            desc = "Go to References";
-          };
+          # gr = {
+          #   action = "references";
+          #   desc = "Go to References";
+          # };
           gD = {
             action = "declaration";
             desc = "Go to Declaration";
@@ -75,5 +75,18 @@ ckModule config ./.
   };
   home.packages = with pkgs; [
     nixd
+  ];
+  # Better LSP References keymap using Telescope
+  programs.nixvim.keymaps = [
+    {
+      mode = "n";
+      key = "gr";
+      action = "<cmd>Telescope lsp_references<CR>";
+      options = {
+        desc = "LSP References (Telescope)";
+        silent = true;
+        noremap = true;
+      };
+    }
   ];
 }
