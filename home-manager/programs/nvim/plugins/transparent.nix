@@ -15,11 +15,17 @@ ckModule config ./..
       vim.cmd("highlight Lualine guibg=NONE")
       vim.cmd("highlight Lualine guifg=NONE")
       vim.cmd("highlight NormalNC guibg=NONE")
-      vim.cmd("highlight CursorLine guibg=NONE")
+      -- Highlight for cursor line
+      -- vim.cmd("highlight CursorLine guibg=NONE")
 
     '';
     settings = {
       enable = true;
+      # table: groups you don't want to clear
+      exclude_groups = [
+        "CursorLine"
+      ];
+      # table: additional groups that should be cleared
       extra_groups = [
         "NeoTreeNormal"
         "NeoTreeNormalNC"
