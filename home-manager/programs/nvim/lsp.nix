@@ -53,18 +53,18 @@ ckModule config ./.
       keymaps = {
         silent = true;
         lspBuf = {
-          gd = {
-            action = "definition";
-            desc = "Go to Definition";
-          };
+          # gd = {
+          #   action = "definition";
+          #   desc = "Go to Definition";
+          # };
           # gr = {
           #   action = "references";
           #   desc = "Go to References";
           # };
-          gD = {
-            action = "declaration";
-            desc = "Go to Declaration";
-          };
+          # gD = {
+          #   action = "declaration";
+          #   desc = "Go to Declaration";
+          # };
           "<leader>rn" = {
             action = "rename";
             desc = "Rename";
@@ -80,10 +80,30 @@ ckModule config ./.
   programs.nixvim.keymaps = [
     {
       mode = "n";
+      key = "gd";
+      action = "<cmd>Telescope lsp_definitions<CR>";
+      options = {
+        desc = "LSP Definitions (Telescope)";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      mode = "n";
       key = "gr";
       action = "<cmd>Telescope lsp_references<CR>";
       options = {
         desc = "LSP References (Telescope)";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      mode = "n";
+      key = "gD";
+      action = "<cmd>Telescope lsp_declarations<CR>";
+      options = {
+        desc = "LSP Declarations (Telescope)";
         silent = true;
         noremap = true;
       };
