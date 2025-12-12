@@ -8,7 +8,7 @@ mkModule config ./. {
     enable = true;
     keyboards = {
       default = {
-        config = builtins.readFile ./kanata.nixos.kbd;
+        config = builtins.readFile ./kanata.kbd;
       };
     };
   };
