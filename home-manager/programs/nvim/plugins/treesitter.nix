@@ -21,6 +21,7 @@ ckModule config ./..
           yaml
           python
           commonlisp
+          powershell
         ];
         settings = {
           auto_install = true;
