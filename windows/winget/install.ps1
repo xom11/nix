@@ -19,7 +19,9 @@ $apps = @(
     "Tailscale.Tailscale",
     "UniKey.UniKey",
     "VNGCorp.Zalo",
-    "Brave.Brave"
+    "Brave.Brave",
+    "9PFXXSHC64H3", # Raycast
+
 )
 
 # --------------------------------------------------------

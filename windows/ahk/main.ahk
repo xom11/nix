@@ -4,6 +4,7 @@
 
 #Include launch-kanata.ahk
 #Include launch-app.ahk
+#Include switch-language.ahk
 
 TrayTip "Hệ thống AHK đã sẵn sàng!", "Startup", 1
 
