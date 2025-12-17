@@ -9,7 +9,6 @@ TrayTip "Hệ thống AHK đã sẵn sàng!", "Startup", 1
 
 !r:: {
     TrayTip "Reload AHK", "AHK System"
-    Sleep 500
     Reload()
 }
 
