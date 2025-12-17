@@ -132,7 +132,7 @@
   x $cut
   c $copy
   v $paste
-  b $paste-history 
+  b $paste_history 
 
   n tab
   m bspc
@@ -141,8 +141,8 @@
   , bspc
   . del
   / ret
-  [ A-bspc
-  ] A-del
+  [ $del_word_left
+  ] $del_word_right
 
   1 f1
   2 f2
