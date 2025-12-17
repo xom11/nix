@@ -1,9 +1,9 @@
-(include "defcfg.kbd")
+
 (defvar
   undo C-z
   cut C-x 
   copy C-c
   paste C-v
-  paste-history M-v
+  paste-history A-v
 )
 (include "main.kbd")
