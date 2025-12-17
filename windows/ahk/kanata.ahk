@@ -14,10 +14,7 @@ StartKanata(*) {
     
     try {
         Run(KanataExe ' -c "' . KanataConfig . '"', , "Hide")
-        TrayTip "Kanata đã được nạp!", "Kanata"
     } catch {
-        MsgBox "Lỗi: Không tìm thấy file!`n`nExe: " . KanataExe . "`nConfig: " . KanataConfig
+        MsgBox "Error: Kanta config not found!`n`nExe: " . KanataExe . "`nConfig: " . KanataConfig
     }
 }
-
-!r::StartKanata()

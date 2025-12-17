@@ -1,0 +1,4 @@
+- `#` win
+- `+` shift
+- `^` ctrl
+- `!` alt
