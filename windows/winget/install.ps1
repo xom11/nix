@@ -21,6 +21,7 @@ $apps = @(
     "VNGCorp.Zalo",
     "Brave.Brave",
     "9PFXXSHC64H3", # Raycast
+    "Notion.Notion"
 
 )
 

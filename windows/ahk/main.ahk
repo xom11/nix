@@ -3,12 +3,13 @@
 
 
 #Include launch-kanata.ahk
-#Include launch-app.ahk
+#Include window-manager.ahk
 #Include switch-language.ahk
+#Include power-manager.ahk
 
-TrayTip "Hệ thống AHK đã sẵn sàng!", "Startup", 1
+TrayTip "AHK loading sucess!!", "Startup", 1
 
-!r:: {
+^#+r:: {
     Reload()
     TrayTip "Reload AHK", "AHK System"
 }

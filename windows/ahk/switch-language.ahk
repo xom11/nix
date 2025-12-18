@@ -11,8 +11,6 @@ GroupAdd "EN_Group", "ahk_exe ApplicationFrameHost.exe"
 ; Define apps for Vietnamese (VI)
 GroupAdd "VI_Group", "ahk_exe brave.exe"
 GroupAdd "VI_Group", "ahk_exe winword.exe"
-GroupAdd "VI_Group", "Google Gemini"
-GroupAdd "VI_Group", "YouTube"
 
 ; Language IDs (LCID)
 EN_US := 0x0409 ; English (United States)
