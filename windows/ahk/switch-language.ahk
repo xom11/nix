@@ -5,6 +5,8 @@ Persistent
 ; Define apps for English (EN)
 GroupAdd "EN_Group", "ahk_exe WindowsTerminal.exe"
 GroupAdd "EN_Group", "ahk_exe Code.exe"
+GroupAdd "EN_Group", "ahk_exe explorer.exe"
+GroupAdd "EN_Group", "ahk_exe ApplicationFrameHost.exe"
 
 ; Define apps for Vietnamese (VI)
 GroupAdd "VI_Group", "ahk_exe brave.exe"
