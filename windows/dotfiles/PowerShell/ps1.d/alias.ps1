@@ -31,7 +31,6 @@ function gu {
     }
 
     git pull && git add . && git commit -m "$commit_msg" && git push
-    Write-Host "Git updated completed." -ForegroundColor Green
 }
 function glog { 
     git log --graph --oneline --decorate --all 
