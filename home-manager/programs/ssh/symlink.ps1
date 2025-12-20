@@ -1,6 +1,6 @@
-$DotfileDir = "$env:APPDATA\Code\User"
+$DotfileDir = "$env:USERPROFILE\.ssh"
 
-"settings.json", "keybindings.json" | ForEach-Object {
+"config" | ForEach-Object {
     $Src = Join-Path $PSScriptRoot $_
     $Dest = Join-Path $DotfileDir $_
 
