@@ -59,7 +59,7 @@
   // Terminal settings
   "terminal.integrated.customGlyphs": false,
   "terminal.integrated.defaultProfile.linux": "zsh",
-  "terminal.integrated.fontFamily": "MesloLGL Nerd Font",
+  "terminal.integrated.fontFamily": "'MesloLGL Nerd Font','JetBrainsMono Nerd Font'",
 
   // TypeScript settings
   "typescript.updateImportsOnFileMove.enabled": "always",

@@ -63,16 +63,16 @@ Snap(winTitle, state) {
 ^#!.:: Snap("A", "Right")
 ^#!/:: Snap("A", "Max")
 
-pwaPath := A_Programs . "\Ứng dụng Brave"
-LocalAppData := EnvGet("LocalAppData")
+pwaPath := A_Programs . "\Ứng dụng Brave\"
+LocalAppData := EnvGet("LocalAppData") . "\"
 
-^#!g:: Launch(pwaPath . "\Google Gemini.lnk", "Google Gemini")
-^#!y:: Launch(pwaPath . "\YouTube.lnk", "YouTube", 2)
-^#!m:: Launch(pwaPath . "\Messenger.lnk", "Messenger")
-^#!k:: Launch(pwaPath . "\Google Keep.lnk", "Google Keep")
+^#!g:: Launch(pwaPath . "Google Gemini.lnk", "Google Gemini")
+^#!y:: Launch(pwaPath . "YouTube.lnk", "YouTube", 2)
+^#!m:: Launch(pwaPath . "Messenger.lnk", "Messenger")
+^#!k:: Launch(pwaPath . "Google Keep.lnk", "Google Keep")
 
 ^#!v:: Launch("vscode://", "ahk_exe Code.exe")
-^#!b:: Launch(LocalAppData . "\BraveSoftware\Brave-Browser\Application\brave.exe", " - Brave", 2)
+^#!b:: Launch(LocalAppData . "BraveSoftware\Brave-Browser\Application\brave.exe", " - Brave", 2)
 ^#!t:: Launch("tg://", "ahk_exe Telegram.exe")
 ^#!d:: Launch("discord://", "ahk_exe Discord.exe")
 ^#!n:: Launch("notion://", "ahk_exe Notion.exe")
