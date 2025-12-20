@@ -11,12 +11,18 @@ Import-Module ZLocation
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 
 function v{nvim.exe}
-Set-Alias lzg lazygit
-Set-Alias lzd lazydocker
-Set-Alias ff fastfetch
+function lzg {lazygit}
+function lzd {lazydocker}
+function ff {fastfetch}
 
 function ga {git add $args}
-function gc {git commit -m $args}
+function gc {
+    if ($args.Count -eq 0) {
+        git commit
+    } else {
+        git commit -m $args
+    }
+}
 function gp {git push}
 function gst {git status}
 function gl {git pull}
