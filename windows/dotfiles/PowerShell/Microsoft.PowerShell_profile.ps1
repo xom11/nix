@@ -9,33 +9,12 @@ Import-Module ZLocation
 # Set-PSReadLineOption -PredictionSource History
 # Set-PSReadLineOption -PredictionViewStyle ListView
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
-$conflicts = @("gc", "gl", "gp")
-foreach ($alias in $conflicts) {
-    if (Test-Path "alias:$alias") {
-        Remove-Item "alias:$alias" -Force
-    }
-}
-function v { nvim.exe }
-function lzg { lazygit }
-function lzd { lazydocker }
-function ff { fastfetch }
 
-function ga { git add $args }
-function gc {
-    if ($args.Count -eq 0) {
-        Write-Warning "Commit message is required."
-    }
-    else {
-        $message = $args -join " "
-        git commit -m "$message"
+$ModulesDir = Join-Path (Split-Path $PSCommandPath) "ps1.d"
+
+if (Test-Path $ModulesDir) {
+    $files = Get-ChildItem -Path $ModulesDir -Filter *.ps1
+    foreach ($file in $files) {
+        . $file.FullName 
     }
 }
-function gp { git push $args }
-function gst { git status $args }
-function gl { git pull $args }
-function glog { 
-    git log --graph --oneline --decorate --all 
-}
-function py { python $args }
-# Set-Alias spy source .venv\bin\activate
-function m { micromamba.exe }

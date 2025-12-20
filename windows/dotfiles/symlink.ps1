@@ -6,7 +6,11 @@ $dotfiles = @(
     }
     @{ 
         src  = ".\Powershell\Microsoft.PowerShell_profile.ps1"; 
-        dest = "$env:HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+        dest = "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+    }
+    @{ 
+        src  = ".\Powershell\ps1.d"; 
+        dest = "$env:USERPROFILE\Documents\PowerShell\ps1.d"
     }
     @{ 
         src  = ".\..\..\home-manager\dotfiles\vscode\settings.json"; 
