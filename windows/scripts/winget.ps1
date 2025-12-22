@@ -11,6 +11,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 winget source update
 winget source reset --force
 $modules = @(
+    "AutoHotkey.AutoHotkey"
     "gerardog.gsudo"
     "Microsoft.PowerShell"
     "JanDeDobbeleer.OhMyPosh"
@@ -24,6 +25,7 @@ $modules = @(
     "Brave.Brave"
     "9PFXXSHC64H3" # Raycast
     "Notion.Notion"
+    "DEVCOM.JetBrainsMonoNerdFont"
 
 )
 
@@ -52,6 +54,7 @@ $modules = @(
     "Terminal-Icons"
     "ZLocation"
     "PSReadLine"
+    "PSFzf"
 )
 
 foreach ($module in $modules) {
