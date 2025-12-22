@@ -1,4 +1,4 @@
-& [scriptblock]::Create((Invoke-RestMethod "https://debloat.raphi.re/")) `
+& ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) `
     -Silent `
     -RunDefaults `
     -RemoveApps `
