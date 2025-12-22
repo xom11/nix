@@ -1,0 +1,11 @@
+(include "defcfg.kbd")
+(defvar
+  undo M-z
+  cut M-x 
+  copy M-c
+  paste M-v
+  paste_history A-v
+  del_word_left A-bspc
+  del_word_right A-del
+)
+(include "main.kbd")

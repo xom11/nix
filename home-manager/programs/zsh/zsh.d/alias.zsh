@@ -16,6 +16,10 @@ alias ga='git add'
 alias gl='git pull'
 alias gp='git push'
 alias gc='git commit -m'
+alias gst='git status'
+alias gco='git checkout'
+alias gb='git branch'
+alias glog='git log --oneline --graph --decorate'
 
 # python
 alias py='python'
