@@ -1,3 +1,6 @@
+- Reset win without wifi
+Shift + f10 to go to cmd
+`OOBE\BYPASSNRO`
 - create symlink
 ```bash
 $target = (wsl -d Ubuntu wslpath -w "~/.nix").Trim()
