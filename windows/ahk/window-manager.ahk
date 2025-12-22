@@ -1,14 +1,13 @@
 #Requires AutoHotkey v2.0
 SetTitleMatchMode 3 ; Exact title match
 
-Launch(exePath, winTitle, matchMode := 3) {
+Launch(exePath, winTitle, matchMode := 3, args := "") {
     SetTitleMatchMode matchMode
 
     if !WinExist(winTitle) {
         try {
-            ; Run(exePath)
             ; FIX: run as user mode (default AHK runs as admin)
-            Run 'explorer.exe "' . exePath . '"'
+            RunAsUser(exePath, args)
             if WinWait(winTitle, , 5)
                 WinActivate(winTitle)
         } catch {
@@ -21,6 +20,17 @@ Launch(exePath, winTitle, matchMode := 3) {
         ; Send("!{Tab}")
         else
             WinActivate(winTitle)
+    }
+}
+
+RunAsUser(target, args := "", workingDir := "") {
+    try {
+        ; Get the Shell's folder view object
+        shellFolderView := ObjBindMethod(ComObject("Shell.Application").Windows.FindWindowSW(0, 0, 8, 0, 1).Document, "Application")
+        ; Use ShellExecute to run the target as the user
+        shellFolderView().ShellExecute(target, args, workingDir, "open", 1)
+    } catch {
+        Run(args ? target . ' ' . args : target)
     }
 }
 
@@ -68,21 +78,21 @@ LocalAppData := EnvGet("LocalAppData")
 ; LocalAppData C:\Users\<User>\AppData\Local\Microsoft
 ; A_ProgramsCommon C:\ProgramData\Microsoft\Windows\Start Menu\Programs
 
-^#!g:: Launch(pwaPath . "\Google Gemini.lnk", "Google Gemini")
-^#!y:: Launch(pwaPath . "\YouTube.lnk", "YouTube", 2)
-^#!m:: Launch(pwaPath . "\Messenger.lnk", "Messenger")
-^#!k:: Launch(pwaPath . "\Google Keep.lnk", "Google Keep")
+^#!g:: Launch(A_Programs . "\Brave.lnk", "Google Gemini", 3, " --app=https://gemini.google.com")
+^#!y:: Launch(A_Programs . "\Brave.lnk", "YouTube", 2, " --app=https://www.youtube.com")
+^#!m:: Launch(A_Programs . "\Brave.lnk", "Messenger", 3, " --app=https://www.messenger.com")
+^#!k:: Launch(A_Programs . "\Brave.lnk", "Google Keep", 3, " --app=https://keep.google.com")
 
 ^#!v:: Launch(A_Programs . "\Visual Studio Code\Visual Studio Code.lnk", "ahk_exe Code.exe")
 ^#!b:: Launch(A_Programs . "\Brave.lnk", " - Brave", 2)
 ^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
 ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
 ^#!n:: Launch(A_Programs . "\Notion.lnk", "ahk_exe Notion.exe")
+^#!z:: Launch(A_Programs . "\Zalo.lnk", "ahk_exe zalo.exe")
 ^#!Space:: Launch(LocalAppData . "\Microsoft\WindowsApps\wt.exe", "ahk_exe WindowsTerminal.exe")
-^#!f:: Launch("", "ahk_class CabinetWClass")
+^#!f:: Launch("explorer.exe", "ahk_class CabinetWClass")
 ^#!s:: Launch("ms-settings:", "ahk_exe ApplicationFrameHost.exe")
 
-^#!z:: Launch(A_Programs . "\Zalo.lnk", "ahk_exe zalo.exe")
 
 #Include lib/which-key.ahk
 menuApps := Map(
