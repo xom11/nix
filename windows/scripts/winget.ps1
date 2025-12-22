@@ -7,6 +7,9 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # --------------------------------------------------------
 # Install winget packages
 # --------------------------------------------------------
+
+winget source update
+winget source reset --force
 $modules = @(
     "gerardog.gsudo"
     "Microsoft.PowerShell"
@@ -25,9 +28,9 @@ $modules = @(
 )
 
 foreach ($module in $modules) {
-    Write-Host "Installing $app..." -ForegroundColor Cyan
+    Write-Host "Installing $module ..." -ForegroundColor Cyan
     
-    winget install --id $app `
+    winget install --id $module `
         -e `
         --silent `
         --accept-package-agreements `
