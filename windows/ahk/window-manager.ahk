@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-SetTitleMatchMode 3 ; Exact 3, Relative 2 
+SetTitleMatchMode 2 ; Exact 3, Relative 2 
 global AppIDs := Map()
 
 Launch(exePath, winTitle, args := "") {
@@ -83,7 +83,7 @@ Snap(winTitle, state) {
 LocalAppData := EnvGet("LocalAppData") 
 brower := A_Programs . "\Brave.lnk"
 
-^#!b:: Launch(brower, "ahk_exe brave.exe")
+^#!b:: Launch(brower, "Brave")
 ^#!g:: Launch(brower, "Google Gemini", " --app=https://gemini.google.com")
 ^#!y:: Launch(brower, "YouTube", " --app=https://www.youtube.com")
 ^#!m:: Launch(brower, "Messenger", " --app=https://www.messenger.com")
