@@ -30,10 +30,13 @@ ckModule config ./..
       "<leader>ff" = "find_files";
       "<leader>fb" = "buffers";
       "<leader>fp" = "git_files";
-      "<leader>fs" = "grep_string";
+      "<leader>fw" = "grep_string";
       "<leader>fg" = "live_grep";
-      "<A-f>" = "live_grep";
       "<leader>fo" = "oldfiles";
+      "<leader>fs" = "lsp_document_symbols";
+      "<leader>fS" = "lsp_workspace_symbols";
+      "<leader>fh" = "help_tags";
+      "<leader>fr" = "resume";
     };
     settings = {
       defaults = {
