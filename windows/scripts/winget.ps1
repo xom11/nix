@@ -15,19 +15,15 @@ $modules = @(
     "gerardog.gsudo"
     "Microsoft.PowerShell"
     "JanDeDobbeleer.OhMyPosh"
-    # "Microsoft.PowerToys"
+    "Microsoft.PowerToys"
     "Discord.Discord"
     "Google.Chrome"
     "Microsoft.VisualStudioCode"
     "Tailscale.Tailscale"
-    # "UniKey.UniKey"
     "VNGCorp.Zalo"
     "Brave.Brave"
     "9PFXXSHC64H3" # Raycast
-    "Notion.Notion"
     "DEVCOM.JetBrainsMonoNerdFont"
-    "Telegram.TelegramDesktop"
-
 )
 
 foreach ($module in $modules) {
