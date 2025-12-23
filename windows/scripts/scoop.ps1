@@ -31,7 +31,9 @@ $modules = @(
     "lazygit"
     "lazydocker"
     "ripgrep"
+    "kanata"
     "yazi"
+    "autohotkey"
 )
 foreach ($module in $modules) {
     Write-Host "Installing $module via scoop..." -ForegroundColor Cyan
