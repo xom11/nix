@@ -1,6 +1,10 @@
 # Define the list of source and target paths
 $dotfiles = @(
     @{ 
+        src  = ".\PowerToys\settings.json"; 
+        dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\settings.json"
+    }
+    @{ 
         src  = ".\WindowsTerminal\settings.json"; 
         dest = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
     }
