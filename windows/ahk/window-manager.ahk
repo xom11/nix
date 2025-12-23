@@ -1,8 +1,8 @@
 #Requires AutoHotkey v2.0
-SetTitleMatchMode 3 ; Exact title match
+SetTitleMatchMode 3 ; Exact 3, Relative 2 
 global AppIDs := Map()
 
-Launch(exePath, winTitle, matchMode := 3, args := "") {
+Launch(exePath, winTitle, args := "") {
     appKey := exePath . args 
     
     if AppIDs.Has(appKey) && WinExist("ahk_id " . AppIDs[appKey]) {
@@ -17,7 +17,6 @@ Launch(exePath, winTitle, matchMode := 3, args := "") {
         try {
             RunAsUser(exePath, args)
             
-            SetTitleMatchMode matchMode
             if WinWait(winTitle, , 8) {
                 activeHwnd := WinGetID(winTitle)
                 AppIDs[appKey] := activeHwnd
@@ -84,14 +83,14 @@ Snap(winTitle, state) {
 LocalAppData := EnvGet("LocalAppData") 
 brower := A_Programs . "\Brave.lnk"
 
-^#!b:: Launch(brower, " - Brave", 2)
-^#!g:: Launch(brower, "Google Gemini", 3, " --app=https://gemini.google.com")
-^#!y:: Launch(brower, "YouTube", 2, " --app=https://www.youtube.com")
-^#!m:: Launch(brower, "Messenger", 3, " --app=https://www.messenger.com")
-^#!k:: Launch(brower, "Google Keep", 3, " --app=https://keep.google.com")
-^#!d:: Launch(brower, "Discord", 2, " --app=https://discord.com/app")
-^#!t:: Launch(brower, "Telegram", 2, " --app=https://web.telegram.org")
-^#!n:: Launch(brower, "Notion", 2, " --app=https://www.notion.so/")
+^#!b:: Launch(brower, "ahk_exe brave.exe")
+^#!g:: Launch(brower, "Google Gemini", " --app=https://gemini.google.com")
+^#!y:: Launch(brower, "YouTube", " --app=https://www.youtube.com")
+^#!m:: Launch(brower, "Messenger", " --app=https://www.messenger.com")
+^#!k:: Launch(brower, "Google Keep", " --app=https://keep.google.com")
+^#!d:: Launch(brower, "Discord", " --app=https://discord.com/app")
+^#!t:: Launch(brower, "Telegram", " --app=https://web.telegram.org")
+^#!n:: Launch(brower, "Notion", " --app=https://www.notion.so/")
 
 ; ^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
 ; ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
@@ -107,10 +106,10 @@ brower := A_Programs . "\Brave.lnk"
 #Include lib/which-key.ahk
 menuApps := Map(
     "d", { Desc: "DeepSeek", Action: (*) =>
-        Launch(brower, "DeepSeek - Into the Unknown", 2, " --app=https://chat.deepseek.com/") },
+        Launch(brower, "DeepSeek", " --app=https://chat.deepseek.com/") },
     "m", { Desc: "Gmail", Action: (*) =>
-        Launch(brower, "Gmail", 2, " --app=https://mail.google.com/") },
+        Launch(brower, "Gmail", " --app=https://mail.google.com/") },
     "c", { Desc: "Chrome", Action: (*) =>
-        Launch(A_ProgramsCommon . "\Google Chrome.lnk", " - Google Chrome", 2) },
+        Launch(A_ProgramsCommon . "\Google Chrome.lnk", "Google Chrome") },
 )
 ^#!a:: WhichKey("🚀 Quick Apps", menuApps)
