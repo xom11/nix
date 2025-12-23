@@ -1,6 +1,7 @@
 {
   config,
   mkModule,
+repoPath,
   ...
 }:
 mkModule config ./. {
@@ -8,7 +9,7 @@ mkModule config ./. {
     enable = true;
     keyboards = {
       default = {
-        config = builtins.readFile ./kanata.kbd;
+        config = builtins.readFile "${repoPath}/configs/kanata/kanata_nixos.kbd";
       };
     };
   };
