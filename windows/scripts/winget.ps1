@@ -26,6 +26,7 @@ $modules = @(
     "9PFXXSHC64H3" # Raycast
     "Notion.Notion"
     "DEVCOM.JetBrainsMonoNerdFont"
+    "Telegram.TelegramDesktop"
 
 )
 

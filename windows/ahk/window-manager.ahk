@@ -1,28 +1,34 @@
 #Requires AutoHotkey v2.0
 SetTitleMatchMode 3 ; Exact title match
+global AppIDs := Map()
 
 Launch(exePath, winTitle, matchMode := 3, args := "") {
-    SetTitleMatchMode matchMode
-
-    if !WinExist(winTitle) {
-        try {
-            ; FIX: run as user mode (default AHK runs as admin)
-            RunAsUser(exePath, args)
-            if WinWait(winTitle, , 5)
-                WinActivate(winTitle)
-        } catch {
-            MsgBox ": " . exePath
+    appKey := exePath . args 
+    
+    if AppIDs.Has(appKey) && WinExist("ahk_id " . AppIDs[appKey]) {
+        targetHwnd := "ahk_id " . AppIDs[appKey]
+        
+        if WinActive(targetHwnd) {
+            Send("!{Esc}") 
+        } else {
+            WinActivate(targetHwnd)
         }
     } else {
-        if WinActive(winTitle)
-            Send("!{Esc}")
-        ; WinMinimize(winTitle)
-        ; Send("!{Tab}")
-        else
-            WinActivate(winTitle)
+        try {
+            RunAsUser(exePath, args)
+            
+            SetTitleMatchMode matchMode
+            if WinWait(winTitle, , 8) {
+                activeHwnd := WinGetID(winTitle)
+                AppIDs[appKey] := activeHwnd
+                
+                WinActivate("ahk_id " activeHwnd)
+            }
+        } catch Error as e {
+            MsgBox "Can't run " . exePath . "`nError: " . e.Message
+        }
     }
 }
-
 RunAsUser(target, args := "", workingDir := "") {
     try {
         ; Get the Shell's folder view object
@@ -72,22 +78,26 @@ Snap(winTitle, state) {
 ^#!.:: Snap("A", "Right")
 ^#!/:: Snap("A", "Max")
 
-pwaPath := A_Programs . "\Ứng dụng Brave" 
 ; A_programs C:\Users\<User>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
-LocalAppData := EnvGet("LocalAppData") 
 ; LocalAppData C:\Users\<User>\AppData\Local\Microsoft
 ; A_ProgramsCommon C:\ProgramData\Microsoft\Windows\Start Menu\Programs
+LocalAppData := EnvGet("LocalAppData") 
+brower := A_Programs . "\Brave.lnk"
 
-^#!g:: Launch(A_Programs . "\Brave.lnk", "Google Gemini", 3, " --app=https://gemini.google.com")
-^#!y:: Launch(A_Programs . "\Brave.lnk", "YouTube", 2, " --app=https://www.youtube.com")
-^#!m:: Launch(A_Programs . "\Brave.lnk", "Messenger", 3, " --app=https://www.messenger.com")
-^#!k:: Launch(A_Programs . "\Brave.lnk", "Google Keep", 3, " --app=https://keep.google.com")
+^#!b:: Launch(brower, " - Brave", 2)
+^#!g:: Launch(brower, "Google Gemini", 3, " --app=https://gemini.google.com")
+^#!y:: Launch(brower, "YouTube", 2, " --app=https://www.youtube.com")
+^#!m:: Launch(brower, "Messenger", 3, " --app=https://www.messenger.com")
+^#!k:: Launch(brower, "Google Keep", 3, " --app=https://keep.google.com")
+^#!d:: Launch(brower, "Discord", 2, " --app=https://discord.com/app")
+^#!t:: Launch(brower, "Telegram", 2, " --app=https://web.telegram.org")
+^#!n:: Launch(brower, "Notion", 2, " --app=https://www.notion.so/")
+
+; ^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
+; ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
+; ^#!n:: Launch(A_Programs . "\Notion.lnk", "ahk_exe Notion.exe")
 
 ^#!v:: Launch(A_Programs . "\Visual Studio Code\Visual Studio Code.lnk", "ahk_exe Code.exe")
-^#!b:: Launch(A_Programs . "\Brave.lnk", " - Brave", 2)
-^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
-^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
-^#!n:: Launch(A_Programs . "\Notion.lnk", "ahk_exe Notion.exe")
 ^#!z:: Launch(A_Programs . "\Zalo.lnk", "ahk_exe zalo.exe")
 ^#!Space:: Launch(LocalAppData . "\Microsoft\WindowsApps\wt.exe", "ahk_exe WindowsTerminal.exe")
 ^#!f:: Launch("explorer.exe", "ahk_class CabinetWClass")
@@ -97,9 +107,9 @@ LocalAppData := EnvGet("LocalAppData")
 #Include lib/which-key.ahk
 menuApps := Map(
     "d", { Desc: "DeepSeek", Action: (*) =>
-        Launch(pwaPath . "\DeepSeek - Into the Unknown.lnk", "DeepSeek - Into the Unknown", 2) },
+        Launch(brower, "DeepSeek - Into the Unknown", 2, " --app=https://chat.deepseek.com/") },
     "m", { Desc: "Gmail", Action: (*) =>
-        Launch(pwaPath . "\Gmail.lnk", "Gmail", 2) },
+        Launch(brower, "Gmail", 2, " --app=https://mail.google.com/") },
     "c", { Desc: "Chrome", Action: (*) =>
         Launch(A_ProgramsCommon . "\Google Chrome.lnk", " - Google Chrome", 2) },
 )
