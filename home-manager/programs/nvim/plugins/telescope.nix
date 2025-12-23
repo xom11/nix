@@ -40,16 +40,18 @@ ckModule config ./..
     };
     settings = {
       defaults = {
-        vimgrep_arguments = ["${pkgs.ripgrep}/bin/rg" "-L" "--color=never" "--no-heading" "--with-filename" "--line-number" "--column" "--smart-case" "--fixed-strings"];
+        vimgrep_arguments = ["${pkgs.ripgrep}/bin/rg" "-L" "--color=never" "--no-heading" "--with-filename" "--line-number" "--column" "--smart-case"];
         selection_caret = "  ";
         entry_prefix = "  ";
         layout_strategy = "flex";
         layout_config = {
           horizontal = {
-            prompt_position = "top";
+            prompt_position = "bottom";
           };
+          width = 0.99;
+          height = 0.99;
         };
-        sorting_strategy = "ascending";
+        sorting_strategy = "descending";
         set_env.COLORTERM = "truecolor";
         file_ignore_patterns = [
           "^.git/"

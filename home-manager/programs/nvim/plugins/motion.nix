@@ -33,7 +33,7 @@ ckModule config ./..
       settings = {
         jump = {
           # Automatically jump when there is only one match
-          autojump = true;
+          autojump = false;
           # Clear highlight after jump
           nohlsearch = true;
         };
