@@ -2,12 +2,6 @@
 Persistent
 
 ; --- Configuration ---
-; Define apps for English (EN)
-GroupAdd "EN_Group", "ahk_exe WindowsTerminal.exe"
-GroupAdd "EN_Group", "ahk_exe Code.exe"
-GroupAdd "EN_Group", "ahk_exe explorer.exe"
-GroupAdd "EN_Group", "ahk_exe ApplicationFrameHost.exe"
-
 ; Define apps for Vietnamese (VI)
 GroupAdd "VI_Group", "ahk_exe brave.exe"
 GroupAdd "VI_Group", "ahk_exe winword.exe"
@@ -28,11 +22,11 @@ AutoSwitchLanguage() {
     if (activeHwnd == 0 || activeHwnd == lastHwnd)
         return
 
-    if WinActive("ahk_group EN_Group") {
-        SetInputLang(EN_US)
-    } 
-    else if WinActive("ahk_group VI_Group") {
+    if WinActive("ahk_group VI_Group") {
         SetInputLang(VI_VN)
+    }
+    else {
+        SetInputLang(EN_US)
     }
 
     lastHwnd := activeHwnd
