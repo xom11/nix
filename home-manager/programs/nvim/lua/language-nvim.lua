@@ -4,8 +4,8 @@
 
 vim = vim
 local sysname = vim.loop.os_uname().sysname
-local is_mac = sysname == "Darwin"
-local is_linux = sysname == "Linux"
+local is_mac = sysname == "Darwin" and vim.fn.executable("macism") == 1
+local is_linux = sysname == "Linux" and vim.fn.executable("fcitx5-remote") == 1
 
 if is_mac then
     local english_layout = "com.apple.keylayout.ABC"
