@@ -1,3 +1,7 @@
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Start-Process powershell.exe "-NoProfile -File `"$PSCommandPath`"" -Verb RunAs
+    exit
+}
 # --- Configuration ---
 $TaskName = "AHKrunning"
 $AhkExe   = "$env:USERPROFILE\scoop\shims\autohotkey.exe"
