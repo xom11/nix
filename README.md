@@ -1,4 +1,4 @@
-# Install test 
+# Install
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/install | sh
 ```
