@@ -23,21 +23,14 @@ in
       plugins = {
         auto-save.enable = true;
         # auto-session.enable = true;
-        barbecue.enable = true;
-        colorizer.enable = true;
         comment.enable = true;
-        dashboard.enable = true;
 
         # https://github.com/folke/flash.nvim/
         # flash.enable = true;
 
         friendly-snippets.enable = true;
-        image.enable = true;
-        lualine.enable = true;
         luasnip.enable = true;
-        noice.enable = true;
         nvim-autopairs.enable = true;
-        render-markdown.enable = true;
         tmux-navigator.enable = true;
         visual-multi.enable = true;
         web-devicons.enable = true;

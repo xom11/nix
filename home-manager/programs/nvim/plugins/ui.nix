@@ -5,6 +5,15 @@
 }:
 ckModule config ./..
 {
+  programs.nixvim.plugins = {
+    lualine.enable = true;
+    render-markdown.enable = true;
+    dashboard.enable = true;
+    colorizer.enable = true;
+    noice.enable = true;
+    image.enable = true;
+    barbecue.enable = true;
+  }
   programs.nixvim.plugins.transparent = {
     enable = true;
     luaConfig.post = ''
