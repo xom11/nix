@@ -1,33 +1,26 @@
 #Requires AutoHotkey v2.0
 SetTitleMatchMode 2 ; Exact 3, Relative 2 
-global AppIDs := Map()
 
 Launch(exePath, winTitle, args := "") {
-    appKey := exePath . args 
-    
-    if AppIDs.Has(appKey) && WinExist("ahk_id " . AppIDs[appKey]) {
-        targetHwnd := "ahk_id " . AppIDs[appKey]
-        
-        if WinActive(targetHwnd) {
-            Send("!{Esc}") 
-        } else {
-            WinActivate(targetHwnd)
-        }
-    } else {
+
+    if !WinExist(winTitle) {
         try {
             RunAsUser(exePath, args)
-            
-            if WinWait(winTitle, , 8) {
-                activeHwnd := WinGetID(winTitle)
-                AppIDs[appKey] := activeHwnd
-                
-                WinActivate("ahk_id " activeHwnd)
-            }
-        } catch Error as e {
-            MsgBox "Can't run " . exePath . "`nError: " . e.Message
+            if WinWait(winTitle, , 5)
+                WinActivate(winTitle)
+        } catch {
+            MsgBox ": " . exePath
         }
+    } else {
+        if WinActive(winTitle)
+        ; WinMinimize(winTitle)
+        ; Send("!{Tab}")
+            Send("!{Esc}")
+        else
+            WinActivate(winTitle)
     }
 }
+
 RunAsUser(target, args := "", workingDir := "") {
     try {
         ; Get the Shell's folder view object
