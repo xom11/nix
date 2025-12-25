@@ -13,6 +13,7 @@ mkModule config ./. {
     eza
     fastfetch
     fzf
+    git
     gh
     htop
     jq
