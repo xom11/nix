@@ -18,6 +18,9 @@ in
       ansible-playbook -i "localhost," ${cfgDir}/ansible.yml
     '';
   };
+  home.sessionVariables = {
+      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+  };
   modules.home-manager = {
     dotfiles = {
     };
