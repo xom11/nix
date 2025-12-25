@@ -9,7 +9,7 @@ mkModule config ./. {
     settings = {
       user = {
         name = "khanhkhanhlele";
-        email = "namkhanh2172@gmail.com";
+        email = "khanhkhanhlele";
       };
       init.defaultBranch = "main";
       credential.helper = "store";
