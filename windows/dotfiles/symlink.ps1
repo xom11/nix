@@ -32,6 +32,10 @@ $dotfiles = @(
         src  = ".\..\..\home-manager\programs\ssh\config"; 
         dest = "$env:USERPROFILE\.ssh\config" 
     }
+    @{ 
+        src  = ".\..\..\configs\lazy.nvim"; 
+        dest = "$env:USERPROFILE\AppData\Local\nvim" 
+    }
     # @{ 
     #     src  = "$HOME\dotfiles\nvim"; 
     #     dest = "$AppData\Local\nvim" 
@@ -76,3 +80,6 @@ foreach ($item in $dotfiles) {
     }
     Write-Host "-----------------------------------"
 }
+
+Write-Host "All done!" -ForegroundColor Magenta
+Read-Host "Press Enter to exit..."
