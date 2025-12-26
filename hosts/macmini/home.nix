@@ -37,7 +37,7 @@
       bin.enable = true;
       btop.enable = true;
       git.enable = true;
-      nvim.enable = true;
+      nixvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
       yazi.enable = true;

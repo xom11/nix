@@ -54,7 +54,7 @@
       dev.enable = true;
     };
     programs = {
-      nvim.enable = true;
+      nixvim.enable = true;
       git.enable = true;
       bin.enable = true;
     };

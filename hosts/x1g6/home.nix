@@ -32,7 +32,7 @@
     };
     programs = {
       bin.enable = true;
-      nvim.enable = true;
+      nixvim.enable = true;
       git.enable = true;
       tmux.enable = true;
       zsh.enable = true;
