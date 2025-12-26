@@ -5,7 +5,7 @@ foreach ($alias in $conflicts) {
         Remove-Item "alias:$alias" -Force
     }
 }
-function v { nvim.exe }
+function v { nvim.exe  $args}
 function lzg { lazygit }
 function lzd { lazydocker }
 function ff { fastfetch }
