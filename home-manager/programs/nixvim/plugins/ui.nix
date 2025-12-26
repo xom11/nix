@@ -13,7 +13,7 @@ ckModule config ./..
     noice.enable = true;
     image.enable = true;
     barbecue.enable = true;
-    notify.enable = true; 
+    # notify.enable = true; 
   }
   programs.nixvim.plugins.transparent = {
     enable = true;
