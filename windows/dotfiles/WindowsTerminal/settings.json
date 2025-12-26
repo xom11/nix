@@ -33,10 +33,6 @@
             "keys": "ctrl+c"
         },
         {
-            "id": "Terminal.CopyToClipboard",
-            "keys": "y"
-        },
-        {
             "id": "Terminal.PasteFromClipboard",
             "keys": "ctrl+v"
         },
