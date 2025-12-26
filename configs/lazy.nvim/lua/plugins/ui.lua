@@ -68,9 +68,56 @@ return {
     -- OPTIONAL:
     --   `nvim-notify` is only needed, if you want to use the notification view.
     --   If not available, we use `mini` as the fallback
-    "rcarriga/nvim-notify",
+    -- "rcarriga/nvim-notify",
     }
   },
+},
+ {
+  "xiyaowong/transparent.nvim",
+  lazy = false,
+  opts = {
+    extra_groups = {
+      -- NeoTree
+      "NeoTreeNormal",
+      "NeoTreeNormalNC",
+      "NeoTreeFloat",
+      "NeoTreeFloatBorder",
+      -- Telescope
+      "TelescopeNormal",
+      "TelescopeBorder",
+      "TelescopePromptNormal",
+      "TelescopePromptBorder",
+      "TelescopeResultsNormal",
+      "TelescopePreviewNormal",
+      -- Lualine
+      "LualineNormal",
+      "LualineNC",
+      -- FzfLua
+      "FzfLuaBorder",
+      "FzfLuaNormal",
+      "FzfLuaTitle",
+      "FzfLuaPreviewBorder",
+      "FzfLuaPreviewNormal",
+      "FzfLuaPreviewTitle",
+    },
+    exclude_groups = {
+      "CursorLine",
+    },
+  },
+  config = function(_, opts)
+    local transparent = require("transparent")
+    
+    transparent.setup(opts)
+
+    transparent.clear_prefix('NeoTree')
+    transparent.clear_prefix('Telescope')
+
+    vim.cmd("highlight Normal guibg=NONE")
+    vim.cmd("highlight Lualine guibg=NONE")
+    vim.cmd("highlight Lualine guifg=NONE")
+    vim.cmd("highlight NormalNC guibg=NONE")
+    
+  end,
 }
 
 }

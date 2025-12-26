@@ -1,25 +1,12 @@
 return {
   "stevearc/conform.nvim",
-  event = { "BufReadPre", "BufNewFile" },
+  event = { "BufWritePre" }, 
+  cmd = { "ConformInfo" },
   dependencies = {
     "williamboman/mason.nvim",
-    "zapling/mason-conform.nvim",
   },
   config = function()
     local conform = require("conform")
-    local mason_conform = require("mason-conform")
-
-    mason_conform.setup({
-      ensure_installed = {
-        -- "black",
-        -- "shfmt",
-        -- "stylua",
-        -- "prettierd",
-        -- "prettier",
-        -- "yamllint",
-        -- "yamlfmt",
-      },
-    })
 
     conform.setup({
       notify_on_error = true,
@@ -42,6 +29,7 @@ return {
         bash = { "shfmt" },
         ["_"] = { "trim_whitespace" },
       },
+      format_on_save = false, 
     })
 
     vim.keymap.set("n", "<leader>lf", function()

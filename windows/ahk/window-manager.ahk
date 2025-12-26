@@ -89,7 +89,7 @@ brower := A_Programs . "\Brave.lnk"
 ; ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
 ; ^#!n:: Launch(A_Programs . "\Notion.lnk", "ahk_exe Notion.exe")
 
-^#!v:: Launch(A_Programs . "\Visual Studio Code\Visual Studio Code.lnk", "ahk_exe Code.exe")
+; ^#!v:: Launch(A_Programs . "\Visual Studio Code\Visual Studio Code.lnk", "ahk_exe Code.exe")
 ^#!z:: Launch(A_Programs . "\Zalo.lnk", "ahk_exe zalo.exe")
 ; ^#!Space:: Launch(LocalAppData . "\Microsoft\WindowsApps\wt.exe", "ahk_exe WindowsTerminal.exe")
 ^#!Space:: Launch("wezterm-gui.exe", "ahk_exe wezterm-gui.exe")
