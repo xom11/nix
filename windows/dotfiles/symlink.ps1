@@ -4,41 +4,45 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 # Define the list of source and target paths
 $dotfiles = @(
-    @{ 
-        src  = ".\PowerToys\settings.json"; 
+    @{
+        src  = ".\PowerToys\settings.json";
         dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\settings.json"
     }
-    @{ 
-        src  = ".\WindowsTerminal\settings.json"; 
+    @{
+        src  = ".\WindowsTerminal\settings.json";
         dest = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
     }
-    @{ 
-        src  = ".\pwsh\Microsoft.PowerShell_profile.ps1"; 
+    @{
+        src  = ".\pwsh\Microsoft.PowerShell_profile.ps1";
         dest = "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
     }
-    @{ 
-        src  = ".\pwsh\ps1.d"; 
+    @{
+        src  = ".\pwsh\ps1.d";
         dest = "$env:USERPROFILE\Documents\PowerShell\ps1.d"
     }
-    @{ 
-        src  = ".\..\..\home-manager\dotfiles\vscode\settings.json"; 
-        dest = "$env:APPDATA\Code\User\settings.json" 
+    @{
+        src  = ".\..\..\home-manager\dotfiles\vscode\settings.json";
+        dest = "$env:APPDATA\Code\User\settings.json"
     }
-    @{ 
-        src  = ".\..\..\home-manager\dotfiles\vscode\keybindings.json"; 
-        dest = "$env:APPDATA\Code\User\keybindings.json" 
+    @{
+        src  = ".\..\..\home-manager\dotfiles\vscode\keybindings.json";
+        dest = "$env:APPDATA\Code\User\keybindings.json"
     }
-    @{ 
-        src  = ".\..\..\home-manager\programs\ssh\config"; 
-        dest = "$env:USERPROFILE\.ssh\config" 
+    @{
+        src  = ".\..\..\home-manager\dotfiles\wezterm\wezterm.lua";
+        dest = "$env:USERPROFILE\.config\wezterm\wezterm.lua"
     }
-    @{ 
-        src  = ".\..\..\configs\lazy.nvim"; 
-        dest = "$env:USERPROFILE\AppData\Local\nvim" 
+    @{
+        src  = ".\..\..\home-manager\programs\ssh\config";
+        dest = "$env:USERPROFILE\.ssh\config"
     }
-    # @{ 
-    #     src  = "$HOME\dotfiles\nvim"; 
-    #     dest = "$AppData\Local\nvim" 
+    @{
+        src  = ".\..\..\configs\lazy.nvim";
+        dest = "$env:USERPROFILE\AppData\Local\nvim"
+    }
+    # @{
+    #     src  = "$HOME\dotfiles\nvim";
+    #     dest = "$AppData\Local\nvim"
     # }
 )
 

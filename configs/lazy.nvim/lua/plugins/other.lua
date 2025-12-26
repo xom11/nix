@@ -1,5 +1,8 @@
 return {
     {
+      "mg979/vim-visual-multi",
+    },
+    {
         "christoomey/vim-tmux-navigator",
         config = function()
             vim.keymap.set('n', 'C-h', ':TmuxNavigateLeft<CR>')
