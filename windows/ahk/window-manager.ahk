@@ -91,7 +91,8 @@ brower := A_Programs . "\Brave.lnk"
 
 ^#!v:: Launch(A_Programs . "\Visual Studio Code\Visual Studio Code.lnk", "ahk_exe Code.exe")
 ^#!z:: Launch(A_Programs . "\Zalo.lnk", "ahk_exe zalo.exe")
-^#!Space:: Launch(LocalAppData . "\Microsoft\WindowsApps\wt.exe", "ahk_exe WindowsTerminal.exe")
+; ^#!Space:: Launch(LocalAppData . "\Microsoft\WindowsApps\wt.exe", "ahk_exe WindowsTerminal.exe")
+^#!Space:: Launch("wezterm-gui.exe", "ahk_exe wezterm-gui.exe")
 ^#!f:: Launch("explorer.exe", "ahk_class CabinetWClass")
 ^#!s:: Launch("ms-settings:", "ahk_exe ApplicationFrameHost.exe")
 

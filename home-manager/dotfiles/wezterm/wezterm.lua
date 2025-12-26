@@ -1,6 +1,7 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 local act = wezterm.action
+local mux = wezterm.mux
 
 -- pwsh shell in windows
 local function get_default_prog()
@@ -12,9 +13,13 @@ end
 config.default_prog = get_default_prog()
 
 config.font = wezterm.font 'JetBrains Mono'
-config.font_size = 11.0
-
+config.font_size = 14.0
 config.color_scheme = 'Catppuccin Macchiato'
+
+wezterm.on("gui-startup", function()
+  local tab, pane, window = mux.spawn_window{}
+  window:gui_window():maximize()
+end)
 
 config.window_background_opacity = 0.5
 config.win32_system_backdrop = 'Acrylic' -- 'Acrylic', 'Mica', 'Tabbed'
@@ -27,6 +32,11 @@ config.keys = {
   { key = 'w', mods = 'CTRL|SHIFT', action = wezterm.action.CloseCurrentTab { confirm = true } },
   { key = 'LeftArrow',  mods = 'CTRL|SHIFT', action = wezterm.action.ActivateTabRelative(-1) },
   { key = 'RightArrow', mods = 'CTRL|SHIFT', action = wezterm.action.ActivateTabRelative(1) },
+    {
+    key = 'n',
+    mods = 'SHIFT|CTRL',
+    action = wezterm.action.ToggleFullScreen,
+  },
 }
 
 return config
