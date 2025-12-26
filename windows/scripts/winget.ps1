@@ -24,6 +24,7 @@ $modules = @(
     "Brave.Brave"
     "9PFXXSHC64H3" # Raycast
     "DEVCOM.JetBrainsMonoNerdFont"
+    "wez.wezterm"
 )
 
 foreach ($module in $modules) {

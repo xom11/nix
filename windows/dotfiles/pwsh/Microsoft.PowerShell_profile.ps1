@@ -4,7 +4,7 @@ Import-Module PSFzf
 # replace 'Ctrl+t' and 'Ctrl+r' with your preferred bindings:
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 # Oh My Posh init
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\wopian.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "$PSScriptRoot\ps1.d\theme.json" | Invoke-Expression
 
 
 # Set-PSReadLineOption -PredictionSource History

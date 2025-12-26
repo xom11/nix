@@ -13,11 +13,11 @@ $dotfiles = @(
         dest = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
     }
     @{ 
-        src  = ".\Powershell\Microsoft.PowerShell_profile.ps1"; 
+        src  = ".\pwsh\Microsoft.PowerShell_profile.ps1"; 
         dest = "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
     }
     @{ 
-        src  = ".\Powershell\ps1.d"; 
+        src  = ".\pwsh\ps1.d"; 
         dest = "$env:USERPROFILE\Documents\PowerShell\ps1.d"
     }
     @{ 
