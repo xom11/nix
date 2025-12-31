@@ -14,7 +14,7 @@ ckModule config ./..
     image.enable = true;
     barbecue.enable = true;
     # notify.enable = true; 
-  }
+  };
   programs.nixvim.plugins.transparent = {
     enable = true;
     luaConfig.post = ''

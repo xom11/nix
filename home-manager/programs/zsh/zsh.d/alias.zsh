@@ -62,4 +62,18 @@ alias tkss='tmux kill-session -t '
 
 
 # kanata
-alias rk='sudo launchctl unload /Library/LaunchDaemons/org.nixos.kanata.plist; sudo launchctl load /Library/LaunchDaemons/org.nixos.kanata.plist'
+rk() {
+    local plist="/Library/LaunchDaemons/org.nixos.kanata.plist"
+    local log_file=$(grep -A 1 "StandardErrorPath" "$plist" | grep "string" | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
+
+    sudo launchctl unload "$plist"
+    sudo launchctl load "$plist"
+    
+    if [ -n "$log_file" ]; then
+        sleep 1
+        tail -f "$log_file"
+    else
+        echo "Không tìm thấy đường dẫn log trong file .plist"
+    fi
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
+}
