@@ -49,14 +49,14 @@ alias tl='tmux ls'
 # alias tn='tmux new -s '
 tn() {
   if [ -n "$TMUX" ]; then
-    tmux new-session -d -s "$1"
-    tmux switch-client -t "$1"
+    tmux -u new-session -d -s "$1"
+    tmux -u switch-client -t "$1"
   else
     tmux new-session -s "$1"
   fi
 }
 alias ts='tmux switch -t'
-alias ta='tmux attach -t'
+alias ta='tmux -u attach -t'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t '
 
