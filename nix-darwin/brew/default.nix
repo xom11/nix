@@ -49,7 +49,7 @@ mkModule config ./. {
       # "chromedriver"
       # "cursor"
       # "deskreen"
-      "discord"
+      # "discord"
       # "drawpen"
       # "duet"
       # "evkey"

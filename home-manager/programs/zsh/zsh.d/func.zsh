@@ -61,3 +61,21 @@ _uv_run_mod() {
     fi
 }
 compdef _uv_run_mod uv
+
+install_pwa() {
+  local apps=(
+    "https://web.telegram.org"
+    "https://discord.com/app"
+    "https://www.youtube.com"
+    "https://gemini.google.com"
+    "https://www.messenger.com"
+    "https://keep.google.com"
+    "https://www.notion.so/"
+  )
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    open -a "Brave Browser" "${apps[@]}"
+  else
+    brave-browser "${apps[@]}" &>/dev/null &
+  fi
+}
