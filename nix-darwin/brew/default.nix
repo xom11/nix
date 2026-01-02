@@ -37,13 +37,13 @@ mkModule config ./. {
       "sleepwatcher"
       "tailscale"
       "macism"
-      "scrcpy"
+      # "scrcpy"
       # "zathura"
     ];
 
     caskArgs.no_quarantine = true;
     casks = [
-      "android-platform-tools"
+      # "android-platform-tools"
       # "Tunnelblick"
       "balenaetcher"
       "bitwarden"
