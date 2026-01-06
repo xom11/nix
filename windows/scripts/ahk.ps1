@@ -5,7 +5,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # --- Configuration ---
 $TaskName = "AHKrunning"
 $AhkExe   = "$env:USERPROFILE\scoop\shims\autohotkey.exe"
-$AhkFile  = "$env:USERPROFILE\nix\windows\ahk\main.ahk"
+$AhkFile  = "$env:USERPROFILE\.nix\windows\ahk\main.ahk"
 
 # 1. Define the action: Run AHK with the script path as an argument
 $Action = New-ScheduledTaskAction -Execute $AhkExe -Argument "`"$AhkFile`""
