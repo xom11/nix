@@ -1,5 +1,5 @@
 - Reset win without wifi
-Shift + f10 to go to cmd
+    Shift + f10 to go to cmd
 `OOBE\BYPASSNRO`
 - create symlink
 ```bash
