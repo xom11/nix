@@ -31,7 +31,7 @@ ckModule config ./..
             function(state)
               local p = state.tree:get_node().path
               vim.fn.setreg("+", p)
-              vim.notify("Copied to clipboard: " .. p)
+              vim.notify("Copied: " .. p)
             end
           '';
         };
@@ -41,7 +41,7 @@ ckModule config ./..
             function(state)
               local n = state.tree:get_node().name
               vim.fn.setreg("+", n)
-              vim.notify("Copied to clipboard: " .. n)
+              vim.notify("Copied: " .. n)
             end
           '';
         };
@@ -52,7 +52,7 @@ ckModule config ./..
               local p = state.tree:get_node().path
               local r = vim.fn.fnamemodify(p, ":.")
               vim.fn.setreg("+", r)
-              vim.notify("Copied to clipboard: " .. r)
+              vim.notify("Copied: " .. r)
             end
           '';
         };
