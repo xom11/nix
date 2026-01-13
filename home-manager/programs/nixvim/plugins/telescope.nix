@@ -68,12 +68,12 @@ ckModule config ./..
     {
       key = "<leader><leader>";
       action = "<cmd>Telescope frecency workspace=CWD<cr>";
-      options.desc = "Open frecency in current workspace";
+      options.desc = "Telescope frecency";
     }
     {
       key = "<leader>fc";
       action = "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>";
-      options.desc = "Open file browser in current buffer directory";
+      options.desc = "Telescope current path";
     }
   ];
   home.packages = with pkgs; [
