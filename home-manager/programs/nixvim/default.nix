@@ -38,7 +38,7 @@ in
 
       extraPlugins = with pkgs.vimPlugins; [
         vim-obsession
-        clipboard-image-nvim
+        # clipboard-image-nvim
       ];
 
       extraConfigVim = ''
