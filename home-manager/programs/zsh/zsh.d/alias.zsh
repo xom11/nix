@@ -77,3 +77,6 @@ rk() {
     fi
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
 }
+
+# ai
+alias ai="aichat -e"
