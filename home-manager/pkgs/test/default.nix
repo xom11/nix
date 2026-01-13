@@ -12,5 +12,6 @@ mkModule config ./. {
     mkpasswd
     opencode
     yq-go
+    aichat
   ];
 }
