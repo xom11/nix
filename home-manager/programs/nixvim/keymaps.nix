@@ -50,7 +50,8 @@ ckModule config ./.
         {
           key = "<leader>yr";
           mode = "n";
-          action = ":let @+ = expand('%')<CR>";
+          # action = ":let @+ = expand('%')<CR>";
+          action = ":let @+ = fnamemodify(expand('%'), ':.')<CR>";
           options.desc = "Copy relative path to clipboard";
         }
         {
