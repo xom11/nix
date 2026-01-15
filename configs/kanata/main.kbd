@@ -134,6 +134,8 @@
   v $paste
   b $paste_history 
 
+  t A-t
+
   n tab
   m bspc
   ;; , spc
