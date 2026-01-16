@@ -12,13 +12,14 @@ if !A_IsAdmin
 #Include power-manager.ahk
 #Include switch-language.ahk
 #Include window-manager.ahk
+#Include tab-key.ahk
 
 TrayTip "AHK loading sucess!!", "Startup", 1
 
-^#+r:: {
-    Reload()
-    TrayTip "Reload AHK", "AHK System"
-}
+; ^#+r:: {
+;     Reload()
+;     TrayTip "Reload AHK", "AHK System"
+; }
 
 KillAll(*) {
     if ProcessExist("kanata.exe")
