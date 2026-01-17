@@ -2,12 +2,12 @@
 
 # Danh sách URL ngăn cách bởi khoảng trắng
 URLS=(
-    "https://github.com"
+  "https://github.com"
 )
 
 for url in "${URLS[@]}"; do
-    echo "Đang cài đặt: $url"
-    osascript <<EOT
+  echo "Đang cài đặt: $url"
+  osascript <<EOT
         tell application "Brave Browser"
             activate
             open location "$url"
@@ -22,7 +22,7 @@ for url in "${URLS[@]}"; do
             end tell
         end tell
 EOT
-    sleep 2
+  sleep 2
 done
 
 echo "Hoàn thành cài đặt các Web App!"

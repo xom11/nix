@@ -34,6 +34,9 @@ $modules = @(
     "kanata"
     "yazi"
     "autohotkey"
+
+    "shfmt"
+    "stylua"
 )
 foreach ($module in $modules) {
     Write-Host "Installing $module via scoop..." -ForegroundColor Cyan
