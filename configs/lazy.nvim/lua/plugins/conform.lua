@@ -10,6 +10,7 @@ return {
 
 		conform.setup({
 			notify_on_error = true,
+			-- log_level = vim.log.levels.DEBUG,
 			formatters_by_ft = {
 				html = { "prettierd", "prettier", stop_after_first = true },
 				css = { "prettierd", "prettier", stop_after_first = true },
@@ -27,7 +28,25 @@ return {
 				rust = { "rustfmt" },
 				sh = { "shfmt" },
 				bash = { "shfmt" },
+				ps1 = { "psscriptanalyzer" },
 				["_"] = { "trim_whitespace" },
+			},
+			formatters = {
+				psscriptanalyzer = {
+					command = "pwsh",
+					args = {
+						"-NoProfile",
+						"-NonInteractive",
+						"-Command",
+						[[
+                $inputString = [Console]::In.ReadToEnd()
+                if ([string]::IsNullOrWhiteSpace($inputString)) { exit 0 }
+                $result = Invoke-Formatter -ScriptDefinition $inputString
+                if ($result) { $result } else { $inputString }
+            ]],
+					},
+					stdin = true,
+				},
 			},
 			format_on_save = false,
 		})

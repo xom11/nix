@@ -11,11 +11,11 @@ if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
     }
     catch {
         Write-Error "Error installing Scoop"
-        Exit
+        exit
     }
 }
 
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","User") + ";" + [System.Environment]::GetEnvironmentVariable("Path","Machine")
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
 scoop install git
 scoop bucket add extras
@@ -36,9 +36,11 @@ $modules = @(
     "autohotkey"
 
     "shfmt"
+    "yamlfmt"
     "stylua"
 )
 foreach ($module in $modules) {
     Write-Host "Installing $module via scoop..." -ForegroundColor Cyan
     scoop install $module
 }
+
