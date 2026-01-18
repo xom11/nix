@@ -5,3 +5,8 @@ show_hidden = true
 # video = [
 #     { run = "vlc \"$@\"", desc = "Open in VLC" }
 # ]
+
+[opener]
+edit = [
+  { run = 'nvim %*',    block = true, desc = "nvim",           for = "windows" },
+]

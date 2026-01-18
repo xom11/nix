@@ -16,23 +16,24 @@ ckModule config ./..
       # };
       notify_on_error = true;
       formatters_by_ft = {
-        html = [["prettierd" "prettier"]];
+        "_" = ["trim_whitespace"];
+        bash = ["shfmt"];
         css = [["prettierd" "prettier"]];
-        scss = ["prettierd" "prettier"];
+        html = [["prettierd" "prettier"]];
         javascript = [["prettierd" "prettier"]];
         javascriptreact = [["prettierd" "prettier"]];
-        typescript = [["prettierd" "prettier"]];
-        typescriptreact = [["prettierd" "prettier"]];
-        markdown = [["prettierd" "prettier"]];
-        yaml = [["yamllint" "yamlfmt"]];
         json = ["prettierd"];
-        nix = ["alejandra"];
         lua = ["stylua"];
+        markdown = [["prettierd" "prettier"]];
+        nix = ["alejandra"];
         python = ["black"];
         rust = ["rustfmt"];
+        scss = ["prettierd" "prettier"];
         sh = ["shfmt"];
-        bash = ["shfmt"];
-        "_" = ["trim_whitespace"];
+        toml = ["taplo"]
+        typescript = [["prettierd" "prettier"]];
+        typescriptreact = [["prettierd" "prettier"]];
+        yaml = [["yamllint" "yamlfmt"]];
       };
     };
     luaConfig.post = ''

@@ -40,6 +40,10 @@ $dotfiles = @(
         src  = ".\..\..\configs\lazy.nvim";
         dest = "$env:USERPROFILE\AppData\Local\nvim"
     }
+    @{
+        src  = ".\..\..\home-manager\programs\yazi\yazi.d";
+        dest = "$env:APPDATA\yazi\config"
+    }
     # @{
     #     src  = "$HOME\dotfiles\nvim";
     #     dest = "$AppData\Local\nvim"
