@@ -1,7 +1,7 @@
 # Drag and drop via dragon
 [[mgr.prepend_keymap]]
 on  = "<C-n>"
-run = 'shell -- dragon-drop -x -i -T "$1"'
+run = 'shell -- ripdrag %s -x 2>/dev/null &'
 
 # Linux: Copy selected files to the system clipboard while yanking
 [[mgr.prepend_keymap]]
@@ -17,3 +17,17 @@ run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
 # on   = "l"
 # run  = "plugin smart-enter"
 # desc =l"Enter the child directory, or open the file"
+
+[[mgr.prepend_keymap]]
+on   = "!"
+for  = "unix"
+run  = 'shell "$SHELL" --block'
+desc = "Open $SHELL here"
+
+# If you also using Yazi on Windows:
+[[mgr.prepend_keymap]]
+on   = "!"
+for  = "windows"
+run  = 'shell "powershell.exe" --block'
+desc = "Open PowerShell here"
+

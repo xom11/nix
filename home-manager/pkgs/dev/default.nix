@@ -67,5 +67,7 @@ mkModule config ./. {
     # BUG: conflicts with macOS clang
     # https://github.com/NixOS/nixpkgs/issues/306279#issuecomment-2634075103
     # gcc
+
+    ripdrag
   ];
 }

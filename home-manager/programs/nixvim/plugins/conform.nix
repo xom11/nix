@@ -30,7 +30,7 @@ ckModule config ./..
         rust = ["rustfmt"];
         scss = ["prettierd" "prettier"];
         sh = ["shfmt"];
-        toml = ["taplo"]
+        toml = ["taplo"];
         typescript = [["prettierd" "prettier"]];
         typescriptreact = [["prettierd" "prettier"]];
         yaml = [["yamllint" "yamlfmt"]];
@@ -54,5 +54,6 @@ ckModule config ./..
     prettierd
     yamllint
     yamlfmt
+    taplo
   ];
 }
