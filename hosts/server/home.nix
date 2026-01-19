@@ -12,10 +12,10 @@ in
       nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
     '';
     galaxy-update = ''
-      ansible-galaxy install -r  ${cfgDir}/ansible.requirements.yml
+      ansible-galaxy install -r  ${cfgDir}/ansible/requirements.yml
     '';
     ansible-update = ''
-      ansible-playbook -i "localhost," ${cfgDir}/ansible.yml
+      ansible-playbook -i "localhost," ${cfgDir}/ansible/main.yml
     '';
   };
   home.sessionVariables = {

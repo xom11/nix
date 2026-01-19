@@ -1,4 +1,7 @@
-{ ... }:
+{ pkgs, device, ... }:
+let
+  cfgDir = "~/.nix/hosts/${device}";
+in
 {
   imports = [
     ../../home-manager
@@ -6,60 +9,43 @@
   home.shellAliases = {
     update = ''
       git -C ~nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#desktop
+      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
     '';
     galaxy-update = ''
-      ansible-galaxy install -r  ~/.nix/ansible/requirements.yml
+      ansible-galaxy install -r  ${cfgDir}/ansible/requirements.yml
     '';
     ansible-update = ''
-      ansible-playbook -i ~/.nix/ansible/hosts ~/.nix/ansible/ubuntu.yml
+      ansible-playbook -i "localhost," ${cfgDir}/ansible/main.yml
     '';
   };
-
-  # show desktop apps
-  targets.genericLinux.enable = true;
-  programs.home-manager.enable = true;
-  home.file.".config/environment.d/nix-path.conf".text = ''
-    PATH="$HOME/.nix-profile/bin:$PATH"
-  '';
-
-  # system manager path
-  programs.zsh.initContent = ''
-    # source system manager path
-    if [ -d /run/system-manager/sw/bin ]; then
-      export PATH="/run/system-manager/sw/bin/:$PATH"
-    fi
-  '';
-  modules = {
-    i18n.enable = true;
-    fonts.enable = true;
-    x11 = {
-      enable = true;
-      screen.dpi = 192;
-    };
+  home.sessionVariables = {
+      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+  };
+  modules.home-manager = {
     dotfiles = {
-      btop.enable = true;
-      i3.enable = true;
       kitty.enable = true;
-      qutebrowser.enable = true;
-      vscode.enable = true;
-      rofi.enable = true;
-      ssh.enable = true;
-      yazi.enable = true;
-      zsh.enable = true;
-      tmux.enable = true;
+    };
+    environments = {
     };
     pkgs = {
-      cli.enable = true;
+      test.enable = true;
       dev.enable = true;
     };
     programs = {
-      nixvim.enable = true;
-      git.enable = true;
       bin.enable = true;
+      btop.enable = true;
+      git.enable = true;
+      nixvim.enable = true;
+      ssh.enable = true;
+      tmux.enable = true;
+      yazi.enable = true;
+      zsh.enable = true;
     };
-    sources = {
-      raiseorlaunch.enable = true;
+    services = {
+      # syncthing.enable = true;
     };
   };
+  home.packages = [
+    pkgs.discordchatexporter-cli
+  ];
 }
