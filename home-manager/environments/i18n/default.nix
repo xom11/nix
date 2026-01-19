@@ -12,7 +12,8 @@ mkModule config ./. {
       addons = with pkgs; [
         # fcitx5-bamboo
         fcitx5-gtk
-        fcitx5-unikey
+        # fcitx5-unikey
+        qt6Packages.fcitx5-unikey
       ];
       waylandFrontend = true;
       settings = {
