@@ -22,4 +22,4 @@
         state: present
         install_recommends: yes
       loop:
-        - tailscale
+        - vim
