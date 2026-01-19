@@ -57,15 +57,16 @@ ckModule config ./..
           '';
         };
       };
-    };
-
-    filesystem = {
-      followCurrentFile.enabled = true;
-      filteredItems = {
-        hideHidden = false;
-        hideDotfiles = false;
-        forceVisibleInEmptyFolder = false;
-        hideGitignored = false;
+      filesystem = {
+        follow_current_file = {
+          enabled = true;
+        };
+        filtered_items = {
+          hide_hidden = false;
+          hide_dotfiles = false;
+          force_visible_in_empty_folder = false;
+          hide_gitignored = false;
+        };
       };
     };
 
