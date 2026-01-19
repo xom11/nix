@@ -8,7 +8,7 @@
   ];
   modules.nixos = {
     services = {
-      environment.enable = true;
+      environments.enable = true;
     };
   };
   # VMware Guest Tools
