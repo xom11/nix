@@ -4,8 +4,7 @@
   config,
   getRelPath,
   ...
-}:
-let
+}: let
   relPath = getRelPath ./.;
   pathList = ["modules"] ++ (lib.splitString "/" relPath);
   cfg = lib.getAttrFromPath pathList config;
@@ -17,8 +16,7 @@ let
     zlib
     stdenv.cc.cc.lib
   ];
-in
-{
+in {
   options = lib.setAttrByPath pathList {
     enable = lib.mkEnableOption "Enable x11 settings";
     screen.dpi = lib.mkOption {
@@ -54,8 +52,8 @@ in
       };
     };
 
-    # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     home.sessionVariables = {
+      # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
       LD_LIBRARY_PATH = lib.makeLibraryPath lb_libs;
     };
   };

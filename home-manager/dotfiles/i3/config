@@ -12,6 +12,7 @@ font pango:DejaVu Sans Mono 14
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
+exec_always --no-startup-id picom -b
 
 # keyboard repeat rate and delay
 exec --no-startup-id xset r rate 200 30
@@ -81,7 +82,7 @@ bindsym $alt+Tab exec --no-startup-id rofi -show window
 
 bindsym $mod+Tab workspace back_and_forth
 
-exec --no-startup-id sh -c "sleep 0.5 && feh --bg-scale ~/.nix/home-manager/dotfiles/images/nix-waifu.png"
+exec --no-startup-id sh -c "sleep 0.5 && feh --bg-fill ~/.nix/home-manager/dotfiles/images/nix-waifu.png"
 exec_always --no-startup-id autorandr --change
 exec --no-startup-id clipmenud
 
