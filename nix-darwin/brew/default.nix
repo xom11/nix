@@ -27,6 +27,7 @@ mkModule config ./. {
 
     brews = [
       "colima"
+      "lima"
       "docker"
       "docker-compose"
       "kanata"
@@ -74,7 +75,7 @@ mkModule config ./. {
       # "scroll-reverser"
       # "slack"
       "telegram"
-      # "orbstack
+      # "orbstack"
       "visual-studio-code"
       "vlc"
       # "vmware-fusion"

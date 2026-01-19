@@ -1,2 +1,4 @@
 ---
 - src: geerlingguy.docker
+- src: artis3n.tailscale
+
