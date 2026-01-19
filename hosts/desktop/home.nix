@@ -51,6 +51,6 @@ in
   };
   home.packages = [
     pkgs.discordchatexporter-cli
-    pkgs.kanata
+    # pkgs.kanata
   ];
 }

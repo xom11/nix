@@ -53,6 +53,6 @@ in
       extraConfigLuaPost = ''
       '';
 
-      extraConfigLua = extraConfigsLua;
+      # extraConfigLua = extraConfigsLua;
     };
   }

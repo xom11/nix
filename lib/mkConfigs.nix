@@ -173,7 +173,7 @@ in {
       inherit extraSpecialArgs;
       modules = [
         # ../hosts/${device}/configuration.nix
-        ../system-manager/base/default.nix
+        ../system-manager
       ];
     };
 }
