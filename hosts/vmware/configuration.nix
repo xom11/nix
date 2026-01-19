@@ -6,7 +6,7 @@
     ./disko.nix
     ./hardware.nix
   ];
-  modules = {
+  modules.nixos = {
     services = {
       desktop-environment.enable = true;
     };
