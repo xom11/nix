@@ -7,4 +7,4 @@
   del_word_left C-bspc
   del_word_right C-del
 )
-(include "main.kbd")
+;; (include "main.kbd")

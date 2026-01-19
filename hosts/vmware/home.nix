@@ -9,7 +9,7 @@
   home.shellAliases = {
     update = ''
       git -C ~nix pull
-      sudo nixos-rebuild switch --impure --refresh --flake ~/.nix${device}
+      sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#${device}
     '';
   };
   modules.home-manager = {
