@@ -19,7 +19,7 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 nix run github:nix-community/home-manager -- switch --impure -b backup  --refresh --flake github:kln-os/nix/main#server
 add-visudo && add-authkey && set-zsh
 ```
-# WSL2
+# WSL2[text](README.md)
 ```bash
 sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
 ```

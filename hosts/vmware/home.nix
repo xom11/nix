@@ -24,9 +24,7 @@
       kitty.enable = true;
       # qutebrowser.enable = true;
       rofi.enable = true;
-      ssh.enable = true;
-      vscode.enable = true;
-      yazi.enable = true;
+      # vscode.enable = true;
     };
     pkgs = {
       cli.enable = true;
@@ -35,9 +33,12 @@
     };
     programs = {
       bin.enable = true;
+      btop.enable = true;
       git.enable = true;
-      nvim.enable = true;
+      nixvim.enable = true;
+      ssh.enable = true;
       tmux.enable = true;
+      yazi.enable = true;
       zsh.enable = true;
     };
     secrets.enable = true;
