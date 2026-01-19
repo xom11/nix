@@ -33,7 +33,7 @@
     programs = {
       bin.enable = true;
       btop.enable = true;
-      git.enable = true;
+      # git.enable = true;
       nixvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
