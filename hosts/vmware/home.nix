@@ -19,7 +19,6 @@
       x11.enable = true;
     };
     dotfiles = {
-      btop.enable = true;
       i3.enable = true;
       kitty.enable = true;
       # qutebrowser.enable = true;
