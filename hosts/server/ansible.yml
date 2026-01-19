@@ -11,6 +11,8 @@
         docker_install_compose: true
         docker_install_compose_plugin: true
     - role: artis3n.tailscale
+      vars:
+        tailscale_up_skip: true
   tasks:
 
     # --- Install apt packages ---
