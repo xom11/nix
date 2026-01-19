@@ -10,7 +10,7 @@
 
   services.tailscale.enable = true;
   services.openssh.enable = true;
-  services.preload.enable = true;
+  # services.preload.enable = true;
   # services.flatpak.enable = true;
 
 }
