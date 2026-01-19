@@ -74,6 +74,7 @@ mkModule config ./. {
       # "scroll-reverser"
       # "slack"
       "telegram"
+      # "orbstack
       "visual-studio-code"
       "vlc"
       # "vmware-fusion"
