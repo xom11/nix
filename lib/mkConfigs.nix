@@ -169,10 +169,11 @@ in {
         device = device;
       };
   in
-    inputs.system-manager.lib.systemManagerConfiguration {
+    inputs.system-manager.lib.makeSystemConfig {
       inherit extraSpecialArgs;
       modules = [
-        ../hosts/${device}/configuration.nix
+        # ../hosts/${device}/configuration.nix
+        ../system-manager/base/default.nix
       ];
     };
 }

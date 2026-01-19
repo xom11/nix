@@ -22,3 +22,5 @@
         - vim
         - kitty
         - i3
+        - build-essential
+        - fcitx5

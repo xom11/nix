@@ -19,13 +19,17 @@ in
     '';
   };
   home.sessionVariables = {
-      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+      # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
     dotfiles = {
       kitty.enable = true;
+      i3.enable = true;
+      rofi.enable = true;
     };
     environments = {
+      fonts.enable = true;
+      x11.enable = true;
     };
     pkgs = {
       test.enable = true;
@@ -47,5 +51,6 @@ in
   };
   home.packages = [
     pkgs.discordchatexporter-cli
+    pkgs.kanata
   ];
 }
