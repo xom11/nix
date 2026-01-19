@@ -40,7 +40,7 @@
       yazi.enable = true;
       zsh.enable = true;
     };
-    secrets.enable = true;
+    # secrets.enable = true;
   };
   home.packages = [
   ];
