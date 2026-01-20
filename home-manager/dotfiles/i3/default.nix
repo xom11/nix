@@ -19,5 +19,6 @@ mkModule config ./. {
         name:
           pkgs.writeShellScriptBin name (builtins.readFile (./scripts + "/${name}"))
       )
-      scripts;
+      scripts ++ [
+      ];
 }

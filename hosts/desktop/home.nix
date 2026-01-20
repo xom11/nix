@@ -1,8 +1,10 @@
-{ pkgs, device, ... }:
-let
-  cfgDir = "~/.nix/hosts/${device}";
-in
 {
+  pkgs,
+  device,
+  ...
+}: let
+  cfgDir = "~/.nix/hosts/${device}";
+in {
   imports = [
     ../../home-manager
   ];
@@ -17,9 +19,12 @@ in
     ansible-update = ''
       ansible-playbook -i "localhost," ${cfgDir}/ansible/main.yml
     '';
+    system-manager-update = ''
+      sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#${device}
+    '';
   };
   home.sessionVariables = {
-      # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+    # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
     dotfiles = {

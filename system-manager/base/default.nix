@@ -7,9 +7,6 @@
 }: {
   nixpkgs.hostPlatform = "aarch64-linux";
   system-manager.allowAnyDistro = true;
-  environment.etc."environment.d/system-manager-path.conf".text = ''
-    PATH="/run/system-manager/sw/bin/:$PATH"
-  '';
   system-manager.preActivationAssertions = {
     setup_init = {
       enable = true;
@@ -18,4 +15,7 @@
       '';
     };
   };
+  environment.systemPackages = with pkgs; [
+    cowsay
+  ];
 }
