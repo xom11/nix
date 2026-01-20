@@ -43,7 +43,13 @@ in {
       dragon-drop
       maim
     ];
-    services.picom.enable = true;
+    services.picom = {
+      enable = true;
+      vSync = true;
+      settings = {
+        use-damage = false;
+      };
+    };
     home.file = {
       ".Xresources" = {
         text = ''

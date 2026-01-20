@@ -35,6 +35,7 @@ in {
     environments = {
       fonts.enable = true;
       x11.enable = true;
+      i18n.enable = true;
     };
     pkgs = {
       test.enable = true;
