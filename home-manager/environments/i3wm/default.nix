@@ -21,6 +21,9 @@ in
       ".config/i3/config" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
       };
+      ".config/i3/scripts" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/scripts";
+      };
     };
     home.packages = with pkgs; [
       xorg.xmodmap
@@ -38,6 +41,7 @@ in
       clipmenu
       dragon-drop
       maim
+      i3-back
     ];
     services.picom = {
       enable = true;

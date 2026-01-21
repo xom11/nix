@@ -29,12 +29,12 @@ in {
   modules.home-manager = {
     dotfiles = {
       kitty.enable = true;
-      i3.enable = true;
       rofi.enable = true;
     };
     environments = {
       fonts.enable = true;
-      x11.enable = true;
+      i3wm.enable = true;
+      i3wm.ubuntu.enable = true;
       i18n.enable = true;
     };
     pkgs = {
