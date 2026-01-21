@@ -42,6 +42,7 @@ in
       dragon-drop
       maim
       i3-back
+      autotiling
     ];
     services.picom = {
       enable = true;
