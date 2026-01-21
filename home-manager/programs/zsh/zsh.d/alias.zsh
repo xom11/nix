@@ -79,4 +79,9 @@ rk() {
 }
 
 # ai
-alias ai="aichat -e"
+alias ai='aichat -e'
+alias tv='aichat "Dịch đoạn sau sang tiếng Việt: "'
+alias te='aichat "Translate the following text to English: "'
+
+# nix
+alias u='update'
