@@ -17,7 +17,13 @@ sudo qcom-firmware-extract
 git clone https://github.com/serdeliuk/zenbook-a14-EC.git
 cd zenbook-a14-EC
 make
+# Temporarily load the driver
 sudo insmod hid-asus-ec.ko
+# Install the driver permanently
+sudo cp hid-asus-ec.ko /lib/modules/$(uname -r)/kernel/drivers/hid/
+sudo depmod -a
+sudo modprobe hid-asus-ec
+echo "hid-asus-ec" | sudo tee -a /etc/modules
 ```
 
 
