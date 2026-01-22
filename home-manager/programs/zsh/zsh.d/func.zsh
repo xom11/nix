@@ -7,20 +7,6 @@ y() {
     rm -f -- "$tmp"
 }
 
-# t() {
-#     if [ -z "$1" ]; then
-#         SESSION_NAME="0"
-#     else
-#         SESSION_NAME="$1"
-#     fi
-#
-#     if [ -z "$TMUX" ]; then
-#         tmux attach -t "$SESSION_NAME" || tmux new -s "$SESSION_NAME"
-#     else
-#         tmux new-window -n "$SESSION_NAME"
-#     fi
-# }
-
 gu() {
   if [ -z "$1" ]; then
     commit_msg="update"
@@ -32,25 +18,6 @@ gu() {
   git add . && \
   git commit -m "$commit_msg" && \
   git push
-}
-
-# Function to set macOS desktop wallpaper. 
-wp() {
-    if [ -z "$1" ]; then
-        echo "Error: Please provide the image file path. (Example: wp ~/Desktop/image.jpg or wp ./image.jpg)"
-        return 1
-    fi
-
-    local absolute_path=$(realpath "$1" 2>/dev/null)
-
-    if [ -z "$absolute_path" ]; then
-        echo "Error: Image file not found or path is invalid: $1"
-        return 1
-    fi
-
-    /usr/bin/osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$absolute_path\""
-    
-    echo "✅ Successfully set wallpaper to: $absolute_path"
 }
 
 _uv_run_mod() {

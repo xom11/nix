@@ -60,28 +60,9 @@ alias ta='tmux -u attach -t'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t '
 
-
-# kanata
-rk() {
-    local plist="/Library/LaunchDaemons/org.nixos.kanata.plist"
-    local log_file=$(grep -A 1 "StandardErrorPath" "$plist" | grep "string" | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
-
-    sudo launchctl unload "$plist"
-    sudo launchctl load "$plist"
-    
-    if [ -n "$log_file" ]; then
-        sleep 1
-        tail -f "$log_file"
-    else
-        echo "Không tìm thấy đường dẫn log trong file .plist"
-    fi
-    open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
-}
-
 # ai
-alias ai='aichat -e'
-alias tv='aichat "Dịch đoạn sau sang tiếng Việt: "'
-alias te='aichat "Translate the following text to English: "'
+alias aie='aichat -e'
+alias air='aichat -r'
 
 # nix
 alias u='update'

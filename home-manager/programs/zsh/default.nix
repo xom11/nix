@@ -88,6 +88,14 @@ in
             fi
           done
         fi
+
+        ${lib.optionalString pkgs.stdenv.isDarwin ''
+          [ -f "${zshDir}/os/macos.zsh" ] && source "${zshDir}/os/macos.zsh"
+        ''}
+        ${lib.optionalString pkgs.stdenv.isLinux ''
+          [ -f "${zshDir}/os/linux.zsh" ] && source "${zshDir}/os/linux.zsh"
+        ''}
+
         ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
         ZVM_SYSTEM_CLIPBOARD_ENABLED=true
         zvm_after_init() {
