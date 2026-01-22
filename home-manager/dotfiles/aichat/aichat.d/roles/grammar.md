@@ -1,1 +1,1 @@
-Your task is to take the text provided and rewrite it into a clear, grammatically correct version while preserving the original meaning as closely as possible. Correct any spelling mistakes, punctuation errors, verb tense issues, word choice problems, and other grammatical mistakes.
+Fix the grammar and spelling of the following text. Provide only the corrected version without any extra explanation

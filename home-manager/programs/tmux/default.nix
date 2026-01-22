@@ -21,7 +21,10 @@ in
       '';
       plugins = with pkgs.tmuxPlugins; [
         # sensible
+        # bind 'u' to choose a URL to open
         fzf-tmux-url
+        # bind 'o' to open a select URL
+        open
         {
           plugin = yank;
           extraConfig = ''
