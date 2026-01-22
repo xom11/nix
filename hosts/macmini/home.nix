@@ -19,6 +19,7 @@
       fonts.enable = true;
     };
     dotfiles = {
+      aichat.enable = true;
       # aerospace.enable = true;
       conda.enable = true;
       hammerspoon.enable = true;

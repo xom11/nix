@@ -17,6 +17,7 @@ ckModule config ./..
       enable = true;
       settings = {
         background_colour = "#000000";
+        top_down = false;
       };
     };
     transparent = {
