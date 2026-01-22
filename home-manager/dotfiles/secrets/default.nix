@@ -15,13 +15,13 @@ mkModule config ./. {
   ];
   age = {
     secrets = {
-      "secret".file = ./secrects.d/secret.age;
-      "zsh".file = ./secrects.d/zsh.age;
+      "secret".file = ./secrets.d/secret.age;
+      "zsh".file = ./secrets.d/zsh.age;
       "zsh-keys" = {
-        file = ./secrects.d/zsh-keys.age;
+        file = ./secrets.d/zsh-keys.age;
       };
       "git-credentials" = {
-        file = ./secrects.d/git-credentials.age;
+        file = ./secrets.d/git-credentials.age;
         path = "${config.home.homeDirectory}/.git-credentials";
       };
     };
