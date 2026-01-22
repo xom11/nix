@@ -65,6 +65,8 @@ in
             set -g @sessionx-bind 's'
             set -g @sessionx-window-height '90%'
             set -g @sessionx-window-width '90%'
+            set -g @sessionx-bind-kill-session 'ctrl-w'
+            set -g @sessionx-bind-window-mode 'ctrl-s'
           '';
         }
       ];

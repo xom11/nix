@@ -40,7 +40,13 @@ ckModule config ./..
     plugins.avante = {
       enable = true;
       settings = {
-        # provider = "copilot";
+        provider = "gemini";
+        providers = {
+          gemini = {
+            model = "gemini-2.5-flash";
+            api_key_name = "GEMINI_KEY";
+          };
+        };
       };
     };
 
