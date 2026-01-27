@@ -35,4 +35,5 @@ Snap(winTitle, state) {
 ^#!,:: Snap("A", "Left")
 ^#!.:: Snap("A", "Right")
 ^#!/:: Snap("A", "Max")
+#q::Send "!{F4}"
 
