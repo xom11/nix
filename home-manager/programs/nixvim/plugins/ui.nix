@@ -6,7 +6,27 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
-    lualine.enable = true;
+    lualine = {
+      enable = true;
+      settings = {
+        sections = {
+          lualine_x = [
+            {
+              __raw = ''
+                {
+                  require("noice").api.status.mode.get,
+                  cond = require("noice").api.status.mode.has,
+                  color = { fg = "#ff9e64" },
+                }
+              '';
+            }
+            "encoding"
+            "fileformat"
+            "filetype"
+          ];
+        };
+      };
+    };
     render-markdown.enable = true;
     dashboard.enable = true;
     colorizer.enable = true;

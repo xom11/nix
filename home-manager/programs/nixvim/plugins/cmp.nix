@@ -37,10 +37,10 @@ ckModule config ./..
         "<C-f>" = "cmp.mapping.scroll_docs(4)";
         "<Tab>" = ''
             cmp.mapping(function(fallback)
-              if require("copilot.suggestion").is_visible() then
-                require("copilot.suggestion").accept()
-              elseif cmp.visible() then
+              if cmp.visible() then
                 cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+              elseif require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").accept()
               else
                 fallback()
               end

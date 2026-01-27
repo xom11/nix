@@ -18,7 +18,7 @@ if is_mac then
             layout = f:read("*all"):gsub("\n", "")
             f:close()
         end
-        print(layout)
+        -- print(layout)
         return layout
     end
 

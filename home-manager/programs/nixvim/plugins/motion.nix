@@ -29,6 +29,9 @@ ckModule config ./..
         map({'o'}, 'r', function() require("flash").remote() end, { desc = "Remote Flash" })
         map({'o', 'x'}, 'R', function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
         map({'c'}, '<c-s>', function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
+        -- Guilded Flash jump
+        -- f + word + f f f to jump forward
+        -- r for forward in operator mode d + r to delete to the next occurrence 
       '';
       settings = {
         jump = {

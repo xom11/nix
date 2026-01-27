@@ -50,6 +50,7 @@ mkModule config ./. {
     nodejs.pkgs.npm
     nodejs.pkgs.pm2
     nodejs.pkgs.yarn
+    live-server
 
     # C-sharp
     dotnetCorePackages.sdk_8_0-bin
