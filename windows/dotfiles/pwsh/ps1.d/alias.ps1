@@ -32,6 +32,7 @@ function gu {
 
     git pull && git add . && git commit -m "$commit_msg" && git push
 }
+function gcl { git clone $args }
 function glog { 
     git log --graph --oneline --decorate --all 
 }
