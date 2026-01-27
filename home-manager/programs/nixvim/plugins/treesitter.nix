@@ -8,14 +8,12 @@ ckModule config ./..
 {
   programs.nixvim = {
     filetype.extension.kbd = "lisp";
+    extraPackages = with pkgs; [
+      tree-sitter 
+    ];
     plugins = {
       treesitter = {
         enable = true;
-        nixGrammars = true;
-        grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
-        extraPackages = with pkgs; [
-          tree-sitter
-        ];
         # grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
         #   bash
         #   json
@@ -27,14 +25,14 @@ ckModule config ./..
         #   python
         #   commonlisp
         #   powershell
-        # html
-        # css
-        # javascript
-        # typescript
-        # tsx
-        # dockerfile
-        # query
+        #   html
+        #   css
+        #   javascript
+        #   typescript
+        #   tsx
+        #   dockerfile
         # ];
+        grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
         settings = {
           auto_install = false;
           highlight.enable = true;
