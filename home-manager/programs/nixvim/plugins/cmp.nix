@@ -52,32 +52,51 @@ ckModule config ./..
         ":" = {
           mapping = {
             # __raw = "cmp.mapping.preset.cmdline()";
+            # NOTE: similar to zsh
+            # - Up/Down to navigate history when no selection
+            # - Up/Down to navigate completion when selection
+            # - Tab/S-Tab to navigate completion
             __raw = ''
               cmp.mapping.preset.cmdline({
-                ["<Up>"] = cmp.mapping({
-                  c = function(fallback)
-                    if cmp.visible() then
-                      return cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select, select = false })
-                    end
+                ["<Tab>"] = cmp.mapping(function(fallback)
+                  if cmp.visible() then
+                    cmp.select_next_item()
+                  else
+                    cmp.complete()
+                  end
+                end, { "c" }),
+
+                ["<S-Tab>"] = cmp.mapping(function(fallback)
+                  if cmp.visible() then
+                    cmp.select_prev_item()
+                  else
                     fallback()
-                  end,
-                }),
-                ["<Down>"] = cmp.mapping({
-                  c = function(fallback)
-                    if cmp.visible() then
-                      return cmp.select_next_item({ behavior = cmp.SelectBehavior.Select, select = false })
-                    end
+                  end
+                end, { "c" }),
+
+                ["<Up>"] = cmp.mapping(function(fallback)
+                  if cmp.visible() and cmp.get_selected_entry() then
+                    cmp.select_prev_item()
+                  else
                     fallback()
-                  end,
-                }),
-                ["<CR>"] = cmp.mapping({
-                  c = function(fallback)
-                    if cmp.get_selected_entry() then
-                      return cmp.confirm({ select = true })
-                    end
+                  end
+                end, { "c" }),
+
+                ["<Down>"] = cmp.mapping(function(fallback)
+                  if cmp.visible() and cmp.get_selected_entry() then
+                    cmp.select_next_item()
+                  else
                     fallback()
-                  end,
-                }),
+                  end
+                end, { "c" }),
+
+                ["<CR>"] = cmp.mapping(function(fallback)
+                  if cmp.visible() and cmp.get_selected_entry() then
+                    cmp.confirm({ select = false })
+                  else
+                    fallback()
+                  end
+                end, { "c" }),
               })
             '';
           };
