@@ -6,12 +6,10 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
-    emmet.enable = true;
     cmp = {
       enable = true;
       autoEnableSources = true;
       settings.sources = [
-        {name = "emmet_vim";}
         {name = "luasnip";}
         {name = "nvim_lsp";}
         {name = "path";}
