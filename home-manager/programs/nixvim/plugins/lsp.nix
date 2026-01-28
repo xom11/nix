@@ -43,6 +43,7 @@ ckModule config ./..
           enable = true;
           settings.telemetry.enable = false;
         };
+        emmet_language_server.enable = true; # Emmet
 
         rust_analyzer = {
           enable = true;

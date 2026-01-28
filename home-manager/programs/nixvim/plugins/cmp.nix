@@ -6,6 +6,9 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
+    cmp-nvim-lsp = {
+      enable = true;
+    };
     cmp = {
       enable = true;
       autoEnableSources = true;

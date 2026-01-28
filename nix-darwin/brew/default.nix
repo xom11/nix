@@ -38,6 +38,9 @@ mkModule config ./. {
       "sleepwatcher"
       "tailscale"
       "macism"
+      "postgresql"
+      "nginx"
+      "livekit"
       # "scrcpy"
       # "zathura"
     ];
