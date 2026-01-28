@@ -1,42 +1,27 @@
-local function osc52_clipboard()
-  return {
-    name = 'osc52-custom',
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
+if vim.env.TMUX ~= nil then
+  local copy = {'tmux', 'load-buffer', '-w', '-'}
+  local paste = {'bash', '-c', 'tmux refresh-client -l && sleep 0.05 && tmux save-buffer -'}
+  vim.g.clipboard = {
+    name = 'tmux',
     copy = {
-      ['+'] = function(lines) require('vim.ui.clipboard.osc52').copy('+')(lines) end,
-      ['*'] = function(lines) require('vim.ui.clipboard.osc52').copy('*')(lines) end,
+      ['+'] = copy,
+      ['*'] = copy,
     },
     paste = {
-      ['+'] = function() return require('vim.ui.clipboard.osc52').paste('+')() end,
-      ['*'] = function() return require('vim.ui.clipboard.osc52').paste('*')() end,
-    },
-  }
-end
-
-local function tmux_clipboard()
-  return {
-    name = 'tmux-custom',
-    copy = {
-      ['+'] = {'tmux', 'load-buffer', '-w', '-'},
-      ['*'] = {'tmux', 'load-buffer', '-w', '-'},
-    },
-    paste = {
-      ['+'] = {'tmux', 'save-buffer', '-'},
-      ['*'] = {'tmux', 'save-buffer', '-'},
+      ['+'] = paste,
+      ['*'] = paste,
     },
     cache_enabled = 0,
   }
 end
-
-if vim.env.TMUX then
-  vim.g.clipboard = tmux_clipboard()
-  
-elseif vim.env.SSH_CONNECTION then
-  local status, _ = pcall(require, 'vim.ui.clipboard.osc52')
-  if status then
-    vim.g.clipboard = osc52_clipboard()
-  end
-  
-else
-  vim.g.clipboard = nil
-end
-
