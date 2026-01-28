@@ -21,4 +21,15 @@
   # power.sleep = {
   #   computer = "never";
   # };
+  homebrew = {
+    brews = [
+      "redis"
+      "postgresql"
+      "nginx"
+      "livekit"
+    ];
+    casks = [
+      "xquartz"
+    ];
+  };
 }

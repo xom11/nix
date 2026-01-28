@@ -1,5 +1,4 @@
-{...}:
-{
+{...}: {
   imports = [
     ../../nix-darwin
   ];
@@ -8,5 +7,9 @@
     launchd = {
       kanata.enable = true;
     };
+  };
+  homebrew = {
+    brews = [
+    ];
   };
 }

@@ -21,8 +21,8 @@ mkModule config ./. {
     };
 
     taps = [
-      # "homebrew-zathura/zathura"
-      "laishulu/homebrew"
+      # "homebrew-zathura/zathura" # zathura
+      "laishulu/homebrew" # macism
     ];
 
     brews = [
@@ -34,13 +34,9 @@ mkModule config ./. {
       "micromamba"
       "openssl@3"
       "podman"
-      "redis"
       "sleepwatcher"
       "tailscale"
       "macism"
-      "postgresql"
-      "nginx"
-      "livekit"
       # "scrcpy"
       # "zathura"
     ];
@@ -82,7 +78,6 @@ mkModule config ./. {
       "visual-studio-code"
       "vlc"
       # "vmware-fusion"
-      "xquartz"
       "zalo"
     ];
   };
