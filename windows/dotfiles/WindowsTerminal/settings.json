@@ -17,12 +17,24 @@
     "keybindings": 
     [
         {
-            "id": "Terminal.PrevTab",
-            "keys": "ctrl+shift+left"
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
         },
         {
             "id": "Terminal.NextTab",
             "keys": "ctrl+shift+right"
+        },
+        {
+            "id": "Terminal.PrevTab",
+            "keys": "ctrl+shift+left"
+        },
+        {
+            "id": "Terminal.PrevTab",
+            "keys": "ctrl+shift+comma"
+        },
+        {
+            "id": "Terminal.NextTab",
+            "keys": "ctrl+shift+period"
         },
         {
             "id": "Terminal.OpenNewTab",
@@ -35,10 +47,6 @@
         {
             "id": "Terminal.PasteFromClipboard",
             "keys": "ctrl+v"
-        },
-        {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
         },
         {
             "id": "User.closeTab.0",
