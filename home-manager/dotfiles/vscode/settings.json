@@ -184,5 +184,8 @@
   "explorer.confirmPasteNative": false,
   "editor.accessibilitySupport": "on",
   "makefile.configureOnOpen": true,
-  "git.blame.editorDecoration.enabled": true
+  "git.blame.editorDecoration.enabled": true,
+  "remote.SSH.remotePlatform": {
+    "rog": "linux"
+  }
 }
