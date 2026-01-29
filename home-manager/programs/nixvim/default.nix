@@ -24,10 +24,6 @@ in
         auto-save.enable = true;
         # auto-session.enable = true;
         comment.enable = true;
-
-        # https://github.com/folke/flash.nvim/
-        # flash.enable = true;
-
         friendly-snippets.enable = true;
         luasnip.enable = true;
         nvim-autopairs.enable = true;
