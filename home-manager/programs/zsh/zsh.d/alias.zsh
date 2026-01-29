@@ -48,11 +48,13 @@ alias kitty-opacity='kitty @ set-background-opacity'
 alias tl='tmux ls'
 # alias tn='tmux new -s '
 tn() {
+  local session_name="${1:-$(basename "$PWD")}"
+
   if [ -n "$TMUX" ]; then
-    tmux -u new-session -d -s "$1"
-    tmux -u switch-client -t "$1"
+    tmux -u new-session -d -s "$session_name"
+    tmux -u switch-client -t "$session_name"
   else
-    tmux new-session -s "$1"
+    tmux new-session -s "$session_name"
   fi
 }
 alias ts='tmux switch -t'
