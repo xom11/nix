@@ -32,7 +32,7 @@ ckModule config ./..
       "<leader>fp" = "git_files";
       "<leader>fw" = "grep_string";
       "<leader>fg" = "live_grep";
-      "<leader>fo" = "oldfiles";
+      # "<leader>fo" = "oldfiles";
       "<leader>fs" = "lsp_document_symbols";
       "<leader>fS" = "lsp_workspace_symbols";
       "<leader>fh" = "help_tags";
@@ -75,6 +75,11 @@ ckModule config ./..
       action = "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>";
       options.desc = "Telescope current path";
     }
+{
+    key = "<leader>fo";
+    action = "<cmd>Telescope oldfiles only_cwd=true<cr>";
+    options.desc = "Oldfiles (CWD)";
+  }
   ];
   home.packages = with pkgs; [
     ripgrep
