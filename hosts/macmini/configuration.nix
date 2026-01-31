@@ -26,9 +26,11 @@
       "redis"
       "postgresql"
       "nginx"
+      "httpie"
       "livekit"
     ];
     casks = [
+      "postman"
       "xquartz"
     ];
   };

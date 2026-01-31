@@ -17,7 +17,7 @@ ckModule config ./..
         {name = "nvim_lsp";}
         {name = "path";}
         {name = "buffer";}
-        {name = "render-markdown";}
+        # {name = "render-markdown";}
       ];
 
       settings.mapping = {
