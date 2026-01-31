@@ -7,6 +7,9 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
+    harpoon = {
+      enable = true;
+    };
     nvim-surround = {
       enable = true;
       settings = {

@@ -72,7 +72,8 @@ ckModule config ./..
 
     luaConfig.post = ''
       local map = vim.keymap.set
-      map("n", "<leader>ee", "<CMD>Neotree toggle<CR>", { silent = true, desc = "Toggle Neotree file explorer" })
+      map("n", "<leader>et", "<CMD>Neotree toggle<CR>", { silent = true, desc = "Neotree: toggle sidebar" })
+      map("n", "<leader>ee", "<CMD>Neotree reveal current<CR>", { silent = true, desc = "Neotree: open buffer" })
     '';
   };
 }
