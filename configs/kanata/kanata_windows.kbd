@@ -16,6 +16,9 @@
 (deftemplate cap-action (k)
   (multi lmet lctl lalt $k)
 )
+(deftemplate tab-action (k)
+  (multi lmet lctl lsft $k)
+)
 ;; fix bug hold cap + aaaa, detail in readme
 (deflayermap (caplayer)
   ;; --- Alphabet ---
@@ -46,9 +49,6 @@
   spc (t! cap-action spc)
   grave (t! cap-action grave) ;; `~
 )
-(deftemplate tab-action (k)
-  (multi lmet lctl lsft $k)
-)
 (deflayermap (tablayer)
   ;; --- Alphabet ---
   a (t! tab-action a) b (t! tab-action b) c (t! tab-action c) d (t! tab-action d)
@@ -70,8 +70,6 @@
   / (t! tab-action /)  \ (t! tab-action \)  grave (t! tab-action grave)
   spc (t! tab-action spc)
 )
-(defalias
-  tablayer (multi lmet lctl lsft)
-)
+
 
 
