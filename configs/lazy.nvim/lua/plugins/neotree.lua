@@ -9,9 +9,15 @@ return {
   lazy = false,
   keys = {
     { 
-      "<leader>ee", 
+      "<leader>et", 
       "<cmd>Neotree toggle<cr>", 
-      desc = "Toggle Neotree file explorer",
+      desc = "Neotree: toggle sidebar",
+      silent = true 
+    },
+    { 
+      "<leader>ee", 
+      "<cmd>Neotree reveal current<cr>", 
+      desc = "Neotree: open buffer",
       silent = true 
     },
   },
