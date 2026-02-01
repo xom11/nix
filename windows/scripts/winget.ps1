@@ -53,6 +53,7 @@ $modules = @(
     "ZLocation"
     "PSReadLine"
     "PSFzf"
+    "posh-gi"
 )
 
 foreach ($module in $modules) {
