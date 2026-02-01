@@ -13,13 +13,14 @@
   cap_alias (layer-while-held caplayer)
 )
 (include "main.kbd")
+;; fix bug hold cap + aaaa, detail in readme
 (deftemplate cap-action (k)
   (multi lmet lctl lalt $k)
 )
+;; BUG: Shift not a modifier key => error
 (deftemplate tab-action (k)
-  (multi lmet lctl lsft $k)
+  (multi lmet lctl $k)
 )
-;; fix bug hold cap + aaaa, detail in readme
 (deflayermap (caplayer)
   ;; --- Alphabet ---
   a (t! cap-action a) b (t! cap-action b) c (t! cap-action c) d (t! cap-action d)
@@ -51,25 +52,30 @@
 )
 (deflayermap (tablayer)
   ;; --- Alphabet ---
-  a (t! tab-action a) b (t! tab-action b) c (t! tab-action c) d (t! tab-action d)
-  e (t! tab-action e) f (t! tab-action f) g (t! tab-action g) h (t! tab-action h)
-  i (t! tab-action i) j (t! tab-action j) k (t! tab-action k) l (t! tab-action l)
-  m (t! tab-action m) n (t! tab-action n) o (t! tab-action o) p (t! tab-action p)
-  q (t! tab-action q) r (t! tab-action r) s (t! tab-action s) t (t! tab-action t)
-  u (t! tab-action u) v (t! tab-action v) w (t! tab-action w) x (t! tab-action x)
-  y (t! tab-action y) z (t! tab-action z)
+  a (t! tab-action S-a) b (t! tab-action S-b) c (t! tab-action S-c) d (t! tab-action S-d)
+  e (t! tab-action S-e) f (t! tab-action S-f) g (t! tab-action S-g) h (t! tab-action S-h)
+  i (t! tab-action S-i) j (t! tab-action S-j) k (t! tab-action S-k) l (t! tab-action S-l)
+  m (t! tab-action S-m) n (t! tab-action S-n) o (t! tab-action S-o) p (t! tab-action S-p)
+  q (t! tab-action S-q) r (t! tab-action S-r) s (t! tab-action S-s) t (t! tab-action S-t)
+  u (t! tab-action S-u) v (t! tab-action S-v) w (t! tab-action S-w) x (t! tab-action S-x)
+  y (t! tab-action S-y) z (t! tab-action S-z)
 
   ;; --- Numbers ---
-  1 (t! tab-action 1) 2 (t! tab-action 2) 3 (t! tab-action 3) 4 (t! tab-action 4)
-  5 (t! tab-action 5) 6 (t! tab-action 6) 7 (t! tab-action 7) 8 (t! tab-action 8)
-  9 (t! tab-action 9) 0 (t! tab-action 0)
+  1 (t! tab-action S-1) 2 (t! tab-action S-2) 3 (t! tab-action S-3) 4 (t! tab-action S-4)
+  5 (t! tab-action S-5) 6 (t! tab-action S-6) 7 (t! tab-action S-7) 8 (t! tab-action S-8)
+  9 (t! tab-action S-9) 0 (t! tab-action S-0)
 
   ;; --- Symbols ---
-  - (t! tab-action -)  = (t! tab-action =)  [ (t! tab-action [)  ] (t! tab-action ])
-  ; (t! tab-action ;)  ' (t! tab-action ')  , (t! tab-action ,)  . (t! tab-action .)
-  / (t! tab-action /)  \ (t! tab-action \)  grave (t! tab-action grave)
-  spc (t! tab-action spc)
+  -     (t! tab-action S--)   ;; _
+  =     (t! tab-action S-=)   ;; +
+  [     (t! tab-action S-[)   ;; {
+  ]     (t! tab-action S-])   ;; }
+  ;     (t! tab-action S-;)   ;; :
+  '     (t! tab-action S-')   ;; "
+  ,     (t! tab-action S-,)   ;; <
+  .     (t! tab-action S-.)   ;; >
+  /     (t! tab-action S-/)   ;; ?
+  \     (t! tab-action S-\)   ;; |
+  spc   (t! tab-action S-spc)
+  grave (t! tab-action S-grave) ;; ~
 )
-
-
-
