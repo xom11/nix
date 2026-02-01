@@ -51,10 +51,10 @@
 )
 
 (deflayermap (main)
-  ;; caps (t! charmod esc (multi lmet lctl lalt))
-  caps (tap-hold 200 200 esc @cap_alias)
   ;; tab (t! charmod tab (multi lmet lctl lsft))
   tab (tap-hold 200 200 tab @tab_alias)
+  ;; caps (t! charmod esc (multi lmet lctl lalt))
+  caps (tap-hold 200 200 esc @cap_alias)
   ;; q (t! charmod q fn)
   w (chord mtl w)
   e (chord mtl e)

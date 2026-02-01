@@ -9,7 +9,7 @@
   del_word_right A-del
 )
 (defalias
-  tab_alias (multi lmet lctl lalt)
-  cap_alias (multi lmet lctl lsft)
+  tab_alias (multi lmet lctl lsft)
+  cap_alias (multi lmet lctl lalt)
 )
 (include "main.kbd")
