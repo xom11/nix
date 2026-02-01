@@ -8,4 +8,70 @@
   del_word_left C-bspc
   del_word_right C-del
 )
+(defalias
+  tab_alias (layer-while-held tablayer)
+  cap_alias (layer-while-held caplayer)
+)
 (include "main.kbd")
+(deftemplate cap-action (k)
+  (multi lmet lctl lalt $k)
+)
+;; fix bug hold cap + aaaa, detail in readme
+(deflayermap (caplayer)
+  ;; --- Alphabet ---
+  a (t! cap-action a) b (t! cap-action b) c (t! cap-action c) d (t! cap-action d)
+  e (t! cap-action e) f (t! cap-action f) g (t! cap-action g) h (t! cap-action h)
+  i (t! cap-action i) j (t! cap-action j) k (t! cap-action k) l (t! cap-action l)
+  m (t! cap-action m) n (t! cap-action n) o (t! cap-action o) p (t! cap-action p)
+  q (t! cap-action q) r (t! cap-action r) s (t! cap-action s) t (t! cap-action t)
+  u (t! cap-action u) v (t! cap-action v) w (t! cap-action w) x (t! cap-action x)
+  y (t! cap-action y) z (t! cap-action z)
+
+  ;; --- Numbers ---
+  1 (t! cap-action 1) 2 (t! cap-action 2) 3 (t! cap-action 3) 4 (t! cap-action 4)
+  5 (t! cap-action 5) 6 (t! cap-action 6) 7 (t! cap-action 7) 8 (t! cap-action 8)
+  9 (t! cap-action 9) 0 (t! cap-action 0)
+
+  ;; --- Symbols ---
+  -    (t! cap-action -)
+  =    (t! cap-action =)
+  [    (t! cap-action [)
+  ]    (t! cap-action ])
+  ;    (t! cap-action ;)
+  '    (t! cap-action ')
+  ,    (t! cap-action ,)
+  .    (t! cap-action .)
+  /    (t! cap-action /)
+  \    (t! cap-action \)
+  spc (t! cap-action spc)
+  grave (t! cap-action grave) ;; `~
+)
+(deftemplate tab-action (k)
+  (multi lmet lctl lsft $k)
+)
+(deflayermap (tablayer)
+  ;; --- Alphabet ---
+  a (t! tab-action a) b (t! tab-action b) c (t! tab-action c) d (t! tab-action d)
+  e (t! tab-action e) f (t! tab-action f) g (t! tab-action g) h (t! tab-action h)
+  i (t! tab-action i) j (t! tab-action j) k (t! tab-action k) l (t! tab-action l)
+  m (t! tab-action m) n (t! tab-action n) o (t! tab-action o) p (t! tab-action p)
+  q (t! tab-action q) r (t! tab-action r) s (t! tab-action s) t (t! tab-action t)
+  u (t! tab-action u) v (t! tab-action v) w (t! tab-action w) x (t! tab-action x)
+  y (t! tab-action y) z (t! tab-action z)
+
+  ;; --- Numbers ---
+  1 (t! tab-action 1) 2 (t! tab-action 2) 3 (t! tab-action 3) 4 (t! tab-action 4)
+  5 (t! tab-action 5) 6 (t! tab-action 6) 7 (t! tab-action 7) 8 (t! tab-action 8)
+  9 (t! tab-action 9) 0 (t! tab-action 0)
+
+  ;; --- Symbols ---
+  - (t! tab-action -)  = (t! tab-action =)  [ (t! tab-action [)  ] (t! tab-action ])
+  ; (t! tab-action ;)  ' (t! tab-action ')  , (t! tab-action ,)  . (t! tab-action .)
+  / (t! tab-action /)  \ (t! tab-action \)  grave (t! tab-action grave)
+  spc (t! tab-action spc)
+)
+(defalias
+  tablayer (multi lmet lctl lsft)
+)
+
+
