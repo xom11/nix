@@ -27,7 +27,9 @@
       "postgresql"
       "nginx"
       "httpie"
+      "ollama"
       "livekit"
+      "ffmpeg"
     ];
     casks = [
       "postman"

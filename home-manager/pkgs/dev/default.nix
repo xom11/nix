@@ -62,7 +62,7 @@ mkModule config ./. {
     mongosh
 
     # Other
-    ffmpeg
+    # ffmpeg
     tldr
 
     # BUG: conflicts with macOS clang
