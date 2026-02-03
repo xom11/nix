@@ -29,7 +29,7 @@
       "httpie"
       "ollama"
       "livekit"
-      "ffmpeg"
+      "ffmpeg@6"
     ];
     casks = [
       "postman"
