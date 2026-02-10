@@ -10,6 +10,7 @@ ckModule config ./..
     harpoon = {
       enable = true;
     };
+    # https://github.com/kylechui/nvim-surround?tab=readme-ov-file#rocket-usage
     nvim-surround = {
       enable = true;
       settings = {
