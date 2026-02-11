@@ -21,8 +21,11 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lazy-lock.json";
       };
       # share lua configs between nixvim and lazyvim
-      ".config/lazyvim/lua/nixvim" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua";
+      ".config/lazyvim/lua/extras" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/extras";
+      };
+      ".config/lazyvim/lua/opts" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/opts";
       };
     };
   }

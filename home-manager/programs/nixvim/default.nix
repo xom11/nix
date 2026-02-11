@@ -8,8 +8,8 @@
   inherit (builtins) filter map toString;
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.strings) hasSuffix;
-  luaFiles = filter (path: hasSuffix ".lua" (baseNameOf path)) (listFilesRecursive ./lua);
-  extraConfigsLua = builtins.concatStringsSep "\n" (map builtins.readFile luaFiles);
+  extraFiles = filter (path: hasSuffix ".lua" (baseNameOf path)) (listFilesRecursive ./extras);
+  extraConfigsLua = builtins.concatStringsSep "\n" (map builtins.readFile extraFiles);
 in
   {
     imports = filter (hasSuffix ".nix") (
