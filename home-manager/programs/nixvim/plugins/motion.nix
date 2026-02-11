@@ -18,7 +18,7 @@ ckModule config ./..
         };
         keywords = {
           FIX = {
-            alt = ["FIXME" "BUG" "FIXIT" "ISSUE"];
+            alt = ["FIXME" "BUG" "FIXIT" "ISSUE" "ERROR"];
             color = "error";
             icon = " ";
           };

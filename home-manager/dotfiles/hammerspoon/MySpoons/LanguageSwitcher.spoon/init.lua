@@ -1,8 +1,11 @@
 local obj = {}
 obj.__index = obj
+-- INFO: macos telex very bad, Fcitx5 much better
 
 local vn = "Fcitx5"
 local en = "ABC"
+
+spoon.SpoonInstall:andUse("InputSourceSwitch")
 
 function obj:init()
 	hs.loadSpoon("InputSourceSwitch")

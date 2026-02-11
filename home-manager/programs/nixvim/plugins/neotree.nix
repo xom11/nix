@@ -81,10 +81,11 @@ ckModule config ./..
       '';
     };
     # PART: oil.nvim
+    # remap _ instead of -
     oil = {
-      enable = false;
+      enable = true;
       luaConfig.post = ''
-        vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+        vim.keymap.set("n", "_", "<CMD>Oil<CR>", { desc = "Open parent directory" })
       '';
     };
   };
