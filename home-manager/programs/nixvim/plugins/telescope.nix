@@ -41,6 +41,7 @@ ckModule config ./..
     settings = {
       defaults = {
         vimgrep_arguments = ["${pkgs.ripgrep}/bin/rg" "-L" "--color=never" "--no-heading" "--with-filename" "--line-number" "--column" "--smart-case"];
+        path_display = ["truncate"];
         selection_caret = "  ";
         entry_prefix = "  ";
         layout_strategy = "flex";
@@ -75,11 +76,11 @@ ckModule config ./..
       action = "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>";
       options.desc = "Telescope current path";
     }
-{
-    key = "<leader>fo";
-    action = "<cmd>Telescope oldfiles only_cwd=true<cr>";
-    options.desc = "Oldfiles (CWD)";
-  }
+    {
+      key = "<leader>fo";
+      action = "<cmd>Telescope oldfiles only_cwd=true<cr>";
+      options.desc = "Oldfiles (CWD)";
+    }
   ];
   home.packages = with pkgs; [
     ripgrep
