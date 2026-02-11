@@ -36,8 +36,13 @@ in
           enable = true;
           settings = {__raw = "require('opts.neotree')";};
         };
+        toggleterm = {
+          enable = true;
+          settings = {__raw = "require('opts.toggleterm')";};
+        };
         which-key = {
           enable = true;
+          settings = {__raw = "require('opts.which-key')";};
         };
       };
 
