@@ -3,13 +3,15 @@
   config,
   pkgs,
   mkModule,
+  getPath,
   ...
 }: let
   inherit (builtins) filter map toString;
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.strings) hasSuffix;
-  extraFiles = filter (path: hasSuffix ".lua" (baseNameOf path)) (listFilesRecursive ./extras);
+  extraFiles = filter (path: hasSuffix ".lua" (baseNameOf path)) (listFilesRecursive ./lua/extras);
   extraConfigsLua = builtins.concatStringsSep "\n" (map builtins.readFile extraFiles);
+  pwd = getPath ./.;
 in
   {
     imports = filter (hasSuffix ".nix") (
@@ -30,6 +32,12 @@ in
         tmux-navigator.enable = true;
         visual-multi.enable = true;
         web-devicons.enable = true;
+        neo-tree = {
+          enable = true;
+          settings = {
+            __raw = "require('opts.neotree')";
+          };
+        };
       };
 
       extraPlugins = with pkgs.vimPlugins; [
@@ -44,6 +52,9 @@ in
         if vim.g.have_nerd_font then
           require('nvim-web-devicons').setup {}
         end
+
+        -- Add the current directory to runtime path to load extra Lua configs
+        vim.opt.rtp:append("${pwd}")
 
       '';
 

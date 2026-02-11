@@ -22,10 +22,10 @@ in
       };
       # share lua configs between nixvim and lazyvim
       ".config/lazyvim/lua/extras" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/extras";
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/extras";
       };
       ".config/lazyvim/lua/opts" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/opts";
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/opts";
       };
     };
   }
