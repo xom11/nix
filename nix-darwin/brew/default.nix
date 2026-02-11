@@ -47,7 +47,7 @@ mkModule config ./. {
       # "Tunnelblick"
       "balenaetcher"
       "bitwarden"
-      "betterdisplay"
+      # "betterdisplay"
       "brave-browser"
       # "chromedriver"
       # "cursor"
