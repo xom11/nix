@@ -9,8 +9,6 @@
   inherit (builtins) filter map toString;
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.strings) hasSuffix;
-  extraFiles = filter (path: hasSuffix ".lua" (baseNameOf path)) (listFilesRecursive ./lua/extras);
-  extraConfigsLua = builtins.concatStringsSep "\n" (map builtins.readFile extraFiles);
   pwd = getPath ./.;
 in
   {
@@ -21,7 +19,7 @@ in
   // mkModule config ./. {
     programs.nixvim = {
       enable = true;
-
+      colorschemes.catppuccin.enable = true;
       plugins = {
         auto-save.enable = true;
         # auto-session.enable = true;
@@ -62,11 +60,17 @@ in
         -- Add the current directory to runtime path to load extra Lua configs
         vim.opt.rtp:append("${pwd}")
 
+        require('config.options')
+        require('extras')
+
       '';
 
       extraConfigLuaPost = ''
+        require('config.keymaps')
       '';
 
-      extraConfigLua = extraConfigsLua;
+      extraConfigLua = ''
+
+    '';
     };
   }
