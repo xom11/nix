@@ -18,7 +18,11 @@ function obj:init()
 	hs.hotkey.bind(tab, "t", function()
 		spoon.AClock:toggleShow()
 	end)
-
+	-- PART: Battery status
+	hs.hotkey.bind(tab, "p", function()
+		hs.loadSpoon("ABattery")
+		spoon.ABattery:toggleShow()
+	end)
 	-- PART:Screenshot tool
 	hs.hotkey.bind(tab, "s", function()
 		hs.execute("screencapture -i -c")
@@ -30,7 +34,7 @@ function obj:init()
 	hs.loadSpoon("Emojis"):bindHotkeys({ toggle = { tab, "e" } })
 
 	-- PART: Draw on screen
-  -- (d)raw/(c)lear/(a)nnotate/(t)oggle
+	-- (d)raw/(c)lear/(a)nnotate/(t)oggle
 	local drawonscreen = hs.loadSpoon("DrawOnScreen")
 	local hotkey = hs.hotkey.modal.new(tab, "d")
 
