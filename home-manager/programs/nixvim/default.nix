@@ -34,9 +34,10 @@ in
         web-devicons.enable = true;
         neo-tree = {
           enable = true;
-          settings = {
-            __raw = "require('opts.neotree')";
-          };
+          settings = {__raw = "require('opts.neotree')";};
+        };
+        which-key = {
+          enable = true;
         };
       };
 
