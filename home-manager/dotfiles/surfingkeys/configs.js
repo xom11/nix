@@ -23,9 +23,15 @@ const {
   vunmap,
 } = api;
 
+/***********************
+SECTION: SETTINGS
+***********************/
 // Scroll speed
 settings.scrollStepSize = 200;
 
+/***********************
+SECTION: KEY MAPPINGS
+***********************/
 // Open Clipboard URL in new tab
 map("p", "cc");
 
@@ -43,6 +49,9 @@ map("gx", "gxx");
 // Open a URL in current tab
 map("<Space><Space>", "go");
 
+/***********************
+SECTION: ALIASES
+***********************/
 api.removeSearchAlias("w");
 api.removeSearchAlias("s");
 api.removeSearchAlias("g");
@@ -76,7 +85,7 @@ api.mapkey("ont", "Open newtab", function () {
 });
 
 /***********************
-SESSION SHORTCUTS URLS
+SECTION: SHORTCUTS URLS
 ***********************/
 api.mapkey("ogH", "Open Github", function () {
   window.location.replace("https://github.com");
@@ -90,7 +99,7 @@ api.mapkey("ofB", "Open facebook ", function () {
 });
 
 /***********************
-GIT HUB NAVIGATION
+SECTION: GIT HUB NAVIGATION
 ***********************/
 api.mapkey(
   "<Space>c",
@@ -155,7 +164,7 @@ api.mapkey(
 );
 
 /***********************
-LLM CONFIGURATION
+SECTION: LLM CONFIGURATION
 ***********************/
 settings.defaultLLMProvider = "gemini";
 settings.llm = {

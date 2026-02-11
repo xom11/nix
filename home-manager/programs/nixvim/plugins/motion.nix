@@ -8,43 +8,57 @@ ckModule config ./..
 {
   programs.nixvim.plugins = {
     # https://github.com/folke/todo-comments.nvim/
-    # GUIDE: Highlight and search for todo comments like TODO, HACK, BUG in your code
+    # GUIDE:  Highlight and search for todo comments like TODO, HACK, BUG in your code
     todo-comments = {
       enable = true;
-      keywords = {
-        FIX = {
-          alt = ["FIXME" "BUG" "FIXIT" "ISSUE"];
-          color = "error";
-          icon = " ";
-        };
-        HACK = {
-          color = "warning";
-          icon = " ";
-        };
-        NOTE = {
-          alt = ["INFO" "SESSION"];
-          color = "hint";
-          icon = " ";
-        };
-        PERF = {
-          alt = ["OPTIM" "PERFORMANCE" "OPTIMIZE"];
-          icon = " ";
-        };
-        TEST = {
-          alt = ["TESTING" "PASSED" "FAILED"];
-          color = "test";
-          icon = "⏲ ";
-        };
-        TODO = {
-          color = "info";
-          icon = " ";
-        };
-        WARN = {
-          alt = ["WARNING" "XXX"];
-          color = "warning";
-          icon = " ";
+      settings = {
+        keywords = {
+          FIX = {
+            alt = ["FIXME" "BUG" "FIXIT" "ISSUE"];
+            color = "error";
+            icon = " ";
+          };
+          HACK = {
+            color = "warning";
+            icon = " ";
+          };
+          NOTE = {
+            alt = ["INFO"];
+            color = "hint";
+            icon = " ";
+          };
+          SECTION = {
+            alt = ["CHAPTER" "PART"];
+            icon = " ";
+          };
+          GUIDE = {
+            alt = ["DOCS" "DOCUMENTATION"];
+            icon = "󰉋 ";
+          };
+          PERF = {
+            alt = ["OPTIM" "PERFORMANCE" "OPTIMIZE"];
+            icon = " ";
+          };
+          TEST = {
+            alt = ["TESTING" "PASSED" "FAILED"];
+            color = "test";
+            icon = "⏲ ";
+          };
+          TODO = {
+            color = "info";
+            icon = " ";
+          };
+          WARN = {
+            alt = ["WARNING" "XXX"];
+            color = "warning";
+            icon = " ";
+          };
         };
       };
+      luaConfig.post = ''
+        vim.keymap.set("n", "]t", function() require("todo-comments").jump_next() end, { desc = "Next Todo Comment" })
+        vim.keymap.set("n", "[t", function() require("todo-comments").jump_prev() end, { desc = "Previous Todo Comment" })
+      '';
     };
 
     # https://github.com/ThePrimeagen/harpoon/
