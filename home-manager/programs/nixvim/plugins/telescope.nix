@@ -13,9 +13,9 @@ ckModule config ./..
       ui-select.enable = true;
       frecency = {
         enable = true;
-        # FIX: issue https://github.com/nvim-telescope/telescope-frecency.nvim/issues/270
+        # Fix issue https://github.com/nvim-telescope/telescope-frecency.nvim/issues/270
         settings.db_safe_mode = false;
-        # Fix: issue https://github.com/nvim-telescope/telescope-frecency.nvim/issues/105
+        # Fix issue https://github.com/nvim-telescope/telescope-frecency.nvim/issues/105
         settings.db_validate_threshold = 1;
       };
       fzf-native.enable = true;

@@ -62,6 +62,8 @@ ckModule config ./..
       luaConfig.post = ''
         vim.keymap.set("n", "]t", function() require("todo-comments").jump_next() end, { desc = "Next Todo Comment" })
         vim.keymap.set("n", "[t", function() require("todo-comments").jump_prev() end, { desc = "Previous Todo Comment" })
+        vim.keymap.set("n", "<leader>fT", "<Cmd>TodoTelescope<CR>", { desc = "search TODOs across all files" })
+        vim.keymap.set("n", "<leader>ft", "<Cmd>TodoTelescope cwd=%:p:h search_filenames=true<CR>", { desc = "search TODOs in current file" })
       '';
     };
 
