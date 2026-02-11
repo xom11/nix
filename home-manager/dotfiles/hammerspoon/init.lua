@@ -5,6 +5,7 @@ hs.ipc.cliInstall()
 
 -- Look for Spoons in ~/.hammerspoon/MySpoons as well
 package.path = package.path .. ";" .. hs.configdir .. "/MySpoons/?.spoon/init.lua"
+package.path = package.path .. ";" .. hs.configdir .. "/LibSpoons/?.spoon/init.lua"
 
 tab = { "cmd", "ctrl", "shift" }
 cap = { "ctrl", "alt", "cmd" }
