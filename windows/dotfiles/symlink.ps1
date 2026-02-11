@@ -37,7 +37,7 @@ $dotfiles = @(
         dest = "$env:USERPROFILE\.ssh\config"
     }
     @{
-        src  = ".\..\..\configs\lazy.nvim";
+        src  = ".\..\..\configs\lazyvim";
         dest = "$env:USERPROFILE\AppData\Local\nvim"
     }
     @{
