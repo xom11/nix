@@ -7,8 +7,8 @@
 ckModule config ./..
 {
   programs.nixvim = {
-    # Copilot-lua Configuration
     plugins = {
+      # PART: copilot-lua.nvim
       copilot-lua = {
         enable = true;
         settings = {
@@ -27,33 +27,32 @@ ckModule config ./..
             };
           };
         };
+        luaConfig.post = ''
+          highlight = {
+            CopilotSuggestion = {
+              italic = true,
+              fg = "#555555",
+            },
+          }
+        '';
       };
-    };
-    highlight = {
-      CopilotSuggestion = {
-        italic = true;
-        fg = "#555555";
-      };
-    };
-
-    # Avante Configuration
-    plugins.avante = {
-      enable = true;
-      settings = {
-        provider = "gemini";
-        providers = {
-          gemini = {
-            model = "gemini-2.5-flash";
-            api_key_name = "GEMINI_KEY";
+      # PART: avante.nvim
+      avante = {
+        enable = true;
+        settings = {
+          provider = "gemini";
+          providers = {
+            gemini = {
+              model = "gemini-2.5-flash";
+              api_key_name = "GEMINI_KEY";
+            };
           };
         };
       };
-    };
-
-    # CodeCompanion Configuration
-    plugins.codecompanion = {
-      enable = false;
-      # settings = {
+      # PART: codecompanion.nvim
+      codecompanion = {
+        enable = false;
+      };
     };
   };
 }

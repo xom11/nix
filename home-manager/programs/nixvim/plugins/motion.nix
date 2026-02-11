@@ -7,11 +7,15 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
+    # PART: todo-comments.nvim
     # https://github.com/folke/todo-comments.nvim/
-    # GUIDE:  Highlight and search for todo comments like TODO, HACK, BUG in your code
+    # Highlight and search for todo comments like TODO, HACK, BUG in your code
     todo-comments = {
       enable = true;
       settings = {
+        highlight = {
+          multiline = false;
+        };
         keywords = {
           FIX = {
             alt = ["FIXME" "BUG" "FIXIT" "ISSUE"];
@@ -61,14 +65,16 @@ ckModule config ./..
       '';
     };
 
+    # PART: harpoon
     # https://github.com/ThePrimeagen/harpoon/
-    # GUIDE: mark files and quickly navigate between them
+    # mark files and quickly navigate between them
     harpoon = {
       enable = true;
     };
 
+    # PART: nvim-surround
     # https://github.com/kylechui/nvim-surround?tab=readme-ov-file#rocket-usage
-    # GUIDE: add, delete, change surroundings (parentheses, brackets, quotes, tags, etc.)
+    # add, delete, change surroundings (parentheses, brackets, quotes, tags, etc.)
     nvim-surround = {
       enable = true;
       settings = {
@@ -78,6 +84,7 @@ ckModule config ./..
       };
     };
 
+    # PART: leap.nvim
     leap = {
       enable = false;
       luaConfig.post = ''
@@ -87,6 +94,7 @@ ckModule config ./..
       '';
     };
 
+    # PART: flash.nvim
     # https://nix-community.github.io/nixvim/plugins/flash/index.html#flash
     # https://github.com/folke/flash.nvim/
     flash = {

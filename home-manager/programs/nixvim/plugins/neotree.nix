@@ -23,6 +23,7 @@ ckModule config ./..
           "yy" = "copy_path";
           "yf" = "copy_name";
           "yr" = "copy_relative_path";
+          "<esc>" = "close_window";
         };
       };
       commands = {

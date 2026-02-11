@@ -55,7 +55,7 @@ ckModule config ./..
         ":" = {
           mapping = {
             # __raw = "cmp.mapping.preset.cmdline()";
-            # NOTE: similar to zsh
+            # NOTE similar to zsh
             # - Up/Down to navigate history when no selection
             # - Up/Down to navigate completion when selection
             # - Tab/S-Tab to navigate completion
