@@ -1,5 +1,5 @@
 return {
-  -- PART: catppuccin
+	-- PART: catppuccin
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
@@ -9,14 +9,14 @@ return {
 		end,
 	},
 
-  -- PART: toggleterm
+	-- PART: toggleterm
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		opts = require("opts.toggleterm"),
 	},
 
-  -- PART: lualine
+	-- PART: lualine
 	{
 		"nvim-lualine/lualine.nvim",
 		opts = {
@@ -24,7 +24,7 @@ return {
 		},
 	},
 
-  -- PART: barbecue
+	-- PART: barbecue
 	{
 		"utilyre/barbecue.nvim",
 		name = "barbecue",
@@ -38,7 +38,7 @@ return {
 		},
 	},
 
-  -- PART: render-markdown
+	-- PART: render-markdown
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
@@ -49,7 +49,7 @@ return {
 		opts = {},
 	},
 
-  -- PART: dashboard-nvim
+	-- PART: dashboard-nvim
 	{
 		"nvimdev/dashboard-nvim",
 		event = "VimEnter",
@@ -61,7 +61,7 @@ return {
 		dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	},
 
-  -- PART: colorizer
+	-- PART: colorizer
 	{
 		"catgoose/nvim-colorizer.lua",
 		event = "BufReadPre",
@@ -69,7 +69,7 @@ return {
 		},
 	},
 
-  -- PART: noice
+	-- PART: noice
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
@@ -84,7 +84,7 @@ return {
 		},
 	},
 
-  -- PART: nvim-notify
+	-- PART: nvim-notify
 	{
 		"rcarriga/nvim-notify",
 		opts = {
@@ -93,11 +93,11 @@ return {
 		},
 	},
 
-  -- PART: transparent
+	-- PART: transparent
 	{
 		"xiyaowong/transparent.nvim",
 		lazy = false,
-    opts = require("opts.transparent"),
+		opts = require("opts.transparent"),
 		config = function(_, opts)
 			local transparent = require("transparent")
 
@@ -111,5 +111,10 @@ return {
 			vim.cmd("highlight Lualine guifg=NONE")
 			vim.cmd("highlight NormalNC guibg=NONE")
 		end,
+	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+    opts = require("opts.todo-comments"),
 	},
 }

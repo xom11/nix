@@ -9,7 +9,6 @@ ckModule config ./..
   # PART: telescope
   programs.nixvim.plugins.telescope = {
     enable = true;
-    settings = {__raw = "require('opts.telescope')";};
     extensions = {
       ui-select.enable = true;
       frecency = {
@@ -27,8 +26,9 @@ ckModule config ./..
         settings.auto_depth = true;
       };
     };
+    settings = {__raw = "require('opts.telescope')";};
   };
-  # PART: lsp
+  # PART: cmp
   programs.nixvim.plugins.cmp-nvim-lsp = {
     enable = true;
   };

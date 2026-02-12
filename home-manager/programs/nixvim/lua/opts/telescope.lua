@@ -47,6 +47,7 @@ map("n", "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "LSP 
 map("n", "<leader>fS", "<cmd>Telescope lsp_workspace_symbols<cr>", { desc = "LSP Workspace" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Tags" })
 map("n", "<leader>fr", "<cmd>Telescope resume<cr>", { desc = "Resume" })
+
 map("n", "<leader><leader>", "<cmd>Telescope frecency workspace=CWD<cr>", { desc = "Telescope frecency" })
 map("n", "<leader>fc", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "Current path" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles only_cwd=true<cr>", { desc = "Oldfiles (CWD)" })
