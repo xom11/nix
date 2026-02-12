@@ -52,4 +52,8 @@ map("n", "<leader><leader>", "<cmd>Telescope frecency workspace=CWD<cr>", { desc
 map("n", "<leader>fc", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "Current path" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles only_cwd=true<cr>", { desc = "Oldfiles (CWD)" })
 
+map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "LSP Definitions", silent = true, noremap = true })
+map("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "LSP References", silent = true, noremap = true })
+map("n", "gD", "<cmd>Telescope lsp_declarations<CR>", { desc = "LSP Declarations", silent = true, noremap = true })
+
 return opts
