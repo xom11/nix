@@ -15,7 +15,6 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
-    opts = require("opts.which-key"),
 	},
 
 	{

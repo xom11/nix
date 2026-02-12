@@ -40,7 +40,6 @@ in
         };
         which-key = {
           enable = true;
-          settings = {__raw = "require('opts.which-key')";};
         };
       };
 
