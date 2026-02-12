@@ -1,13 +1,12 @@
-local modname = ... or "extras" -- Lấy tên module truyền vào, nếu không có thì mặc định là "extras"
-local prefix = modname:match("(.-)%.?init$") or modname
-prefix = prefix .. "." -- Thêm dấu chấm để nối module con (vd: "extras.")
+local base = ... -- Tự động lấy tên module (vd: "core" hoặc "extras")
+local path = debug.getinfo(1).source:sub(2):match("(.*[/\\])") -- Lấy đường dẫn folder hiện tại
 
-local dir = vim.fn.stdpath("config") .. "/lua/" .. prefix:gsub("%.", "/")
-
-if vim.fn.isdirectory(dir) == 1 then
-  for name, type in vim.fs.dir(dir) do
-    if type == "file" and name:match("%.lua$") and name ~= "init.lua" then
-      require(prefix .. name:sub(1, -5))
+for _, file in ipairs(vim.fn.globpath(path, "*.lua", 0, 1)) do
+    local name = vim.fn.fnamemodify(file, ":t:r")
+    if name ~= "init" then
+        local ok, err = pcall(require, base .. "." .. name)
+        if not ok then
+            vim.notify("Error loading " .. base .. "." .. name .. "\n" .. err, vim.log.levels.ERROR)
+        end
     end
-  end
 end
