@@ -9,6 +9,12 @@ return {
 	},
 
 	{
+		"akinsho/toggleterm.nvim",
+		version = "*",
+		opts = require("opts.toggleterm"),
+	},
+
+	{
 		"nvim-lualine/lualine.nvim",
 		opts = {
 			options = { theme = "catppuccin" },
@@ -70,13 +76,13 @@ return {
 		},
 	},
 
-  {
-    "rcarriga/nvim-notify",
-    opts = {
-      background_colour = "#000000",
-      -- timeout = 3000,
-    },
-  },
+	{
+		"rcarriga/nvim-notify",
+		opts = {
+			background_colour = "#000000",
+			-- timeout = 3000,
+		},
+	},
 
 	{
 		"xiyaowong/transparent.nvim",
