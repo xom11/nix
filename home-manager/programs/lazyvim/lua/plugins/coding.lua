@@ -1,5 +1,24 @@
 return {
 	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-emoji",
+			"L3MON4D3/LuaSnip", -- Engine snippet
+			"saadparwaiz1/cmp_luasnip",
+		},
+		config = function()
+			local cmp = require("cmp")
+			local cfg = require("opts.cmp")
+			cmp.setup(cfg.opts)
+			cmp.setup.cmdline(":", cfg.cmdline[":"])
+		end,
+	},
+	-- PART: telescope
+	{
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
 		dependencies = {
@@ -34,6 +53,7 @@ return {
 			telescope.load_extension("file_browser")
 		end,
 	},
+	-- PART: conform
 	{
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
@@ -44,11 +64,13 @@ return {
 		opts = require("opts.conform"),
 	},
 
+	-- PART: treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
 
+	-- PART: mason
 	{
 		"williamboman/mason.nvim",
 		config = function()

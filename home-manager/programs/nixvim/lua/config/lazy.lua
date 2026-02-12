@@ -1,0 +1,1 @@
+/nix/store/gl5n2x47wiwgbbrm2cp6sqqqika25jjp-home-manager-files/.config/lazyvim/lua/config/lazy.lua

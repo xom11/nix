@@ -5,29 +5,33 @@
   ...
 }: let
   pwd = getPath ./.;
+  targetDir = ".config/lazyvim";
 in
   mkModule config ./. {
     home.file = {
-      ".config/lazyvim/lua/plugins" = {
+      "${targetDir}/lua/plugins" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/plugins";
       };
-      ".config/lazyvim/lua/cfg" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/cfg";
+      "${targetDir}/lua/config/lazy.lua" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/config/lazy.lua";
       };
-      ".config/lazyvim/init.lua" = {
+      "${targetDir}/init.lua" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/init.lua";
       };
-      ".config/lazyvim/lazy-lock.json" = {
+      "${targetDir}/lazy-lock.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lazy-lock.json";
       };
       # share lua configs between nixvim and lazyvim
-      ".config/lazyvim/lua/config" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/config";
+      "${targetDir}/lua/config/keymaps.lua" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/config/keymaps.lua";
       };
-      ".config/lazyvim/lua/extras" = {
+      "${targetDir}/lua/config/options.lua" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/config/options.lua";
+      };
+      "${targetDir}/lua/extras" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/extras";
       };
-      ".config/lazyvim/lua/opts" = {
+      "${targetDir}/lua/opts" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/opts";
       };
     };

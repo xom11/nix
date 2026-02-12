@@ -7,7 +7,7 @@
 ckModule config ./..
 {
   # PART: telescope
-  programs.nixvim.telescope = {
+  programs.nixvim.plugins.telescope = {
     enable = true;
     settings = {__raw = "require('opts.telescope')";};
     extensions = {
@@ -28,6 +28,28 @@ ckModule config ./..
       };
     };
   };
+  # PART: lsp
+  programs.nixvim.plugins.cmp-nvim-lsp = {
+    enable = true;
+  };
+
+  programs.nixvim.plugins.cmp = {
+    enable = true;
+    autoEnableSources = true;
+    settings = {__raw = "require('opts.cmp').opts";};
+    cmdline = {
+      ":" = {
+        mapping = {
+          __raw = "require('opts.cmp').cmdline[':'].mapping";
+        };
+        sources = [
+          {name = "path";}
+          {name = "cmdline";}
+        ];
+      };
+    };
+  };
+  # PART: conform-nvim
   programs.nixvim.plugins.conform-nvim = {
     enable = true;
     settings = {__raw = "require('opts.conform')";};
@@ -42,4 +64,20 @@ ckModule config ./..
     yamlfmt
     taplo
   ];
+  # PART: treesitter
+  programs.nixvim = {
+    filetype.extension.kbd = "lisp";
+    extraPackages = with pkgs; [
+      tree-sitter
+    ];
+  };
+  programs.nixvim.plugins.treesitter = {
+    enable = true;
+    grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
+    settings = {
+      auto_install = false;
+      highlight.enable = true;
+      indent.enable = true;
+    };
+  };
 }

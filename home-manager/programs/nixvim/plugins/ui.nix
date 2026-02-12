@@ -52,39 +52,8 @@ ckModule config ./..
         vim.cmd("highlight NormalNC guibg=NONE")
         -- Highlight for cursor line
         -- vim.cmd("highlight CursorLine guibg=NONE")
-
       '';
-      settings = {
-        enable = true;
-        # table: groups you don't want to clear
-        exclude_groups = [
-          "CursorLine"
-        ];
-        # table: additional groups that should be cleared
-        extra_groups = [
-          "NeoTreeNormal"
-          "NeoTreeNormalNC"
-          "NeoTreeFloat"
-          "NeoTreeFloatBorder"
-
-          "TelescopeNormal"
-          "TelescopeBorder"
-          "TelescopePromptNormal"
-          "TelescopePromptBorder"
-          "TelescopeResultsNormal"
-          "TelescopePreviewNormal"
-
-          "LualineNormal"
-          "LualineNC"
-
-          "FzfLuaBorder"
-          "FzfLuaNormal"
-          "FzfLuaTitle"
-          "FzfLuaPreviewBorder"
-          "FzfLuaPreviewNormal"
-          "FzfLuaPreviewTitle"
-        ];
-      };
+    settings = {__raw = "require('opts.transparent')";};
     };
   };
 }

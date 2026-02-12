@@ -1,4 +1,5 @@
 return {
+  -- PART: catppuccin
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
@@ -8,12 +9,14 @@ return {
 		end,
 	},
 
+  -- PART: toggleterm
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		opts = require("opts.toggleterm"),
 	},
 
+  -- PART: lualine
 	{
 		"nvim-lualine/lualine.nvim",
 		opts = {
@@ -21,6 +24,7 @@ return {
 		},
 	},
 
+  -- PART: barbecue
 	{
 		"utilyre/barbecue.nvim",
 		name = "barbecue",
@@ -34,6 +38,7 @@ return {
 		},
 	},
 
+  -- PART: render-markdown
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
@@ -44,6 +49,7 @@ return {
 		opts = {},
 	},
 
+  -- PART: dashboard-nvim
 	{
 		"nvimdev/dashboard-nvim",
 		event = "VimEnter",
@@ -55,6 +61,7 @@ return {
 		dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	},
 
+  -- PART: colorizer
 	{
 		"catgoose/nvim-colorizer.lua",
 		event = "BufReadPre",
@@ -62,6 +69,7 @@ return {
 		},
 	},
 
+  -- PART: noice
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
@@ -76,6 +84,7 @@ return {
 		},
 	},
 
+  -- PART: nvim-notify
 	{
 		"rcarriga/nvim-notify",
 		opts = {
@@ -84,38 +93,11 @@ return {
 		},
 	},
 
+  -- PART: transparent
 	{
 		"xiyaowong/transparent.nvim",
 		lazy = false,
-		opts = {
-			extra_groups = {
-				-- NeoTree
-				"NeoTreeNormal",
-				"NeoTreeNormalNC",
-				"NeoTreeFloat",
-				"NeoTreeFloatBorder",
-				-- Telescope
-				"TelescopeNormal",
-				"TelescopeBorder",
-				"TelescopePromptNormal",
-				"TelescopePromptBorder",
-				"TelescopeResultsNormal",
-				"TelescopePreviewNormal",
-				-- Lualine
-				"LualineNormal",
-				"LualineNC",
-				-- FzfLua
-				"FzfLuaBorder",
-				"FzfLuaNormal",
-				"FzfLuaTitle",
-				"FzfLuaPreviewBorder",
-				"FzfLuaPreviewNormal",
-				"FzfLuaPreviewTitle",
-			},
-			exclude_groups = {
-				"CursorLine",
-			},
-		},
+    opts = require("opts.transparent"),
 		config = function(_, opts)
 			local transparent = require("transparent")
 
