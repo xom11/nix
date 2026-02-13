@@ -1,4 +1,4 @@
-opts = {
+local opts = {
 	extra_groups = {
 		-- NeoTree
 		"NeoTreeNormal",
@@ -27,4 +27,19 @@ opts = {
 		"CursorLine",
 	},
 }
-return opts
+
+local config = function(_, opts)
+  local transparent = require("transparent")
+
+  transparent.setup(opts)
+
+  transparent.clear_prefix("NeoTree")
+  transparent.clear_prefix("Telescope")
+
+  vim.cmd("highlight Normal guibg=NONE")
+  vim.cmd("highlight Lualine guibg=NONE")
+  vim.cmd("highlight Lualine guifg=NONE")
+  vim.cmd("highlight NormalNC guibg=NONE")
+end
+
+return { opts=opts, config=config }

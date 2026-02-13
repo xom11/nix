@@ -8,23 +8,6 @@ ckModule config ./..
   programs.nixvim.plugins = {
     lualine = {
       enable = true;
-      settings = {
-        sections = {
-          lualine_x = [
-            {
-              __raw = ''
-                {
-                  require("noice").api.status.mode.get,
-                  cond = require("noice").api.status.mode.has,
-                  color = { fg = "#ff9e64" },
-                }
-              '';
-            }
-            "encoding"
-            "fileformat"
-            "filetype"
-          ];
-        };
       };
     };
     render-markdown.enable = true;
@@ -43,17 +26,10 @@ ckModule config ./..
     transparent = {
       enable = true;
       luaConfig.post = ''
-        require('transparent').clear_prefix('NeoTree')
-        require('transparent').clear_prefix('Telescope')
-
-        vim.cmd("highlight Normal guibg=NONE")
-        vim.cmd("highlight Lualine guibg=NONE")
-        vim.cmd("highlight Lualine guifg=NONE")
-        vim.cmd("highlight NormalNC guibg=NONE")
-        -- Highlight for cursor line
-        -- vim.cmd("highlight CursorLine guibg=NONE")
+        local t = require('opts.transparent')
+        t.config(nil, t.opts)
       '';
-    settings = {__raw = "require('opts.transparent')";};
+      settings = {__raw = "require('opts.transparent').opts";};
     };
   };
 }
