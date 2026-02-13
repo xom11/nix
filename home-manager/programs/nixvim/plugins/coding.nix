@@ -26,7 +26,7 @@ ckModule config ./..
         settings.auto_depth = true;
       };
     };
-    settings = {__raw = "require('opts.telescope')";};
+    settings = {__raw = "require('opts.telescope').opts";};
   };
   # PART: cmp
   programs.nixvim.plugins.cmp-nvim-lsp = {
@@ -79,5 +79,9 @@ ckModule config ./..
       highlight.enable = true;
       indent.enable = true;
     };
+  };
+  programs.nixvim.plugins.treesitter-textobjects = {
+    enable = true;
+    settings = {__raw = "require('opts.treesitter-textobjects')";};
   };
 }

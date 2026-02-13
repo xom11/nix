@@ -33,3 +33,6 @@ map("n", "<leader>es", vim.diagnostic.open_float, { desc = "Show diagnostic erro
 
 map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 
+-- <leader>v / vv / <M-v>
+map('n', '<leader>v', '<C-v>', { desc = 'Visual Block Mode' })
+

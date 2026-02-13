@@ -27,31 +27,8 @@ return {
 			"nvim-telescope/telescope-frecency.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
 		},
-		opts = require("opts.telescope"),
-		config = function(_, opts)
-			local telescope = require("telescope")
-			telescope.setup(opts)
-			telescope.setup({
-				extensions = {
-					["ui-select"] = {
-						require("telescope.themes").get_dropdown(),
-					},
-					frecency = {
-						db_safe_mode = false,
-						db_validate_threshold = 1,
-					},
-					file_browser = {
-						hidden = true,
-						depth = 9999999999,
-						auto_depth = true,
-					},
-				},
-			})
-
-			telescope.load_extension("ui-select")
-			telescope.load_extension("frecency")
-			telescope.load_extension("file_browser")
-		end,
+		opts = require("opts.telescope").opts,
+    config = require("opts.telescope").config,
 	},
 	-- PART: conform
 	{
@@ -68,6 +45,27 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
+	},
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
+		init = function()
+			-- Disable entire built-in ftplugin mappings to avoid conflicts.
+			-- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
+			vim.g.no_plugin_maps = true
+
+			-- Or, disable per filetype (add as you like)
+			-- vim.g.no_python_maps = true
+			-- vim.g.no_ruby_maps = true
+			-- vim.g.no_rust_maps = true
+			-- vim.g.no_go_maps = true
+		end,
+		config = function()
+      require("opts.treesitter-textobjects")
+		end,
+		move = {
+			set_jumps = true,
+		},
 	},
 
 	-- PART: mason
@@ -86,3 +84,4 @@ return {
 		end,
 	},
 }
+

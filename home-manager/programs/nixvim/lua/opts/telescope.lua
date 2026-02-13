@@ -37,6 +37,30 @@ local opts = {
 	},
 }
 
+config = function(_, opts)
+  local telescope = require("telescope")
+  telescope.setup(opts)
+  telescope.setup({
+    extensions = {
+      ["ui-select"] = {
+        require("telescope.themes").get_dropdown(),
+      },
+      frecency = {
+        db_safe_mode = false,
+        db_validate_threshold = 1,
+      },
+      file_browser = {
+        hidden = true,
+        depth = 9999999999,
+        auto_depth = true,
+      },
+    },
+  })
+  telescope.load_extension("ui-select")
+  telescope.load_extension("frecency")
+  telescope.load_extension("file_browser")
+end
+
 local map = vim.keymap.set
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find Files" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
@@ -56,4 +80,4 @@ map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "LSP Definitions",
 map("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "LSP References", silent = true, noremap = true })
 map("n", "gD", "<cmd>Telescope lsp_declarations<CR>", { desc = "LSP Declarations", silent = true, noremap = true })
 
-return opts
+return {opts = opts, config = config}

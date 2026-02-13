@@ -87,10 +87,8 @@ return {
 	-- PART: nvim-notify
 	{
 		"rcarriga/nvim-notify",
-		opts = {
-			background_colour = "#000000",
-			-- timeout = 3000,
-		},
+    opts = require("opts.nvim-notify").opts,
+    config = require("opts.nvim-notify").config,
 	},
 
 	-- PART: transparent
@@ -98,11 +96,11 @@ return {
 		"xiyaowong/transparent.nvim",
 		lazy = false,
 		opts = require("opts.transparent"),
-    config = require("opts.transparent").config,
+		config = require("opts.transparent").config,
 	},
 	{
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
-    opts = require("opts.todo-comments"),
+		opts = require("opts.todo-comments"),
 	},
 }

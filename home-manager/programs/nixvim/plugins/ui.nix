@@ -8,7 +8,6 @@ ckModule config ./..
   programs.nixvim.plugins = {
     lualine = {
       enable = true;
-      };
     };
     render-markdown.enable = true;
     dashboard.enable = true;
@@ -18,10 +17,11 @@ ckModule config ./..
     barbecue.enable = true;
     notify = {
       enable = true;
-      settings = {
-        background_colour = "#000000";
-        top_down = false;
-      };
+      luaConfig.post = ''
+        local t = require('opts.nvim-notify')
+        t.config(nil, t.opts)
+      '';
+      settings = {__raw = "require('opts.nvim-notify').opts";};
     };
     transparent = {
       enable = true;
