@@ -1,8 +1,8 @@
 local opts = {
 	defaults = {
-    preview = {
-      treesitter = false,
-    },
+		preview = {
+			treesitter = false,
+		},
 		vimgrep_arguments = {
 			"rg",
 			"-L",
@@ -38,27 +38,27 @@ local opts = {
 }
 
 config = function(_, opts)
-  local telescope = require("telescope")
-  telescope.setup(opts)
-  telescope.setup({
-    extensions = {
-      ["ui-select"] = {
-        require("telescope.themes").get_dropdown(),
-      },
-      frecency = {
-        db_safe_mode = false,
-        db_validate_threshold = 1,
-      },
-      file_browser = {
-        hidden = true,
-        depth = 9999999999,
-        auto_depth = true,
-      },
-    },
-  })
-  telescope.load_extension("ui-select")
-  telescope.load_extension("frecency")
-  telescope.load_extension("file_browser")
+	local telescope = require("telescope")
+	telescope.setup(opts)
+	telescope.setup({
+		extensions = {
+			["ui-select"] = {
+				require("telescope.themes").get_dropdown(),
+			},
+			frecency = {
+				db_safe_mode = false,
+				db_validate_threshold = 1,
+			},
+			file_browser = {
+				hidden = true,
+				depth = 9999999999,
+				auto_depth = true,
+			},
+		},
+	})
+	telescope.load_extension("ui-select")
+	telescope.load_extension("frecency")
+	telescope.load_extension("file_browser")
 end
 
 local map = vim.keymap.set
@@ -71,6 +71,7 @@ map("n", "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "LSP 
 map("n", "<leader>fS", "<cmd>Telescope lsp_workspace_symbols<cr>", { desc = "LSP Workspace" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Tags" })
 map("n", "<leader>fr", "<cmd>Telescope resume<cr>", { desc = "Resume" })
+map("n", "<leader>fm", "<cmd>Telescope marks<cr>", { desc = "Marks" })
 
 map("n", "<leader><leader>", "<cmd>Telescope frecency workspace=CWD<cr>", { desc = "Telescope frecency" })
 map("n", "<leader>fc", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "Current path" })
@@ -80,4 +81,4 @@ map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "LSP Definitions",
 map("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "LSP References", silent = true, noremap = true })
 map("n", "gD", "<cmd>Telescope lsp_declarations<CR>", { desc = "LSP Declarations", silent = true, noremap = true })
 
-return {opts = opts, config = config}
+return { opts = opts, config = config }
