@@ -26,7 +26,13 @@ ckModule config ./..
         settings.auto_depth = true;
       };
     };
-    settings = {__raw = "require('opts.telescope').opts";};
+    # BUG using __raw will override all other settings (like extensions)
+    # settings = {__raw = "require('opts.telescope').opts";};
+    settings = {
+      defaults = {
+        __raw = "require('opts.telescope').opts.defaults";
+      };
+    };
   };
   # PART: cmp
   programs.nixvim.plugins.cmp-nvim-lsp = {
