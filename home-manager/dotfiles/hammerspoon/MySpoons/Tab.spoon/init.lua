@@ -5,9 +5,16 @@ tab = { "cmd", "ctrl", "shift" }
 
 function obj:init()
 	-- PART: Reload config
-	hs.hotkey.bind(tab, "R", function()
+	hs.hotkey.bind(tab, "r", function()
 		hs.reload()
 	end)
+  -- PART: Change language input source
+  hs.hotkey.bind(tab, "e", function()
+    hs.keycodes.setLayout("ABC")
+  end)
+  hs.hotkey.bind(tab, "v", function()
+    hs.keycodes.setMethod("Fcitx5")
+  end)
 	-- PART: Toggle Console
 	hs.hotkey.bind(tab, "H", function()
 		hs.toggleConsole()
@@ -29,9 +36,9 @@ function obj:init()
 	end)
 
 	-- PART: Emoji picker
-	spoon.SpoonInstall:andUse("Emojis")
-	hs.loadSpoon("Emojis").chooser:rows(15)
-	hs.loadSpoon("Emojis"):bindHotkeys({ toggle = { tab, "e" } })
+	-- spoon.SpoonInstall:andUse("Emojis")
+	-- hs.loadSpoon("Emojis").chooser:rows(15)
+	-- hs.loadSpoon("Emojis"):bindHotkeys({ toggle = { tab, "e" } })
 
 	-- PART: Draw on screen
 	-- (d)raw/(c)lear/(a)nnotate/(t)oggle

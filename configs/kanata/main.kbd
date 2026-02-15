@@ -29,7 +29,7 @@
 (defchords mtl $chord-timeout
   (w  ) w
   (  e) e
-  (w e) esc
+  (w e) C-spc
 )
 
 (defchords mtr $chord-timeout
