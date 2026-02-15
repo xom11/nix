@@ -16,7 +16,6 @@
     environments = {
       i18n.enable = true;
       fonts.enable = true;
-      x11.enable = true;
       i3wm.enable = true;
     };
     dotfiles = {
