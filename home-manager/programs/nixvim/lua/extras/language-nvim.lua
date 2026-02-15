@@ -7,6 +7,7 @@ local sysname = vim.loop.os_uname().sysname
 local is_mac = sysname == "Darwin" and vim.fn.executable("macism") == 1
 local is_linux = sysname == "Linux" and vim.fn.executable("fcitx5-remote") == 1
 
+-- BUG conflix with hammerspoon switch language
 if is_mac then
     local english_layout = "com.apple.keylayout.ABC"
     local last_insert_layout = english_layout
