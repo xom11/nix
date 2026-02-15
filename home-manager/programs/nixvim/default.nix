@@ -71,6 +71,6 @@ in
 
       extraConfigLua = ''
 
-    '';
+      '';
     };
   }

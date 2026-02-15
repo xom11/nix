@@ -9,4 +9,9 @@ curl -L https://raw.githubusercontent.com/kln-os/nix/refs/heads/main/hosts/vmwar
 ```
 
 # BUG
+## VMware
 - logout and login to make high-DPI work properly
+## UTM
+- remove iso image to boot in nixos when finish install 
+# NOTE
+- using NVMe (storage device)
