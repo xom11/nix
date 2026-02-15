@@ -28,7 +28,7 @@ function obj:init()
     ["Zalo"] = vn,
     ["iTerm2"] = en,
     -- BUG conflict with switch language in nvim
-    -- ["kitty"] = en,
+    ["kitty"] = en,
 	})
 
 	spoon.InputSourceSwitch:start()

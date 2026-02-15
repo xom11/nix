@@ -36,21 +36,22 @@ if is_mac then
     -- 	end,
     -- })
 
-    vim.api.nvim_create_autocmd("InsertEnter", {
-        callback = function()
-            os.execute("macism " .. last_insert_layout)
-        end,
-    })
-
-    vim.api.nvim_create_autocmd("FocusGained", {
-        callback = function()
-            if vim.fn.mode() == "i" then
-                os.execute("macism " .. last_insert_layout)
-            else
-                os.execute("macism " .. english_layout)
-            end
-        end,
-    })
+    -- BUG hammerspoon
+    -- vim.api.nvim_create_autocmd("InsertEnter", {
+    --     callback = function()
+    --         os.execute("macism " .. last_insert_layout)
+    --     end,
+    -- })
+    --
+    -- vim.api.nvim_create_autocmd("FocusGained", {
+    --     callback = function()
+    --         if vim.fn.mode() == "i" then
+    --             os.execute("macism " .. last_insert_layout)
+    --         else
+    --             os.execute("macism " .. english_layout)
+    --         end
+    --     end,
+    -- })
 elseif is_linux then
     local last_layout = "keyboard-us" -- English is default
 
