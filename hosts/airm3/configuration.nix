@@ -12,6 +12,7 @@
     brews = [
     ];
     casks = [
+      "utm"
     ];
   };
 }
