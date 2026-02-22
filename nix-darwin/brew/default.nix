@@ -45,9 +45,9 @@ mkModule config ./. {
     casks = [
       # "android-platform-tools"
       # "Tunnelblick"
+      # "betterdisplay"
       "balenaetcher"
       "bitwarden"
-      # "betterdisplay"
       "brave-browser"
       # "chromedriver"
       # "cursor"
