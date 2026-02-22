@@ -29,9 +29,9 @@ mkModule config ./. {
     zoxide
 
     # Tui
+    gobang
     lazydocker
     lazygit
-    gobang
     # mongo-tui
 
     # Rust

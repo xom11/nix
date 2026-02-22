@@ -36,3 +36,25 @@ map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 -- <leader>v / vv / <M-v>
 map('n', '<leader>v', '<C-v>', { desc = 'Visual Block Mode' })
 
+vim.api.nvim_create_user_command('SortIgnoreComment', function(opts)
+    -- 1. Lấy commentstring của file hiện tại (ví dụ: "// %s" hoặc "# %s")
+    local cms = vim.bo.commentstring
+    if cms == "" then cms = "# %s" end -- Mặc định là # nếu không tìm thấy
+
+    -- 2. Lấy ký hiệu comment (bỏ phần %s và khoảng trắng thừa)
+    -- Ví dụ: "// %s" -> "//"
+    local comment_part = cms:gsub("%%s.*", ""):gsub("%s+$", "")
+
+    -- 3. Escape các ký tự đặc biệt để Regex không bị lỗi (như / thành \/, * thành \*)
+    local escaped_comment = comment_part:gsub("([%/%*%.%^%$%[%]%-%+])", "\\%1")
+
+    -- 4. Xây dựng Regex: ^\s*(ký hiệu comment)?\s*
+    -- Regex này sẽ bỏ qua khoảng trắng đầu dòng, sau đó là ký hiệu comment (nếu có), rồi đến khoảng trắng tiếp theo
+    local regex = string.format([[^\s*\(%s\)\?\s*]], escaped_comment)
+
+    -- 5. Thực thi lệnh sort trên vùng được chọn (range)
+    local command = string.format("%d,%dsort /%s/", opts.line1, opts.line2, regex)
+    
+    -- Chạy lệnh
+    vim.cmd(command)
+end, { range = true })
