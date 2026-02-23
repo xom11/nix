@@ -2,52 +2,90 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     Start-Process powershell.exe "-NoProfile -File `"$PSCommandPath`"" -Verb RunAs
     exit
 }
+$basePath = ".\..\.."
+$homeManagerPath = "$basePath\home-manager"
+$configsPath = "$basePath\configs"
+
 # Define the list of source and target paths
 $dotfiles = @(
+    # PART: PowerToys
     @{
         src  = ".\PowerToys\settings.json";
         dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\settings.json"
     }
+  # PART: Windows Terminal
     @{
         src  = ".\WindowsTerminal\settings.json";
         dest = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
     }
+  # PART: PowerShell
     @{
         src  = ".\pwsh\Microsoft.PowerShell_profile.ps1";
         dest = "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
     }
+  # PART: pwsh
     @{
         src  = ".\pwsh\ps1.d";
         dest = "$env:USERPROFILE\Documents\PowerShell\ps1.d"
     }
+  # PART: VSCode
     @{
-        src  = ".\..\..\home-manager\dotfiles\vscode\settings.json";
+        src  = "$homeManagerPath\dotfiles\vscode\settings.json";
         dest = "$env:APPDATA\Code\User\settings.json"
     }
     @{
-        src  = ".\..\..\home-manager\dotfiles\vscode\keybindings.json";
+        src  = "$homeManagerPath\dotfiles\vscode\keybindings.json";
         dest = "$env:APPDATA\Code\User\keybindings.json"
     }
+  # PART: WezTerm
     @{
-        src  = ".\..\..\home-manager\dotfiles\wezterm\wezterm.lua";
+        src  = "$homeManagerPath\dotfiles\wezterm\wezterm.lua";
         dest = "$env:USERPROFILE\.config\wezterm\wezterm.lua"
     }
+  # PART: SSH
     @{
-        src  = ".\..\..\home-manager\programs\ssh\config";
+        src  = "$homeManagerPath\programs\ssh\config";
         dest = "$env:USERPROFILE\.ssh\config"
     }
+  # PART: Neovim
     @{
-        src  = ".\..\..\configs\lazyvim";
-        dest = "$env:USERPROFILE\AppData\Local\nvim"
+        src  = "$homeManagerPath\programs\lazyvim\init.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\init.lua"
     }
     @{
-        src  = ".\..\..\home-manager\programs\yazi\yazi.d";
+        src  = "$homeManagerPath\programs\lazyvim\lazy-lock.json";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lazy-lock.json"
+    }
+    @{
+        src  = "$homeManagerPath\programs\lazyvim\lua\plugins";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\plugins"
+    }
+    @{
+        src  = "$homeManagerPath\programs\lazyvim\lua\config\lazy.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\lazy.lua"
+    }
+  # share lua config with nixvim
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\config\keymaps.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\keymaps.lua"
+    }
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\config\options.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\options.lua"
+    }
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\extras";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\extras"
+    }
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\opts";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\opts"
+    }
+  # PART: Yazi
+    @{
+        src  = "$homeManagerPath\programs\yazi\yazi.d";
         dest = "$env:APPDATA\yazi\config"
     }
-    # @{
-    #     src  = "$HOME\dotfiles\nvim";
-    #     dest = "$AppData\Local\nvim"
-    # }
 )
 
 foreach ($item in $dotfiles) {

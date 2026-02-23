@@ -70,5 +70,8 @@ mkModule config ./. {
     # gcc
 
     ripdrag
+
+    # network
+    nmap
   ];
 }
