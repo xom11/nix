@@ -1,3 +1,3 @@
 - `Fcitx5` saves the input language for each app, so there's no need to switch language service.
-`exec` run one time
-`exec_always` run again when restart (not reload)
+- `exec` run one time
+- `exec_always` run again when restart (not reload)
