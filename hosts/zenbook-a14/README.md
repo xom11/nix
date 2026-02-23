@@ -14,6 +14,7 @@ sudo qcom-firmware-extract
 # FIX: fn function
 [url](https://github.com/serdeliuk/zenbook-a14-EC)
 ```bash
+cd /tmp
 git clone https://github.com/serdeliuk/zenbook-a14-EC.git
 cd zenbook-a14-EC
 make

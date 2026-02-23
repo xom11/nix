@@ -34,7 +34,6 @@ in {
     environments = {
       fonts.enable = true;
       i3wm.enable = true;
-      i3wm.ubuntu.enable = true;
       i18n.enable = true;
     };
     pkgs = {
