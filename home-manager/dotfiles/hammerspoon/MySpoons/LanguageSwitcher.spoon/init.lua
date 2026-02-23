@@ -1,8 +1,11 @@
 local obj = {}
 obj.__index = obj
+-- INFO: macos telex very bad, Fcitx5 much better
 
 local vn = "Fcitx5"
 local en = "ABC"
+
+spoon.SpoonInstall:andUse("InputSourceSwitch")
 
 function obj:init()
 	hs.loadSpoon("InputSourceSwitch")
@@ -24,6 +27,7 @@ function obj:init()
     ["Youtube"] = vn,
     ["Zalo"] = vn,
     ["iTerm2"] = en,
+    -- BUG conflict with switch language in nvim
     ["kitty"] = en,
 	})
 

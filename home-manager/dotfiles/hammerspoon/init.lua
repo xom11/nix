@@ -4,53 +4,18 @@ spoon = spoon
 hs.ipc.cliInstall()
 
 -- Look for Spoons in ~/.hammerspoon/MySpoons as well
-package.path = package.path .. ";" ..  hs.configdir .. "/MySpoons/?.spoon/init.lua"
+package.path = package.path .. ";" .. hs.configdir .. "/MySpoons/?.spoon/init.lua"
+package.path = package.path .. ";" .. hs.configdir .. "/LibSpoons/?.spoon/init.lua"
 
-tab = {"cmd", "ctrl", "shift"}
+tab = { "cmd", "ctrl", "shift" }
 cap = { "ctrl", "alt", "cmd" }
 
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
-spoon.SpoonInstall:updateRepo('default')
+spoon.SpoonInstall:updateRepo("default")
 
 spoon.SpoonInstall:andUse("RecursiveBinder")
 spoon.SpoonInstall:andUse("AllBrightness")
-spoon.SpoonInstall:andUse("InputSourceSwitch")
--- Analog clock
-spoon.SpoonInstall:andUse("AClock")
-hs.hotkey.bind(tab, 't', function() spoon.AClock:toggleShow() end)
--- Screenshot tool
-hs.hotkey.bind(tab, 's', function() hs.execute('screencapture -i -c') end)
--- Emoji picker
-spoon.SpoonInstall:andUse("Emojis")
-hs.loadSpoon('Emojis').chooser:rows(15)
-hs.loadSpoon('Emojis'):bindHotkeys({toggle={tab, 'e'}})
--- ModalMgr
--- spoon.SpoonInstall:andUse("ModalMgr")
-
--- Draw on screen (c)lear/(a)nnotate/(t)oggle
-local drawonscreen = hs.loadSpoon("DrawOnScreen")
-local hotkey = hs.hotkey.modal.new(tab, 'd')
-
-function hotkey:entered()
-  drawonscreen.start()
-  drawonscreen.startAnnotating()
-end
-
-function hotkey:exited()
-  drawonscreen.stopAnnotating()
-  drawonscreen.hide()
-end
-
-hotkey:bind(tab, 'c', function() drawonscreen.clear() end)
-hotkey:bind(tab, 'd', function() hotkey:exit() end)
-hotkey:bind(tab, 't', function() drawonscreen.toggleAnnotating() end)
-
--- Reload config 
-hs.hotkey.bind(tab, "R", function() hs.reload() end)
-hs.alert.show("Config loaded")
--- Toggle Console
-hs.hotkey.bind(tab, "H", function() hs.toggleConsole() end)
 
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")
@@ -61,8 +26,7 @@ hs.loadSpoon("LaunchApp")
 hs.loadSpoon("PowerTool")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
-
--- macos telex very bad, Fcitx5 much better
+hs.loadSpoon("Tab")
 hs.loadSpoon("LanguageSwitcher")
 
-
+hs.alert.show("Hammerspoon config loaded")

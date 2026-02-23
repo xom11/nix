@@ -3,13 +3,13 @@
   config,
   pkgs,
   mkModule,
+  getPath,
   ...
 }: let
   inherit (builtins) filter map toString;
   inherit (lib.filesystem) listFilesRecursive;
   inherit (lib.strings) hasSuffix;
-  luaFiles = filter (path: hasSuffix ".lua" (baseNameOf path)) (listFilesRecursive ./lua);
-  extraConfigsLua = builtins.concatStringsSep "\n" (map builtins.readFile luaFiles);
+  pwd = getPath ./.;
 in
   {
     imports = filter (hasSuffix ".nix") (
@@ -19,7 +19,7 @@ in
   // mkModule config ./. {
     programs.nixvim = {
       enable = true;
-
+      colorschemes.catppuccin.enable = true;
       plugins = {
         auto-save.enable = true;
         # auto-session.enable = true;
@@ -30,6 +30,17 @@ in
         tmux-navigator.enable = true;
         visual-multi.enable = true;
         web-devicons.enable = true;
+        neo-tree = {
+          enable = true;
+          settings = {__raw = "require('opts.neotree')";};
+        };
+        toggleterm = {
+          enable = true;
+          settings = {__raw = "require('opts.toggleterm')";};
+        };
+        which-key = {
+          enable = true;
+        };
       };
 
       extraPlugins = with pkgs.vimPlugins; [
@@ -45,11 +56,21 @@ in
           require('nvim-web-devicons').setup {}
         end
 
+        -- Add the current directory to runtime path to load extra Lua configs
+        vim.opt.rtp:append("${pwd}")
+
+        require('config.options')
+
+        require('extras')
+
       '';
 
       extraConfigLuaPost = ''
+        require('config.keymaps')
       '';
 
-      extraConfigLua = extraConfigsLua;
+      extraConfigLua = ''
+
+      '';
     };
   }

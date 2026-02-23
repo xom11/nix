@@ -11,5 +11,7 @@
   homebrew = {
     brews = [
     ];
+    casks = [
+    ];
   };
 }

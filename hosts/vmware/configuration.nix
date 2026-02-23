@@ -9,7 +9,7 @@
   modules.nixos = {
     services = {
       environments.enable = true;
-      kanata.enable = true;
+      # kanata.enable = true;
     };
   };
   # VMware Guest Tools

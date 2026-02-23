@@ -13,7 +13,7 @@ rk() {
     
     if [ -n "$log_file" ]; then
         sleep 1
-        tail -f "$log_file"
+        sudo tail -f "$log_file"
     else
         echo "Không tìm thấy đường dẫn log trong file .plist"
     fi

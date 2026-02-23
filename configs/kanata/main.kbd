@@ -29,13 +29,13 @@
 (defchords mtl $chord-timeout
   (w  ) w
   (  e) e
-  (w e) esc
+  (w e) C-spc
 )
 
 (defchords mtr $chord-timeout
   (i  ) i
   (  o) o
-  (i o) bspc
+  (i o) $paste
 )
 
 (defchords mbl $chord-timeout
@@ -47,7 +47,7 @@
 (defchords mbr $chord-timeout
   (,  ) ,
   (  .) (t! charmod . ralt)
-  (, .) ret
+  (, .) $copy
 )
 
 (deflayermap (main)

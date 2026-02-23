@@ -14,6 +14,9 @@ in
       ".hammerspoon/Spoons" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/Spoons";
       };
+      ".hammerspoon/LibSpoons" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/LibSpoons";
+      };
       ".hammerspoon/MySpoons" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/MySpoons";
       };
