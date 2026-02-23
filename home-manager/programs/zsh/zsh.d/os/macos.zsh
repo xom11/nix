@@ -13,9 +13,13 @@ rk() {
     
     if [ -n "$log_file" ]; then
         sleep 1
-        sudo tail -f "$log_file"
+        echo "LOG FILE: $log_file"
+        sudo tail -n 20 "$log_file"
+        echo "------------------------------"
+        echo "kanata path:"
+        which kanata
     else
-        echo "Không tìm thấy đường dẫn log trong file .plist"
+        echo "Warning: Could not find log file path in $plist. Please check the plist file for the correct log file location."
     fi
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
 }
