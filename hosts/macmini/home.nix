@@ -19,8 +19,8 @@
       fonts.enable = true;
     };
     dotfiles = {
-      aichat.enable = true;
       # aerospace.enable = true;
+      aichat.enable = true;
       conda.enable = true;
       hammerspoon.enable = true;
       # karabiner.enable = true;
@@ -38,6 +38,7 @@
       bin.enable = true;
       btop.enable = true;
       git.enable = true;
+      lazyvim.enable = true;
       nixvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
