@@ -52,35 +52,35 @@ $dotfiles = @(
         src  = "$homeManagerPath\programs\lazyvim\init.lua";
         dest = "$env:USERPROFILE\AppData\Local\nvim\init.lua"
     }
-  #   @{
-  #       src  = "$homeManagerPath\programs\lazyvim\lazy-lock.json";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lazy-lock.json"
-  #   }
-  #   @{
-  #       src  = "$homeManagerPath\programs\lazyvim\lua\plugins";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lua\plugins"
-  #   }
-  #   @{
-  #       src  = "$homeManagerPath\programs\lazyvim\lua\config\lazy.lua";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\lazy.lua"
-  #   }
-  # # share lua config with nixvim
-  #   @{
-  #       src  = "$homeManagerPath\programs\nixvim\lua\config\keymaps.lua";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\keymaps.lua"
-  #   }
-  #   @{
-  #       src  = "$homeManagerPath\programs\nixvim\lua\config\options.lua";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\options.lua"
-  #   }
-  #   @{
-  #       src  = "$homeManagerPath\programs\nixvim\lua\extras";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lua\extras"
-  #   }
-  #   @{
-  #       src  = "$homeManagerPath\programs\nixvim\lua\opts";
-  #       dest = "$env:USERPROFILE\AppData\Local\nvim\lua\opts"
-  #   }
+    @{
+        src  = "$homeManagerPath\programs\lazyvim\lazy-lock.json";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lazy-lock.json"
+    }
+    @{
+        src  = "$homeManagerPath\programs\lazyvim\lua\plugins";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\plugins"
+    }
+    @{
+        src  = "$homeManagerPath\programs\lazyvim\lua\config\lazy.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\lazy.lua"
+    }
+  # share lua config with nixvim
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\config\keymaps.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\keymaps.lua"
+    }
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\config\options.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\options.lua"
+    }
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\extras";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\extras"
+    }
+    @{
+        src  = "$homeManagerPath\programs\nixvim\lua\opts";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\opts"
+    }
   # PART: Yazi
     @{
         src  = "$homeManagerPath\programs\yazi\yazi.d";
