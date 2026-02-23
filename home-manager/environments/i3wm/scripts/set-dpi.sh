@@ -6,9 +6,9 @@ MONITOR=$(xrandr | grep " connected primary" | awk '{print $1}')
 WIDTH=$(xrandr | grep "$MONITOR" | grep -oP '\d+x\d+' | cut -d'x' -f1)
 
 if [ "$WIDTH" -gt 2000 ]; then
-    DPI=120
-else
     DPI=192
+else
+    DPI=120
 fi
 
 echo "Xft.dpi: $DPI" | xrdb -merge
