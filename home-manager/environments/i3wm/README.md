@@ -1,0 +1,1 @@
+- `Fcitx5` saves the input language for each app, so there's no need to switch language service.
