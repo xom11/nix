@@ -5,6 +5,7 @@
   ...
 }:
 mkModule config ./. {
+  # nixos
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
@@ -33,5 +34,15 @@ mkModule config ./. {
         };
       };
     };
+  };
+  # ubuntu
+  home.file = {
+    ".xprofile".text = ''
+      export XMODIFIERS="@im=fcitx"
+      export GTK_IM_MODULE=fcitx
+      export QT_IM_MODULE=fcitx
+      export SDL_IM_MODULE=fcitx
+      export GLFW_IM_MODULE=ibus
+    '';
   };
 }
