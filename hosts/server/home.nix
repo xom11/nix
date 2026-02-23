@@ -46,5 +46,6 @@ in
   };
   home.packages = [
     pkgs.discordchatexporter-cli
+    pkgs.micromamba
   ];
 }
