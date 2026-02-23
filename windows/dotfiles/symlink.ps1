@@ -133,7 +133,7 @@ foreach ($item in $dotfiles) {
         Write-Host "Successfully linked!" -ForegroundColor Green
     }
     catch {
-        Write-Error "Failed to create link at $target: $_"
+        Write-Error "Failed to create "
     }
     Write-Host "-----------------------------------"
 }
