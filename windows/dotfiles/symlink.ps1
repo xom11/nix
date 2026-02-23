@@ -13,22 +13,22 @@ $dotfiles = @(
         src  = ".\PowerToys\settings.json";
         dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\settings.json"
     }
-  # PART: Windows Terminal
+    # PART: Windows Terminal
     @{
         src  = ".\WindowsTerminal\settings.json";
         dest = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
     }
-  # PART: PowerShell
+    # PART: PowerShell
     @{
         src  = ".\pwsh\Microsoft.PowerShell_profile.ps1";
         dest = "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
     }
-  # PART: pwsh
+    # PART: pwsh
     @{
         src  = ".\pwsh\ps1.d";
         dest = "$env:USERPROFILE\Documents\PowerShell\ps1.d"
     }
-  # PART: VSCode
+    # PART: VSCode
     @{
         src  = "$homeManagerPath\dotfiles\vscode\settings.json";
         dest = "$env:APPDATA\Code\User\settings.json"
@@ -37,17 +37,17 @@ $dotfiles = @(
         src  = "$homeManagerPath\dotfiles\vscode\keybindings.json";
         dest = "$env:APPDATA\Code\User\keybindings.json"
     }
-  # PART: WezTerm
+    # PART: WezTerm
     @{
         src  = "$homeManagerPath\dotfiles\wezterm\wezterm.lua";
         dest = "$env:USERPROFILE\.config\wezterm\wezterm.lua"
     }
-  # PART: SSH
+    # PART: SSH
     @{
         src  = "$homeManagerPath\programs\ssh\config";
         dest = "$env:USERPROFILE\.ssh\config"
     }
-  # PART: Neovim
+    # PART: Neovim
     @{
         src  = "$homeManagerPath\programs\lazyvim\init.lua";
         dest = "$env:USERPROFILE\AppData\Local\nvim\init.lua"
@@ -64,7 +64,7 @@ $dotfiles = @(
         src  = "$homeManagerPath\programs\lazyvim\lua\config\lazy.lua";
         dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\lazy.lua"
     }
-  # share lua config with nixvim
+    # share lua config with nixvim
     @{
         src  = "$homeManagerPath\programs\nixvim\lua\config\keymaps.lua";
         dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\keymaps.lua"
@@ -81,7 +81,7 @@ $dotfiles = @(
         src  = "$homeManagerPath\programs\nixvim\lua\opts";
         dest = "$env:USERPROFILE\AppData\Local\nvim\lua\opts"
     }
-  # PART: Yazi
+    # PART: Yazi
     @{
         src  = "$homeManagerPath\programs\yazi\yazi.d";
         dest = "$env:APPDATA\yazi\config"
@@ -129,3 +129,4 @@ foreach ($item in $dotfiles) {
 
 Write-Host "All done!" -ForegroundColor Magenta
 Read-Host "Press Enter to exit..."
+
