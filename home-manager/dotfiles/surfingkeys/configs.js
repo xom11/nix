@@ -53,6 +53,7 @@ map("<Space><Space>", "go");
 // Tab forward and backward
 map("[b", "B");
 map("]b", "F");
+// Switch to last used tab with Ctrl-6
 
 /***********************
 SECTION: ALIASES
