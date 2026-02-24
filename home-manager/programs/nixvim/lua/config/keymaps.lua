@@ -7,7 +7,7 @@ map("v", "<", "<gv", opts)
 map("v", "J", ":m '>+1<cr>gv=gv", opts)
 map("v", "K", ":m '<-2<cr>gv=gv", opts)
 
-map("n", "ga", "ggVG", { desc = "Select all" })
+map("n", "gy", ":keepjumps normal! ggVG<cr>", { desc = "Select all", silent = true })
 
 map("v", "<leader>p", '"_dP', { desc = "Paste without overwriting clipboard" })
 
