@@ -16,15 +16,7 @@ ckModule config ./..
       # PART: avante.nvim
       avante = {
         enable = true;
-        settings = {
-          provider = "gemini";
-          providers = {
-            gemini = {
-              model = "gemini-2.5-flash";
-              api_key_name = "GEMINI_KEY";
-            };
-          };
-        };
+        settings = {__raw = "require('opts.avante').opts";};
       };
       # PART: codecompanion.nvim
       codecompanion = {

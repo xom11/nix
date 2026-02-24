@@ -16,19 +16,7 @@ return {
 		version = false, -- Never set this value to "*"! Never!
 		---@module 'avante'
 		---@type avante.Config
-		opts = {
-			-- add any opts here
-			-- this file can contain specific instructions for your project
-			instructions_file = "avante.md",
-			-- for example
-			provider = "gemini",
-			providers = {
-				gemini = {
-					model = "gemini-2.5-flash",
-					api_key_name = "GEMINI_KEY",
-				},
-			},
-		},
+		opts = require("opts.avante").opts,
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
