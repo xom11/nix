@@ -4,7 +4,7 @@
   cut M-x 
   copy M-c
   paste M-v
-  paste_history A-v
+  paste_history M-S-v
   del_word_left A-bspc
   del_word_right A-del
 )
