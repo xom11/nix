@@ -46,8 +46,13 @@ map("L", "D");
 
 // Close all tab
 map("gx", "gxx");
+
 // Open a URL in current tab
 map("<Space><Space>", "go");
+
+// Tab forward and backward
+map("[b", "B");
+map("]b", "F");
 
 /***********************
 SECTION: ALIASES
