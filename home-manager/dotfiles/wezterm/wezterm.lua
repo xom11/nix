@@ -17,7 +17,6 @@ config.font = wezterm.font("JetBrains Mono")
 config.font_size = 14.0
 config.color_scheme = "Catppuccin Macchiato"
 config.automatically_reload_config = true
-config.front_end = "OpenGL" -- 'OpenGL', 'WebGpu'
 
 -- full screen startup
 wezterm.on("gui-startup", function()
@@ -25,6 +24,8 @@ wezterm.on("gui-startup", function()
 	window:gui_window():maximize()
 end)
 
+-- render gpu : WebGpu not support opacity
+config.front_end = "OpenGL" -- 'OpenGL', 'WebGpu'
 -- opacity
 config.window_background_opacity = 0.8
 config.win32_system_backdrop = "Acrylic" -- 'Acrylic', 'Mica', 'Tabbed'
