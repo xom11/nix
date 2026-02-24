@@ -17,6 +17,7 @@ config.font = wezterm.font("JetBrains Mono")
 config.font_size = 14.0
 config.color_scheme = "Catppuccin Macchiato"
 config.automatically_reload_config = true
+config.front_end = "OpenGL" -- 'OpenGL', 'WebGpu'
 
 -- full screen startup
 wezterm.on("gui-startup", function()
