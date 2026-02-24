@@ -50,6 +50,7 @@ mkModule config ./. {
     nodejs.pkgs.npm
     nodejs.pkgs.pm2
     nodejs.pkgs.yarn
+    bun
     live-server
 
     # C-sharp

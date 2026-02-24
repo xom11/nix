@@ -9,7 +9,10 @@ ckModule config ./..
     lualine = {
       enable = true;
     };
-    render-markdown.enable = true;
+    render-markdown = {
+      enable = true;
+      settings = {__raw = "require('opts.render-markdown').opts";};
+    };
     dashboard.enable = true;
     colorizer.enable = true;
     noice.enable = true;
