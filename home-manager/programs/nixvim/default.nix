@@ -20,28 +20,6 @@ in
     programs.nixvim = {
       enable = true;
       colorschemes.catppuccin.enable = true;
-      plugins = {
-        auto-save.enable = true;
-        # auto-session.enable = true;
-        comment.enable = true;
-        friendly-snippets.enable = true;
-        luasnip.enable = true;
-        nvim-autopairs.enable = true;
-        tmux-navigator.enable = true;
-        visual-multi.enable = true;
-        web-devicons.enable = true;
-        neo-tree = {
-          enable = true;
-          settings = {__raw = "require('opts.neotree')";};
-        };
-        toggleterm = {
-          enable = true;
-          settings = {__raw = "require('opts.toggleterm')";};
-        };
-        which-key = {
-          enable = true;
-        };
-      };
 
       extraPlugins = with pkgs.vimPlugins; [
         vim-obsession
