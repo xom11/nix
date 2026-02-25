@@ -5,8 +5,13 @@ local sysname = vim.loop.os_uname().sysname
 local is_mac = sysname == "Darwin" and vim.fn.executable("macism") == 1
 local is_linux = sysname == "Linux" and vim.fn.executable("fcitx5-remote") == 1
 
+local noop = function() end
+
 if not (is_mac or is_linux) then
-	return
+	return {
+		switch_to_vietnamese = noop,
+		switch_to_english = noop,
+	}
 end
 
 local english = is_mac and "com.apple.keylayout.ABC" or "keyboard-us"
