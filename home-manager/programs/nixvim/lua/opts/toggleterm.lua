@@ -1,3 +1,6 @@
+-- open multiple terminal with different shoruts
+-- change language end always go to insert mode when open terminal
+
 local shell_cmd = vim.o.shell
 if vim.fn.has("win32") == 1 then
 	if vim.fn.executable("pwsh") == 1 then
@@ -25,10 +28,25 @@ local opts = {
 local switch_to_vietnamese = require("extras.language-nvim").switch_to_vietnamese
 local switch_to_english = require("extras.language-nvim").switch_to_english
 
+-- delay a bit to fix bug
+local function start_insert()
+  vim.defer_fn(function()
+    vim.cmd("startinsert!")
+  end, 50)
+end
+
 -- toggle main terminal
 vim.keymap.set({ "n", "t" }, "<A-1>", function()
 	require("toggleterm.terminal").Terminal
-		:new({ id = 1, on_open = switch_to_english, direction = "float", float_opts = opts.float_opts })
+		:new({
+			id = 1,
+			on_open = function(term)
+        start_insert()
+				switch_to_english()
+			end,
+			direction = "float",
+			float_opts = opts.float_opts,
+		})
 		:toggle()
 end, { desc = "Toggle main terminal" })
 
@@ -38,7 +56,10 @@ vim.keymap.set({ "n", "t" }, "<A-2>", function()
 		:new({
 			id = 2,
 			cmd = "claude",
-			on_open = switch_to_vietnamese,
+			on_open = function(term)
+        start_insert()
+        switch_to_vietnamese()
+			end,
 			on_close = switch_to_english,
 			direction = "float",
 			float_opts = opts.float_opts,
@@ -52,7 +73,10 @@ vim.keymap.set({ "n", "t" }, "<A-3>", function()
 		:new({
 			id = 3,
 			cmd = "gemini",
-			on_open = switch_to_vietnamese,
+			on_open = function(term)
+        start_insert()
+				switch_to_vietnamese()
+			end,
 			on_close = switch_to_english,
 			direction = "float",
 			float_opts = opts.float_opts,
