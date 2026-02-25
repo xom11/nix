@@ -4,26 +4,27 @@ obj.__index = obj
 local hyper = { "cmd", "ctrl", "alt" }
 
 local defaultShortcuts = {
-	{ "space", "kitty" },
 	{ "b", "Brave Browser" },
+  { "c", "Claude" },
 	{ "d", "Discord" },
 	{ "f", "Finder" },
-	{ "k", "Google Keep" },
 	{ "g", "Google Gemini" },
+	{ "k", "Google Keep" },
 	{ "m", "Messenger" },
 	{ "n", "Notion" },
-	{ "t", "Telegram" },
 	{ "s", "System Settings" },
+	{ "space", "kitty" },
+	{ "t", "Telegram" },
 	-- { "v", "Visual Studio Code" },
 	{ "y", "Youtube" },
 	{ "z", "Zalo" },
 }
 local extendShortcuts = {
 	{ "a", "Launchpad" },
-	{ "d", "DeepSeek - Into the Unknown" },
-	{ "v", "VMware Fusion" },
-	{ "m", "Gmail" },
 	{ "c", "Google Chrome" },
+	{ "d", "DeepSeek - Into the Unknown" },
+	{ "m", "Gmail" },
+	{ "v", "VMware Fusion" },
 }
 
 local rb = hs.loadSpoon("RecursiveBinder")
