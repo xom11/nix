@@ -12,7 +12,7 @@ map("n", "gy", ":keepjumps normal! ggVG<cr>", { desc = "Select all", silent = tr
 map("v", "<leader>p", '"_dP', { desc = "Paste without overwriting clipboard" })
 
 map("n", "<leader>yy", ":let @+ = expand('%:p')<cr>", { desc = "Copy absolute file path" })
-map("n", "<leader>yr", ":let @+ = expand('%:f')<cr>", { desc = "Copy relative file path" })
+map("n", "<leader>yr", ":let @+ = expand('%:.')<cr>", { desc = "Copy relative file path" })
 map("n", "<leader>yf", ":let @+ = expand('%:t')<cr>", { desc = "Copy filename" })
 
 map("n", "<leader>ey", function()
