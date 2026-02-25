@@ -47,6 +47,7 @@ brower := A_Programs . "\Brave.lnk"
 ^#!d:: Launch(brower, "Discord", " --app=https://discord.com/app")
 ^#!t:: Launch(brower, "Telegram", " --app=https://web.telegram.org")
 ^#!n:: Launch(brower, "Notion", " --app=https://www.notion.so/")
+^#!c:: Launch(brower, "Claude", " --app=https://claude.ai/new")
 
 ; ^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
 ; ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
