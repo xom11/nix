@@ -27,7 +27,9 @@ local switch_to_english = require("extras.language-nvim").switch_to_english
 
 -- toggle main terminal
 vim.keymap.set({ "n", "t" }, "<A-1>", function()
-	require("toggleterm.terminal").Terminal:new({ id = 1, direction = "float", float_opts = opts.float_opts }):toggle()
+	require("toggleterm.terminal").Terminal
+		:new({ id = 1, on_open = switch_to_english, direction = "float", float_opts = opts.float_opts })
+		:toggle()
 end, { desc = "Toggle main terminal" })
 
 -- toggle claude terminal
