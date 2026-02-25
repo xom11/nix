@@ -10,6 +10,7 @@ if not (is_mac or is_linux) then
 end
 
 local english = is_mac and "com.apple.keylayout.ABC" or "keyboard-us"
+local vietnamese = is_mac and "org.fcitx.inputmethod.Fcitx5.fcitx5" or "keyboard-vietnamese"
 local last_layout = english
 
 local function get_layout()
