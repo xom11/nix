@@ -8,6 +8,7 @@ mkModule config ./. {
   home.packages = with pkgs; [
     aichat
     caligula
+    claude-code
     codex
     gemini-cli
     mkpasswd
