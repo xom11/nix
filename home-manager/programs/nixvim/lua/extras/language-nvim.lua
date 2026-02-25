@@ -29,6 +29,14 @@ local function set_layout(layout)
 	os.execute(cmd)
 end
 
+local function switch_to_vietnamese()
+  set_layout(vietnamese)
+end
+
+local function switch_to_english()
+  set_layout(english)
+end
+
 vim.api.nvim_create_autocmd("InsertLeave", {
 	callback = function()
 		last_layout = get_layout()
@@ -51,3 +59,8 @@ vim.api.nvim_create_autocmd("FocusGained", {
 		end
 	end,
 })
+
+return {
+	switch_to_vietnamese = switch_to_vietnamese,
+  switch_to_english = switch_to_english,
+}

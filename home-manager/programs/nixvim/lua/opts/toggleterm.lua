@@ -22,6 +22,9 @@ local opts = {
 	open_mapping = [[<a-t>]],
 }
 
+local switch_to_vietnamese = require("extras.language-nvim").switch_to_vietnamese
+local switch_to_english = require("extras.language-nvim").switch_to_english
+
 -- toggle main terminal
 vim.keymap.set({ "n", "t" }, "<A-1>", function()
 	require("toggleterm.terminal").Terminal:new({ id = 1, direction = "float", float_opts = opts.float_opts }):toggle()
@@ -30,14 +33,28 @@ end, { desc = "Toggle main terminal" })
 -- toggle claude terminal
 vim.keymap.set({ "n", "t" }, "<A-2>", function()
 	require("toggleterm.terminal").Terminal
-		:new({ id = 2, cmd = "claude", direction = "float", float_opts = opts.float_opts })
+		:new({
+			id = 2,
+			cmd = "claude",
+			on_open = switch_to_vietnamese,
+			on_close = switch_to_english,
+			direction = "float",
+			float_opts = opts.float_opts,
+		})
 		:toggle()
 end, { desc = "Toggle claude terminal" })
 
 -- toggle gemini terminal
 vim.keymap.set({ "n", "t" }, "<A-3>", function()
 	require("toggleterm.terminal").Terminal
-		:new({ id = 3, cmd = "gemini", direction = "float", float_opts = opts.float_opts })
+		:new({
+			id = 3,
+			cmd = "gemini",
+			on_open = switch_to_vietnamese,
+			on_close = switch_to_english,
+			direction = "float",
+			float_opts = opts.float_opts,
+		})
 		:toggle()
 end, { desc = "Toggle gemini terminal" })
 
