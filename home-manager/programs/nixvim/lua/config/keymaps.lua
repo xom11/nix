@@ -58,3 +58,25 @@ vim.api.nvim_create_user_command('SortIgnoreComment', function(opts)
     -- Chạy lệnh
     vim.cmd(command)
 end, { range = true })
+
+
+-- PART: toggleterm keymaps
+local Terminal = require("toggleterm.terminal").Terminal
+
+-- toggle main terminal
+vim.keymap.set({ "n", "t" }, "<A-1>", function()
+	Terminal:new({ id = 1, direction = "float", float_opts = opts.float_opts }):toggle()
+end, { desc = "Toggle main terminal" })
+
+-- toggle claude terminal
+vim.keymap.set({ "n", "t" }, "<A-2>", function()
+	Terminal:new({ id = 2, cmd = "claude", direction = "float", float_opts = opts.float_opts }):toggle()
+end, { desc = "Toggle claude terminal" })
+
+-- toggle gemini terminal
+vim.keymap.set({ "n", "t" }, "<A-3>", function()
+  Terminal:new({ id = 3, cmd = "gemini", direction = "float", float_opts = opts.float_opts }):toggle()
+end, { desc = "Toggle gemini terminal" })
+
+-- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
+
