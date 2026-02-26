@@ -5,6 +5,7 @@
   unzip,
 }:
 
+# select fcitx5 english ( not chinese ) version
 stdenvNoCC.mkDerivation rec {
   pname = "fcitx5-macos-installer";
   version = "0.2.9";
