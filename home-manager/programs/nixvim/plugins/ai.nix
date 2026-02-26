@@ -8,10 +8,14 @@ ckModule config ./..
 {
   programs.nixvim = {
     plugins = {
-      # PART: copilot-lua.nvim
+      # PART: copilot
       copilot-lua = {
         enable = true;
-        settings = {__raw = "require('opts.copilot-lua')";};
+        settings = {__raw = "require('opts.copilot-lua').opts";};
+      };
+      copilot-chat = {
+        enable = true;
+        settings = {__raw = "require('opts.copilot-chat').opts";};
       };
       # PART: avante.nvim
       avante = {

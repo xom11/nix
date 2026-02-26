@@ -22,10 +22,12 @@ local opts = {
 -- 	italic = true,
 -- })
 
-highlight = {
+local highlight = {
 	CopilotSuggestion = {
 		italic = true,
 		fg = "#555555",
 	},
 }
-return opts
+return {
+  opts = opts,
+}
