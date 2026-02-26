@@ -1,6 +1,7 @@
 -- open multiple terminal with different shoruts
 -- change language end always go to insert mode when open terminal
 
+local vim = vim
 local shell_cmd = vim.o.shell
 if vim.fn.has("win32") == 1 then
 	if vim.fn.executable("pwsh") == 1 then

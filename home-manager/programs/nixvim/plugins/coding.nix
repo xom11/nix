@@ -80,11 +80,12 @@ ckModule config ./..
   programs.nixvim.plugins.treesitter = {
     enable = true;
     grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
-    settings = {
-      auto_install = false;
-      highlight.enable = true;
-      indent.enable = true;
-    };
+    settings = {__raw = "require('opts.treesitter').opts";};
+    # settings = {
+    #   auto_install = false;
+    #   highlight.enable = true;
+    #   indent.enable = true;
+    # };
   };
   programs.nixvim.plugins.treesitter-textobjects = {
     enable = true;

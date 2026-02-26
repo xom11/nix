@@ -45,6 +45,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
+    opts = require("opts.treesitter").opts,
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
