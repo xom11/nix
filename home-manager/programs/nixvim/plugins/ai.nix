@@ -23,9 +23,9 @@ ckModule config ./..
         settings = {__raw = "require('opts.avante').opts";};
       };
       # PART: codecompanion.nvim
-      codecompanion = {
-        enable = false;
-      };
+      # codecompanion = {
+      #   enable = true;
+      # };
     };
   };
 }
