@@ -27,7 +27,7 @@ function obj:init()
 		["Youtube"] = vn,
 		["Zalo"] = vn,
 		["iTerm2"] = en,
-		["kitty"] = en, -- BUG conflict with switch language in nvim
+		["kitty"] = en,
     ["Claude"] = vn,
 	})
 

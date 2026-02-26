@@ -1,5 +1,6 @@
 -- set language based on vim mode
 -- requires macism (macOS) or fcitx5-remote (Linux)
+-- NOTE: using Fcitx5.fcitx5 in macos keyboard (not Fcitx5.zhHans)
 
 local sysname = vim.loop.os_uname().sysname
 local is_mac = sysname == "Darwin" and vim.fn.executable("macism") == 1
