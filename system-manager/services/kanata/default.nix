@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: let
-  configPath = "/home/kln/.nix/configs/kanata/kanata_windows.kbd";
+  configPath = "/home/kln/.nix/configs/kanata/kanata_ubuntu.kbd";
 in {
   systemd.services.kanata = {
     description = "kanata";
