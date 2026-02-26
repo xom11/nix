@@ -71,12 +71,12 @@ ckModule config ./..
     taplo
   ];
   # PART: treesitter
-  programs.nixvim = {
-    filetype.extension.kbd = "lisp";
-    extraPackages = with pkgs; [
-      tree-sitter
-    ];
-  };
+  # programs.nixvim = {
+  #   filetype.extension.kbd = "lisp";
+  #   extraPackages = with pkgs; [
+  #     tree-sitter
+  #   ];
+  # };
   programs.nixvim.plugins.treesitter = {
     enable = true;
     grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;

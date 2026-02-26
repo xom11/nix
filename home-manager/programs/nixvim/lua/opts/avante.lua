@@ -10,12 +10,15 @@ opts = {
 			api_key_name = "GEMINI_KEY",
 		},
 	},
-  windows = {
-    position = "right",
-    width = 50,
-  },
+	behaviour = {
+		enable_fastapply = true,
+	},
+	windows = {
+		position = "right",
+		width = 50,
+	},
 }
 
 return {
-  opts = opts,
+	opts = opts,
 }

@@ -14,5 +14,7 @@ mkModule config ./. {
     mkpasswd
     opencode
     yq-go
+
+    hugo
   ];
 }
