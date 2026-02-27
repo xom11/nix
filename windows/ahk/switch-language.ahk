@@ -7,8 +7,13 @@ GroupAdd "VI_Group", "ahk_exe brave.exe"
 GroupAdd "VI_Group", "ahk_exe winword.exe"
 
 ; Language IDs (LCID)
-EN_US := 0x0409 ; English (United States)
-VI_VN := 0x042A ; Vietnamese
+EN := 0x0409 ; English (United States)
+VN := 0x042A ; Vietnamese
+
+; Fix using EVkey, Evkey active in en (us), so chang en (us) to type vn and en (New Zealand) to type en
+; Install Evkey, turn on (Tắt layout trên bàn phím khác US)
+EN := 0x1409 ; English (New Zealand) -> en 
+VN := 0x0409 ; English (United States) -> vn
 ; ---------------------
 
 SetTimer(AutoSwitchLanguage, 500)
@@ -23,10 +28,10 @@ AutoSwitchLanguage() {
         return
 
     if WinActive("ahk_group VI_Group") {
-        SetInputLang(VI_VN)
+        SetInputLang(VN)
     }
     else {
-        SetInputLang(EN_US)
+        SetInputLang(EN )
     }
 
     lastHwnd := activeHwnd
