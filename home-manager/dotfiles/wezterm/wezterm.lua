@@ -14,7 +14,7 @@ end
 config.default_prog = get_default_prog()
 
 config.font = wezterm.font("JetBrains Mono")
-config.font_size = 14.0
+config.font_size = 12.0
 config.color_scheme = "Catppuccin Macchiato"
 config.automatically_reload_config = true
 

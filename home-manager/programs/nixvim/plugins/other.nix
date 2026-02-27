@@ -21,10 +21,6 @@ ckModule config ./..
     tmux-navigator.enable = true;
     visual-multi.enable = true;
     web-devicons.enable = true;
-    neo-tree = {
-      enable = true;
-      settings = {__raw = "require('opts.neotree')";};
-    };
     toggleterm = {
       enable = true;
       settings = {__raw = "require('opts.toggleterm')";};

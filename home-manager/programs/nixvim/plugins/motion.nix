@@ -7,6 +7,10 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
+    neo-tree = {
+      enable = true;
+      settings = {__raw = "require('opts.neotree')";};
+    };
     todo-comments = {
       enable = true;
       settings = {__raw = "require('opts.todo-comments')";};
