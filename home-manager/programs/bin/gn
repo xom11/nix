@@ -1,0 +1,18 @@
+  #!/bin/bash
+  APP_ID="org.gonhanh.GoNhanh"
+
+  case "$1" in
+      1)
+          defaults write $APP_ID "gonhanh.enabled" -bool true
+          killall GoNhanh 2>/dev/null; open -g -a GoNhanh
+          echo "1"
+          ;;
+      0)
+          defaults write $APP_ID "gonhanh.enabled" -bool false
+          killall GoNhanh 2>/dev/null; open -g -a GoNhanh
+          echo "0"
+          ;;
+      *)
+          defaults read $APP_ID "gonhanh.enabled" 2>/dev/null || echo "1"
+          ;;
+  esac
