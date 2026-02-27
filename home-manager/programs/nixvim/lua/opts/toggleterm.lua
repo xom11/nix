@@ -27,11 +27,11 @@ local opts = {
 }
 
 -- change fcitx5 to GoNhanh
--- local switch_to_vietnamese = require("extras.language-nvim").switch_to_vietnamese
--- local switch_to_english = require("extras.language-nvim").switch_to_english
+local switch_to_vietnamese = require("extras.language-nvim").switch_to_vietnamese
+local switch_to_english = require("extras.language-nvim").switch_to_english
 
-local switch_to_vietnamese = require("extras.gonhanh").switch_to_vietnamese
-local switch_to_english = require("extras.gonhanh").switch_to_english
+-- local switch_to_vietnamese = require("extras.gonhanh").switch_to_vietnamese
+-- local switch_to_english = require("extras.gonhanh").switch_to_english
 
 -- delay a bit to fix bug
 local function start_insert()
