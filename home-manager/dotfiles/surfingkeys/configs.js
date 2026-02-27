@@ -1,3 +1,7 @@
+// https://github.com/brookhong/Surfingkeys/issues
+// vietnamese keyboard bug for shortcuts like 'oo'-> 'ô'
+// fcitx5 fix that bug but have bug when typing in omnibar must type enter to show suggestions
+
 const {
   Clipboard,
   Front,
@@ -65,7 +69,7 @@ api.removeSearchAlias("e");
 api.removeSearchAlias("b");
 api.removeSearchAlias("y");
 unmap("on");
-api.addSearchAlias("o", "google", "https://www.google.com/search?q=");
+api.addSearchAlias("p", "google", "https://www.google.com/search?q=");
 api.addSearchAlias("gg", "google", "https://www.google.com/search?q=");
 api.addSearchAlias("tt", "taostats", "https://taostats.io/subnets/%s");
 api.addSearchAlias("gh", "github", "https://github.com/search?q=");

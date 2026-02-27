@@ -2,7 +2,8 @@ local obj = {}
 obj.__index = obj
 -- INFO: macos telex very bad, Fcitx5 much better
 
-local vn = "Fcitx5"
+-- local vn = "Fcitx5"
+local vn = "Unicode Hex Input"
 local en = "ABC"
 
 spoon.SpoonInstall:andUse("InputSourceSwitch")
@@ -12,7 +13,7 @@ function obj:init()
 
 	spoon.InputSourceSwitch:setApplications({
 		["Alacritty"] = en,
-		["Brave Browser"] = vn,
+		["Brave Browser"] = en,
 		["DeepSeek - Into the Unknown"] = vn,
 		["Finder"] = en,
 		["Firefox"] = vn,
