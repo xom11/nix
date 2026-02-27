@@ -1,5 +1,7 @@
 local obj = {}
 obj.__index = obj
+-- Ideal: GoNhanh should be launched only when the user switches to Unicode Hex Input, and should be closed when switching away from it.
+-- This make easy to switch between different input sources without worrying about manually launching or closing GoNhanh.
 
 local function enableGonhanh()
     hs.execute("open -g -a GoNhanh")
