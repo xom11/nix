@@ -8,7 +8,9 @@ local is_linux = sysname == "Linux" and vim.fn.executable("fcitx5-remote") == 1
 
 local noop = function() end
 
-if not (is_mac or is_linux) then
+-- change fcitx5 to GoNhanh in MacOS
+-- if not (is_mac or is_linux) then
+if not is_linux then
 	return {
 		switch_to_vietnamese = noop,
 		switch_to_english = noop,
@@ -36,11 +38,11 @@ local function set_layout(layout)
 end
 
 local function switch_to_vietnamese()
-  set_layout(vietnamese)
+	set_layout(vietnamese)
 end
 
 local function switch_to_english()
-  set_layout(english)
+	set_layout(english)
 end
 
 vim.api.nvim_create_autocmd("InsertLeave", {
@@ -68,5 +70,5 @@ vim.api.nvim_create_autocmd("FocusGained", {
 
 return {
 	switch_to_vietnamese = switch_to_vietnamese,
-  switch_to_english = switch_to_english,
+	switch_to_english = switch_to_english,
 }
