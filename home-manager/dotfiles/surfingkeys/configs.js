@@ -69,7 +69,6 @@ api.removeSearchAlias("e");
 api.removeSearchAlias("b");
 api.removeSearchAlias("y");
 unmap("on");
-api.addSearchAlias("p", "google", "https://www.google.com/search?q=");
 api.addSearchAlias("gg", "google", "https://www.google.com/search?q=");
 api.addSearchAlias("tt", "taostats", "https://taostats.io/subnets/%s");
 api.addSearchAlias("gh", "github", "https://github.com/search?q=");
@@ -94,6 +93,10 @@ api.mapkey("ont", "Open newtab", function () {
   api.tabOpenLink("www.google.com");
 });
 
+// leader key
+api.mapkey('<Space>g', 'Search Google via omnibar', function() {
+  api.Front.openOmnibar({type: "SearchEngine", extra: "gg"});
+});
 /***********************
 SECTION: SHORTCUTS URLS
 ***********************/
