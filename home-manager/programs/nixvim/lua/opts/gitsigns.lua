@@ -13,10 +13,12 @@ map("n", "[h", "<cmd>Gitsigns prev_hunk<CR>", { desc = "Prev hunk" })
 
 -- Actions (Hunks)
 map({ "n", "v" }, "<leader>hs", "<cmd>Gitsigns stage_hunk<CR>", { desc = "Stage hunk" })
+map({ "n", "v" }, "<leader>hu", "<cmd>Gitsigns undo_stage_hunk<CR>", { desc = "Undo stage hunk" })
 map({ "n", "v" }, "<leader>hr", "<cmd>Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
 
 -- Actions (Buffer)
 map("n", "<leader>hS", "<cmd>Gitsigns stage_buffer<CR>", { desc = "Stage buffer" })
+map("n", "<leader>hU", "<cmd>Gitsigns undo_stage_buffer<CR>", { desc = "Undo stage buffer" })
 map("n", "<leader>hR", "<cmd>Gitsigns reset_buffer<CR>", { desc = "Reset buffer" })
 
 -- Blame
