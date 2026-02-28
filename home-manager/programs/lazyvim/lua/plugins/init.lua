@@ -18,16 +18,10 @@ return {
 		---@type avante.Config
 		opts = require("opts.avante").opts,
 		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"MunifTanjim/nui.nvim",
 			"nvim-mini/mini.pick",
-			"nvim-telescope/telescope.nvim",
-			"hrsh7th/nvim-cmp",
 			"ibhagwan/fzf-lua",
 			"stevearc/dressing.nvim",
 			"folke/snacks.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"zbirenbaum/copilot.lua",
 			{
 				"HakonHarnes/img-clip.nvim",
 				event = "VeryLazy",
@@ -63,12 +57,23 @@ return {
 			cmp.setup.cmdline(":", cfg.cmdline[":"])
 		end,
 	},
+	-- PART: plenary
+	{
+		"nvim-lua/plenary.nvim",
+	},
+	-- PART: nvim-web-devicons
+	{
+		"nvim-tree/nvim-web-devicons",
+	},
+	-- PART: nui
+	{
+		"MunifTanjim/nui.nvim",
+	},
 	-- PART: telescope
 	{
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-ui-select.nvim",
 			"nvim-telescope/telescope-frecency.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
@@ -81,9 +86,6 @@ return {
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo" },
-		dependencies = {
-			"williamboman/mason.nvim",
-		},
 		opts = require("opts.conform"),
 	},
 	-- PART: treesitter
@@ -140,9 +142,6 @@ return {
 			"LazyGitFilter",
 			"LazyGitFilterCurrentFile",
 		},
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
 	},
 	-- PART: flash
 	{
@@ -154,7 +153,6 @@ return {
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
-		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			local harpoon = require("harpoon")
 		end,
@@ -163,11 +161,6 @@ return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
-		},
 		lazy = false,
 		opts = require("opts.neotree"),
 	},
@@ -246,14 +239,13 @@ return {
 		version = "*",
 		dependencies = {
 			"SmiteshP/nvim-navic",
-			"nvim-tree/nvim-web-devicons",
 		},
 		opts = {},
 	},
 	-- PART: render-markdown
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" },
+		dependencies = { "nvim-mini/mini.nvim" },
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = require("opts.render-markdown").opts,
@@ -265,7 +257,6 @@ return {
 		config = function()
 			require("dashboard").setup({})
 		end,
-		dependencies = { { "nvim-tree/nvim-web-devicons" } },
 	},
 	-- PART: colorizer
 	{
@@ -278,10 +269,6 @@ return {
 		"folke/noice.nvim",
 		event = "VeryLazy",
 		opts = {},
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
 	},
 	-- PART: nvim-notify
 	{
@@ -299,7 +286,6 @@ return {
 	-- PART: todo-comments
 	{
 		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = require("opts.todo-comments"),
 	},
 }
