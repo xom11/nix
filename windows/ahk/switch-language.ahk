@@ -1,9 +1,14 @@
 #Requires AutoHotkey v2.0
 Persistent
+SetTitleMatchMode 2 ; Relative match (contains)
 
 ; --- Configuration ---
-; Define apps for Vietnamese (VI)
-GroupAdd "VI_Group", "ahk_exe brave.exe"
+; Define apps for Vietnamese (VI) - using winTitle for more granular control
+GroupAdd "VI_Group", "Google Gemini"
+GroupAdd "VI_Group", "Messenger"
+GroupAdd "VI_Group", "Telegram"
+GroupAdd "VI_Group", "Zalo"
+GroupAdd "VI_Group", "Claude"
 GroupAdd "VI_Group", "ahk_exe winword.exe"
 
 ; Language IDs (LCID)
