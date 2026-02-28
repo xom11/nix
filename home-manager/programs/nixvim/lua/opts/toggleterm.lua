@@ -56,7 +56,7 @@ vim.keymap.set({ "n", "t" }, "<A-2>", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 2,
-			cmd = "claude -c",
+			cmd = "claude",
 			on_open = function(term)
         start_insert()
         switch_to_vietnamese()
@@ -73,7 +73,7 @@ vim.keymap.set({ "n", "t" }, "<A-3>", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 3,
-			cmd = "gemini -r",
+			cmd = "gemini",
 			on_open = function(term)
         start_insert()
 				switch_to_vietnamese()

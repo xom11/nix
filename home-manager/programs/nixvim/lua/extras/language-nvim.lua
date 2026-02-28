@@ -36,7 +36,7 @@ local layouts = {
 	},
 	linux = {
 		english = "keyboard-us",
-		vietnamese = "keyboard-vietnamese",
+		vietnamese = "unikey",
 	},
 	windows = {
 		english = "1033",
