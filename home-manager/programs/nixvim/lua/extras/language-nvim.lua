@@ -1,5 +1,5 @@
 -- set language based on vim mode
--- requires: macism (macOS), fcitx5-remote (Linux), or PowerShell (Windows)
+-- requires: macism (macOS), fcitx5-remote (Linux), or im-select.exe (Windows)
 -- NOTE: using Fcitx5.fcitx5 in macos keyboard (not Fcitx5.zhHans)
 local vim = vim
 local api = vim.api
@@ -17,7 +17,7 @@ if sysname == "Darwin" and fn.executable("macism") == 1 and not is_ssh then
 	platform = "mac"
 elseif sysname == "Linux" and fn.executable("fcitx5-remote") == 1 and not is_ssh then
 	platform = "linux"
-elseif sysname == "Windows_NT" and fn.executable("powershell") == 1 then
+elseif sysname == "Windows_NT" and fn.executable("im-select.exe") == 1 then
 	platform = "windows"
 end
 
@@ -29,7 +29,6 @@ if not platform then
 end
 
 -- layout configurations per platform
--- Windows uses Keyboard Layout ID (KLID): 00000409 = English US, 0000042a = Vietnamese
 local layouts = {
 	mac = {
 		english = "com.apple.keylayout.ABC",
@@ -40,25 +39,14 @@ local layouts = {
 		vietnamese = "keyboard-vietnamese",
 	},
 	windows = {
-		english = "00000409",
-		vietnamese = "0000042a",
+		english = "1033",
+		vietnamese = "1066",
 	},
 }
 
 local english = layouts[platform].english
 local vietnamese = layouts[platform].vietnamese
 local last_layout = english
-
--- PowerShell script for Windows keyboard layout switching
-local ps_switch = [[
-Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public class KL{[DllImport("user32.dll")]public static extern IntPtr LoadKeyboardLayout(string k,uint f);[DllImport("user32.dll")]public static extern IntPtr ActivateKeyboardLayout(IntPtr h,uint f);}';
-[KL]::ActivateKeyboardLayout([KL]::LoadKeyboardLayout('%s',1),0)
-]]
-
-local ps_get = [[
-Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public class KL{[DllImport("user32.dll")]public static extern IntPtr GetKeyboardLayout(uint t);}';
-$l=[KL]::GetKeyboardLayout(0).ToInt64();'{0:x8}' -f ($l -band 0xFFFF -bor (($l -shr 16) -band 0xFFFF) -shl 16)
-]]
 
 -- command builders per platform
 local function build_get_cmd()
@@ -67,7 +55,7 @@ local function build_get_cmd()
 	elseif platform == "linux" then
 		return { "fcitx5-remote", "-n" }
 	else
-		return { "powershell", "-NoProfile", "-Command", ps_get }
+		return { "im-select.exe" }
 	end
 end
 
@@ -77,7 +65,7 @@ local function build_set_cmd(layout)
 	elseif platform == "linux" then
 		return { "fcitx5-remote", "-s", layout }
 	else
-		return { "powershell", "-NoProfile", "-Command", string.format(ps_switch, layout) }
+		return { "im-select.exe", layout }
 	end
 end
 
