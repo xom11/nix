@@ -1,38 +1,108 @@
 -- set language based on vim mode
--- requires macism (macOS) or fcitx5-remote (Linux)
+-- requires: macism (macOS), fcitx5-remote (Linux), or im-select.exe (Windows)
 -- NOTE: using Fcitx5.fcitx5 in macos keyboard (not Fcitx5.zhHans)
 local vim = vim
-local sysname = vim.loop.os_uname().sysname
-local is_mac = sysname == "Darwin" and vim.fn.executable("macism") == 1
-local is_linux = sysname == "Linux" and vim.fn.executable("fcitx5-remote") == 1
+local api = vim.api
+local fn = vim.fn
+local uv = vim.loop or vim.uv
+
+local sysname = uv.os_uname().sysname
+local is_ssh = vim.env.SSH_TTY ~= nil
 
 local noop = function() end
 
-if not (is_mac or is_linux) then
+-- detect platform and available tools
+local platform
+if sysname == "Darwin" and fn.executable("macism") == 1 and not is_ssh then
+	platform = "mac"
+elseif sysname == "Linux" and fn.executable("fcitx5-remote") == 1 and not is_ssh then
+	platform = "linux"
+elseif sysname == "Windows_NT" and fn.executable("im-select.exe") == 1 then
+	platform = "windows"
+end
+
+if not platform then
 	return {
 		switch_to_vietnamese = noop,
 		switch_to_english = noop,
 	}
 end
 
-local english = is_mac and "com.apple.keylayout.ABC" or "keyboard-us"
-local vietnamese = is_mac and "com.apple.keylayout.UnicodeHexInput" or "keyboard-vietnamese"
+-- layout configurations per platform
+local layouts = {
+	mac = {
+		english = "com.apple.keylayout.ABC",
+		vietnamese = "com.apple.keylayout.UnicodeHexInput",
+	},
+	linux = {
+		english = "keyboard-us",
+		vietnamese = "keyboard-vietnamese",
+	},
+	windows = {
+		english = "1033",
+		vietnamese = "1066",
+	},
+}
+
+local english = layouts[platform].english
+local vietnamese = layouts[platform].vietnamese
 local last_layout = english
 
-local function get_layout()
-	local cmd = is_mac and "macism" or "fcitx5-remote -n"
-	local f = io.popen(cmd)
-	if f then
-		local result = f:read("*all"):gsub("%s+", "")
-		f:close()
-		return result
+-- command builders per platform
+local function build_get_cmd()
+	if platform == "mac" then
+		return { "macism" }
+	elseif platform == "linux" then
+		return { "fcitx5-remote", "-n" }
+	else
+		return { "im-select.exe" }
 	end
-	return english
 end
 
+local function build_set_cmd(layout)
+	if platform == "mac" then
+		return { "macism", layout }
+	elseif platform == "linux" then
+		return { "fcitx5-remote", "-s", layout }
+	else
+		return { "im-select.exe", layout }
+	end
+end
+
+-- async layout operations using vim.system (neovim 0.10+) or vim.fn.jobstart
 local function set_layout(layout)
-	local cmd = is_mac and ("macism " .. layout) or ("fcitx5-remote -s " .. layout)
-	os.execute(cmd)
+	local cmd = build_set_cmd(layout)
+	if vim.system then
+		vim.system(cmd, { detach = true })
+	else
+		fn.jobstart(cmd, { detach = true })
+	end
+end
+
+local function get_layout_async(callback)
+	local cmd = build_get_cmd()
+	if vim.system then
+		vim.system(cmd, { text = true }, function(obj)
+			local result = (obj.stdout or ""):gsub("%s+", "")
+			vim.schedule(function()
+				callback(result ~= "" and result or english)
+			end)
+		end)
+	else
+		local output = {}
+		fn.jobstart(cmd, {
+			stdout_buffered = true,
+			on_stdout = function(_, data)
+				output = data
+			end,
+			on_exit = function()
+				local result = table.concat(output, ""):gsub("%s+", "")
+				vim.schedule(function()
+					callback(result ~= "" and result or english)
+				end)
+			end,
+		})
+	end
 end
 
 local function switch_to_vietnamese()
@@ -43,22 +113,29 @@ local function switch_to_english()
 	set_layout(english)
 end
 
-vim.api.nvim_create_autocmd("InsertLeave", {
+local augroup = api.nvim_create_augroup("LanguageSwitch", { clear = true })
+
+api.nvim_create_autocmd("InsertLeave", {
+	group = augroup,
 	callback = function()
-		last_layout = get_layout()
+		get_layout_async(function(layout)
+			last_layout = layout
+		end)
 		set_layout(english)
 	end,
 })
 
-vim.api.nvim_create_autocmd("InsertEnter", {
+api.nvim_create_autocmd("InsertEnter", {
+	group = augroup,
 	callback = function()
 		set_layout(last_layout)
 	end,
 })
 
-vim.api.nvim_create_autocmd("FocusGained", {
+api.nvim_create_autocmd("FocusGained", {
+	group = augroup,
 	callback = function()
-		if vim.fn.mode() == "i" then
+		if fn.mode() == "i" then
 			set_layout(last_layout)
 		else
 			set_layout(english)
