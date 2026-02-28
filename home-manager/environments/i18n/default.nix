@@ -26,8 +26,11 @@ in
     };
     home.file = {
       # dotfile
-      ".config/fcitx5" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/fcitx5.d";
+      ".config/fcitx5/config" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/fcitx5.d/config";
+      };
+      ".config/fcitx5/profile" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/fcitx5.d/profile";
       };
       # ubuntu
       ".xprofile".text = ''

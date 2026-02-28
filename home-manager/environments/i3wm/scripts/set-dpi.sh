@@ -1,15 +1,40 @@
 #!/bin/bash
 
-# dpi-scale: 96-100% 120-125% 144-150% 192-200%
-MONITOR=$(xrandr | grep " connected primary" | awk '{print $1}')
+# Usage: ./set-dpi.sh [scale]
+# Scale options: 1 | 1.25 | 1.5 | 2
+# echo "Xft.dpi: $DPI" | xrdb -merge
 
-WIDTH=$(xrandr | grep "$MONITOR" | grep -oP '\d+x\d+' | cut -d'x' -f1)
+BASE_DPI=96
 
-if [ "$WIDTH" -gt 2000 ]; then
-    DPI=192
+set_dpi() {
+    local scale=$1
+    local dpi
+
+    case "$scale" in
+        1)    dpi=96  ;;
+        1.25) dpi=120 ;;
+        1.5)  dpi=144 ;;
+        2)    dpi=192 ;;
+        *)
+            echo "❌ Invalid scale: $scale"
+            echo "   Use one of: 1 | 1.25 | 1.5 | 2"
+            exit 1
+            ;;
+    esac
+
+    echo "🖥️  Scale: ${scale}x → DPI: $dpi"
+    echo "Xft.dpi: $dpi" | xrdb -merge
+    echo "✅ DPI set to $dpi"
+}
+
+if [ -z "$1" ]; then
+    echo "Choose scale:"
+    echo "  1)    1x   → 96 DPI"
+    echo "  2)    1.25x → 120 DPI"
+    echo "  3)    1.5x → 144 DPI"
+    echo "  4)    2x   → 192 DPI"
+    read -rp "Enter scale (1 / 1.25 / 1.5 / 2): " scale
+    set_dpi "$scale"
 else
-    DPI=120
+    set_dpi "$1"
 fi
-
-echo "Xft.dpi: $DPI" | xrdb -merge
-
