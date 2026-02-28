@@ -60,6 +60,9 @@ vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous,
 -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
 -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
 
-return {
+opts = {
 
+}
+return {
+  opts = opts,
 }

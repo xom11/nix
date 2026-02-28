@@ -81,14 +81,9 @@ ckModule config ./..
     enable = true;
     grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
     settings = {__raw = "require('opts.treesitter').opts";};
-    # settings = {
-    #   auto_install = false;
-    #   highlight.enable = true;
-    #   indent.enable = true;
-    # };
+    luaConfig.post = "require('opts.treesitter-textobjects')"; # Treesitter-textobjects dont have this option
   };
   programs.nixvim.plugins.treesitter-textobjects = {
     enable = true;
-    # settings = {__raw = "require('opts.treesitter-textobjects')";};
   };
 }
