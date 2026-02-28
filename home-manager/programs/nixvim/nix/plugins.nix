@@ -265,6 +265,7 @@ ckModule config ./..
     yamllint
     yamlfmt
     taplo
+
     # lsp
     nixd
   ];
