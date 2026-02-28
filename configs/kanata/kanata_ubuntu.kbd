@@ -10,7 +10,7 @@
   switch_input_method C-spc
 )
 (defalias
-  tab_alias (layer-while-held tablayer)
-  cap_alias (layer-while-held caplayer)
+  tab_alias (multi lmet lctl lsft)
+  cap_alias (multi lmet lctl lalt)
 )
 (include "main.kbd")
