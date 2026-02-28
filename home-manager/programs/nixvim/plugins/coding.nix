@@ -89,6 +89,6 @@ ckModule config ./..
   };
   programs.nixvim.plugins.treesitter-textobjects = {
     enable = true;
-    settings = {__raw = "require('opts.treesitter-textobjects')";};
+    # settings = {__raw = "require('opts.treesitter-textobjects')";};
   };
 }
