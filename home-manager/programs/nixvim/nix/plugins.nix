@@ -22,6 +22,11 @@ ckModule config ./..
       enable = true;
       settings = {__raw = "require('opts.avante').opts";};
     };
+    # PART: img-clip
+    img-clip = {
+      enable = true;
+      settings = {__raw = "require('opts.img-clip')";};
+    };
     # PART: telescope
     telescope = {
       enable = true;

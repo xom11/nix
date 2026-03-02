@@ -9,34 +9,14 @@ return {
 	-- PART: avante
 	{
 		"yetone/avante.nvim",
-		build = vim.fn.has("win32") ~= 0
-				and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-			or "make",
 		event = "VeryLazy",
-		version = false,
-		---@module 'avante'
-		---@type avante.Config
 		opts = require("opts.avante").opts,
-		dependencies = {
-			"nvim-mini/mini.pick",
-			"ibhagwan/fzf-lua",
-			"stevearc/dressing.nvim",
-			"folke/snacks.nvim",
-			{
-				"HakonHarnes/img-clip.nvim",
-				event = "VeryLazy",
-				opts = {
-					default = {
-						embed_image_as_base64 = false,
-						prompt_for_file_name = false,
-						drag_and_drop = {
-							insert_mode = true,
-						},
-						use_absolute_path = true,
-					},
-				},
-			},
-		},
+	},
+	-- PART: img-clip
+	{
+		"HakonHarnes/img-clip.nvim",
+		event = "VeryLazy",
+		opts = require("opts.img-clip"),
 	},
 	-- PART: nvim-cmp
 	{

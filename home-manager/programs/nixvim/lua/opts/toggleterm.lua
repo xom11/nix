@@ -1,6 +1,3 @@
--- open multiple terminal with different shoruts
--- change language end always go to insert mode when open terminal
-
 local vim = vim
 local shell_cmd = vim.o.shell
 if vim.fn.has("win32") == 1 then
@@ -47,8 +44,27 @@ vim.keymap.set({ "n" }, "<leader>tt", function()
 		:toggle()
 end, { desc = "ToggleTerm: terminal" })
 
+-- helper to copy context for AI
+-- copy @relative_path and selected text in visual mode
+local function copy_context_for_ai()
+	local mode = vim.fn.mode()
+	if mode == "v" or mode == "V" or mode == "\22" then -- visual, visual line, visual block
+		vim.cmd('normal! "zy')
+		local selected = vim.fn.getreg("z")
+		local filepath = vim.fn.expand("%:.")
+		local line_start = vim.fn.line("'<")
+		local line_end = vim.fn.line("'>")
+		local prompt = string.format("@%s\n\nLine %d-%d:\n```\n%s\n```\n", filepath, line_start, line_end, selected)
+		vim.fn.setreg("+", prompt)
+	else
+		local filepath = vim.fn.expand("%:.")
+		vim.fn.setreg("+", "@" .. filepath)
+	end
+end
+
 -- toggle claude terminal
-vim.keymap.set({ "n" }, "<leader>cc", function()
+vim.keymap.set({ "n", "v" }, "<leader>cc", function()
+	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 2,
@@ -63,7 +79,8 @@ vim.keymap.set({ "n" }, "<leader>cc", function()
 end, { desc = "ToggleTerm: claude" })
 
 -- toggle gemini terminal
-vim.keymap.set({ "n", "t" }, "<leader>tg", function()
+vim.keymap.set({ "n", "v" }, "<leader>tg", function()
+	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 3,
