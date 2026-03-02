@@ -19,6 +19,7 @@ in
   // mkModule config ./. {
     programs.nixvim = {
       enable = true;
+      nixpkgs.config.allowUnfree = true;
       colorschemes.catppuccin.enable = true;
 
       extraPlugins = with pkgs.vimPlugins; [
