@@ -32,6 +32,7 @@
       "ffmpeg@6"
     ];
     casks = [
+      "dbeaver-community"
       "postman"
       "xquartz"
     ];

@@ -12,12 +12,6 @@
 --   - Linux: fcitx5-remote (part of fcitx5)
 --   - Windows: im-select.exe
 --
--- Autocmds:
---   - InsertLeave: Save current layout, switch to English
---   - InsertEnter: Restore last layout
---   - FocusLost: Save current layout
---   - FocusGained: Restore layout if in insert/terminal mode, else English
---
 -- NOTE: Using Fcitx5.fcitx5 in macOS keyboard (not Fcitx5.zhHans)
 -- =============================================================================
 local vim = vim
@@ -169,6 +163,23 @@ api.nvim_create_autocmd("FocusGained", {
 		else
 			set_layout(english)
 		end
+	end,
+})
+
+api.nvim_create_autocmd("TermEnter", {
+	group = augroup,
+	callback = function()
+		set_layout(last_layout)
+	end,
+})
+
+api.nvim_create_autocmd("TermLeave", {
+	group = augroup,
+	callback = function()
+		get_layout_async(function(layout)
+			last_layout = layout
+		end)
+		set_layout(english)
 	end,
 })
 
