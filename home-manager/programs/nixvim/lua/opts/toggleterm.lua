@@ -37,7 +37,7 @@ local function start_insert()
 end
 
 -- toggle main terminal
-vim.keymap.set({ "n", "t" }, "<A-1>", function()
+vim.keymap.set({ "n" }, "<leader>tt", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 1,
@@ -49,10 +49,10 @@ vim.keymap.set({ "n", "t" }, "<A-1>", function()
 			float_opts = opts.float_opts,
 		})
 		:toggle()
-end, { desc = "Toggle main terminal" })
+end, { desc = "ToggleTerm: terminal" })
 
 -- toggle claude terminal
-vim.keymap.set({ "n", "t" }, "<A-2>", function()
+vim.keymap.set({ "n" }, "<leader>cc", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 2,
@@ -66,10 +66,10 @@ vim.keymap.set({ "n", "t" }, "<A-2>", function()
 			float_opts = opts.float_opts,
 		})
 		:toggle()
-end, { desc = "Toggle claude terminal" })
+end, { desc = "ToggleTerm: claude" })
 
 -- toggle gemini terminal
-vim.keymap.set({ "n", "t" }, "<A-3>", function()
+vim.keymap.set({ "n", "t" }, "<leader>tg", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 3,
@@ -83,23 +83,19 @@ vim.keymap.set({ "n", "t" }, "<A-3>", function()
 			float_opts = opts.float_opts,
 		})
 		:toggle()
-end, { desc = "Toggle gemini terminal" })
+end, { desc = "ToggleTerm: gemini" })
 
 -- toggle lazygit terminal
-vim.keymap.set({ "n", "t" }, "<leader>gg", function()
+vim.keymap.set({ "n" }, "<leader>gg", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 4,
 			cmd = "lazygit",
-			on_open = function(term)
-				start_insert()
-				switch_to_english()
-			end,
 			direction = "float",
 			float_opts = opts.float_opts,
 		})
 		:toggle()
-end, { desc = "Toggle lazygit" })
+end, { desc = "ToggleTerm: lazygit" })
 
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
 
