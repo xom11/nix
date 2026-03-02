@@ -11,6 +11,7 @@ opts =  {
 			["/"] = "filter_on_submit",
 			["h"] = "show_help",
 			["c"] = "copy_to_clipboard",
+			["y"] = "none",
 			["yy"] = "copy_path",
 			["yf"] = "copy_name",
 			["yr"] = "copy_relative_path",
