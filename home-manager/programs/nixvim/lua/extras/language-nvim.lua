@@ -1,6 +1,25 @@
--- set language based on vim mode
--- requires: macism (macOS), fcitx5-remote (Linux), or im-select.exe (Windows)
--- NOTE: using Fcitx5.fcitx5 in macos keyboard (not Fcitx5.zhHans)
+-- =============================================================================
+-- Language Input Switcher for Neovim
+-- =============================================================================
+--
+-- Automatically switches keyboard layout based on Neovim mode:
+--   - Normal mode: English
+--   - Insert mode: Restore last used layout
+--   - Terminal mode: Restore last used layout
+--
+-- Requirements (one of):
+--   - macOS: macism (brew install macism)
+--   - Linux: fcitx5-remote (part of fcitx5)
+--   - Windows: im-select.exe
+--
+-- Autocmds:
+--   - InsertLeave: Save current layout, switch to English
+--   - InsertEnter: Restore last layout
+--   - FocusLost: Save current layout
+--   - FocusGained: Restore layout if in insert/terminal mode, else English
+--
+-- NOTE: Using Fcitx5.fcitx5 in macOS keyboard (not Fcitx5.zhHans)
+-- =============================================================================
 local vim = vim
 local api = vim.api
 local fn = vim.fn
@@ -132,10 +151,20 @@ api.nvim_create_autocmd("InsertEnter", {
 	end,
 })
 
+api.nvim_create_autocmd("FocusLost", {
+	group = augroup,
+	callback = function()
+		get_layout_async(function(layout)
+			last_layout = layout
+		end)
+	end,
+})
+
 api.nvim_create_autocmd("FocusGained", {
 	group = augroup,
 	callback = function()
-		if fn.mode() == "i" then
+		local mode = fn.mode()
+		if mode == "i" or mode == "t" then
 			set_layout(last_layout)
 		else
 			set_layout(english)

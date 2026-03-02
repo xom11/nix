@@ -104,10 +104,6 @@ ckModule config ./..
     diffview = {
       enable = true;
     };
-    # PART: lazygit
-    lazygit = {
-      enable = true;
-    };
     # PART: lsp
     lsp = {
       enable = true;

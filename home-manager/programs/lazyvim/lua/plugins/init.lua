@@ -132,17 +132,6 @@ return {
 	{
 		"sindrets/diffview.nvim",
 	},
-	-- PART: lazygit
-	{
-		"kdheepak/lazygit.nvim",
-		cmd = {
-			"LazyGit",
-			"LazyGitConfig",
-			"LazyGitCurrentFile",
-			"LazyGitFilter",
-			"LazyGitFilterCurrentFile",
-		},
-	},
 	-- PART: flash
 	{
 		"folke/flash.nvim",

@@ -52,8 +52,6 @@ map("n", "<leader>ep", vim.diagnostic.goto_prev, { desc = "Go to previous error"
 
 map("n", "<leader>es", vim.diagnostic.open_float, { desc = "Show diagnostic error message", silent = true })
 
-map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
-
 -- <leader>v / vv / <M-v>
 map("n", "<leader>v", "<C-v>", { desc = "Visual Block Mode" })
 

@@ -85,6 +85,30 @@ vim.keymap.set({ "n", "t" }, "<A-3>", function()
 		:toggle()
 end, { desc = "Toggle gemini terminal" })
 
+-- toggle lazygit terminal
+vim.keymap.set({ "n", "t" }, "<leader>gg", function()
+	require("toggleterm.terminal").Terminal
+		:new({
+			id = 4,
+			cmd = "lazygit",
+			on_open = function(term)
+				start_insert()
+				switch_to_english()
+			end,
+			direction = "float",
+			float_opts = opts.float_opts,
+		})
+		:toggle()
+end, { desc = "Toggle lazygit" })
+
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
+
+-- ESC to exit terminal mode, then ESC again in normal mode to close terminal
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+vim.keymap.set("n", "<Esc>", function()
+	if vim.bo.buftype == "terminal" then
+		vim.cmd("ToggleTerm")
+	end
+end, { desc = "Close terminal in normal mode" })
 
 return opts
