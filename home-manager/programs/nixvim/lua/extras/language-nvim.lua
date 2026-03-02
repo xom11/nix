@@ -32,13 +32,8 @@ elseif sysname == "Linux" and fn.executable("fcitx5-remote") == 1 and not is_ssh
 	platform = "linux"
 elseif sysname == "Windows_NT" and fn.executable("im-select.exe") == 1 then
 	platform = "windows"
-end
-
-if not platform then
-	return {
-		switch_to_vietnamese = noop,
-		switch_to_english = noop,
-	}
+else
+  return {}
 end
 
 -- layout configurations per platform
@@ -183,7 +178,4 @@ api.nvim_create_autocmd("TermLeave", {
 	end,
 })
 
-return {
-	switch_to_vietnamese = switch_to_vietnamese,
-	switch_to_english = switch_to_english,
-}
+return {}

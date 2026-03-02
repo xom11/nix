@@ -26,9 +26,6 @@ local opts = {
 	open_mapping = [[<a-t>]],
 }
 
-local switch_to_vietnamese = require("extras.language-nvim").switch_to_vietnamese
-local switch_to_english = require("extras.language-nvim").switch_to_english
-
 -- delay a bit to fix bug
 local function start_insert()
   vim.defer_fn(function()
@@ -43,7 +40,6 @@ vim.keymap.set({ "n" }, "<leader>tt", function()
 			id = 1,
 			on_open = function(term)
         start_insert()
-				switch_to_english()
 			end,
 			direction = "float",
 			float_opts = opts.float_opts,
@@ -59,9 +55,7 @@ vim.keymap.set({ "n" }, "<leader>cc", function()
 			cmd = "claude",
 			on_open = function(term)
         start_insert()
-        switch_to_vietnamese()
 			end,
-			on_close = switch_to_english,
 			direction = "float",
 			float_opts = opts.float_opts,
 		})
@@ -76,9 +70,7 @@ vim.keymap.set({ "n", "t" }, "<leader>tg", function()
 			cmd = "gemini",
 			on_open = function(term)
         start_insert()
-				switch_to_vietnamese()
 			end,
-			on_close = switch_to_english,
 			direction = "float",
 			float_opts = opts.float_opts,
 		})
