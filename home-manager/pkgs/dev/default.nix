@@ -75,4 +75,8 @@ mkModule config ./. {
     # network
     nmap
   ];
+
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
 }
