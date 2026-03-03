@@ -44,6 +44,7 @@ mkModule config ./. {
     caskArgs.no_quarantine = true;
     casks = [
       "gonhanh"
+      "monitorcontrol"
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"
