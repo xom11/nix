@@ -38,7 +38,7 @@ vim.keymap.set({ "n" }, "<leader>tt", function()
 			on_open = function(term)
         start_insert()
 			end,
-			direction = "float",
+			direction = opts.direction,
 			float_opts = opts.float_opts,
 		})
 		:toggle()
@@ -72,7 +72,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 			on_open = function(term)
         start_insert()
 			end,
-			direction = "float",
+			direction = opts.direction,
 			float_opts = opts.float_opts,
 		})
 		:toggle()
@@ -88,7 +88,7 @@ vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 			on_open = function(term)
         start_insert()
 			end,
-			direction = "float",
+			direction = opts.direction,
 			float_opts = opts.float_opts,
 		})
 		:toggle()
@@ -100,7 +100,7 @@ vim.keymap.set({ "n" }, "<leader>gg", function()
 		:new({
 			id = 4,
 			cmd = "lazygit",
-			direction = "float",
+			direction = opts.direction,
 			float_opts = opts.float_opts,
 		})
 		:toggle()
