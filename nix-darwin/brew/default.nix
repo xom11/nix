@@ -38,7 +38,6 @@ mkModule config ./. {
       # "scrcpy"
       "sleepwatcher"
       "tailscale"
-      # "zathura"
     ];
 
     caskArgs.no_quarantine = true;
@@ -52,12 +51,9 @@ mkModule config ./. {
       "bitwarden"
       "brave-browser"
       # "chromedriver"
-      # "cursor"
       # "deskreen"
-      # "discord"
       # "drawpen"
       # "duet"
-      # "evkey"
       "google-chrome"
       "hammerspoon"
       "homerow"
@@ -80,7 +76,6 @@ mkModule config ./. {
       "telegram"
       "visual-studio-code"
       "vlc"
-      # "vmware-fusion"
       "zalo"
     ];
   };
