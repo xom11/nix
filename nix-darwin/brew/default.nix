@@ -30,7 +30,7 @@ mkModule config ./. {
       "docker"
       "docker-compose"
       "kanata"
-      "lima"
+      # "lima"
       "macism"
       "micromamba"
       "openssl@3"
