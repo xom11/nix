@@ -28,6 +28,14 @@ in
     TORCH_HOME = "${ssd}/cache/torch";
     # Selenium drivers
     SE_CACHE_DIR = "${ssd}/cache/selenium";
+    # pip
+    PIP_CACHE_DIR = "${ssd}/cache/pip";
+    # .NET / NuGet
+    NUGET_PACKAGES = "${ssd}/data/NuGet";
+    # Prisma engines
+    PRISMA_ENGINES_CACHE_DIR = "${ssd}/cache/prisma";
+    # micromamba
+    MAMBA_ROOT_PREFIX = "${ssd}/micromamba";
   };
   home.packages = [
     pkgs.bws

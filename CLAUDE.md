@@ -106,13 +106,3 @@ home.file."${config.xdg.configHome}/zsh/zsh.d" = {
 
 The module is auto-discovered — no import list to update.
 
-### Secrets
-
-`home-manager/dotfiles/secrets/` is git-ignored. Secrets are managed via `agenix`.
-
-### SSD caching (macmini)
-
-`/Volumes/ssd` is an external SSD. The macmini sets cache dirs there:
-- `HOMEBREW_CACHE=/Volumes/ssd/cache/Homebrew`
-- `UV_CACHE_DIR=/Volumes/ssd/cache/uv`
-- `NPM_CONFIG_CACHE=/Volumes/ssd/cache/npm`
