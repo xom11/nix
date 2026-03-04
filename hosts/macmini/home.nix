@@ -1,4 +1,7 @@
 { pkgs, device, ...}:
+let
+  ssd = "/Volumes/ssd";
+in
 {
   nixpkgs.overlays = [
     (import ../../overlays)
@@ -8,6 +11,23 @@
   ];
   home.shellAliases = {
     update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
+  };
+  home.sessionVariables = {
+    # Homebrew
+    HOMEBREW_CACHE = "${ssd}/cache/Homebrew";
+    # uv
+    UV_CACHE_DIR = "${ssd}/cache/uv";
+    UV_DATA_DIR  = "${ssd}/data/uv";
+    # npm
+    NPM_CONFIG_CACHE = "${ssd}/cache/npm";
+    # Colima/Lima VM disk
+    LIMA_HOME = "${ssd}/lima";
+    # HuggingFace (models + datasets)
+    HF_HOME = "${ssd}/huggingface";
+    # PyTorch
+    TORCH_HOME = "${ssd}/cache/torch";
+    # Selenium drivers
+    SE_CACHE_DIR = "${ssd}/cache/selenium";
   };
   home.packages = [
     pkgs.bws
