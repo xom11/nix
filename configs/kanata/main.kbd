@@ -48,7 +48,7 @@
 (defchords mbr $chord-timeout
   (,  ) ,
   (  .) (t! charmod . ralt)
-  (, .) ret
+  (, .) A-t
 )
 
 (deflayermap (main)
