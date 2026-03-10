@@ -68,7 +68,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 	require("toggleterm.terminal").Terminal
 		:new({
 			id = 2,
-			cmd = "claude",
+			cmd = "claude --verbose",
 			on_open = function(term)
         start_insert()
 			end,
