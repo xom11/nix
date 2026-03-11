@@ -31,7 +31,6 @@ $modules = @(
     "lazygit"
     "lazydocker"
     "ripgrep"
-    "kanata"
     "yazi"
     "autohotkey"
 
@@ -42,18 +41,5 @@ $modules = @(
 foreach ($module in $modules) {
     Write-Host "Installing $module via scoop..." -ForegroundColor Cyan
     scoop install $module
-}
-
-# --------------------------------------------------------
-# Install im-select (input method switcher for Neovim)
-# --------------------------------------------------------
-$imSelectDest = "$env:USERPROFILE\.local\bin\im-select.exe"
-if (!(Test-Path $imSelectDest)) {
-    Write-Host "Installing im-select.exe..." -ForegroundColor Cyan
-    New-Item -ItemType Directory -Force -Path (Split-Path $imSelectDest) | Out-Null
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/daipeihust/im-select/master/win/out/x64/im-select.exe" -OutFile $imSelectDest -UseBasicParsing
-    Write-Host "im-select.exe installed to $imSelectDest" -ForegroundColor Green
-} else {
-    Write-Host "im-select.exe already installed." -ForegroundColor Green
 }
 
