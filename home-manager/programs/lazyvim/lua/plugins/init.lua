@@ -7,11 +7,11 @@ return {
 		},
 	},
 	-- PART: avante
-	{
-		"yetone/avante.nvim",
-		event = "VeryLazy",
-		opts = require("opts.avante").opts,
-	},
+	-- {
+	-- 	"yetone/avante.nvim",
+	-- 	event = "VeryLazy",
+	-- 	opts = require("opts.avante").opts,
+	-- },
 	-- PART: img-clip
 	{
 		"HakonHarnes/img-clip.nvim",

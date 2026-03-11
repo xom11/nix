@@ -18,10 +18,10 @@ ckModule config ./..
       settings = {__raw = "require('opts.copilot-chat').opts";};
     };
     # PART: avante
-    avante = {
-      enable = true;
-      settings = {__raw = "require('opts.avante').opts";};
-    };
+    # avante = {
+    #   enable = true;
+    #   settings = {__raw = "require('opts.avante').opts";};
+    # };
     # PART: img-clip
     img-clip = {
       enable = true;
