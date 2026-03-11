@@ -56,7 +56,7 @@ local function copy_context_for_ai()
 		local line_end = vim.fn.line("'>")
 		local prompt = string.format("@%s\n\nLine %d-%d:\n```\n%s\n```\n", filepath, line_start, line_end, selected)
 		vim.fn.setreg("+", prompt)
-	else
+	elseif mode == "n" then
 		local filepath = vim.fn.expand("%:.")
 		vim.fn.setreg("+", "@" .. filepath)
 	end
@@ -108,8 +108,8 @@ end, { desc = "ToggleTerm: lazygit" })
 
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
 
--- ESC to exit terminal mode, then ESC again in normal mode to close terminal
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+-- ESC ESC to exit terminal mode, then ESC again in normal mode to close terminal
+vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<Esc>", function()
 	if vim.bo.buftype == "terminal" then
 		vim.cmd("ToggleTerm")

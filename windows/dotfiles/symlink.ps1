@@ -81,6 +81,11 @@ $dotfiles = @(
         src  = "$homeManagerPath\programs\nixvim\lua\opts";
         dest = "$env:USERPROFILE\AppData\Local\nvim\lua\opts"
     }
+    # PART: Claude
+    @{
+        src  = "$homeManagerPath\dotfiles\claude\claude.d\commands";
+        dest = "$env:USERPROFILE\.claude\commands"
+    }
     # PART: Yazi
     @{
         src  = "$homeManagerPath\programs\yazi\yazi.d";
