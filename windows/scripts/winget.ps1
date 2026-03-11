@@ -15,7 +15,7 @@ $modules = @(
     "gerardog.gsudo"
     "Microsoft.PowerShell"
     "JanDeDobbeleer.OhMyPosh"
-    "Microsoft.PowerToys"
+    # "Microsoft.PowerToys"
     "Discord.Discord"
     "Google.Chrome"
     "Microsoft.VisualStudioCode"
