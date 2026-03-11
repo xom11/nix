@@ -7,12 +7,14 @@ if !A_IsAdmin
     ExitApp
 }
 
+#Include lib/ui.ahk
 #Include launch-app.ahk
 #Include launch-kanata.ahk
 #Include power-manager.ahk
 #Include switch-language.ahk
 #Include window-manager.ahk
 #Include tab-key.ahk
+#Include fix-spelling.ahk
 
 TrayTip "AHK loading sucess!!", "Startup", 1
 
