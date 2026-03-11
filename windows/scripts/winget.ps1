@@ -28,13 +28,17 @@ $modules = @(
 )
 
 foreach ($module in $modules) {
-    Write-Host "Installing $module ..." -ForegroundColor Cyan
-    
-    winget install --id $module `
-        -e `
-        --silent `
-        --accept-package-agreements `
-        --accept-source-agreements
+    $installed = winget list --id $module -e 2>&1 | Select-String $module
+    if ($installed) {
+        Write-Host "Already installed: $module" -ForegroundColor DarkGray
+    } else {
+        Write-Host "Installing $module ..." -ForegroundColor Cyan
+        winget install --id $module `
+            -e `
+            --silent `
+            --accept-package-agreements `
+            --accept-source-agreements
+    }
 }
 
 # --------------------------------------------------------
@@ -53,7 +57,7 @@ $modules = @(
     "ZLocation"
     "PSReadLine"
     "PSFzf"
-    "posh-gi"
+    "posh-git"
 )
 
 foreach ($module in $modules) {

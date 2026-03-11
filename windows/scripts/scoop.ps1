@@ -2,7 +2,7 @@
 # --------------------------------------------------------
 # Install scoop modules
 # --------------------------------------------------------
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force -ErrorAction SilentlyContinue
 
 if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
     try {
@@ -39,7 +39,12 @@ $modules = @(
     "stylua"
 )
 foreach ($module in $modules) {
-    Write-Host "Installing $module via scoop..." -ForegroundColor Cyan
-    scoop install $module
+    $installed = scoop list $module 2>&1 | Select-String $module
+    if ($installed) {
+        Write-Host "Already installed: $module" -ForegroundColor DarkGray
+    } else {
+        Write-Host "Installing $module via scoop..." -ForegroundColor Cyan
+        scoop install $module
+    }
 }
 
