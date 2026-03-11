@@ -49,6 +49,7 @@ in
     dotfiles = {
       # aerospace.enable = true;
       aichat.enable = true;
+      claude.enable = true;
       conda.enable = true;
       hammerspoon.enable = true;
       # karabiner.enable = true;
