@@ -1,10 +1,10 @@
 #Requires AutoHotkey v2.0
 
-prefix := "^#+"
+tabkey := "^#+"
 
-Hotkey(prefix "t", ShowTime)
-Hotkey(prefix "p", ShowBattery)
-Hotkey(prefix "r", ReloadConfig)
+Hotkey(tabkey "t", ShowTime)
+Hotkey(tabkey "p", ShowBattery)
+Hotkey(tabkey "r", ReloadConfig)
 
 ReloadConfig(*) {
     Reload()

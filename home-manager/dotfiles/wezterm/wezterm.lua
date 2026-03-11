@@ -24,11 +24,11 @@ wezterm.on("gui-startup", function()
 	window:gui_window():maximize()
 end)
 
--- render gpu : WebGpu not support opacity
-config.front_end = "OpenGL" -- 'OpenGL', 'WebGpu'
+-- GPU renderer: WebGPU does not support opacity, and OpenGL lags on Windows ARM.
+config.front_end = "WebGpu" -- 'OpenGL', 'WebGpu'
 -- opacity
-config.window_background_opacity = 0.8
-config.win32_system_backdrop = "Acrylic" -- 'Acrylic', 'Mica', 'Tabbed'
+-- config.window_background_opacity = 0.8
+-- config.win32_system_backdrop = "Acrylic" -- 'Acrylic', 'Mica', 'Tabbed'
 
 config.window_decorations = "RESIZE"
 

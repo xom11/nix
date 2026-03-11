@@ -36,6 +36,10 @@ function gcl { git clone $args }
 function glog { 
     git log --graph --oneline --decorate --all 
 }
+function rk {
+    Stop-Process -Name kanata -ErrorAction SilentlyContinue
+    Start-Process "$env:USERPROFILE\scoop\shims\kanata.exe" -ArgumentList "-c `"$env:USERPROFILE\.nix\configs\kanata\kanata_windows.kbd`"" -WindowStyle Hidden
+}
 function py { python $args }
 # Set-Alias spy source .venv\bin\activate
 function m { micromamba.exe }
