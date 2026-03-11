@@ -20,15 +20,28 @@ $packages = @(
     "@anthropic-ai/claude-code"   # Claude Code CLI
     "@google/gemini-cli"          # Gemini CLI
 
-    "prettier"                    # Code formatter
-    "typescript"                  # TypeScript compiler
-    "tsx"                         # Run TypeScript directly
+    # "prettier"                    # Code formatter
+    # "typescript"                  # TypeScript compiler
+    # "tsx"                         # Run TypeScript directly
 )
 
 foreach ($pkg in $packages) {
-    Write-Host "Installing $pkg ..." -ForegroundColor Cyan
-    npm install -g $pkg
+    npm list -g $pkg --depth=0 2>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "Already installed: $pkg" -ForegroundColor DarkGray
+    } else {
+        Write-Host "Installing $pkg ..." -ForegroundColor Cyan
+        npm install -g $pkg
+    }
 }
 
 Write-Host "`nDone! Installed packages:" -ForegroundColor Green
 npm list -g --depth=0
+
+# Add ~/.local/bin to User PATH permanently so all apps (Neovim, terminals, etc.) can find npm globals
+$localBin = "$env:USERPROFILE\.local\bin"
+$userPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+if ($userPath -notlike "*$localBin*") {
+    [Environment]::SetEnvironmentVariable("PATH", "$localBin;$userPath", "User")
+    Write-Host "`nAdded $localBin to User PATH permanently." -ForegroundColor Green
+}
