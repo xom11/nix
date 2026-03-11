@@ -23,6 +23,7 @@ in
   };
   modules.home-manager = {
     dotfiles = {
+      claude.enable = true;
     };
     environments = {
     };

@@ -18,6 +18,7 @@
     };
     dotfiles = {
       # aerospace.enable = true;
+      claude.enable = true;
       aichat.enable = true;
       conda.enable = true;
       hammerspoon.enable = true;

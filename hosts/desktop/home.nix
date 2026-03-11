@@ -28,6 +28,7 @@ in {
   };
   modules.home-manager = {
     dotfiles = {
+      claude.enable = true;
       kitty.enable = true;
       rofi.enable = true;
     };
