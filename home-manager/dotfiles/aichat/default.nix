@@ -13,8 +13,8 @@
 in
   mkModule config ./. {
     home.file = {
-      "${targetDir}" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/aichat.d";
+      "${targetDir}/roles" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/aichat.d/roles";
       };
     };
   }
