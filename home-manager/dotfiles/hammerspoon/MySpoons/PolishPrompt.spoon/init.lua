@@ -1,4 +1,4 @@
--- FixSpelling.spoon
+-- PolishPrompt.spoon
 -- Cmd+Ctrl+Shift+W  — toggle input (content preserved while hidden)
 -- Input box: like Spotlight, auto focus, show current word if any, support left/right to move cursor, support backspace/delete to edit
 -- Enter             — submit
@@ -25,7 +25,7 @@ local function checkSpelling(text, callback)
             return
         end
         callback(result)
-    end, { "-lc", "aichat -r grammar" })
+    end, { "-lc", "aichat -r polish" })
     task:setInput(text)
     task:start()
 end

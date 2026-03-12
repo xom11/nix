@@ -1,4 +1,4 @@
-; Fix spelling/grammar using aichat -r grammar
+; Polish prompt using aichat -r polish
 ; Tab+w — show/hide input (content preserved while hidden)
 ; Enter            — submit
 ; Esc              — cancel and clear
@@ -62,7 +62,7 @@ SpellSubmit() {
     psScript := '$env:PATH += ";$env:USERPROFILE\scoop\shims"' "`n"
     psScript .= '$text   = [IO.File]::ReadAllText("' tempIn '", [Text.Encoding]::UTF8)' "`n"
     psScript .= 'try {' "`n"
-    psScript .= '    $out = ($text | & aichat -r grammar) 2>&1' "`n"
+    psScript .= '    $out = ($text | & aichat -r polish) 2>&1' "`n"
     psScript .= '    [IO.File]::WriteAllText("' tempOut '", ($out -join "`n"), [Text.Encoding]::UTF8)' "`n"
     psScript .= '} catch {' "`n"
     psScript .= '    [IO.File]::WriteAllText("' tempErr '", $_.ToString(), [Text.Encoding]::UTF8)' "`n"
