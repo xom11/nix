@@ -21,6 +21,9 @@
   # power.sleep = {
   #   computer = "never";
   # };
+  environment.systemPath = [
+    # "/opt/homebrew/opt/postgresql@18/bin"
+  ];
   homebrew = {
     brews = [
       "redis"
