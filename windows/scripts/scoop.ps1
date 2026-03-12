@@ -32,7 +32,7 @@ $modules = @(
     "lazydocker"
     "ripgrep"
     "yazi"
-    "autohotkey"
+    "aichat"
 
     "shfmt"
     "yamlfmt"

@@ -86,12 +86,19 @@ $dotfiles = @(
         src  = "$homeManagerPath\dotfiles\claude\claude.d\commands";
         dest = "$env:USERPROFILE\.claude\commands"
     }
+    # PART: Aichat
+    @{
+        src  = "$homeManagerPath\dotfiles\aichat\aichat.d\roles";
+        dest = "$env:APPDATA\aichat\roles"
+    }
     # PART: Yazi
     @{
         src  = "$homeManagerPath\programs\yazi\yazi.d";
         dest = "$env:APPDATA\yazi\config"
     }
 )
+
+$ok = 0; $fail = 0
 
 foreach ($item in $dotfiles) {
     $source = $item.src
@@ -100,38 +107,32 @@ foreach ($item in $dotfiles) {
     }
     $target = $item.dest
 
-    Write-Host "Processing: $($source) -> $($target)" -ForegroundColor Cyan
-
-    # 1. Check if source exists
     if (-not (Test-Path $source)) {
-        Write-Warning "Source not found: $source. Skipping..."
+        Write-Host "SKIP  $source" -ForegroundColor Yellow
+        $fail++
         continue
     }
 
-    # 2. Ensure target parent directory exists
     $targetDir = Split-Path $target
     if (-not (Test-Path $targetDir)) {
         New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
-        Write-Host "Created directory: $targetDir" -ForegroundColor Gray
     }
 
-    # 3. Remove existing file/folder/symlink at target
     if (Test-Path $target) {
         Remove-Item -Path $target -Force -Recurse
-        Write-Host "Removed existing target: $target" -ForegroundColor Yellow
     }
 
-    # 4. Create Symbolic Link
     try {
         New-Item -Path $target -ItemType SymbolicLink -Value $source -Force | Out-Null
-        Write-Host "Successfully linked!" -ForegroundColor Green
+        Write-Host "OK    $target" -ForegroundColor Green
+        $ok++
     }
     catch {
-        Write-Error "Failed to create link: $_"
+        Write-Host "FAIL  $target`n      $_" -ForegroundColor Red
+        $fail++
     }
-    Write-Host "-----------------------------------"
 }
 
-Write-Host "All done!" -ForegroundColor Magenta
+Write-Host "`nDone: $ok linked, $fail failed." -ForegroundColor Cyan
 Read-Host "Press Enter to exit..."
 
