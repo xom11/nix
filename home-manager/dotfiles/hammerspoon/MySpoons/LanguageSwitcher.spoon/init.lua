@@ -1,10 +1,12 @@
 local obj = {}
 obj.__index = obj
--- INFO: macos telex very bad, Fcitx5 much better
+-- NOTE:
+-- Fcitx5 -> cn -> Gonhanh turn off -> en
+-- ABC -> en -> Gonhanh turn on -> vn
 
--- local vn = "Fcitx5"
-local vn = "Unicode Hex Input"
-local en = "ABC"
+local en = "Fcitx5"
+-- local vn = "Unicode Hex Input"
+local vn = "ABC"
 
 spoon.SpoonInstall:andUse("InputSourceSwitch")
 

@@ -24,11 +24,12 @@ spoon.TrackpadReverse:start()
 hs.loadSpoon("LaunchApp")
 -- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerTool")
-hs.loadSpoon("GoNhanh")
+-- hs.loadSpoon("GoNhanh")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
 hs.loadSpoon("Tab")
 hs.loadSpoon("LanguageSwitcher")
+hs.loadSpoon("FixSpelling")
 
 hs.alert.show("Hammerspoon config loaded")
 
