@@ -82,14 +82,14 @@
 )
 
 (deflayermap (vlayer)
-  0 mute
-  - vold
-  = volu
+  0 $vol_mute
+  - $vol_dn
+  = $vol_up
 )
 
 (deflayermap (blayer)
-  - brdn
-  = brup
+  - $br_dn
+  = $br_up
 )
 
 (defalias
