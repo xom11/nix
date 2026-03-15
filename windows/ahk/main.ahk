@@ -14,7 +14,7 @@ if !A_IsAdmin
 #Include switch-language.ahk
 #Include window-manager.ahk
 #Include tab-key.ahk
-#Include fix-spelling.ahk
+#Include polish-prompt.ahk
 
 TrayTip "AHK loading sucess!!", "Startup", 1
 
