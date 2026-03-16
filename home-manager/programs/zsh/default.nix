@@ -63,20 +63,6 @@ in
           name = "zsh-vi-mode";
           src = "${pkgs.zsh-vi-mode}/share/zsh-vi-mode";
         };
-      dirHashes = {
-        # cd ~cfg
-        cfg = "$HOME/.config";
-        pass = "$HOME/.password-store";
-        dev = "$HOME/Documents/dev";
-        note = "$HOME/Documents/note";
-        test = "$HOME/Documents/test";
-        tmp = "$HOME/Documents/tmp";
-        nix = "$HOME/.nix";
-        ssd = "/Volumes/ssd";
-        dotfiles = "$HOME/.nix/home-manager/dotfiles";
-        secrets = "$HOME/.nix/home-manager/dotfiles/secrets";
-      };
-
       sessionVariables = {
       };
 
