@@ -69,6 +69,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 		:new({
 			id = 2,
 			cmd = "claude --verbose",
+			auto_scroll = false, -- allow scrolling up while Claude is generating output
 			on_open = function(term)
         start_insert()
 			end,
