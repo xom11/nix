@@ -14,10 +14,10 @@ local opts = {
 	float_opts = {
 		border = "curved",
 		height = function()
-			return math.floor(vim.o.lines * 0.9)
+			return math.floor(vim.o.lines * 0.99)
 		end,
 		width = function()
-			return math.floor(vim.o.columns * 0.9)
+			return math.floor(vim.o.columns * 0.99)
 		end,
 	},
 	open_mapping = [[<a-t>]],
