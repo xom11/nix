@@ -27,6 +27,7 @@ mkModule config ./. {
     wget
     zip
     zoxide
+    worktrunk
 
     # Tui
     gobang
