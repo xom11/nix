@@ -61,7 +61,7 @@ mkModule config ./. {
       "karabiner-elements"
       # "kindavim"
       "kitty"
-      "lark"
+      # "lark"
       "localsend"
       # "microsoft-edge"
       # "miniconda"
