@@ -86,6 +86,7 @@ vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 		:new({
 			id = 3,
 			cmd = "gemini",
+			auto_scroll = false, -- allow scrolling up while Claude is generating output
 			on_open = function(term)
         start_insert()
 			end,

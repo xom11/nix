@@ -8,7 +8,7 @@ in
   ];
   home.shellAliases = {
     update = ''
-      git -C ~nix pull
+      git -C ~/.nix pull
       nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
     '';
     galaxy-update = ''
