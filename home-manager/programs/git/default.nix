@@ -1,19 +1,19 @@
 {
   config,
   mkModule,
+  pkgs,
+  getPath,
   ...
-}:
-mkModule config ./. {
-  programs.git = {
-    enable = true;
-    settings = {
-      user = {
-        name = "namkhanh20xx";
-        email = "namkhanh20xx@gmail.com";
+}: let
+  pwd = getPath ./.;
+in
+  mkModule config ./. {
+    # programs.git.enable = true;
+
+    home.file = {
+      ".config/git/config" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
       };
-      init.defaultBranch = "main";
-      credential.helper = "store"; # Cache credentials on disk (plain text, ~/.git-credentials)
-      push.autoSetupRemote = true; # Auto-set upstream on first push without needing -u origin <branch>
     };
-  };
-}
+    home.packages = [pkgs.git];
+  }
