@@ -4,8 +4,8 @@ obj.__index = obj
 -- Fcitx5 -> cn -> Gonhanh turn off -> en
 -- ABC -> en -> Gonhanh turn on -> vn
 
-local en = "Fcitx5"
--- local vn = "Unicode Hex Input"
+-- local en = "Fcitx5"
+local en = "Unicode Hex Input"
 local vn = "ABC"
 
 spoon.SpoonInstall:andUse("InputSourceSwitch")

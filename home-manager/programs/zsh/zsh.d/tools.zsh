@@ -16,5 +16,5 @@ fi
 
 # PART: cloudflare
 if command -v cloudflared &>/dev/null; then
-  source <(cloudflared completion zsh)
+  source <(cloudflared completion zsh 2>/dev/null)
 fi

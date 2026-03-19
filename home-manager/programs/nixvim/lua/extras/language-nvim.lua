@@ -12,7 +12,8 @@ local is_ssh = vim.env.SSH_TTY ~= nil
 -- Per-platform tool configuration
 local cfg = ({
 	Darwin     = fn.executable("macism") == 1 and not is_ssh and {
-		english = "org.fcitx.inputmethod.Fcitx5.zhHans",
+		english = " com.apple.keylayout.UnicodeHexInput ",
+		-- english = "org.fcitx.inputmethod.Fcitx5.zhHans",
 		-- english = "com.apple.keylayout.ABC",
 		get     = { "macism" },
 		set     = { "macism" },
