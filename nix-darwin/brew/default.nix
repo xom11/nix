@@ -44,7 +44,7 @@ mkModule config ./. {
     casks = [
       "gonhanh"
       "monitorcontrol"
-      "syncthing"
+      # "syncthing"
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"

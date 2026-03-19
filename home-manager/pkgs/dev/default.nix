@@ -76,6 +76,7 @@ mkModule config ./. {
 
     # network
     nmap
+    cloudflared
   ];
 
   home.sessionPath = [

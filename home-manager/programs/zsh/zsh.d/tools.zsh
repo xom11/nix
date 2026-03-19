@@ -13,3 +13,8 @@ fi
 if command -v pm2 &>/dev/null; then
   source <(pm2 completion)
 fi
+
+# PART: cloudflare
+if command -v cloudflared &>/dev/null; then
+  source <(cloudflared completion zsh)
+fi
