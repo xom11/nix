@@ -27,11 +27,11 @@
   homebrew = {
     brews = [
       "redis"
-      "postgresql"
-      "nginx"
+      # "postgresql"
+      # "nginx"
       "httpie"
       # "ollama"
-      "livekit"
+      # "livekit"
       "ffmpeg@6"
     ];
     casks = [
