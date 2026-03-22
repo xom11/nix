@@ -16,18 +16,18 @@ local browser = "Vivaldi"
 -- so we handle browser windows separately via hs.window.filter.
 local browserWindowRules = {
 	["claude.ai"]         = vn,
-	["discord.com"]       = vn,
+	["discord.com"]       = en,
 	["gemini.google.com"] = vn,
 	["keep.google.com"]   = vn,
 	["messenger.com"]     = vn,
 	["notion.so"]         = vn,
 	["telegram.org"]      = vn,
-	["youtube.com"]       = vn,
+	["youtube.com"]       = en,
 	["chat.deepseek.com"] = vn,
 	["mail.google.com"]   = vn,
 	-- no match = real browser window, falls back to browser default below
 }
-local browserDefault = vn
+local browserDefault = en
 
 spoon.SpoonInstall:andUse("InputSourceSwitch")
 
@@ -37,7 +37,7 @@ function obj:init()
 	spoon.InputSourceSwitch:setApplications({
 		["Alacritty"]    = en,
 		["Brave Browser"] = en,
-		-- Vivaldi excluded: handled entirely by browserFilter below
+		-- Browser excluded: handled entirely by browserFilter below
 		-- to avoid race condition where InputSourceSwitch overrides windowFocused
 		["Finder"]       = en,
 		["Firefox"]      = vn,

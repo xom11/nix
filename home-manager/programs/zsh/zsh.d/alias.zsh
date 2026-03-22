@@ -50,7 +50,7 @@ alias kitty-opacity='kitty @ set-background-opacity'
 alias tl='tmux ls'
 # alias tn='tmux new -s '
 tn() {
-  local session_name="${1:-$(basename "$PWD")}"
+  local session_name="${1:-$(basename "$PWD" | sed 's/^\.//')}"
 
   if [ -n "$TMUX" ]; then
     tmux -u new-session -d -s "$session_name"
