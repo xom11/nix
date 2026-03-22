@@ -70,7 +70,7 @@ mkModule config ./. {
       "nomachine"
       "notion"
       # "orbstack"
-      # "qutebrowser"
+      "qutebrowser"
       "raycast"
       # "rustdesk"
       # "scroll-reverser"

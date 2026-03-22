@@ -41,8 +41,10 @@ install_pwa() {
   )
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    open -a "Brave Browser" "${apps[@]}"
+    open "${apps[@]}"
   else
-    brave-browser "${apps[@]}" &>/dev/null &
+    for app in "${apps[@]}"; do
+      xdg-open "$app" &>/dev/null &
+    done
   fi
 }
