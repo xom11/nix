@@ -61,5 +61,6 @@ Root causes:
 - When toggling the browser (`appName == browser`) and focused on a web app window,
   `launchNative` calls `findMainBrowserWindow` to find a real (non-web-app) browser window
   and focuses it directly, instead of calling `switchAway`.
-# Old version
-[v1](https://github.com/kln-os/nix/blob/3a996ab7f716dda446e950c384347d5950950131/home-manager/dotfiles/hammerspoon/MySpoons/LaunchApp.spoon/init.lua) using pwa instead of launch with url
+## Old version
+
+- `git show 3a996ab:home-manager/dotfiles/hammerspoon/MySpoons/LaunchApp.spoon/init.lua` — v1: used installed PWA instead of launching with `--app=` URL
