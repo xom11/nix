@@ -35,6 +35,14 @@ because they no longer have their own app name — they all run under the browse
 **Fix:** Add a `hs.window.filter` that checks the URL of the focused browser window
 via AppleScript and switches input source based on URL pattern matching.
 
+### Race condition: InputSourceSwitch overrides windowFilter
+Both `InputSourceSwitch` (app-level) and `browserFilter` (window-level) fire on the same
+focus event. If `InputSourceSwitch` fires last, it overrides the URL-based source set by
+`browserFilter`, resulting in all Vivaldi windows always using `browserDefault`.
+
+**Fix:** Remove Vivaldi from `InputSourceSwitch` entirely. Let `browserFilter` handle
+all Vivaldi windows (both real browser and web apps), eliminating the conflict.
+
 ## Old version
 
 - `git show d7e8893:home-manager/dotfiles/hammerspoon/MySpoons/LanguageSwitcher.spoon/init.lua` — v1: used installed PWA app names in `InputSourceSwitch`, no per-window URL switching

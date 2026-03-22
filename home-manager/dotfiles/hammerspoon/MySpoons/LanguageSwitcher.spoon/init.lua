@@ -27,7 +27,7 @@ local browserWindowRules = {
 	["mail.google.com"]   = vn,
 	-- no match = real browser window, falls back to browser default below
 }
-local browserDefault = en
+local browserDefault = vn
 
 spoon.SpoonInstall:andUse("InputSourceSwitch")
 
@@ -37,7 +37,8 @@ function obj:init()
 	spoon.InputSourceSwitch:setApplications({
 		["Alacritty"]    = en,
 		["Brave Browser"] = en,
-		["Vivaldi"]      = browserDefault,
+		-- Vivaldi excluded: handled entirely by browserFilter below
+		-- to avoid race condition where InputSourceSwitch overrides windowFocused
 		["Finder"]       = en,
 		["Firefox"]      = vn,
 		["Google Chrome"] = vn,
