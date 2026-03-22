@@ -16,6 +16,7 @@ function obj:init()
 	spoon.InputSourceSwitch:setApplications({
 		["Alacritty"] = en,
 		["Brave Browser"] = en,
+		["Vivaldi"] = vn,
 		["DeepSeek - Into the Unknown"] = vn,
 		["Finder"] = en,
 		["Firefox"] = vn,
