@@ -18,11 +18,14 @@ in
       enable = true;
       extraConfig = ''
         source-file ${tmuxDir}/tmux.conf
-        source-file ${tmuxDir}/plugins.conf
       '';
       plugins = with pkgs.tmuxPlugins; [
         # sensible
-        fzf-tmux-url # bind 'u' to choose a URL to open
+        {
+          plugin = fzf-tmux-url; # bind 'u' to choose a URL to open
+          # add all config in first plugin
+          extraConfig = "source-file ${tmuxDir}/plugins.conf";
+        }
         open # bind 'o' to open a select URL
         yank
         vim-tmux-navigator

@@ -118,9 +118,22 @@
               enabled = true;
             };
 
-            # 'Ctrl + Opt + Space' Select the next input source 
+            # 'Ctrl + Opt + Space' Select the next input source
             "61" = {
               enabled = true;
+            };
+
+            # 'Ctrl + Opt + Cmd + 8' Reverse black and white
+            "21" = {
+              enabled = false;
+            };
+            # 'Ctrl + Opt + Cmd + .' Increase display contrast
+            "25" = {
+              enabled = false;
+            };
+            # 'Ctrl + Opt + Cmd + ,' Decrease display contrast
+            "26" = {
+              enabled = false;
             };
           };
         };
