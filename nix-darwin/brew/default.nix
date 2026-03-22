@@ -44,6 +44,7 @@ mkModule config ./. {
     casks = [
       "gonhanh"
       "monitorcontrol"
+      "vivaldi"
       # "syncthing"
       # "Tunnelblick"
       # "android-platform-tools"
