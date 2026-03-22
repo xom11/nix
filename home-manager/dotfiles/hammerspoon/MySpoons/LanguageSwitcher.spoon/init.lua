@@ -8,33 +8,71 @@ obj.__index = obj
 local en = "Unicode Hex Input"
 local vn = "ABC"
 
+-- Browser used for --app= web apps (same as LaunchApp.spoon)
+local browser = "Vivaldi"
+
+-- Per-URL input source rules for browser web app windows.
+-- InputSourceSwitch can only switch per app-name, not per window,
+-- so we handle browser windows separately via hs.window.filter.
+local browserWindowRules = {
+	["claude.ai"]         = vn,
+	["discord.com"]       = vn,
+	["gemini.google.com"] = vn,
+	["keep.google.com"]   = vn,
+	["messenger.com"]     = vn,
+	["notion.so"]         = vn,
+	["telegram.org"]      = vn,
+	["youtube.com"]       = vn,
+	["chat.deepseek.com"] = vn,
+	["mail.google.com"]   = vn,
+	-- no match = real browser window, falls back to browser default below
+}
+local browserDefault = en
+
 spoon.SpoonInstall:andUse("InputSourceSwitch")
 
 function obj:init()
 	hs.loadSpoon("InputSourceSwitch")
 
 	spoon.InputSourceSwitch:setApplications({
-		["Alacritty"] = en,
+		["Alacritty"]    = en,
 		["Brave Browser"] = en,
-		["Vivaldi"] = vn,
-		["DeepSeek - Into the Unknown"] = vn,
-		["Finder"] = en,
-		["Firefox"] = vn,
+		["Vivaldi"]      = browserDefault,
+		["Finder"]       = en,
+		["Firefox"]      = vn,
 		["Google Chrome"] = vn,
-		["Google Gemini"] = vn,
-		["Google Keep"] = vn,
-		["Messenger"] = vn,
-		["Notion"] = vn,
 		["System Settings"] = en,
-		["Telegram"] = vn,
 		["Visual Studio Code"] = en,
-		["Youtube"] = vn,
-		["Zalo"] = vn,
-		["iTerm2"] = en,
-		["kitty"] = en,
-    ["Claude"] = vn,
+		["Zalo"]         = vn,
+		["iTerm2"]       = en,
+		["kitty"]        = en,
 	})
 
 	spoon.InputSourceSwitch:start()
+
+	-- Per-window input source switching inside the browser.
+	-- Needed because all --app= web apps share the same bundle ID as the browser.
+	local browserFilter = hs.window.filter.new(browser)
+	browserFilter:subscribe(hs.window.filter.windowFocused, function(win)
+		local title = win:title():gsub('"', '\\"')
+		local ok, url = hs.osascript.applescript(
+			'tell application "' .. browser .. '"\n' ..
+			'  repeat with w in windows\n' ..
+			'    if name of w is "' .. title .. '" then return URL of active tab of w\n' ..
+			'  end repeat\n' ..
+			'  return ""\n' ..
+			'end tell'
+		)
+		if not ok or not url or url == "" then return end
+
+		for pattern, source in pairs(browserWindowRules) do
+			if url:find(pattern, 1, true) then
+				hs.keycodes.setLayout(source)
+				return
+			end
+		end
+		hs.keycodes.setLayout(browserDefault)
+	end)
 end
+
 return obj
