@@ -31,7 +31,8 @@ compdef _uv_run_mod uv
 
 install_pwa() {
   local apps=(
-    "https://web.telegram.org"
+    # "https://web.telegram.org"
+    "https://mail.google.com"
     "https://discord.com/app"
     "https://www.youtube.com"
     "https://gemini.google.com"
