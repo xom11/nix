@@ -45,4 +45,6 @@ all Vivaldi windows (both real browser and web apps), eliminating the conflict.
 
 ## Old version
 
-- `git show d7e8893:home-manager/dotfiles/hammerspoon/MySpoons/LanguageSwitcher.spoon/init.lua` — v1: used installed PWA app names in `InputSourceSwitch`, no per-window URL switching
+- `git show d7e8893:home-manager/dotfiles/hammerspoon/MySpoons/LanguageSwitcher.spoon/init.lua` — v1: used installed PWA app names in `InputSourceSwitch`
+- `git show 18b6270:home-manager/dotfiles/hammerspoon/MySpoons/LanguageSwitcher.spoon/init.lua` — v2: used installed per-window URL switching
+

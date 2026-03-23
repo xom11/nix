@@ -37,7 +37,9 @@ install_pwa() {
     "https://gemini.google.com"
     "https://www.messenger.com"
     "https://keep.google.com"
-    "https://www.notion.so/"
+    # "https://www.notion.so/"
+    "https://chat.deepseek.com/"
+    "https://claude.ai/new"
   )
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
