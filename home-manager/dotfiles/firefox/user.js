@@ -1,3 +1,8 @@
+// ── Startup & New Tab ─────────────────────────────────────────────────────────
+user_pref("browser.startup.homepage", "https://www.google.com");
+user_pref("browser.startup.page", 1);                       // 1 = mở homepage
+user_pref("browser.newtabpage.enabled", true);
+
 // ── UI ────────────────────────────────────────────────────────────────────────
 user_pref("browser.compactmode.show", true);
 user_pref("browser.uidensity", 1);                          // compact density
@@ -10,6 +15,9 @@ user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
 user_pref("browser.newtabpage.activity-stream.feeds.snippets", false);
 user_pref("extensions.pocket.enabled", false);              // tắt Pocket
+
+// ── Extensions ────────────────────────────────────────────────────────────────
+user_pref("extensions.webextensions.restrictedDomains", "");  // bỏ domain bị chặn
 
 // ── Privacy ───────────────────────────────────────────────────────────────────
 user_pref("privacy.trackingprotection.enabled", true);
@@ -40,6 +48,10 @@ user_pref("layers.acceleration.enabled", true);
 user_pref("media.hardware-video-decoding.enabled", true);
 user_pref("browser.cache.disk.enable", true);
 user_pref("browser.cache.memory.enable", true);
+
+// ── Vertical tabs ─────────────────────────────────────────────────────────────
+user_pref("sidebar.revamp", true);                          // bật sidebar mới
+user_pref("sidebar.verticalTabs", true);                    // tabs dọc
 
 // ── userChrome.css support ────────────────────────────────────────────────────
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);

@@ -1,8 +1,5 @@
-/* ── Compact tabs ─────────────────────────────────────────────────────────── */
-#TabsToolbar .tabbrowser-tab {
-  min-height: 28px !important;
-  max-height: 28px !important;
-}
+/* ── Ẩn tab bar ngang (dùng vertical tabs thay thế) ──────────────────────── */
+#TabsToolbar { display: none !important; }
 
 /* ── Ẩn title bar ─────────────────────────────────────────────────────────── */
 #titlebar { display: none !important; }
