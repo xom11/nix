@@ -37,7 +37,7 @@ settings.scrollStepSize = 200;
 SECTION: KEY MAPPINGS
 ***********************/
 // Open Clipboard URL in new tab
-map("p", "cc");
+// map("p", "cc");
 
 // Passthrough mode
 api.map("<Ctrl-v>", "<Alt-i>");
@@ -106,86 +106,7 @@ api.mapkey("ogH", "Open Github", function () {
 api.mapkey("ogS", "Open github stars page ", function () {
   window.location.replace("https://github.com/stars");
 });
-
 api.mapkey("ofB", "Open facebook ", function () {
   window.location.replace("https://www.facebook.com/");
 });
 
-/***********************
-SECTION: GIT HUB NAVIGATION
-***********************/
-api.mapkey(
-  "<Space>c",
-  "Go to the Code tab",
-  function () {
-    document.querySelector('a[data-hotkey="g c"]').click();
-  },
-  {
-    domain: /github\.com/i,
-  },
-);
-api.mapkey(
-  "<Space>i",
-  "Go to the Issues tab",
-  function () {
-    document.querySelector('a[id="issues-tab"]').click();
-  },
-  {
-    domain: /github\.com/i,
-  },
-);
-api.mapkey(
-  "<Space>d",
-  "Go to the Discussions tab",
-  function () {
-    document.querySelector('a[id="discussions-tab"]').click();
-  },
-  {
-    domain: /github\.com/i,
-  },
-);
-api.mapkey(
-  "<Space>w",
-  "Go to the Wiki tab",
-  function () {
-    document.querySelector('a[id="wiki-tab"]').click();
-  },
-  {
-    domain: /github\.com/i,
-  },
-);
-api.mapkey(
-  "<Space>p",
-  "Go to the Pull requests tab",
-  function () {
-    document.querySelector('a[id="pull-requests-tab"]').click();
-  },
-  {
-    domain: /github\.com/i,
-  },
-);
-
-api.mapkey(
-  "<space>y",
-  "#7 git clone",
-  function () {
-    api.Clipboard.write("git clone " + window.location.href + ".git");
-  },
-  {
-    domain: /github\.com/i,
-  },
-);
-
-/***********************
-SECTION: LLM CONFIGURATION
-***********************/
-settings.defaultLLMProvider = "gemini";
-settings.llm = {
-  gemini: {
-    apiKey: "***********************************",
-  },
-  deepseek: {
-    apiKey: "***********************************",
-    model: "deepseek-chat",
-  },
-};
