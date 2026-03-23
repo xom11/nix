@@ -56,7 +56,7 @@ in
       hammerspoon.enable = true;
       # karabiner.enable = true;
       kitty.enable = true;
-      # qutebrowser.enable = true;
+      qutebrowser.enable = true;
       secrets.enable = true;
       sleepwatcher.enable = true;
       vscode.enable = true;

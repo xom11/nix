@@ -18,6 +18,7 @@ local defaultShortcuts = {
 	-- { "v", "Visual Studio Code" },
 	{ "y", "Youtube" },
 	{ "z", "Zalo" },
+  { "q", "Qutebrowser" },
 }
 local extendShortcuts = {
 	{ "a", "Launchpad" },

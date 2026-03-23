@@ -37,17 +37,18 @@ RunAsUser(target, args := "", workingDir := "") {
 ; LocalAppData C:\Users\<User>\AppData\Local\Microsoft
 ; A_ProgramsCommon C:\ProgramData\Microsoft\Windows\Start Menu\Programs
 LocalAppData := EnvGet("LocalAppData") 
-brower := A_Programs . "\Brave.lnk"
+browser := A_Programs . "\Brave.lnk"
+browserTitle := "Brave"
 
-^#!b:: Launch(brower, "Brave")
-^#!g:: Launch(brower, "Google Gemini", " --app=https://gemini.google.com")
-^#!y:: Launch(brower, "YouTube", " --app=https://www.youtube.com")
-^#!m:: Launch(brower, "Messenger", " --app=https://www.messenger.com")
-^#!k:: Launch(brower, "Google Keep", " --app=https://keep.google.com")
-^#!d:: Launch(brower, "Discord", " --app=https://discord.com/app")
-^#!t:: Launch(brower, "Telegram", " --app=https://web.telegram.org")
-^#!n:: Launch(brower, "Notion", " --app=https://www.notion.so/")
-^#!c:: Launch(brower, "Claude", " --app=https://claude.ai/new")
+^#!b:: Launch(browser, browserTitle)
+^#!g:: Launch(browser, "Google Gemini", " --app=https://gemini.google.com")
+^#!y:: Launch(browser, "YouTube", " --app=https://www.youtube.com")
+^#!m:: Launch(browser, "Messenger", " --app=https://www.messenger.com")
+^#!k:: Launch(browser, "Google Keep", " --app=https://keep.google.com")
+^#!d:: Launch(browser, "Discord", " --app=https://discord.com/app")
+^#!t:: Launch(browser, "Telegram", " --app=https://web.telegram.org")
+^#!n:: Launch(browser, "Notion", " --app=https://www.notion.so/")
+^#!c:: Launch(browser, "Claude", " --app=https://claude.ai/new")
 
 ; ^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
 ; ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
@@ -64,9 +65,9 @@ brower := A_Programs . "\Brave.lnk"
 #Include lib/which-key.ahk
 menuApps := Map(
     "d", { Desc: "DeepSeek", Action: (*) =>
-        Launch(brower, "DeepSeek", " --app=https://chat.deepseek.com/") },
+        Launch(browser, "DeepSeek", " --app=https://chat.deepseek.com/") },
     "m", { Desc: "Gmail", Action: (*) =>
-        Launch(brower, "Gmail", " --app=https://mail.google.com/") },
+        Launch(browser, "Gmail", " --app=https://mail.google.com/") },
     "c", { Desc: "Chrome", Action: (*) =>
         Launch(A_ProgramsCommon . "\Google Chrome.lnk", "Google Chrome") },
 )
