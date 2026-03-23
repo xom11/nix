@@ -91,4 +91,4 @@ SECTION: SHORTCUTS URLS
   ["ogH", "Open Github",            "https://github.com"],
   ["ogS", "Open Github stars page", "https://github.com/stars"],
   ["ofB", "Open Facebook",          "https://www.facebook.com/"],
-].forEach(([key, desc, url]) => api.mapkey(key, desc, () => window.location.replace(url)));
+].forEach(([key, desc, url]) => api.mapkey(key, desc, () => api.tabOpenLink(url)));
