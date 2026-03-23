@@ -59,6 +59,9 @@ map("[b", "B");
 map("]b", "F");
 // Switch to last used tab with Ctrl-6
 
+// Unmap ctrl i ; still work in insert mode
+unmap("<Ctrl-i>");
+
 /***********************
 SECTION: ALIASES
 ***********************/
