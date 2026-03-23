@@ -62,51 +62,33 @@ map("]b", "F");
 /***********************
 SECTION: ALIASES
 ***********************/
-api.removeSearchAlias("w");
-api.removeSearchAlias("s");
-api.removeSearchAlias("g");
-api.removeSearchAlias("e");
-api.removeSearchAlias("b");
-api.removeSearchAlias("y");
+["w", "s", "g", "e", "b", "y"].forEach((a) => api.removeSearchAlias(a));
 unmap("on");
-api.addSearchAlias("gg", "google", "https://www.google.com/search?q=");
-api.addSearchAlias("tt", "taostats", "https://taostats.io/subnets/%s");
-api.addSearchAlias("gh", "github", "https://github.com/search?q=");
-api.addSearchAlias(
-  "np",
-  "nixpkgs",
-  "https://search.nixos.org/packages?channel=unstable&query=%s",
-);
-api.addSearchAlias("nm", "mynixos", "https://mynixos.com/search?q=%s");
-api.addSearchAlias(
-  "nv",
-  "nixvim",
-  "https://nix-community.github.io/nixvim/?search=%s",
-);
-api.addSearchAlias(
-  "yt",
-  "youtube",
-  "https://www.youtube.com/results?search_query=%s",
-);
+// prettier-ignore
+[
+  ["gg", "google",   "https://www.google.com/search?q="],
+  ["tt", "taostats", "https://taostats.io/subnets/%s"],
+  ["gh", "github",   "https://github.com/search?q="],
+  ["np", "nixpkgs",  "https://search.nixos.org/packages?channel=unstable&query=%s"],
+  ["nm", "mynixos",  "https://mynixos.com/search?q=%s"],
+  ["nv", "nixvim",   "https://nix-community.github.io/nixvim/?search=%s"],
+  ["yt", "youtube",  "https://www.youtube.com/results?search_query=%s"],
+].forEach(([alias, name, url]) => api.addSearchAlias(alias, name, url));
 
 api.mapkey("ont", "Open newtab", function () {
   api.tabOpenLink("www.google.com");
 });
 
 // leader key
-api.mapkey('<Space>g', 'Search Google via omnibar', function() {
-  api.Front.openOmnibar({type: "SearchEngine", extra: "gg"});
+api.mapkey("<Space>g", "Search Google via omnibar", function () {
+  api.Front.openOmnibar({ type: "SearchEngine", extra: "gg" });
 });
 /***********************
 SECTION: SHORTCUTS URLS
 ***********************/
-api.mapkey("ogH", "Open Github", function () {
-  window.location.replace("https://github.com");
-});
-api.mapkey("ogS", "Open github stars page ", function () {
-  window.location.replace("https://github.com/stars");
-});
-api.mapkey("ofB", "Open facebook ", function () {
-  window.location.replace("https://www.facebook.com/");
-});
-
+// prettier-ignore
+[
+  ["ogH", "Open Github",            "https://github.com"],
+  ["ogS", "Open Github stars page", "https://github.com/stars"],
+  ["ofB", "Open Facebook",          "https://www.facebook.com/"],
+].forEach(([key, desc, url]) => api.mapkey(key, desc, () => window.location.replace(url)));
