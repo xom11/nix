@@ -37,11 +37,13 @@ in
     # micromamba
     MAMBA_ROOT_PREFIX = "${ssd}/micromamba";
   };
+
   home.packages = [
     pkgs.bws
     pkgs.fcitx5-macos
     pkgs.neofetch2
   ];
+
   modules.home-manager = {
     environments = {
       fonts.enable = true;
@@ -58,6 +60,7 @@ in
       secrets.enable = true;
       sleepwatcher.enable = true;
       vscode.enable = true;
+      firefox.enable = true;
     };
     pkgs = {
       dev.enable = true;

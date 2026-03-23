@@ -45,6 +45,7 @@ mkModule config ./. {
       "gonhanh"
       "monitorcontrol"
       "vivaldi"
+      "firefox"
       # "syncthing"
       # "Tunnelblick"
       # "android-platform-tools"
