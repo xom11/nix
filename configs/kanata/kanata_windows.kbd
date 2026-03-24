@@ -12,8 +12,8 @@
   vol_dn vold
   vol_up volu
   ;; brdn/brup not supported on LLHOOK — use cmd_allowed or wintercept build
-  br_dn nop
-  br_up nop
+  br_dn _
+  br_up _
 )
 (defalias
   tab_alias (layer-while-held tablayer)

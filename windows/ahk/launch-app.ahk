@@ -37,8 +37,8 @@ RunAsUser(target, args := "", workingDir := "") {
 ; LocalAppData C:\Users\<User>\AppData\Local\Microsoft
 ; A_ProgramsCommon C:\ProgramData\Microsoft\Windows\Start Menu\Programs
 LocalAppData := EnvGet("LocalAppData") 
-browser := A_Programs . "\Brave.lnk"
-browserTitle := "Brave"
+browser := A_Programs . "\Vivaldi.lnk"
+browserTitle := "Vivaldi"
 
 ^#!b:: Launch(browser, browserTitle)
 ^#!g:: Launch(browser, "Google Gemini", " --app=https://gemini.google.com")
