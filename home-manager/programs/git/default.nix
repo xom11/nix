@@ -21,5 +21,6 @@ in
       gh-dash
       delta
       lazygit
+      diffnav
     ];
   }

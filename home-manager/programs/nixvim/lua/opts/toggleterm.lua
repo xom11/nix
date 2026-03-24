@@ -30,7 +30,7 @@ local function start_insert()
   end, 50)
 end
 
--- toggle main terminal
+-- PART: terminal
 vim.keymap.set({ "n" }, "<leader>tt", function()
 	require("toggleterm.terminal").Terminal
 		:new({
@@ -62,7 +62,7 @@ local function copy_context_for_ai()
 	end
 end
 
--- toggle claude terminal
+-- PART: claude-cli
 vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
@@ -79,7 +79,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 		:toggle()
 end, { desc = "ToggleTerm: claude" })
 
--- toggle gemini terminal
+--  PART: gemini-cli
 vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
@@ -96,7 +96,7 @@ vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 		:toggle()
 end, { desc = "ToggleTerm: gemini" })
 
--- toggle lazygit terminal
+-- PART: lazygit
 vim.keymap.set({ "n" }, "<leader>gg", function()
 	require("toggleterm.terminal").Terminal
 		:new({
@@ -107,6 +107,18 @@ vim.keymap.set({ "n" }, "<leader>gg", function()
 		})
 		:toggle()
 end, { desc = "ToggleTerm: lazygit" })
+
+-- PART: gh-dash 
+vim.keymap.set({ "n" }, "<leader>gd", function()
+	require("toggleterm.terminal").Terminal
+		:new({
+			id = 5,
+			cmd = "gh-dash",
+			direction = opts.direction,
+			float_opts = opts.float_opts,
+		})
+		:toggle()
+end, { desc = "ToggleTerm: gh-dash" })
 
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
 

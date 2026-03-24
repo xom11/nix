@@ -81,7 +81,7 @@ theme:
             showSeparator: true
             compact: false
 pager:
-    diff: "delta"
+    diff: "diffnav"
 confirmQuit: false
 showAuthorIcons: true
 smartFilteringAtLaunch: true
