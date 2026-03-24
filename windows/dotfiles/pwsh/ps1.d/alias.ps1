@@ -36,9 +36,13 @@ function gcl { git clone $args }
 function glog { 
     git log --graph --oneline --decorate --all 
 }
-function rk {
+function kr {
     Stop-Process -Name kanata -ErrorAction SilentlyContinue
     Start-Process "$env:USERPROFILE\.local\bin\kanata.exe" -ArgumentList "-c `"$env:USERPROFILE\.nix\configs\kanata\kanata_windows.kbd`"" -WindowStyle Hidden
+}
+function ks {
+    Stop-Process -Name kanata -ErrorAction SilentlyContinue
+    Write-Host "kanata stopped."
 }
 function py { python $args }
 # Set-Alias spy source .venv\bin\activate

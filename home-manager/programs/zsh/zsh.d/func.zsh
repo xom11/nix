@@ -29,25 +29,4 @@ _uv_run_mod() {
 }
 compdef _uv_run_mod uv
 
-install_pwa() {
-  local apps=(
-    # "https://web.telegram.org"
-    "https://mail.google.com"
-    "https://discord.com/app"
-    "https://www.youtube.com"
-    "https://gemini.google.com"
-    "https://www.messenger.com"
-    "https://keep.google.com"
-    # "https://www.notion.so/"
-    "https://chat.deepseek.com/"
-    "https://claude.ai/new"
-  )
 
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    open "${apps[@]}"
-  else
-    for app in "${apps[@]}"; do
-      xdg-open "$app" &>/dev/null &
-    done
-  fi
-}

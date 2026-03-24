@@ -5,15 +5,14 @@ path+=(/opt/homebrew/opt/postgresql@18/bin)
 alias copy='pbcopy'
 
 
-
 # kanata
-rk() {
+kr() {
     local plist="/Library/LaunchDaemons/org.nixos.kanata.plist"
     local log_file=$(grep -A 1 "StandardErrorPath" "$plist" | grep "string" | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
 
     sudo launchctl unload "$plist"
     sudo launchctl load "$plist"
-    
+
     if [ -n "$log_file" ]; then
         sleep 1
         echo "LOG FILE: $log_file"
@@ -27,8 +26,14 @@ rk() {
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent"
 }
 
+ks() {
+    local plist="/Library/LaunchDaemons/org.nixos.kanata.plist"
+    sudo launchctl unload "$plist"
+    echo "kanata stopped."
+}
 
-# Function to set macOS desktop wallpaper. 
+
+# Function to set macOS desktop wallpaper.
 wp() {
     if [ -z "$1" ]; then
         echo "Error: Please provide the image file path. (Example: wp ~/Desktop/image.jpg or wp ./image.jpg)"
@@ -43,6 +48,24 @@ wp() {
     fi
 
     /usr/bin/osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$absolute_path\""
-    
+
     echo "✅ Successfully set wallpaper to: $absolute_path"
+}
+
+
+install_pwa() {
+  local apps=(
+    # "https://web.telegram.org"
+    "https://mail.google.com"
+    "https://discord.com/app"
+    "https://www.youtube.com"
+    "https://gemini.google.com"
+    "https://www.messenger.com"
+    "https://keep.google.com"
+    # "https://www.notion.so/"
+    "https://chat.deepseek.com/"
+    "https://claude.ai/new"
+  )
+
+  open "${apps[@]}"
 }
