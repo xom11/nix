@@ -120,6 +120,18 @@ vim.keymap.set({ "n" }, "<leader>gd", function()
 		:toggle()
 end, { desc = "ToggleTerm: gh-dash" })
 
+-- PART: diffnav 
+vim.keymap.set({ "n" }, "<leader>hd", function()
+	require("toggleterm.terminal").Terminal
+		:new({
+			id = 6,
+			cmd = "git diff | diffnav",
+			direction = opts.direction,
+			float_opts = opts.float_opts,
+		})
+		:toggle()
+end, { desc = "ToggleTerm: git diff" })
+
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
 
 -- ESC ESC to exit terminal mode, then ESC again in normal mode to close terminal

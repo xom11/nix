@@ -105,10 +105,6 @@ ckModule config ./..
       enable = true;
       settings = {__raw = "require('opts.gitsigns')";};
     };
-    # PART: diffview
-    diffview = {
-      enable = true;
-    };
     # PART: lsp
     lsp = {
       enable = true;

@@ -36,12 +36,4 @@ map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Gitsigns sel
 -- Preview
 map("n", "<leader>hp", "<cmd>Gitsigns preview_hunk<CR>", { desc = "Preview hunk" })
 
--- Diffview
-map("n", "<leader>hd", function()
-	if next(require("diffview.lib").views) == nil then
-		vim.cmd("DiffviewOpen")
-	else
-		vim.cmd("DiffviewClose")
-	end
-end, { desc = "Toggle Diffview" })
 return opts

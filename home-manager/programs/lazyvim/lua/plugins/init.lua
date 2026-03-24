@@ -108,10 +108,6 @@ return {
 		"lewis6991/gitsigns.nvim",
 		opts = require("opts.gitsigns"),
 	},
-	-- PART: diffview
-	{
-		"sindrets/diffview.nvim",
-	},
 	-- PART: flash
 	{
 		"folke/flash.nvim",
