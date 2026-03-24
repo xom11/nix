@@ -32,9 +32,7 @@ mkModule config ./. {
     # Tui
     gobang
     lazydocker
-    lazygit
     # mongo-tui
-    gh-dash
 
     # Rust
     maturin
