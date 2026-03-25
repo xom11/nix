@@ -33,6 +33,9 @@ SECTION: SETTINGS
 // Scroll speed
 settings.scrollStepSize = 200;
 
+// Disable surfingkeys on specific URLs
+settings.blocklistPattern = /https?:\/\/(www\.youtube\.com).*/;
+
 /***********************
 SECTION: KEY MAPPINGS
 ***********************/

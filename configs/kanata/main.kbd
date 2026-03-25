@@ -36,7 +36,7 @@
 (defchords mtr $chord-timeout
   (i  ) i
   (  o) o
-  (i o) bspc
+  (i o) pp
 )
 
 (defchords mbl $chord-timeout
