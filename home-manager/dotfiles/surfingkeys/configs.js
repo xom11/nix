@@ -64,6 +64,15 @@ map("]b", "F");
 
 // Unmap ctrl i ; still work in insert mode
 unmap("<Ctrl-i>");
+// iunmap("<Ctrl-i>");
+
+// Scroll page in insert mode
+imapkey("<Ctrl-u>", "Scroll up half page", function () {
+  Normal.scroll("pageUp");
+});
+imapkey("<Ctrl-d>", "Scroll down half page", function () {
+  Normal.scroll("pageDown");
+});
 
 /***********************
 SECTION: ALIASES
