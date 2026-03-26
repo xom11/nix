@@ -73,7 +73,7 @@ local function copy_context_for_ai()
 end
 
 -- PART: ai agent
-vim.keymap.set({ "n", "v" }, "<leader>cc", function()
+vim.keymap.set({ "n", "v" }, "<leader>ac", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
@@ -89,7 +89,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 		:toggle()
 end, { desc = "ToggleTerm: claude" })
 
-vim.keymap.set({ "n", "v" }, "<leader>tg", function()
+vim.keymap.set({ "n", "v" }, "<leader>ag", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
@@ -106,7 +106,7 @@ vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 end, { desc = "ToggleTerm: gemini" })
 
 
-vim.keymap.set({ "n", "v" }, "<leader>cc", function()
+vim.keymap.set({ "n", "v" }, "<leader>aa", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
@@ -121,6 +121,22 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 		})
 		:toggle()
 end, { desc = "ToggleTerm: copilot" })
+
+vim.keymap.set({ "n", "v" }, "<leader>ao", function()
+	copy_context_for_ai()
+	require("toggleterm.terminal").Terminal
+		:new({
+			id = 25,
+			cmd = "opencode",
+			auto_scroll = false,
+			on_open = function(term)
+        start_insert()
+			end,
+			direction = opts.direction,
+			float_opts = opts.float_opts,
+		})
+		:toggle()
+end, { desc = "ToggleTerm: opencode" })
 
 -- PART: git
 vim.keymap.set({ "n" }, "<leader>gg", function()
