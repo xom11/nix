@@ -30,6 +30,7 @@ wez.wezterm
 ```
 @anthropic-ai/claude-code
 @google/gemini-cli
+@github/copilot
 ```
 
 ## PowerShell Modules
