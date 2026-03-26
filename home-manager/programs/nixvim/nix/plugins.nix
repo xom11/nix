@@ -27,6 +27,11 @@ ckModule config ./..
       enable = true;
       settings = {__raw = "require('opts.img-clip')";};
     };
+    # PART: obsidian
+    obsidian = {
+      enable = true;
+      settings = {__raw = "require('opts.obsidian').opts";};
+    };
     # PART: telescope
     telescope = {
       enable = true;

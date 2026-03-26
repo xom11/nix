@@ -18,6 +18,17 @@ return {
 		event = "VeryLazy",
 		opts = require("opts.img-clip"),
 	},
+	-- PART: obsidian
+	{
+		"epwalsh/obsidian.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+			"nvim-telescope/telescope.nvim",
+		},
+		opts = require("opts.obsidian").opts,
+	},
 	-- PART: nvim-cmp
 	{
 		"hrsh7th/nvim-cmp",
