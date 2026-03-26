@@ -42,6 +42,7 @@ mkModule config ./. {
 
     caskArgs.no_quarantine = true;
     casks = [
+      "obsidian"
       "gonhanh"
       "monitorcontrol"
       "vivaldi"
