@@ -99,7 +99,7 @@ vim.keymap.set({ "n", "v" }, "<leader>ag", function()
 	})
 end, { desc = "ToggleTerm: gemini" })
 
-vim.keymap.set({ "n", "v" }, "<leader>ao", function()
+vim.keymap.set({ "n", "v" }, "<leader>aa", function()
 	copy_context_for_ai()
 	create_term({
 		cmd = "copilot",
@@ -110,7 +110,7 @@ vim.keymap.set({ "n", "v" }, "<leader>ao", function()
 	})
 end, { desc = "ToggleTerm: copilot" })
 
-vim.keymap.set({ "n", "v" }, "<leader>aa", function()
+vim.keymap.set({ "n", "v" }, "<leader>ao", function()
 	copy_context_for_ai()
 	create_term({
 		cmd = "opencode",
