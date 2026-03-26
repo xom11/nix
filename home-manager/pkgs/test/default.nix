@@ -10,6 +10,7 @@ mkModule config ./. {
     caligula
     claude-code
     codex
+    github-copilot-cli
     gemini-cli
     mkpasswd
     opencode

@@ -34,7 +34,7 @@ end
 vim.keymap.set({ "n" }, "<leader>tt", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = 1,
+			id = "terminal",
 			on_open = function(term)
         start_insert()
 			end,
@@ -67,7 +67,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = 2,
+			id = "claude",
 			cmd = "claude --verbose",
 			auto_scroll = false, -- allow scrolling up while Claude is generating output
 			on_open = function(term)
@@ -79,12 +79,29 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 		:toggle()
 end, { desc = "ToggleTerm: claude" })
 
+-- PART: copilot-cli
+vim.keymap.set({ "n", "v" }, "<leader>cc", function()
+	copy_context_for_ai()
+	require("toggleterm.terminal").Terminal
+		:new({
+			id = "copilot",
+			cmd = "copilot",
+			auto_scroll = false, -- allow scrolling up while Claude is generating output
+			on_open = function(term)
+        start_insert()
+			end,
+			direction = opts.direction,
+			float_opts = opts.float_opts,
+		})
+		:toggle()
+end, { desc = "ToggleTerm: copilot" })
+
 --  PART: gemini-cli
 vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = 3,
+			id = "gemini",
 			cmd = "gemini",
 			auto_scroll = false, -- allow scrolling up while Claude is generating output
 			on_open = function(term)
@@ -100,7 +117,7 @@ end, { desc = "ToggleTerm: gemini" })
 vim.keymap.set({ "n" }, "<leader>gg", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = 4,
+			id = "lazygit",
 			cmd = "lazygit",
 			direction = opts.direction,
 			float_opts = opts.float_opts,
@@ -112,7 +129,7 @@ end, { desc = "ToggleTerm: lazygit" })
 vim.keymap.set({ "n" }, "<leader>gd", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = 5,
+			id = "gh-dash",
 			cmd = "gh-dash",
 			direction = opts.direction,
 			float_opts = opts.float_opts,
@@ -124,7 +141,7 @@ end, { desc = "ToggleTerm: gh-dash" })
 vim.keymap.set({ "n" }, "<leader>hd", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = 6,
+			id = "diffnav",
 			cmd = "git diff | diffnav",
 			direction = opts.direction,
 			float_opts = opts.float_opts,
