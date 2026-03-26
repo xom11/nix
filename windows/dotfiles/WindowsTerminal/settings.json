@@ -9,6 +9,13 @@
                 "action": "closeTab"
             },
             "id": "User.closeTab.0"
+        },
+        {
+            "command": {
+                "action": "sendInput",
+                "input": "\u001b\r"
+            },
+            "keys": "shift+enter"
         }
     ],
     "copyFormatting": "none",
