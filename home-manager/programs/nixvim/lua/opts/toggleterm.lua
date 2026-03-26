@@ -34,7 +34,7 @@ end
 vim.keymap.set({ "n" }, "<leader>tt", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = "terminal",
+			id = 1,
 			on_open = function(term)
         start_insert()
 			end,
@@ -67,7 +67,7 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = "claude",
+			id = 2,
 			cmd = "claude --verbose",
 			auto_scroll = false, -- allow scrolling up while Claude is generating output
 			on_open = function(term)
@@ -79,29 +79,12 @@ vim.keymap.set({ "n", "v" }, "<leader>cc", function()
 		:toggle()
 end, { desc = "ToggleTerm: claude" })
 
--- PART: copilot-cli
-vim.keymap.set({ "n", "v" }, "<leader>cc", function()
-	copy_context_for_ai()
-	require("toggleterm.terminal").Terminal
-		:new({
-			id = "copilot",
-			cmd = "copilot",
-			auto_scroll = false, -- allow scrolling up while Claude is generating output
-			on_open = function(term)
-        start_insert()
-			end,
-			direction = opts.direction,
-			float_opts = opts.float_opts,
-		})
-		:toggle()
-end, { desc = "ToggleTerm: copilot" })
-
 --  PART: gemini-cli
 vim.keymap.set({ "n", "v" }, "<leader>tg", function()
 	copy_context_for_ai()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = "gemini",
+			id = 3,
 			cmd = "gemini",
 			auto_scroll = false, -- allow scrolling up while Claude is generating output
 			on_open = function(term)
@@ -117,7 +100,7 @@ end, { desc = "ToggleTerm: gemini" })
 vim.keymap.set({ "n" }, "<leader>gg", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = "lazygit",
+			id = 4,
 			cmd = "lazygit",
 			direction = opts.direction,
 			float_opts = opts.float_opts,
@@ -129,7 +112,7 @@ end, { desc = "ToggleTerm: lazygit" })
 vim.keymap.set({ "n" }, "<leader>gd", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = "gh-dash",
+			id = 5,
 			cmd = "gh-dash",
 			direction = opts.direction,
 			float_opts = opts.float_opts,
@@ -141,7 +124,7 @@ end, { desc = "ToggleTerm: gh-dash" })
 vim.keymap.set({ "n" }, "<leader>hd", function()
 	require("toggleterm.terminal").Terminal
 		:new({
-			id = "diffnav",
+			id = 6,
 			cmd = "git diff | diffnav",
 			direction = opts.direction,
 			float_opts = opts.float_opts,
@@ -149,6 +132,22 @@ vim.keymap.set({ "n" }, "<leader>hd", function()
 		:toggle()
 end, { desc = "ToggleTerm: git diff" })
 
+-- PART: copilot-cli
+vim.keymap.set({ "n", "v" }, "<leader>cc", function()
+	copy_context_for_ai()
+	require("toggleterm.terminal").Terminal
+		:new({
+			id = 7,
+			cmd = "copilot",
+			auto_scroll = false, -- allow scrolling up while Claude is generating output
+			on_open = function(term)
+        start_insert()
+			end,
+			direction = opts.direction,
+			float_opts = opts.float_opts,
+		})
+		:toggle()
+end, { desc = "ToggleTerm: copilot" })
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
 
 -- ESC ESC to exit terminal mode, then ESC again in normal mode to close terminal
