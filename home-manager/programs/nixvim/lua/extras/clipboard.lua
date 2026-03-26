@@ -1,5 +1,7 @@
 -- SSH + TMUX
-if vim.env.SSH_TTY and vim.env.TMUX then
+-- Check for SSH via multiple methods: SSH_TTY, SSH_CLIENT, or SSH_CONNECTION
+local is_ssh = vim.env.SSH_TTY or vim.env.SSH_CLIENT or vim.env.SSH_CONNECTION
+if is_ssh and vim.env.TMUX then
 	local copy = { "tmux", "load-buffer", "-w", "-" }
 	local paste = { "bash", "-c", "tmux refresh-client -l && sleep 0.05 && tmux save-buffer -" }
 	vim.g.clipboard = {
@@ -15,7 +17,7 @@ if vim.env.SSH_TTY and vim.env.TMUX then
 		cache_enabled = 0,
 	}
 -- SSH + not TMUX
-elseif vim.env.SSH_TTY then
+elseif is_ssh then
 	vim.g.clipboard = {
 		name = "OSC 52",
 		copy = {
