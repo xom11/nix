@@ -77,38 +77,49 @@ local function copy_context_for_ai()
 	end
 end
 
-vim.keymap.set({ "n", "v" }, "<leader>c1", function()
+vim.keymap.set({ "n", "v" }, "<leader>ac", function()
 	copy_context_for_ai()
 	create_term({
 		cmd = "claude --verbose",
-		auto_scroll = false, -- allow scrolling up while Claude is generating output
+		auto_scroll = false,
 		on_open = function(term)
 			start_insert()
 		end,
 	})
 end, { desc = "ToggleTerm: claude" })
 
-vim.keymap.set({ "n", "v" }, "<leader>tg", function()
+vim.keymap.set({ "n", "v" }, "<leader>ag", function()
 	copy_context_for_ai()
 	create_term({
 		cmd = "gemini",
-		auto_scroll = false, -- allow scrolling up while Claude is generating output
+		auto_scroll = false,
 		on_open = function(term)
 			start_insert()
 		end,
 	})
 end, { desc = "ToggleTerm: gemini" })
 
-vim.keymap.set({ "n", "v" }, "<leader>cc", function()
+vim.keymap.set({ "n", "v" }, "<leader>ao", function()
 	copy_context_for_ai()
 	create_term({
 		cmd = "copilot",
-		auto_scroll = false, -- allow scrolling up while Claude is generating output
+		auto_scroll = false,
 		on_open = function(term)
 			start_insert()
 		end,
 	})
 end, { desc = "ToggleTerm: copilot" })
+
+vim.keymap.set({ "n", "v" }, "<leader>aa", function()
+	copy_context_for_ai()
+	create_term({
+		cmd = "opencode",
+		auto_scroll = false,
+		on_open = function(term)
+			start_insert()
+		end,
+	})
+end, { desc = "ToggleTerm: opencode" })
 
 -- PART: git
 vim.keymap.set({ "n" }, "<leader>gg", function()
@@ -131,6 +142,7 @@ end, { desc = "ToggleTerm: git diff" })
 
 -- PART: other
 -- add hidden=true to separate the terminal from the main terminal list, so that it won't be affected by `open_mapping`
+-- Auto-scroll is enabled by default but has scrolling bugs when running an agent
 -- ESC ESC to exit terminal mode, then ESC again in normal mode to close terminal
 vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<Esc>", function()
