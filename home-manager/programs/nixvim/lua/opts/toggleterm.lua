@@ -53,6 +53,7 @@ local function make_ai_term(id, cmd)
 					selected
 				)
 			)
+    -- copy @relative_path 
 		elseif mode == "n" then
 			vim.fn.setreg("+", "@" .. vim.fn.expand("%:."))
 		end

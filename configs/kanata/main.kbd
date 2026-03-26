@@ -36,7 +36,7 @@
 (defchords mtr $chord-timeout
   (i  ) i
   (  o) o
-  (i o) pp
+  (i o) _
 )
 
 (defchords mbl $chord-timeout
@@ -85,6 +85,7 @@
   0 $vol_mute
   - $vol_dn
   = $vol_up
+  9 pp
 )
 
 (deflayermap (blayer)
