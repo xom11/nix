@@ -1,4 +1,4 @@
-/* ── Ẩn tab bar ngang (dùng vertical tabs thay thế) ──────────────────────── */
+/* ── Ẩn tab bar ngang (dùng vertical tabs thay thế) Ctrl-z────────────────── */
 #TabsToolbar { display: none !important; }
 
 /* ── Ẩn title bar ─────────────────────────────────────────────────────────── */
@@ -7,9 +7,24 @@
 /* ── Ẩn tab sound icon khi không hover ───────────────────────────────────── */
 .tab-icon-sound:not([soundplaying]):not([muted]) { display: none !important; }
 
-/* ── Gọn navigation bar ───────────────────────────────────────────────────── */
-#nav-bar { padding-block: 2px !important; }
-#urlbar { --urlbar-min-height: 30px !important; }
+/* ── Auto-hide navigation bar (chỉ hiện khi focus) Cmd+l──────────────────── */
+#navigator-toolbox {
+  --uc-navbar-height: 32px;
+}
+
+#navigator-toolbox {
+  margin-top: calc(0px - var(--uc-navbar-height)) !important;
+}
+
+#navigator-toolbox:focus-within {
+  margin-top: 0 !important;
+}
+
+#nav-bar { 
+  padding-block: 2px !important;
+  height: var(--uc-navbar-height) !important;
+}
+#urlbar { --urlbar-min-height: 28px !important; }
 
 /* ── Ẩn nút Pocket, Firefox View ─────────────────────────────────────────── */
 #firefox-view-button { display: none !important; }

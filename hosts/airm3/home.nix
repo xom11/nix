@@ -29,6 +29,7 @@
       secrets.enable = true;
       sleepwatcher.enable = true;
       vscode.enable = true;
+      firefox.enable = true;
     };
     pkgs = {
       test.enable = true;
