@@ -47,7 +47,7 @@ mkModule config ./. {
       "monitorcontrol"
       "vivaldi"
       "firefox"
-      # "syncthing"
+      "syncthing"
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"
