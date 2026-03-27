@@ -15,6 +15,7 @@ local defaultShortcuts = {
 	{ "s", "System Settings" },
 	{ "space", "kitty" },
 	{ "t", "Telegram" },
+	{ "o", "Obsidian" },
 	-- { "v", "Visual Studio Code" },
 	{ "y", "Youtube" },
 	{ "z", "Zalo" },

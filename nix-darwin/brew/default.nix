@@ -38,6 +38,7 @@ mkModule config ./. {
       # "scrcpy"
       "sleepwatcher"
       "tailscale"
+      "syncthing"
     ];
 
     caskArgs.no_quarantine = true;
@@ -47,7 +48,6 @@ mkModule config ./. {
       "monitorcontrol"
       "vivaldi"
       "firefox"
-      "syncthing"
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"
