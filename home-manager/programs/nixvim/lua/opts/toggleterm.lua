@@ -36,6 +36,18 @@ local function make_term(id, term_opts)
 	end
 end
 
+local function make_tmux_term(id, session)
+	return function()
+		if vim.env.TMUX and vim.trim(vim.fn.system("tmux display-message -p '#S'")) == session then
+			return vim.notify("Already in " .. session, vim.log.levels.WARN)
+		end
+		if os.execute("tmux has-session -t " .. session .. " 2>/dev/null") ~= 0 then
+			return vim.notify("Session '" .. session .. "' not found", vim.log.levels.ERROR)
+		end
+		make_term(id, { cmd = "tmux -u attach -t " .. session })()
+	end
+end
+
 local function make_ai_term(id, cmd)
 	return function()
 		-- copy @relative_path and selected text for AI context
@@ -89,6 +101,9 @@ local keymaps = {
 	{ "n", "<leader>gg", make_term(31, { cmd = "lazygit" }), "ToggleTerm: lazygit" },
 	{ "n", "<leader>gd", make_term(33, { cmd = "gh-dash" }), "ToggleTerm: gh-dash" },
 	{ "n", "<leader>hd", make_term(34, { cmd = "git diff | diffnav" }), "ToggleTerm: git diff" },
+  -- tmux
+	{ "n", "<leader>to", make_tmux_term(41, "obsidian"), "ToggleTerm: tmux obsidian" },
+	{ "n", "<leader>tn", make_tmux_term(42, "nix"), "ToggleTerm: tmux nix" },
 }
 
 for _, km in ipairs(keymaps) do
