@@ -38,6 +38,7 @@ mkModule config ./. {
       # "scrcpy"
       "sleepwatcher"
       "tailscale"
+      "duti"
       "syncthing"
     ];
 

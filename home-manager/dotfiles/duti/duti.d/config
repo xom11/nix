@@ -1,0 +1,31 @@
+# handler id              UTI/ext/scheme     role
+# com.apple.Safari        .md                all
+
+# Chỉ giữ lại các file văn bản thuần túy, an toàn
+net.kovidgoyal.kitty    .txt               all
+net.kovidgoyal.kitty    public.plain-text  all
+net.kovidgoyal.kitty    .py                all
+net.kovidgoyal.kitty    .js                all
+net.kovidgoyal.kitty    .ts                all
+net.kovidgoyal.kitty    .json              all
+net.kovidgoyal.kitty    .nix               all
+net.kovidgoyal.kitty    .conf              all
+net.kovidgoyal.kitty    .lua               all
+net.kovidgoyal.kitty    .toml              all
+net.kovidgoyal.kitty    .md                all
+net.kovidgoyal.kitty    .yml               all
+net.kovidgoyal.kitty    .yaml              all
+net.kovidgoyal.kitty    .sh                all
+net.kovidgoyal.kitty    .zsh               all
+net.kovidgoyal.kitty    .bash              all
+net.kovidgoyal.kitty    .go                all
+net.kovidgoyal.kitty    .rs                all
+net.kovidgoyal.kitty    .c                 all
+net.kovidgoyal.kitty    .cpp               all
+net.kovidgoyal.kitty    .h                 all
+net.kovidgoyal.kitty    .hpp               all
+net.kovidgoyal.kitty    .css               all
+net.kovidgoyal.kitty    .xml               all
+net.kovidgoyal.kitty    .sql               all
+net.kovidgoyal.kitty    public.text        all
+net.kovidgoyal.kitty    public.source-code all
