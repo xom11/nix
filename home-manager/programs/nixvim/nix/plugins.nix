@@ -149,6 +149,8 @@ ckModule config ./..
     friendly-snippets.enable = true;
     # PART: luasnip
     luasnip.enable = true;
+    # PART: cmp_luasnip
+    cmp_luasnip.enable = true;
     # PART: nvim-autopairs
     nvim-autopairs.enable = true;
     # PART: tmux-navigator

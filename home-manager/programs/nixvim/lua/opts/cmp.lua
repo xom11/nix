@@ -1,5 +1,11 @@
 local cmp = require("cmp")
+local luasnip = require("luasnip")
 local opts = {
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
 	sources = {
 		{ name = "luasnip" },
 		{ name = "nvim_lsp" },

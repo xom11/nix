@@ -29,6 +29,14 @@ return {
 		},
 		opts = require("opts.obsidian").opts,
 	},
+	-- PART: luasnip
+	{
+		"L3MON4D3/LuaSnip",
+		dependencies = { "rafamadriz/friendly-snippets" },
+		config = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
+		end,
+	},
 	-- PART: nvim-cmp
 	{
 		"hrsh7th/nvim-cmp",
