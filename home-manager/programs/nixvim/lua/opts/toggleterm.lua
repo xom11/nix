@@ -1,7 +1,7 @@
 -- NOTE:
 -- 1. auto_scroll = false for AI terminals: fixes bug when scrolling while AI is generating output
 -- 2. hidden = true: separates terminal from main list, won't be affected by `open_mapping`
--- 3. Press ESC ESC to exit terminal mode, then ESC again in normal mode to close terminal
+-- 3. Exiting terminal mode with <C-\><C-n>, then ESC again in normal mode to close terminal
 
 local opts = {
 	shell = vim.fn.has("win32") == 1 and (vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell") or vim.o.shell,
@@ -81,7 +81,7 @@ local function make_ai_term(id, cmd)
 end
 
 -- Terminal mode keymaps
-vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+-- vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<Esc>", function()
 	if vim.bo.buftype == "terminal" then
 		vim.cmd("ToggleTerm")

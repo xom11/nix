@@ -36,7 +36,7 @@
 (defchords mtr $chord-timeout
   (i  ) i
   (  o) o
-  (i o) _
+  (i o) (macro C-\ C-n)
 )
 
 (defchords mbl $chord-timeout
