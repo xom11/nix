@@ -35,6 +35,26 @@ end, { desc = "Copy diagnostic message to clipboard", silent = true })
 -- <leader>v / vv / <M-v>
 map("n", "<leader>v", "<C-v>", { desc = "Visual Block Mode" })
 
+-- Open file in browser (useful for html, md files)
+map("n", "<leader>ob", function()
+	local file = vim.fn.expand("%:p")
+	if file == "" then
+		print("No file to open")
+		return
+	end
+	local url = "file://" .. file
+	local browser = vim.env.BROWSER
+	if browser and browser ~= "" then
+		vim.fn.system(browser .. " " .. vim.fn.shellescape(url))
+	elseif vim.fn.has("mac") == 1 then
+		vim.fn.system("open " .. vim.fn.shellescape(url))
+	elseif vim.fn.has("win32") == 1 then
+		vim.fn.system("start " .. vim.fn.shellescape(url))
+	else
+		vim.fn.system("xdg-open " .. vim.fn.shellescape(url))
+	end
+end, { desc = "Open file in browser" })
+
 vim.api.nvim_create_user_command("SortIgnoreComment", function(opts)
 	local cms = vim.bo.commentstring
 	if cms == "" then
