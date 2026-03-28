@@ -24,7 +24,6 @@
       hammerspoon.enable = true;
       # karabiner.enable = true;
       kitty.enable = true;
-      obsidian.enable = true;
       # qutebrowser.enable = true;
       secrets.enable = true;
       sleepwatcher.enable = true;
