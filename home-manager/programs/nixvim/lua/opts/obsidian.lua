@@ -1,4 +1,3 @@
-local M = {}
 
 -- Set workspace path (works on Windows, macOS, and Linux)
 local workspace_path = vim.fn.expand("~/Documents/obsidian")
@@ -8,7 +7,7 @@ if vim.fn.isdirectory(workspace_path) == 0 then
   vim.fn.mkdir(workspace_path, "p")
 end
 
-M.opts = {
+local opts = {
   -- Workspace configuration
   workspaces = {
     {
@@ -37,4 +36,6 @@ M.opts = {
   },
 }
 
-return M
+return {
+  opts = opts,
+}
