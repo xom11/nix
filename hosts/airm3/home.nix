@@ -21,7 +21,6 @@
       claude.enable = true;
       aichat.enable = true;
       conda.enable = true;
-      duti.enable = true;
       hammerspoon.enable = true;
       # karabiner.enable = true;
       kitty.enable = true;

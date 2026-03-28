@@ -53,7 +53,6 @@ in
       aichat.enable = true;
       claude.enable = true;
       conda.enable = true;
-      duti.enable = true;
       hammerspoon.enable = true;
       # karabiner.enable = true;
       kitty.enable = true;
