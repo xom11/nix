@@ -49,7 +49,7 @@ map("n", "<leader>ob", function()
 	elseif vim.fn.has("mac") == 1 then
 		vim.fn.system("open " .. vim.fn.shellescape(url))
 	elseif vim.fn.has("win32") == 1 then
-		vim.fn.system('cmd /c start "" ' .. vim.fn.shellescape(url))
+		vim.fn.system('rundll32 url.dll,FileProtocolHandler ' .. vim.fn.shellescape(url))
 	else
 		vim.fn.system("xdg-open " .. vim.fn.shellescape(url))
 	end
