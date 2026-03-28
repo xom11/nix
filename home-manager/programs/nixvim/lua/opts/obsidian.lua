@@ -1,11 +1,19 @@
 local M = {}
 
+-- Set workspace path (works on Windows, macOS, and Linux)
+local workspace_path = vim.fn.expand("~/Documents/obsidian")
+
+-- Ensure workspace directory exists
+if vim.fn.isdirectory(workspace_path) == 0 then
+  vim.fn.mkdir(workspace_path, "p")
+end
+
 M.opts = {
   -- Workspace configuration
   workspaces = {
     {
       name = "notes",
-      path = "~/Documents/note",
+      path = workspace_path,
     },
   },
 
