@@ -209,7 +209,7 @@ return {
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "catppuccin/nvim" },
 		opts = {
-			options = { theme = "catppuccin" },
+			options = { theme = "catppuccin-mocha" },
 		},
 	},
 	-- PART: barbecue
