@@ -190,7 +190,10 @@ return {
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
-		opts = require("opts.toggleterm"),
+		config = function()
+			local opts = require("opts.toggleterm")
+			require("toggleterm").setup(opts)
+		end,
 	},
 	-- PART: catppuccin
 	{
@@ -204,6 +207,7 @@ return {
 	-- PART: lualine
 	{
 		"nvim-lualine/lualine.nvim",
+		dependencies = { "catppuccin/nvim" },
 		opts = {
 			options = { theme = "catppuccin" },
 		},
