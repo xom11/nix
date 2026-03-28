@@ -23,6 +23,7 @@ Brave.Brave
 9PFXXSHC64H3
 DEVCOM.JetBrainsMonoNerdFont
 wez.wezterm
+Obsidian.Obsidian
 ```
 
 ## NPM
