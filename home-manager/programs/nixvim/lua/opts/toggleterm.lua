@@ -38,6 +38,9 @@ end
 
 local function make_tmux_term(id, session)
 	return function()
+		if vim.fn.executable("tmux") == 0 then
+			return vim.notify("tmux is not available", vim.log.levels.ERROR)
+		end
 		if vim.env.TMUX and vim.trim(vim.fn.system("tmux display-message -p '#S'")) == session then
 			return vim.notify("Already in " .. session, vim.log.levels.WARN)
 		end
@@ -93,9 +96,9 @@ local keymaps = {
 	-- terminal
 	{ "n", "<leader>tt", make_term(1, { on_open = start_insert }), "ToggleTerm: terminal" },
 	-- ai agents
-	{ { "n", "v" }, "<leader>ac", make_ai_term(21, "claude --verbose"), "ToggleTerm: claude" },
+	{ { "n", "v" }, "<leader>aa", make_ai_term(21, "claude --verbose"), "ToggleTerm: claude" },
 	{ { "n", "v" }, "<leader>ag", make_ai_term(22, "gemini"), "ToggleTerm: gemini" },
-	{ { "n", "v" }, "<leader>aa", make_ai_term(24, "copilot"), "ToggleTerm: copilot" },
+	{ { "n", "v" }, "<leader>ac", make_ai_term(24, "copilot"), "ToggleTerm: copilot" },
 	{ { "n", "v" }, "<leader>ao", make_ai_term(25, "opencode"), "ToggleTerm: opencode" },
 	-- git
 	{ "n", "<leader>gg", make_term(31, { cmd = "lazygit" }), "ToggleTerm: lazygit" },
