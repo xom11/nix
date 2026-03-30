@@ -4,10 +4,20 @@ blacklist = ["scratch"]
 
 cache = false
 
-[[default_session]]
+[default_session]
 startup_command = ""
+
+[[session]]
+name = "obsidian"
+path = "~/Documents/obsidian/"
+startup_command = "nvim"
 
 [[session]]
 name = "nix"
 path = "~/.nix"
 startup_command = "nvim"
+
+[[session]]
+name = "gemini"
+path = "~"
+startup_command = "gemini"
