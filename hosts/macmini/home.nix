@@ -73,6 +73,7 @@ in
       lazyvim.enable = true;
       nixvim.enable = true;
       ssh.enable = true;
+      sesh.enable = true;
       tmux.enable = true;
       yazi.enable = true;
       zsh.enable = true;

@@ -37,4 +37,7 @@ in
         tmux-sessionx
       ];
     };
+    home.packages = with pkgs; [
+      sesh
+    ];
   }
