@@ -5,7 +5,7 @@ tabkey := "^#+"
 Hotkey(tabkey "t", ShowTime)
 Hotkey(tabkey "p", ShowBattery)
 Hotkey(tabkey "r", ReloadConfig)
-Hotkey(tabkey "s", ^#s)
+^#+s::Send "+#s"
 
 ReloadConfig(*) {
     Reload()

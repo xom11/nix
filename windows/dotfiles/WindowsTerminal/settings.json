@@ -11,11 +11,12 @@
             "id": "User.closeTab.0"
         },
         {
-            "command": {
+            "command": 
+            {
                 "action": "sendInput",
                 "input": "\u001b\r"
             },
-            "keys": "shift+enter"
+            "id": "User.sendInput.8F63D3A9"
         }
     ],
     "copyFormatting": "none",
@@ -24,16 +25,20 @@
     "keybindings": 
     [
         {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
+            "id": "Terminal.PrevTab",
+            "keys": "ctrl+shift+left"
         },
         {
             "id": "Terminal.NextTab",
             "keys": "ctrl+shift+right"
         },
         {
-            "id": "Terminal.PrevTab",
-            "keys": "ctrl+shift+left"
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        },
+        {
+            "id": "User.sendInput.8F63D3A9",
+            "keys": "shift+enter"
         },
         {
             "id": "Terminal.PrevTab",
@@ -77,7 +82,7 @@
             },
             "opacity": 90,
             "scrollbarState": "hidden",
-            "useAcrylic": true
+            "useAcrylic": true,
         },
         "list": 
         [
