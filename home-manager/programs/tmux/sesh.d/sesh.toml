@@ -21,3 +21,8 @@ startup_command = "nvim"
 name = "gemini"
 path = "~"
 startup_command = "gemini"
+
+[[session]]
+name = "main"
+path = "~"
+

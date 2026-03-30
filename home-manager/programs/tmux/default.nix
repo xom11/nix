@@ -10,7 +10,7 @@
 in
   mkModule config ./. {
     home.file = {
-      ".config/sesh/" = {
+      ".config/sesh" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sesh.d";
       };
       "${tmuxDir}" = {
