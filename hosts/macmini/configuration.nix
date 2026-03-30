@@ -38,7 +38,7 @@
       "dbeaver-community"
       "postman"
       "xquartz"
-      "beeper"
+      # "beeper"
       "tablepro"
     ];
   };
