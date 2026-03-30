@@ -38,10 +38,10 @@ in
     MAMBA_ROOT_PREFIX = "${ssd}/micromamba";
   };
 
-  home.packages = [
-    pkgs.bws
-    pkgs.fcitx5-macos
-    pkgs.neofetch2
+  home.packages = with pkgs; [
+    bws
+    # fcitx5-macos
+    # neofetch2
   ];
 
   modules.home-manager = {

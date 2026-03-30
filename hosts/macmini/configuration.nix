@@ -38,6 +38,7 @@
       "dbeaver-community"
       "postman"
       "xquartz"
+      "beeper"
       "tablepro"
     ];
   };
