@@ -59,6 +59,7 @@ tn() {
     tmux new-session -s "$session_name"
   fi
 }
+alias t='tmux'
 alias ts='tmux switch -t'
 alias ta='tmux -u attach -t'
 alias tksv='tmux kill-server'
