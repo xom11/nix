@@ -14,7 +14,7 @@ local is_ssh = vim.env.SSH_TTY ~= nil
 if is_ssh and vim.env.KITTY_WINDOW_ID then
 	local function set_english_local()
 		vim.system({
-			"kitten", "@", "launch", "--type=background", "sh", "-c",
+			"kitten", "@", "launch", "--type=background", "zsh", "-l", "-c",
 			"command -v macism >/dev/null 2>&1 && macism 'com.apple.keylayout.UnicodeHexInput'"
 				.. " || { command -v fcitx5-remote >/dev/null 2>&1 && fcitx5-remote -s keyboard-us; }",
 		}, { detach = true })
