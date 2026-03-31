@@ -41,7 +41,7 @@ browser := A_Programs . "\Vivaldi.lnk"
 browserTitle := "Vivaldi"
 
 ^#!b:: Launch(browser, browserTitle)
-^#!g:: Launch(browser, "Google Gemini", " --app=https://gemini.google.com")
+^#!g:: Launch(browser, "Gemini", " --app=https://gemini.google.com")
 ^#!y:: Launch(browser, "YouTube", " --app=https://www.youtube.com")
 ^#!m:: Launch(browser, "Messenger", " --app=https://www.messenger.com")
 ^#!k:: Launch(browser, "Google Keep", " --app=https://keep.google.com")
