@@ -1,7 +1,7 @@
 local obj = {}
 obj.__index = obj
 
-tab = { "cmd", "ctrl", "shift" }
+local tab = { "cmd", "ctrl", "shift" }
 
 function obj:init()
 	-- PART: Reload config

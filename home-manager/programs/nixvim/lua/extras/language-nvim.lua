@@ -9,7 +9,38 @@ local uv = vim.loop or vim.uv
 local sysname = uv.os_uname().sysname
 local is_ssh = vim.env.SSH_TTY ~= nil
 
--- Per-platform tool configuration
+-- Kitty SSH: control LOCAL input method via `kitten @` (requires `kitten ssh`)
+-- Limitation: can only SET, not GET → no auto-restore on InsertEnter
+if is_ssh and vim.env.KITTY_WINDOW_ID then
+	local function set_english_local()
+		vim.system({
+			"kitten", "@", "launch", "--type=background", "sh", "-c",
+			"command -v macism >/dev/null 2>&1 && macism 'com.apple.keylayout.UnicodeHexInput'"
+				.. " || { command -v fcitx5-remote >/dev/null 2>&1 && fcitx5-remote -s keyboard-us; }",
+		}, { detach = true })
+	end
+
+	local augroup = api.nvim_create_augroup("LanguageSwitch", { clear = true })
+
+	api.nvim_create_autocmd({ "InsertLeave", "TermLeave" }, {
+		group = augroup,
+		callback = set_english_local,
+	})
+
+	api.nvim_create_autocmd("FocusGained", {
+		group = augroup,
+		callback = function()
+			local mode = fn.mode()
+			if mode ~= "i" and mode ~= "t" then
+				set_english_local()
+			end
+		end,
+	})
+
+	return {}
+end
+
+-- Per-platform tool configuration (local, non-SSH)
 local cfg = ({
 	Darwin     = fn.executable("macism") == 1 and not is_ssh and {
 		english = "com.apple.keylayout.UnicodeHexInput",
