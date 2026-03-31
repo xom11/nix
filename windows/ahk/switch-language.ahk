@@ -4,7 +4,7 @@ SetTitleMatchMode 2 ; Relative match (contains)
 
 ; --- Configuration ---
 ; Define apps for Vietnamese (VI) - using winTitle for more granular control
-GroupAdd "VI_Group", "Gemini"
+; GroupAdd "VI_Group", "Gemini"
 GroupAdd "VI_Group", "Messenger"
 GroupAdd "VI_Group", "Telegram"
 GroupAdd "VI_Group", "Zalo"
