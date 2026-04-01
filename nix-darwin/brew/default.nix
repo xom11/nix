@@ -67,7 +67,7 @@ mkModule config ./. {
       "kitty"
       # "lark"
       "localsend"
-      # "microsoft-edge"
+      "microsoft-edge"
       # "miniconda"
       # "nikitabobko/tap/aerospace"
       "nomachine"

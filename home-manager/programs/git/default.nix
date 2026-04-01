@@ -3,9 +3,14 @@
   mkModule,
   pkgs,
   getPath,
+  lib,
   ...
 }: let
   pwd = getPath ./.;
+  lazygitConfigDir =
+    if pkgs.stdenv.isDarwin
+    then "Library/Application Support/lazygit"
+    else ".config/lazygit";
 in
   mkModule config ./. {
     home.file = {
@@ -14,6 +19,9 @@ in
       };
       ".config/gh-dash/config.yml" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/gh-dash.d/config.yml";
+      };
+      "${lazygitConfigDir}/config.yml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lazygit.d/config.yml";
       };
     };
     home.packages = with pkgs; [
