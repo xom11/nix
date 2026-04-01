@@ -19,7 +19,7 @@
 
   # Enable darwin-specific settings
   power.sleep = {
-    computer = "never";
+    computer = "never"; # never go to sleep when idle
   };
   environment.systemPath = [
     # "/opt/homebrew/opt/postgresql@18/bin"
