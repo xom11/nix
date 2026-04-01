@@ -97,6 +97,7 @@ local keymaps = {
 	{ "n", "<leader>tt", make_term(1, { on_open = start_insert }), "ToggleTerm: terminal" },
 	-- ai agents
 	{ { "n", "v" }, "<leader>aa", make_ai_term(21, "claude --verbose"), "ToggleTerm: claude" },
+	{ { "n", "v" }, "<leader>aA", make_ai_term(211, "claude --verbose --dangerously-skip-permissions"), "ToggleTerm: claude skip permissions" },
 	{ { "n", "v" }, "<leader>ag", make_ai_term(22, "gemini"), "ToggleTerm: gemini" },
 	{ { "n", "v" }, "<leader>ac", make_ai_term(24, "copilot"), "ToggleTerm: copilot" },
 	{ { "n", "v" }, "<leader>ao", make_ai_term(25, "opencode"), "ToggleTerm: opencode" },

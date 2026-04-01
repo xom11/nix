@@ -23,7 +23,7 @@ in
   };
   modules.home-manager = {
     dotfiles = {
-      claude.enable = true;
+      ai.enable = true;
     };
     environments = {
     };
