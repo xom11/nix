@@ -31,7 +31,7 @@ function obj:init()
     -- pwa apps
 		["Claude"] = vn,
 		["DeepSeek - Into the Unknown"] = vn,
-		["Google Gemini"] = vn,
+		["Google Gemini"] = en,
 		["Google Keep"] = vn,
 		["Messenger"] = vn,
 		["Youtube"] = vn,

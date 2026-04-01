@@ -66,6 +66,9 @@ map("]b", "F");
 unmap("<Ctrl-i>");
 // iunmap("<Ctrl-i>");
 
+// Escape insert mode with jk
+imap("jk", "<Esc>");
+
 // Scroll page in insert mode
 imapkey("<Ctrl-u>", "Scroll up half page", function () {
   Normal.scroll("pageUp");
