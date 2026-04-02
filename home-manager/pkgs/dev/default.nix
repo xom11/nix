@@ -47,10 +47,10 @@ mkModule config ./. {
     # mamba
 
     # Node.js
-    nodejs.pkgs.nodemon
-    nodejs.pkgs.npm
-    nodejs.pkgs.pm2
-    nodejs.pkgs.yarn
+    nodemon
+    nodejs_22
+    pm2
+    yarn
     bun
     live-server
 
