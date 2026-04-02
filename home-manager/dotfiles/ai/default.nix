@@ -17,6 +17,9 @@ in
       ".claude/commands" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/claude.d/commands";
       };
+      ".claude/CLAUDE.md" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/claude.d/CLAUDE.md";
+      };
 
       # aichat
       "${aichatDir}/roles" = {
