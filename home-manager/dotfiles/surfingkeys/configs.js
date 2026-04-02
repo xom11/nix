@@ -70,12 +70,12 @@ unmap("<Ctrl-i>");
 imap("jk", "<Esc>");
 
 // Scroll page in insert mode
-imapkey("<Ctrl-u>", "Scroll up half page", function () {
-  Normal.scroll("pageUp");
-});
-imapkey("<Ctrl-d>", "Scroll down half page", function () {
-  Normal.scroll("pageDown");
-});
+// imapkey("<Ctrl-u>", "Scroll up half page", function () {
+//   Normal.scroll("pageUp");
+// });
+// imapkey("<Ctrl-d>", "Scroll down half page", function () {
+//   Normal.scroll("pageDown");
+// });
 
 /***********************
 SECTION: ALIASES
