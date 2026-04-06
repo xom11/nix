@@ -29,6 +29,7 @@ mkModule config ./. {
     zoxide
     worktrunk
     gum
+    just
 
     # Tui
     gobang
