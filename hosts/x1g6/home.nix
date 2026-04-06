@@ -31,7 +31,6 @@
       dev.enable = true;
     };
     programs = {
-      bin.enable = true;
       nixvim.enable = true;
       git.enable = true;
       tmux.enable = true;

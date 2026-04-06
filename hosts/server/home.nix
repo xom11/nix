@@ -32,7 +32,6 @@ in
       dev.enable = true;
     };
     programs = {
-      bin.enable = true;
       btop.enable = true;
       git.enable = true;
       nixvim.enable = true;
