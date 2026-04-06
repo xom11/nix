@@ -37,17 +37,3 @@ markdown_extensions:
   - toc:
       permalink: true
 
-nav:
-  - Home: index.md
-  - Setup:
-      - Linux: setup/linux.md
-      - macOS: setup/macos.md
-      - NixOS: setup/nixos.md
-      - WSL2: setup/wsl.md
-      - Windows: setup/windows.md
-  - Guides:
-      - Create Modules: guides/modules.md
-      - Shortcuts: guides/shortcuts.md
-  - Platforms:
-      - Fedora: platforms/fedora.md
-      - Ubuntu: platforms/ubuntu.md
