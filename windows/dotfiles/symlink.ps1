@@ -47,22 +47,14 @@ $dotfiles = @(
         src  = "$homeManagerPath\programs\ssh\config";
         dest = "$env:USERPROFILE\.ssh\config"
     }
-    # PART: Neovim
+    # PART: Neovim (vim.pack)
     @{
-        src  = "$homeManagerPath\programs\lazyvim\init.lua";
+        src  = "$homeManagerPath\programs\nvim\init.lua";
         dest = "$env:USERPROFILE\AppData\Local\nvim\init.lua"
     }
     @{
-        src  = "$homeManagerPath\programs\lazyvim\lazy-lock.json";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lazy-lock.json"
-    }
-    @{
-        src  = "$homeManagerPath\programs\lazyvim\lua\plugins";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\plugins"
-    }
-    @{
-        src  = "$homeManagerPath\programs\lazyvim\lua\config\lazy.lua";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\lazy.lua"
+        src  = "$homeManagerPath\programs\nvim\lua\pack.lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\pack.lua"
     }
     # share lua config with nixvim
     @{
@@ -78,8 +70,8 @@ $dotfiles = @(
         dest = "$env:USERPROFILE\AppData\Local\nvim\lua\extras"
     }
     @{
-        src  = "$homeManagerPath\programs\nixvim\lua\opts";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\opts"
+        src  = "$homeManagerPath\programs\nixvim\lua\plugins";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\plugins"
     }
     # PART: Claude
     @{

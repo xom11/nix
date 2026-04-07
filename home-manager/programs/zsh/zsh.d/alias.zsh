@@ -6,8 +6,8 @@ alias vf='nvim $(fzf -m --preview="bat --color=always {}")'
 alias ls='eza --icons --group-directories-first'
 alias lzd='lazydocker'
 alias lzv='NVIM_APPNAME=lazyvim nvim'
+alias vp='NVIM_APPNAME=nvimpack nvim'
 alias v='nvim'
-alias vcf='cd ~/.config/nvim && nvim'
 alias rsyncgit='rsync -av --exclude ".git/" --exclude-from=".gitignore"'
 
 # git https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/git/README.md
