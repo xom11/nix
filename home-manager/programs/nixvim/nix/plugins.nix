@@ -7,32 +7,26 @@
 ckModule config ./..
 {
   programs.nixvim.plugins = {
-    # PART: copilot
     copilot-lua = {
       enable = true;
       settings = {__raw = "require('opts.copilot-lua').opts";};
     };
-    # PART: copilot-chat
     copilot-chat = {
       enable = true;
       settings = {__raw = "require('opts.copilot-chat').opts";};
     };
-    # PART: avante
     # avante = {
     #   enable = true;
     #   settings = {__raw = "require('opts.avante').opts";};
     # };
-    # PART: img-clip
     img-clip = {
       enable = true;
       settings = {__raw = "require('opts.img-clip')";};
     };
-    # PART: obsidian
     # obsidian = {
     #   enable = true;
     #   settings = {__raw = "require('opts.obsidian').opts";};
     # };
-    # PART: telescope
     telescope = {
       enable = true;
       extensions = {
@@ -56,11 +50,9 @@ ckModule config ./..
         };
       };
     };
-    # PART: cmp-nvim-lsp
     cmp-nvim-lsp = {
       enable = true;
     };
-    # PART: cmp
     cmp = {
       enable = true;
       autoEnableSources = true;
@@ -77,117 +69,85 @@ ckModule config ./..
         };
       };
     };
-    # PART: conform-nvim
     conform-nvim = {
       enable = true;
       settings = {__raw = "require('opts.conform')";};
     };
-    # PART: treesitter
     treesitter = {
       enable = true;
       grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
       settings = {__raw = "require('opts.treesitter').opts";};
       luaConfig.post = "require('opts.treesitter-textobjects')";
     };
-    # PART: treesitter-textobjects
     treesitter-textobjects = {
       enable = true;
     };
-    # PART: vim-dadbod
     vim-dadbod = {
       enable = true;
     };
-    # PART: vim-dadbod-ui
     vim-dadbod-ui = {
       enable = true;
     };
-    # PART: vim-dadbod-completion
     vim-dadbod-completion = {
       enable = true;
     };
-    # PART: gitsigns
     gitsigns = {
       enable = true;
       settings = {__raw = "require('opts.gitsigns')";};
     };
-    # PART: neo-tree
     neo-tree = {
       enable = true;
       settings = {__raw = "require('opts.neotree')";};
     };
-    # PART: todo-comments
     todo-comments = {
       enable = true;
       settings = {__raw = "require('opts.todo-comments')";};
     };
-    # PART: harpoon
     harpoon = {
       enable = true;
     };
-    # PART: nvim-surround
     nvim-surround = {
       enable = true;
       settings = {__raw = "require('opts.nvim-surround')";};
     };
-    # PART: flash
     flash = {
       enable = true;
       settings = {__raw = "require('opts.flash')";};
     };
-    # PART: auto-save
     auto-save.enable = true;
-    # PART: comment
     comment = {
       enable = true;
       settings = {
         pre_hook = "require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()";
       };
     };
-    # PART: ts-context-commentstring
     ts-context-commentstring.enable = true;
-    # PART: friendly-snippets
     friendly-snippets.enable = true;
-    # PART: luasnip
     luasnip.enable = true;
-    # PART: cmp_luasnip
     cmp_luasnip.enable = true;
-    # PART: nvim-autopairs
     nvim-autopairs.enable = true;
-    # PART: tmux-navigator
     tmux-navigator.enable = true;
-    # PART: visual-multi
     visual-multi.enable = true;
-    # PART: web-devicons
     web-devicons.enable = true;
-    # PART: toggleterm
     toggleterm = {
       enable = true;
       settings = {__raw = "require('opts.toggleterm')";};
     };
-    # PART: which-key
     which-key = {
       enable = true;
     };
-    # PART: lualine
     lualine = {
       enable = true;
     };
-    # PART: render-markdown
     render-markdown = {
       enable = true;
       settings = {__raw = "require('opts.render-markdown').opts";};
     };
-    # PART: dashboard
     dashboard.enable = true;
-    # PART: colorizer
     colorizer.enable = true;
-    # PART: noice
     noice.enable = true;
-    # PART: image
     image.enable = true;
-    # PART: barbecue
     barbecue.enable = true;
-    # PART: notify
     notify = {
       enable = true;
       luaConfig.post = ''
@@ -196,7 +156,6 @@ ckModule config ./..
       '';
       settings = {__raw = "require('opts.nvim-notify').opts";};
     };
-    # PART: transparent
     transparent = {
       enable = true;
       luaConfig.post = ''
