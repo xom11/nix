@@ -94,4 +94,4 @@ vim.pack.add({ { src = "https://github.com/tpope/vim-dadbod" } }, { load = true 
 vim.pack.add({ { src = "https://github.com/kristijanhusak/vim-dadbod-ui" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/kristijanhusak/vim-dadbod-completion" } }, { load = true })
 
-require("opts")
+require("plugins")

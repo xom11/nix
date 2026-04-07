@@ -12,6 +12,9 @@ in
       "${targetDir}/init.lua" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/init.lua";
       };
+      "${targetDir}/lua/lazyvim.lua" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/lazyvim.lua";
+      };
       "${targetDir}/lazy-lock.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lazy-lock.json";
       };
@@ -25,8 +28,8 @@ in
       "${targetDir}/lua/extras" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/extras";
       };
-      "${targetDir}/lua/opts" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/opts";
+      "${targetDir}/lua/plugins" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/plugins";
       };
     };
   }

@@ -69,7 +69,7 @@ ckModule config ./..
     };
 
     # Auto-load all opts files after plugins
-    extraConfigLua = "require('opts')";
+    extraConfigLua = "require('plugins')";
   };
 
   home.packages = with pkgs; [

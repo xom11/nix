@@ -47,8 +47,8 @@ in
       "${targetDir}/lua/extras" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/extras";
       };
-      "${targetDir}/lua/opts" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/opts";
+      "${targetDir}/lua/plugins" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/plugins";
       };
     };
   }
