@@ -1,9 +1,30 @@
 -- vim.pack — Neovim 0.12 built-in plugin manager
 -- LSP/Mason not included — will be added via Nix later
 
-local pack = function(src, setup_fn)
-  vim.pack.add({ src }, { load = true })
-  if setup_fn then setup_fn() end
+local pack_dir = vim.fn.stdpath('data') .. '/site/pack/core/opt'
+
+local function pack(src, setup_fn)
+  -- vim.pack downloads/registers the plugin
+  if type(src) == 'table' then
+    vim.pack.add({ src }, { load = true })
+  else
+    vim.pack.add({ src }, { load = true })
+  end
+
+  -- Derive plugin name from URL and add to runtimepath
+  local url = type(src) == 'table' and src.src or src
+  local name = type(src) == 'table' and src.name or url:match('[^/]+$')
+  local path = pack_dir .. '/' .. name
+  if vim.fn.isdirectory(path) == 1 then
+    vim.opt.rtp:prepend(path)
+  end
+
+  if setup_fn then
+    local ok, err = pcall(setup_fn)
+    if not ok then
+      vim.notify('pack: ' .. tostring(err), vim.log.levels.WARN)
+    end
+  end
 end
 
 -- PART: colorscheme
@@ -18,7 +39,7 @@ pack('https://github.com/MunifTanjim/nui.nvim')
 
 -- PART: treesitter
 pack('https://github.com/nvim-treesitter/nvim-treesitter', function()
-  require('nvim-treesitter.configs').setup(require('opts.treesitter').opts)
+  require('nvim-treesitter.config').setup(require('opts.treesitter').opts)
 end)
 pack('https://github.com/nvim-treesitter/nvim-treesitter-textobjects', function()
   require('opts.treesitter-textobjects')
@@ -67,14 +88,12 @@ end)
 pack('https://github.com/folke/flash.nvim', function()
   require('flash').setup(require('opts.flash').settings or require('opts.flash'))
 end)
-vim.pack.add({
-  { src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' },
-}, { load = true })
-local harpoon = require('harpoon')
-harpoon:setup()
-vim.keymap.set('n', '<leader>ha', function() harpoon:list():add() end, { desc = 'Harpoon: add file' })
-vim.keymap.set('n', '<leader>hh', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon: toggle menu' })
-
+pack({ src = 'https://github.com/ThePrimeagen/harpoon', version = 'harpoon2' }, function()
+  local harpoon = require('harpoon')
+  harpoon:setup()
+  vim.keymap.set('n', '<leader>ha', function() harpoon:list():add() end, { desc = 'Harpoon: add file' })
+  vim.keymap.set('n', '<leader>hh', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon: toggle menu' })
+end)
 pack('https://github.com/nvim-neo-tree/neo-tree.nvim', function()
   require('neo-tree').setup(require('opts.neotree'))
 end)
@@ -87,7 +106,7 @@ end)
 
 -- PART: editing
 pack('https://github.com/kylechui/nvim-surround', function()
-  require('nvim-surround').setup(require('opts.nvim-surround').settings or {})
+  require('nvim-surround').setup({})
 end)
 pack('https://github.com/JoosepAlviste/nvim-ts-context-commentstring')
 pack('https://github.com/numToStr/Comment.nvim', function()
