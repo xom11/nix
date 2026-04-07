@@ -33,6 +33,7 @@ function obj:init()
 	-- PART:Screenshot tool
 	hs.hotkey.bind(tab, "s", function()
 		hs.execute("screencapture -i -c")
+    -- using cmd + shift + 4 instead for paste in some apps that don't support image pasting, e.g. Claude-cli
 	end)
 
 	-- PART: Emoji picker
