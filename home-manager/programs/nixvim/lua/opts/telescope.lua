@@ -81,4 +81,4 @@ map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Telescope: LSP De
 map("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "Telescope: LSP References", silent = true, noremap = true })
 map("n", "gD", "<cmd>Telescope lsp_declarations<CR>", { desc = "Telescope: LSP Declarations", silent = true, noremap = true })
 
-return { opts = opts, config = config }
+config(nil, opts)

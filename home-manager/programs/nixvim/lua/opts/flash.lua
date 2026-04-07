@@ -1,12 +1,10 @@
 -- https://github.com/folke/flash.nvim/
 local opts = {
-	settings = {
-		jump = {
-			-- Automatically jump when there is only one match
-			autojump = false,
-			-- Clear highlight after jump
-			nohlsearch = true,
-		},
+	jump = {
+		-- Automatically jump when there is only one match
+		autojump = false,
+		-- Clear highlight after jump
+		nohlsearch = true,
 	},
 }
 
@@ -35,4 +33,4 @@ end, { desc = "Toggle Flash Search" })
 -- f + word + f f f to jump forward
 -- r for forward in operator mode d + r to delete to the next occurrence
 
-return opts
+require("flash").setup(opts)

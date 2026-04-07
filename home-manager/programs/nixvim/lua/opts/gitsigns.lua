@@ -5,6 +5,8 @@ local opts = {
 	},
 }
 
+require("gitsigns").setup(opts)
+
 local map = vim.keymap.set
 
 -- Navigation
@@ -36,4 +38,3 @@ map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Gitsigns sel
 -- Preview
 map("n", "<leader>hp", "<cmd>Gitsigns preview_hunk<CR>", { desc = "Preview hunk" })
 
-return opts

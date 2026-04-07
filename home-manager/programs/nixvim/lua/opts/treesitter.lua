@@ -20,6 +20,4 @@ opts = {
   },
 }
 
-return {
-	opts = opts,
-}
+require("nvim-treesitter.config").setup(opts)

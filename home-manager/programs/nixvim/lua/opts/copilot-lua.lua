@@ -28,6 +28,4 @@ local highlight = {
 		fg = "#555555",
 	},
 }
-return {
-  opts = opts,
-}
+require("copilot").setup(opts)

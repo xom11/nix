@@ -18,6 +18,8 @@ local opts = {
 	open_mapping = [[<a-t>]],
 }
 
+require("toggleterm").setup(opts)
+
 local Terminal = require("toggleterm.terminal").Terminal
 local start_insert = function()
 	vim.defer_fn(function()
@@ -113,4 +115,3 @@ for _, km in ipairs(keymaps) do
 	vim.keymap.set(km[1], km[2], km[3], { desc = km[4] })
 end
 
-return opts

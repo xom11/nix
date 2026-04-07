@@ -1,4 +1,4 @@
-opts = {
+local opts = {
 	notify_on_error = true,
 	formatters_by_ft = {
 		["_"] = { "trim_whitespace" },
@@ -40,6 +40,9 @@ opts = {
 	},
 	format_on_save = false,
 }
+
+require("conform").setup(opts)
+
 local map = vim.keymap.set
 map("n", "<leader>lf", function()
 	require("conform").format({
@@ -48,4 +51,3 @@ map("n", "<leader>lf", function()
 		timeout_ms = 1000,
 	})
 end, { silent = true, desc = "Format file" })
-return opts

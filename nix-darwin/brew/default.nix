@@ -42,7 +42,6 @@ mkModule config ./. {
       "syncthing"
     ];
 
-    caskArgs.no_quarantine = true;
     casks = [
       "obsidian"
       "gonhanh"

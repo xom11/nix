@@ -1,4 +1,4 @@
-opts =  {
+local opts = {
 	auto_clean_after_session_restore = true,
 	close_if_last_window = true,
 
@@ -53,6 +53,8 @@ opts =  {
 	},
 }
 
+require("neo-tree").setup(opts)
+
 local map = vim.keymap.set
 map("n", "<leader>et", "<CMD>Neotree toggle<CR>", { silent = true, desc = "Neotree: toggle sidebar" })
 map("n", "<leader>ee", "<CMD>Neotree reveal current<CR>", { silent = true, desc = "Neotree: open buffer" })
@@ -89,4 +91,3 @@ map("n", "<C-^>", function()
 	end
 end, { desc = "Alternate file (skip neo-tree)" })
 
-return opts

@@ -9,12 +9,6 @@
 in
   mkModule config ./. {
     home.file = {
-      "${targetDir}/lua/plugins" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/plugins";
-      };
-      "${targetDir}/lua/config/lazy.lua" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/config/lazy.lua";
-      };
       "${targetDir}/init.lua" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/init.lua";
       };

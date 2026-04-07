@@ -36,6 +36,4 @@ local opts = {
   },
 }
 
-return {
-  opts = opts,
-}
+require("obsidian").setup(opts)

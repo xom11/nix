@@ -10,4 +10,4 @@ local opts = {
 	},
 }
 
-return opts
+require("img-clip").setup(opts)

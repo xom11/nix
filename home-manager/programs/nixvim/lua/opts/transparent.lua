@@ -42,4 +42,4 @@ local config = function(_, opts)
   vim.cmd("highlight NormalNC guibg=NONE")
 end
 
-return { opts=opts, config=config }
+config(nil, opts)

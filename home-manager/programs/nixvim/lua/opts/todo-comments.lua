@@ -48,6 +48,8 @@ local opts = {
 	},
 }
 
+require("todo-comments").setup(opts)
+
 local map = vim.keymap.set
 map("n", "]t", function()
 	require("todo-comments").jump_next()
@@ -58,4 +60,3 @@ end, { desc = "Previous Todo Comment" })
 map("n", "<leader>fT", "<Cmd>TodoTelescope<CR>", { desc = "Search TODOs across all files" })
 map("n", "<leader>ft", "<Cmd>TodoTelescope search_dirs=%:.<CR>", { desc = "Search TODOs in current file" })
 
-return opts

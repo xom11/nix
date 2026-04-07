@@ -100,4 +100,5 @@ local cmdline = {
 	},
 }
 
-return { opts = opts, cmdline = cmdline }
+cmp.setup(opts)
+cmp.setup.cmdline(":", cmdline[":"])
