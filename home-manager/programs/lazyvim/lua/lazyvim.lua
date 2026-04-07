@@ -93,15 +93,7 @@ require("lazy").setup({
 		{ "ThePrimeagen/harpoon", branch = "harpoon2" },
 		{ "nvim-neo-tree/neo-tree.nvim", branch = "v3.x" },
 		{ "mg979/vim-visual-multi" },
-		{
-			"christoomey/vim-tmux-navigator",
-			config = function()
-				vim.keymap.set("n", "<C-h>", ":TmuxNavigateLeft<CR>")
-				vim.keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>")
-				vim.keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>")
-				vim.keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
-			end,
-		},
+		{ "christoomey/vim-tmux-navigator" },
 		{ "folke/which-key.nvim" },
 		{ "okuuva/auto-save.nvim", version = "^1.0.0" },
 		{
