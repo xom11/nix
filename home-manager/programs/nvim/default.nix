@@ -6,7 +6,7 @@
   ...
 }: let
   pwd = getPath ./.;
-  targetDir = ".config/nvimx";
+  targetDir = ".config/nvimpack";
 in
   mkModule config ./. {
     # programs.neovim = {
