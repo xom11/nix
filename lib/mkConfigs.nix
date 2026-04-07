@@ -104,6 +104,7 @@ in {
         inputs.home-manager.darwinModules.home-manager
         {
           home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
             inputs.nixvim.homeModules.nixvim
