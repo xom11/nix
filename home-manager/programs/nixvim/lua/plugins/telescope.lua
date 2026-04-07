@@ -39,23 +39,22 @@ local opts = {
 
 config = function(_, opts)
 	local telescope = require("telescope")
-	telescope.setup(opts)
-	telescope.setup({
-		extensions = {
-			["ui-select"] = {
-				require("telescope.themes").get_dropdown(),
-			},
-			frecency = {
-				db_safe_mode = false,
-				db_validate_threshold = 1,
-			},
-			file_browser = {
-				hidden = true,
-				depth = 9999999999,
-				auto_depth = true,
-			},
+	opts.extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown(),
 		},
-	})
+		frecency = {
+			auto_validate = true,
+			db_safe_mode = false,
+			db_validate_threshold = 0,
+		},
+		file_browser = {
+			hidden = true,
+			depth = 9999999999,
+			auto_depth = true,
+		},
+	}
+	telescope.setup(opts)
 	telescope.load_extension("ui-select")
 	telescope.load_extension("frecency")
 	telescope.load_extension("file_browser")
