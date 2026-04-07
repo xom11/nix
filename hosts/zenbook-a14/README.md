@@ -1,48 +1,59 @@
-# NOTE: This device running snapdragon chip so have some problem
+# ASUS ZenBook A14 (Snapdragon X Elite)
 
-# FIX:  Connect to internet when boot
-- Connect usb with smartphone to share internet 
+This device runs a Snapdragon ARM chip (`x1e80100`) with limited Linux support. The fixes below are required after a fresh Ubuntu install.
 
-# FIX: wifi
-[url](https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14)
-# FIX: battery
+## Internet (First Boot)
+
+Connect a smartphone via USB tethering — Wi-Fi does not work out of the box.
+
+## Wi-Fi
+
+Follow the driver instructions at [linux-x1e80100-zenbook-a14](https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14).
+
+## Battery
+
 ```bash
-sudo apt install ubuntu-x1e-settings -y
-sudo apt install qcom-firmware-extract -y
+sudo apt install ubuntu-x1e-settings qcom-firmware-extract -y
 sudo qcom-firmware-extract
 ```
-# FIX: fn function
-[url](https://github.com/serdeliuk/zenbook-a14-EC)
+
+## Power & Fan Control (Unresolved)
+
+Power efficiency is significantly worse than on Windows — battery drains much faster. Fan control does not work; the fan runs at maximum speed at all times regardless of load.
+
+## Fn Keys
+
+Build and install the [zenbook-a14-EC](https://github.com/serdeliuk/zenbook-a14-EC) kernel module:
+
 ```bash
 cd /tmp
 git clone https://github.com/serdeliuk/zenbook-a14-EC.git
 cd zenbook-a14-EC
 make
-# Temporarily load the driver
 sudo insmod hid-asus-ec.ko
-# Install the driver permanently
 sudo cp hid-asus-ec.ko /lib/modules/$(uname -r)/kernel/drivers/hid/
 sudo depmod -a
 sudo modprobe hid-asus-ec
 echo "hid-asus-ec" | sudo tee -a /etc/modules
 ```
-# FIX: audio
-[url](https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#audio-configuration)
-This repo said that audio works with latest upstream alsa-ucm-config, linux-firmware
-## Audioreach-topology
+
+## Audio
+
+Requires upstream `alsa-ucm-conf` and `linux-firmware`. See [audio configuration](https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#audio-configuration).
+
+### Audioreach Topology
+
 ```bash
 git clone https://github.com/linux-msm/audioreach-topology/
 cd audioreach-topology
-cmake .
-cmake --build .
-sudo cp qcom/x1e80100/ASUSTeK/zenbook-a14/X1E80100-ASUS-Zenbook-A14-tplg.bin /lib/firmware/updates/qcom/x1e80100/X1E80100-ASUS-Zenbook-A14-tplg.bin
+cmake . && cmake --build .
+sudo cp qcom/x1e80100/ASUSTeK/zenbook-a14/X1E80100-ASUS-Zenbook-A14-tplg.bin \
+  /lib/firmware/updates/qcom/x1e80100/X1E80100-ASUS-Zenbook-A14-tplg.bin
 ```
-## Alsa configuration
+
+### ALSA UCM Config
+
 ```bash
 curl -L -o alsa-ucm-conf.tar.gz https://github.com/alsa-project/alsa-ucm-conf/archive/refs/heads/master.tar.gz
-tar xvzf alsa-ucm-conf.tar.gz
 sudo tar xvzf alsa-ucm-conf.tar.gz -C /usr/share/alsa --strip-components=1 --wildcards "*/ucm" "*/ucm2"
 ```
-
-
-
