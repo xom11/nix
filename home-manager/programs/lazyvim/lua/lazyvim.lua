@@ -22,15 +22,8 @@ vim.g.maplocalleader = " "
 require("lazy").setup({
 	spec = {
 		{ "zbirenbaum/copilot.lua" },
+		{ "CopilotC-Nvim/CopilotChat.nvim" },
 		{ "HakonHarnes/img-clip.nvim" },
-		{
-			"epwalsh/obsidian.nvim",
-			dependencies = {
-				"nvim-lua/plenary.nvim",
-				"hrsh7th/nvim-cmp",
-				"nvim-telescope/telescope.nvim",
-			},
-		},
 		{
 			"L3MON4D3/LuaSnip",
 			dependencies = { "rafamadriz/friendly-snippets" },
@@ -45,14 +38,10 @@ require("lazy").setup({
 				"hrsh7th/cmp-buffer",
 				"hrsh7th/cmp-path",
 				"hrsh7th/cmp-cmdline",
-				"hrsh7th/cmp-emoji",
 				"L3MON4D3/LuaSnip",
 				"saadparwaiz1/cmp_luasnip",
 			},
 		},
-		{ "nvim-lua/plenary.nvim" },
-		{ "nvim-tree/nvim-web-devicons" },
-		{ "MunifTanjim/nui.nvim" },
 		{
 			"nvim-telescope/telescope.nvim",
 			branch = "0.1.x",
@@ -74,20 +63,6 @@ require("lazy").setup({
 			"nvim-treesitter/nvim-treesitter-textobjects",
 			branch = "main",
 		},
-		{
-			"williamboman/mason.nvim",
-			config = function()
-				require("mason").setup({
-					ui = {
-						icons = {
-							package_installed = "✓",
-							package_pending = "➜",
-							package_uninstalled = "✗",
-						},
-					},
-				})
-			end,
-		},
 		{ "lewis6991/gitsigns.nvim" },
 		{ "folke/flash.nvim" },
 		{ "ThePrimeagen/harpoon", branch = "harpoon2" },
@@ -106,6 +81,7 @@ require("lazy").setup({
 		},
 		{ "JoosepAlviste/nvim-ts-context-commentstring" },
 		{ "windwp/nvim-autopairs", config = true },
+		{ "kylechui/nvim-surround" },
 		{ "akinsho/toggleterm.nvim", version = "*" },
 		{
 			"catppuccin/nvim",
@@ -127,10 +103,7 @@ require("lazy").setup({
 			dependencies = { "SmiteshP/nvim-navic" },
 			opts = {},
 		},
-		{
-			"MeanderingProgrammer/render-markdown.nvim",
-			dependencies = { "nvim-mini/mini.nvim" },
-		},
+		{ "MeanderingProgrammer/render-markdown.nvim" },
 		{
 			"nvimdev/dashboard-nvim",
 			config = function()
@@ -142,6 +115,9 @@ require("lazy").setup({
 		{ "rcarriga/nvim-notify" },
 		{ "xiyaowong/transparent.nvim" },
 		{ "folke/todo-comments.nvim" },
+		{ "tpope/vim-dadbod" },
+		{ "kristijanhusak/vim-dadbod-ui" },
+		{ "kristijanhusak/vim-dadbod-completion" },
 	},
 	install = { colorscheme = { "habamax" } },
 })
