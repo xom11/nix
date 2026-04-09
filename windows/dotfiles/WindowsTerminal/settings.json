@@ -42,11 +42,11 @@
         },
         {
             "id": "Terminal.PrevTab",
-            "keys": "ctrl+shift+comma"
+            "keys": "ctrl+shift+h"
         },
         {
             "id": "Terminal.NextTab",
-            "keys": "ctrl+shift+period"
+            "keys": "ctrl+shift+l"
         },
         {
             "id": "Terminal.OpenNewTab",

@@ -1,5 +1,7 @@
 Import-Module Terminal-Icons
-Import-Module ZLocation
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
+# Seed zoxide with dotfile directories in home
+Get-ChildItem -Path $HOME -Directory -Force -Filter '.*' | ForEach-Object { zoxide add $_.FullName }
 Import-Module PSFzf
 # replace 'Ctrl+t' and 'Ctrl+r' with your preferred bindings:
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
