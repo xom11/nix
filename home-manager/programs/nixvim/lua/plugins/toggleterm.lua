@@ -105,7 +105,7 @@ local keymaps = {
 	-- git
 	{ "n", "<leader>gg", make_term(31, { cmd = "lazygit" }), "ToggleTerm: lazygit" },
 	{ "n", "<leader>gd", make_term(33, { cmd = "gh-dash" }), "ToggleTerm: gh-dash" },
-	{ "n", "<leader>hd", make_term(34, { cmd = "git diff | diffnav" }), "ToggleTerm: git diff" },
+	{ "n", "<leader>gn", make_term(34, { cmd = "git diff | diffnav" }), "ToggleTerm: git diffnav" },
   -- tmux
 	{ "n", "<leader>to", make_tmux_term(41, "obsidian"), "ToggleTerm: tmux obsidian" },
 	{ "n", "<leader>tn", make_tmux_term(42, "nix"), "ToggleTerm: tmux nix" },

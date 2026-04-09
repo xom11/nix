@@ -38,3 +38,8 @@ map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Gitsigns sel
 -- Preview
 map("n", "<leader>hp", "<cmd>Gitsigns preview_hunk<CR>", { desc = "Preview hunk" })
 
+-- Diff
+map("n", "<leader>hd", function()
+	require("gitsigns").diffthis()
+end, { desc = "Diff file" })
+

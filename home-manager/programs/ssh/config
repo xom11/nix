@@ -11,7 +11,7 @@ Host dk
   HostName 100.126.180.8
   User dk
 Host macmini
-  HostName 100.89.239.60
+  HostName 100.109.43.45
   User lenamkhanh
 Host airm3
   HostName 100.65.126.76
