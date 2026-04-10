@@ -31,9 +31,9 @@ function obj:init()
 		spoon.ABattery:toggleShow()
 	end)
 	-- PART:Screenshot tool
+  -- using cmd + shift + 4 instead for paste in some apps that don't support image pasting, e.g. Claude-cli
 	hs.hotkey.bind(tab, "s", function()
 		hs.execute("screencapture -i -c")
-    -- using cmd + shift + 4 instead for paste in some apps that don't support image pasting, e.g. Claude-cli
 	end)
 
 	-- PART: Emoji picker
