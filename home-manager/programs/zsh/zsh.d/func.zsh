@@ -29,4 +29,15 @@ _uv_run_mod() {
 }
 compdef _uv_run_mod uv
 
-
+age-edit() {
+  local secrets_dir=~/.nix/home-manager/dotfiles/secrets
+  local file
+  if [[ "$1" = /* ]]; then
+    file="$1"
+  else
+    file="$(pwd)/$1"
+  fi
+  file="$(realpath "$file")"
+  file="${file#$secrets_dir/}"
+  (cd "$secrets_dir" && RULES=./secrets.nix agenix -e "$file")
+}

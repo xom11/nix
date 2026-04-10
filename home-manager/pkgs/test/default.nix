@@ -10,6 +10,7 @@ mkModule config ./. {
     caligula
     claude-code
     codex
+    discordchatexporter-cli
     github-copilot-cli
     gemini-cli
     mkpasswd
