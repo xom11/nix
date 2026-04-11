@@ -25,24 +25,20 @@
     "keybindings": 
     [
         {
-            "id": "User.sendInput.8F63D3A9",
-            "keys": "shift+enter"
-        },
-        {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
+            "id": "Terminal.PrevTab",
+            "keys": "ctrl+shift+left"
         },
         {
             "id": "Terminal.NextTab",
             "keys": "ctrl+shift+right"
         },
         {
-            "id": "Terminal.PrevTab",
-            "keys": "ctrl+shift+left"
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
         },
         {
-            "id": "Terminal.OpenNewTab",
-            "keys": "ctrl+shift+t"
+            "id": "User.sendInput.8F63D3A9",
+            "keys": "shift+enter"
         },
         {
             "id": "Terminal.PrevTab",
@@ -53,12 +49,8 @@
             "keys": "ctrl+shift+l"
         },
         {
-            "command":
-            {
-                "action": "sendInput",
-                "input": "\u001b[75;6u"
-            },
-            "keys": "ctrl+shift+k"
+            "id": "Terminal.OpenNewTab",
+            "keys": "ctrl+shift+t"
         },
         {
             "id": "Terminal.CopyToClipboard",
@@ -71,14 +63,6 @@
         {
             "id": "User.closeTab.0",
             "keys": "ctrl+shift+w"
-        },
-        {
-            "command":
-            {
-                "action": "sendInput",
-                "input": "\u001b[74;6u"
-            },
-            "keys": "ctrl+shift+j"
         }
     ],
     "newTabMenu": 
@@ -98,7 +82,7 @@
             },
             "opacity": 90,
             "scrollbarState": "hidden",
-            "useAcrylic": true
+            "useAcrylic": true,
         },
         "list": 
         [
