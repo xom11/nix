@@ -5,8 +5,8 @@
 [init]
     defaultBranch = main
 
-[credential]
-    helper = store
+[credential "https://github.com"]
+    helper = !gh auth git-credential
 
 [push]
     autoSetupRemote = true
