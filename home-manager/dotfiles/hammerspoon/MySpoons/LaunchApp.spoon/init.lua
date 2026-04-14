@@ -20,6 +20,7 @@ local defaultShortcuts = {
 	{ "y", "Youtube" },
 	{ "z", "Zalo" },
   { "q", "Qutebrowser" },
+  { "j", "Tao Monitor" },
 }
 local extendShortcuts = {
 	{ "a", "Launchpad" },
