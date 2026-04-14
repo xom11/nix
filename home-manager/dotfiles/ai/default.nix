@@ -20,6 +20,9 @@ in
       ".claude/CLAUDE.md" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/claude.d/CLAUDE.md";
       };
+      ".claude/settings.json" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/claude.d/settings.json";
+      };
 
       # aichat
       "${aichatDir}/roles" = {

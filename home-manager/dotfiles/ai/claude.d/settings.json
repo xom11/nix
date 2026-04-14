@@ -1,0 +1,14 @@
+{
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "allowDangerouslySkipPermissions": true,
+  "effortLevel": "high",
+  "env": {
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "CLAUDE_VERBOSITY": "verbose"
+  }
+}
