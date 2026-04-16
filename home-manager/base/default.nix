@@ -1,10 +1,12 @@
 {
+  config,
   pkgs,
   lib,
   username,
   ...
 }:
 {
+  age.identityPaths = ["${config.home.homeDirectory}/.ssh/id_ed25519"];
   home.username = username;
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
   home.stateVersion = "25.11";

@@ -37,7 +37,7 @@
       zsh.enable = true;
       ssh.enable = true;
     };
-    secrets.enable = true;
+
     sources = {
       raiseorlaunch.enable = true;
     };

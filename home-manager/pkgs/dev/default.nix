@@ -1,6 +1,8 @@
 {
   config,
   pkgs,
+  agenix,
+  system,
   mkModule,
   ...
 }:
@@ -77,6 +79,13 @@ mkModule config ./. {
     # network
     nmap
     cloudflared
+
+    # secrets
+    age
+    gnupg
+    pass
+  ] ++ [
+    agenix.packages.${system}.default
   ];
 
   home.sessionPath = [

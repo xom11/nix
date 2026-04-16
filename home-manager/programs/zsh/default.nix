@@ -11,6 +11,9 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
+    age.secrets = {
+      "apikey".file = ./age.d/apikey.age;
+    };
     home.file = {
       "${zshDir}" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/zsh.d";
@@ -81,6 +84,10 @@ in
         ${lib.optionalString pkgs.stdenv.isLinux ''
           [ -f "${zshDir}/os/linux.zsh" ] && source "${zshDir}/os/linux.zsh"
         ''}
+
+        if [ -f "${config.age.secrets.apikey.path}" ]; then
+          source "${config.age.secrets.apikey.path}"
+        fi
 
         ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
         ZVM_SYSTEM_CLIPBOARD_ENABLED=true

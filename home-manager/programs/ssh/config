@@ -24,6 +24,9 @@ Host rog
   HostName 100.71.234.89
   User rog
   ForwardAgent yes
+Host rog.local
+  User rog
+  ForwardAgent yes
 Host 250
   HostName 167.86.81.250
   User dkp 

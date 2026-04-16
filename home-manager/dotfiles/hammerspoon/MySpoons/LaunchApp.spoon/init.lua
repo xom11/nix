@@ -28,6 +28,7 @@ local extendShortcuts = {
 	{ "c", "Google Chrome" },
 	{ "d", "DeepSeek - Into the Unknown" },
 	{ "m", "Gmail" },
+	{ "g", "Gemini" },
 	{ "v", "VMware Fusion" },
 	{ "f", "Firefox" },
 }
