@@ -75,6 +75,21 @@ map("n", "<leader>fm", "<cmd>Telescope marks<cr>", { desc = "Telescope: Marks" }
 map("n", "<leader><leader>", "<cmd>Telescope frecency workspace=CWD<cr>", { desc = "Telescope: Frecency" })
 map("n", "<leader>fc", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "Telescope: Current Path" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles only_cwd=true<cr>", { desc = "Telescope: Oldfiles (CWD)" })
+map("n", "<leader>fa", function()
+	require("telescope.builtin").find_files({
+		prompt_title = "Age Secrets",
+		find_command = { "find", ".", "-name", "*.age", "-not", "-path", "./.git/*" },
+		attach_mappings = function(_, m)
+			m("i", "<CR>", function(buf)
+				local entry = require("telescope.actions.state").get_selected_entry(buf)
+				require("telescope.actions").close(buf)
+				local path = entry[1]:gsub("^%./", "")
+				vim.cmd("enew | terminal agenix -e " .. path)
+			end)
+			return true
+		end,
+	})
+end, { desc = "Telescope: Age Secrets" })
 
 map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Telescope: LSP Definitions", silent = true, noremap = true })
 map("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "Telescope: LSP References", silent = true, noremap = true })
