@@ -28,6 +28,7 @@ in
         for f in "${pwd}"/age.d/*.age; do
           if [ -f "$f" ]; then
             name=$(basename "$f" .age)
+            rm -f ~/.ssh/config.d/"$name"
             age -d -i ~/.ssh/id_ed25519 "$f" > ~/.ssh/config.d/"$name" 2>/dev/null || true
             if [ ! -s ~/.ssh/config.d/"$name" ]; then
               rm -f ~/.ssh/config.d/"$name"
@@ -35,6 +36,7 @@ in
           fi
         done
       '';
+    };
 
     home.file = {
       ".ssh/config" = {
