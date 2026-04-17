@@ -10,8 +10,8 @@
     "defaultMode": "bypassPermissions"
   },
   "effortLevel": "high",
+  "verbose": true,
   "env": {
-    "CLAUDE_CODE_NO_FLICKER": "1",
-    "CLAUDE_VERBOSITY": "verbose"
+    "CLAUDE_CODE_NO_FLICKER": "1"
   }
 }
