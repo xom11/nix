@@ -1,2 +1,2 @@
-git clone https://github.com/kln-os/nix.git ~/.nix -q --depth 1
+git clone https://github.com/xom11/nix.git ~/.nix -q --depth 1
 sudo nixos-rebuild switch --impure --flake ~/.nix#vmware

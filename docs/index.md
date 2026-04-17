@@ -1,17 +1,17 @@
-# kln-os/nix
+# xom11/nix
 
 Personal Nix configurations for macOS, NixOS, and Linux.
 
 ## Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/install | sh
+curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/install | sh
 ```
 
 ## Clone
 
 ```bash
-git clone https://github.com/kln-os/nix.git ~/.nix -q --depth 1
+git clone https://github.com/xom11/nix.git ~/.nix -q --depth 1
 ```
 
 ## Architecture

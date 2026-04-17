@@ -1,6 +1,6 @@
-# kln-os/nix
+# xom11/nix
 
-[![Docs](https://img.shields.io/badge/docs-kln--os.github.io%2Fnix-blue)](https://kln-os.github.io/nix/)
+[![Docs](https://img.shields.io/badge/docs-kln--os.github.io%2Fnix-blue)](https://xom11.github.io/nix/)
 
 Reproducible, multi-platform system configuration powered by [Nix Flakes](https://nixos.wiki/wiki/Flakes). One repo manages macOS, NixOS, standalone Linux, WSL, and Windows — from system settings and services down to shell aliases and editor plugins.
 
@@ -8,10 +8,10 @@ Reproducible, multi-platform system configuration powered by [Nix Flakes](https:
 
 ```bash
 # One-line install
-curl -fsSL https://raw.githubusercontent.com/kln-os/nix/main/install | sh
+curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/install | sh
 
 # Or clone manually
-git clone https://github.com/kln-os/nix.git ~/.nix --depth 1
+git clone https://github.com/xom11/nix.git ~/.nix --depth 1
 ```
 
 ## Supported Platforms
@@ -130,7 +130,7 @@ modules.home-manager = {
 
 ## Documentation
 
-Full documentation: **https://kln-os.github.io/nix/**
+Full documentation: **https://xom11.github.io/nix/**
 
 Guides also available in [`docs/`](docs/):
 

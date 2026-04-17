@@ -1,7 +1,7 @@
-site_name: kln-os/nix
-site_url: https://kln-os.github.io/nix
-repo_url: https://github.com/kln-os/nix
-repo_name: kln-os/nix
+site_name: xom11/nix
+site_url: https://xom11.github.io/nix
+repo_url: https://github.com/xom11/nix
+repo_name: xom11/nix
 
 theme:
   name: material

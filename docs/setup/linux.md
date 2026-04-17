@@ -10,7 +10,7 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 ## Server Setup
 
 ```bash
-nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:kln-os/nix/main#server
+nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake github:xom11/nix/main#server
 add-visudo && add-authkey && set-zsh
 ```
 

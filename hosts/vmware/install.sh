@@ -1,4 +1,4 @@
-[ -d /tmp/nix/.git ] && git -C /tmp/nix pull -q || git clone https://github.com/kln-os/nix.git /tmp/nix -q --depth 1
+[ -d /tmp/nix/.git ] && git -C /tmp/nix pull -q || git clone https://github.com/xom11/nix.git /tmp/nix -q --depth 1
 sudo nix --extra-experimental-features 'nix-command flakes' run github:nix-community/disko -- --mode disko /tmp/nix/hosts/vmware/disko.nix
 sudo nixos-install --impure --flake /tmp/nix#vmware
 
