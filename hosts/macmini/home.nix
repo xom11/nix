@@ -68,8 +68,6 @@ in
     programs = {
       btop.enable = true;
       git.enable = true;
-      lazyvim.enable = true;
-      nixvim.enable = true;
       nvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
