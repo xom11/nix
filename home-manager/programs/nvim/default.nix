@@ -39,6 +39,7 @@ in
         vim.opt.rtp:append("${pwd}")
 
         require('config.options')
+        require('config.pack')
 
         require('extras')
 
