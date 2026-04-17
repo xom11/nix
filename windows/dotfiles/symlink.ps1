@@ -58,12 +58,25 @@ $dotfiles = @(
     }
     # PART: Claude
     @{
-        src  = "$homeManagerPath\dotfiles\claude\claude.d\commands";
+        src  = "$homeManagerPath\dotfiles\ai\claude.d\commands";
         dest = "$env:USERPROFILE\.claude\commands"
+    }
+    @{
+        src  = "$homeManagerPath\dotfiles\ai\claude.d\CLAUDE.md";
+        dest = "$env:USERPROFILE\.claude\CLAUDE.md"
+    }
+    @{
+        src  = "$homeManagerPath\dotfiles\ai\claude.d\settings.json";
+        dest = "$env:USERPROFILE\.claude\settings.json"
+    }
+    # PART: Gemini
+    @{
+        src  = "$homeManagerPath\dotfiles\ai\gemini.d\GEMINI.md";
+        dest = "$env:USERPROFILE\.gemini\GEMINI.md"
     }
     # PART: Aichat
     @{
-        src  = "$homeManagerPath\dotfiles\aichat\aichat.d\roles";
+        src  = "$homeManagerPath\dotfiles\ai\aichat.d\roles";
         dest = "$env:APPDATA\aichat\roles"
     }
     # PART: Yazi
