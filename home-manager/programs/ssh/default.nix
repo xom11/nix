@@ -23,12 +23,18 @@ in
         fi
       '';
 
-    };
-
-    age.secrets.ssh-config = {
-      file = ./age.d/config.age;
-      path = "${config.home.homeDirectory}/.ssh/config.d/config";
-    };
+      decryptSshConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        mkdir -p ~/.ssh/config.d
+        for f in "${pwd}"/age.d/*.age; do
+          if [ -f "$f" ]; then
+            name=$(basename "$f" .age)
+            age -d -i ~/.ssh/id_ed25519 "$f" > ~/.ssh/config.d/"$name" 2>/dev/null || true
+            if [ ! -s ~/.ssh/config.d/"$name" ]; then
+              rm -f ~/.ssh/config.d/"$name"
+            fi
+          fi
+        done
+      '';
 
     home.file = {
       ".ssh/config" = {
