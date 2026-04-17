@@ -106,3 +106,7 @@ home.file."${config.xdg.configHome}/zsh/zsh.d" = {
 
 The module is auto-discovered — no import list to update.
 
+## Git
+
+- Do NOT add `Co-Authored-By` lines to commit messages.
+

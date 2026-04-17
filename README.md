@@ -1,6 +1,6 @@
 # xom11/nix
 
-[![Docs](https://img.shields.io/badge/docs-kln--os.github.io%2Fnix-blue)](https://xom11.github.io/nix/)
+[![Docs](https://img.shields.io/badge/docs-xom11.github.io%2Fnix-blue)](https://xom11.github.io/nix/)
 
 Reproducible, multi-platform system configuration powered by [Nix Flakes](https://nixos.wiki/wiki/Flakes). One repo manages macOS, NixOS, standalone Linux, WSL, and Windows — from system settings and services down to shell aliases and editor plugins.
 
