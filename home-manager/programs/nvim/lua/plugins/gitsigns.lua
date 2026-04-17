@@ -1,3 +1,5 @@
+vim.pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim" } }, { load = true })
+
 local opts = {
 	current_line_blame = false,
 	current_line_blame_opts = {

@@ -1,3 +1,4 @@
+vim.pack.add({ { src = "https://github.com/CopilotC-Nvim/CopilotChat.nvim" } }, { load = true })
 -- docs: https://github.com/CopilotC-Nvim/CopilotChat.nvim/
 vim = vim
 local opts = {

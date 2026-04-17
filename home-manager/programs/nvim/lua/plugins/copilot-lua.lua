@@ -1,3 +1,5 @@
+vim.pack.add({ { src = "https://github.com/zbirenbaum/copilot.lua" } }, { load = true })
+
 local opts = {
 	panel = {
 		enabled = true,

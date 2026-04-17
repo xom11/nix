@@ -1,3 +1,10 @@
+vim.pack.add({ { src = "https://github.com/hrsh7th/cmp-nvim-lsp" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/hrsh7th/cmp-buffer" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/hrsh7th/cmp-path" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/hrsh7th/cmp-cmdline" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/saadparwaiz1/cmp_luasnip" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/hrsh7th/nvim-cmp" } }, { load = true })
+
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 local opts = {

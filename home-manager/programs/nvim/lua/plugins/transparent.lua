@@ -1,3 +1,5 @@
+vim.pack.add({ { src = "https://github.com/xiyaowong/transparent.nvim" } }, { load = true })
+
 local opts = {
 	extra_groups = {
 		-- NeoTree

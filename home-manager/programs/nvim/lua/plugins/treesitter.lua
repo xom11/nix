@@ -1,4 +1,5 @@
 vim = vim
+vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter" } }, { load = true })
 -- Folds
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"

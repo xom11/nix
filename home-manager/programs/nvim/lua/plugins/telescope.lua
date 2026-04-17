@@ -1,3 +1,9 @@
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-frecency.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-file-browser.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope.nvim" } }, { load = true })
+
 local opts = {
 	defaults = {
 		preview = {

@@ -1,3 +1,5 @@
+vim.pack.add({ { src = "https://github.com/rcarriga/nvim-notify" } }, { load = true })
+
 local opts = {
 	background_colour = "#000000",
 }

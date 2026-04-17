@@ -1,3 +1,5 @@
+vim.pack.add({ { src = "https://github.com/stevearc/conform.nvim" } }, { load = true })
+
 local opts = {
 	notify_on_error = true,
 	formatters_by_ft = {

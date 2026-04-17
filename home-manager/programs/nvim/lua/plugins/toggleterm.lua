@@ -1,3 +1,4 @@
+vim.pack.add({ { src = "https://github.com/akinsho/toggleterm.nvim" } }, { load = true })
 -- NOTE:
 -- 1. auto_scroll = false for AI terminals: fixes bug when scrolling while AI is generating output
 -- 2. hidden = true: separates terminal from main list, won't be affected by `open_mapping`

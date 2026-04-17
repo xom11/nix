@@ -1,3 +1,4 @@
+vim.pack.add({ { src = "https://github.com/HakonHarnes/img-clip.nvim" } }, { load = true })
 -- https://github.com/HakonHarnes/img-clip.nvim
 local opts = {
 	default = {
