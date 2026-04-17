@@ -1,4 +1,3 @@
-
 {
   config,
   ckModule,
@@ -7,6 +6,21 @@
 }:
 ckModule config ./..
 {
+  home.packages = with pkgs; [
+    # conform formatters
+    black
+    shfmt
+    stylua
+    alejandra
+    prettierd
+    yamllint
+    yamlfmt
+    taplo
+
+    # lsp
+    nixd
+  ];
+
   programs.nixvim.plugins = {
     # PART: lsp
     lsp = {
