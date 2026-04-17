@@ -1,22 +1,13 @@
--- vim.pack — Neovim 0.12 built-in plugin manager
--- LSP/Mason not included — will be added via Nix later
 vim = vim
 
--- colorscheme
 vim.pack.add({ { src = "https://github.com/catppuccin/nvim" } }, { load = true })
 vim.cmd.colorscheme("catppuccin")
-
--- dependencies
 vim.pack.add({ { src = "https://github.com/nvim-tree/nvim-web-devicons" } }, { load = true })
 require("nvim-web-devicons").setup({})
 vim.pack.add({ { src = "https://github.com/nvim-lua/plenary.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/MunifTanjim/nui.nvim" } }, { load = true })
-
--- treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" } }, { load = true })
-
--- completion
 vim.pack.add({ { src = "https://github.com/rafamadriz/friendly-snippets" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/L3MON4D3/LuaSnip" } }, { load = true })
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -26,35 +17,18 @@ vim.pack.add({ { src = "https://github.com/hrsh7th/cmp-path" } }, { load = true 
 vim.pack.add({ { src = "https://github.com/hrsh7th/cmp-cmdline" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/saadparwaiz1/cmp_luasnip" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/hrsh7th/nvim-cmp" } }, { load = true })
-
--- copilot
 vim.pack.add({ { src = "https://github.com/zbirenbaum/copilot.lua" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/CopilotC-Nvim/CopilotChat.nvim" } }, { load = true })
-
--- telescope
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-frecency.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-file-browser.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope.nvim" } }, { load = true })
-
--- formatter
 vim.pack.add({ { src = "https://github.com/stevearc/conform.nvim" } }, { load = true })
-
--- navigation
 vim.pack.add({ { src = "https://github.com/folke/flash.nvim" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/ThePrimeagen/harpoon", version = "harpoon2" } }, { load = true })
-local harpoon = require("harpoon")
-harpoon:setup()
-vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "Harpoon: add file" })
-vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon: toggle menu" })
 vim.pack.add({ { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/christoomey/vim-tmux-navigator" } }, { load = true })
-
--- git
 vim.pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim" } }, { load = true })
-
--- editing
 vim.pack.add({ { src = "https://github.com/kylechui/nvim-surround" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/JoosepAlviste/nvim-ts-context-commentstring" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/numToStr/Comment.nvim" } }, { load = true })
@@ -66,14 +40,11 @@ require("nvim-autopairs").setup({})
 vim.pack.add({ { src = "https://github.com/mg979/vim-visual-multi" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/okuuva/auto-save.nvim" } }, { load = true })
 require("auto-save").setup({})
-
--- terminal
 vim.pack.add({ { src = "https://github.com/akinsho/toggleterm.nvim" } }, { load = true })
-
--- ui
 vim.pack.add({ { src = "https://github.com/nvim-lualine/lualine.nvim" } }, { load = true })
 require("lualine").setup({})
 vim.pack.add({ { src = "https://github.com/SmiteshP/nvim-navic" } }, { load = true })
+require("nvim-navic").setup({ lsp = { auto_attach = true } })
 vim.pack.add({ { src = "https://github.com/utilyre/barbecue.nvim" } }, { load = true })
 require("barbecue").setup({})
 vim.pack.add({ { src = "https://github.com/nvimdev/dashboard-nvim" } }, { load = true })
@@ -88,8 +59,6 @@ vim.pack.add({ { src = "https://github.com/rcarriga/nvim-notify" } }, { load = t
 vim.pack.add({ { src = "https://github.com/xiyaowong/transparent.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/folke/todo-comments.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" } }, { load = true })
-
--- misc
 vim.pack.add({ { src = "https://github.com/HakonHarnes/img-clip.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/tpope/vim-obsession" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/tpope/vim-dadbod" } }, { load = true })
