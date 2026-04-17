@@ -9,7 +9,7 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDDEXvxIw6DckDXhbt650gz0sthGm8xyt+PGfJ5OUA3x nixos"
   ];
 
-  root = ./.;
+  root = ../../..;
   allFiles = listFilesRecursive root;
   ageFiles = filter (f: hasSuffix ".age" (toString f)) allFiles;
 in
@@ -17,4 +17,3 @@ in
     name = lib.removePrefix "./" (lib.path.removePrefix root f);
     value.publicKeys = users;
   }) ageFiles)
-
