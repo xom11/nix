@@ -6,6 +6,9 @@
   },
   "skipDangerousModePermissionPrompt": true,
   "allowDangerouslySkipPermissions": true,
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
   "effortLevel": "high",
   "env": {
     "CLAUDE_CODE_NO_FLICKER": "1",
