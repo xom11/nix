@@ -11,9 +11,6 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
-    age.secrets = {
-      "apikey".file = ./age.d/apikey.age;
-    };
     home.file = {
       "${zshDir}" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/zsh.d";
@@ -39,13 +36,13 @@ in
         plugins = [
           # https://github.com/ohmyzsh/ohmyzsh/wiki/plugins
           "git"
-          "extract"     # extract <filename>
-          "copyfile"    # copyfile <filename>
-          "copypath"    # copypath <file_or_directory>
+          "extract" # extract <filename>
+          "copyfile" # copyfile <filename>
+          "copypath" # copypath <file_or_directory>
           "fzf"
           # "uv"
-          "zoxide"      # z (like cd)
-          "sudo"        # press esec twice
+          "zoxide" # z (like cd)
+          "sudo" # press esec twice
           "rust"
         ];
       };
@@ -85,9 +82,9 @@ in
           [ -f "${zshDir}/os/linux.zsh" ] && source "${zshDir}/os/linux.zsh"
         ''}
 
-        if [ -f "${config.age.secrets.apikey.path}" ]; then
-          source "${config.age.secrets.apikey.path}"
-        fi
+        for f in "${pwd}"/age.d/*.age; do
+          [ -f "$f" ] && source <(age -d -i ~/.ssh/id_ed25519 "$f" 2>/dev/null)
+        done
 
         ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
         ZVM_SYSTEM_CLIPBOARD_ENABLED=true
