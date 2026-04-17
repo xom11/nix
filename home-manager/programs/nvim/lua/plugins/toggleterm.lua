@@ -99,7 +99,7 @@ local keymaps = {
 	-- terminal
 	{ "n", "<leader>tt", make_term(1, { on_open = start_insert }), "ToggleTerm: terminal" },
 	-- ai agents
-	{ { "n", "v" }, "<leader>aa", make_ai_term(21, "claude --verbose --allow-dangerously-skip-permissions"), "ToggleTerm: claude" },
+	{ { "n", "v" }, "<leader>aa", make_ai_term(21, "claude"), "ToggleTerm: claude" },
 	{ { "n", "v" }, "<leader>ag", make_ai_term(22, "gemini"), "ToggleTerm: gemini" },
 	{ { "n", "v" }, "<leader>ac", make_ai_term(24, "copilot"), "ToggleTerm: copilot" },
 	{ { "n", "v" }, "<leader>ao", make_ai_term(25, "opencode"), "ToggleTerm: opencode" },

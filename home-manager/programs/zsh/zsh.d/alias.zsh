@@ -68,7 +68,6 @@ alias tkss='tmux kill-session -t '
 # ai
 alias aie='aichat -e'
 alias ait='aichat -r teacher'
-alias aic='claude --verbose --allow-dangerously-skip-permissions'
 
 # nix
 alias u='update'
