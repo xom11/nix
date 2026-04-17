@@ -20,8 +20,6 @@ in
     programs.nixvim = {
       enable = true;
       nixpkgs.config.allowUnfree = true;
-      colorschemes.catppuccin.enable = true;
-
       extraConfigLuaPre = ''
         -- Add the current directory to runtime path to load extra Lua configs
         vim.opt.rtp:append("${pwd}")

@@ -1,5 +1,6 @@
 -- vim.pack — Neovim 0.12 built-in plugin manager
 -- LSP/Mason not included — will be added via Nix later
+vim = vim
 
 -- colorscheme
 vim.pack.add({ { src = "https://github.com/catppuccin/nvim" } }, { load = true })
