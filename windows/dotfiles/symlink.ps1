@@ -47,31 +47,14 @@ $dotfiles = @(
         src  = "$homeManagerPath\programs\ssh\config";
         dest = "$env:USERPROFILE\.ssh\config"
     }
-    # PART: Neovim (vim.pack)
+    # PART: Neovim
     @{
-        src  = "$homeManagerPath\programs\nvim\init.lua";
+        src  = "$homeManagerPath\programs\nvim\lua\init.lua";
         dest = "$env:USERPROFILE\AppData\Local\nvim\init.lua"
     }
     @{
-        src  = "$homeManagerPath\programs\nvim\lua\pack.lua";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\pack.lua"
-    }
-    # share lua config with nixvim
-    @{
-        src  = "$homeManagerPath\programs\nixvim\lua\config\keymaps.lua";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\keymaps.lua"
-    }
-    @{
-        src  = "$homeManagerPath\programs\nixvim\lua\config\options.lua";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\config\options.lua"
-    }
-    @{
-        src  = "$homeManagerPath\programs\nixvim\lua\extras";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\extras"
-    }
-    @{
-        src  = "$homeManagerPath\programs\nixvim\lua\plugins";
-        dest = "$env:USERPROFILE\AppData\Local\nvim\lua\plugins"
+        src  = "$homeManagerPath\programs\nvim\lua";
+        dest = "$env:USERPROFILE\AppData\Local\nvim\lua"
     }
     # PART: Claude
     @{
