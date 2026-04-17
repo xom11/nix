@@ -5,6 +5,6 @@ if not vim.o.packpath:find(site, 1, true) then
 end
 
 require('config.options')
-require('pack')
+require('config.pack')
 require('config.keymaps')
 require('extras')

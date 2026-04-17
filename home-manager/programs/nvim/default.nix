@@ -22,35 +22,17 @@ in
       nixpkgs.config.allowUnfree = true;
       colorschemes.catppuccin.enable = true;
 
-      extraPlugins = with pkgs.vimPlugins; [
-        vim-obsession
-        # clipboard-image-nvim
-      ];
-
-      extraConfigVim = ''
-      '';
-
       extraConfigLuaPre = ''
-        if vim.g.have_nerd_font then
-          require('nvim-web-devicons').setup {}
-        end
-
         -- Add the current directory to runtime path to load extra Lua configs
         vim.opt.rtp:append("${pwd}")
 
         require('config.options')
         require('config.pack')
-
-        require('extras')
-
       '';
 
       extraConfigLuaPost = ''
         require('config.keymaps')
-      '';
-
-      extraConfigLua = ''
-
+        require('extras')
       '';
     };
   }

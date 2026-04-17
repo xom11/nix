@@ -7,6 +7,7 @@ vim.cmd.colorscheme("catppuccin")
 
 -- dependencies
 vim.pack.add({ { src = "https://github.com/nvim-tree/nvim-web-devicons" } }, { load = true })
+require("nvim-web-devicons").setup({})
 vim.pack.add({ { src = "https://github.com/nvim-lua/plenary.nvim" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/MunifTanjim/nui.nvim" } }, { load = true })
 
