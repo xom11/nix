@@ -28,7 +28,7 @@ in
     age.secrets = lib.mkIf agenixEnabled {
       ssh-config = {
         file = ./age.d/config.age;
-        path = "${config.home.homeDirectory}/.ssh/config.d/config";
+        path = "${config.home.homeDirectory}/.ssh/age.d/config";
       };
     };
 

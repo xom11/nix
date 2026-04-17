@@ -5,7 +5,7 @@ Include ~/.orbstack/ssh/config
 
 Include ~/.colima/ssh_config
 
-Include ~/.ssh/config.d/*
+Include ~/.ssh/age.d/*
 
 Host *
     AddKeysToAgent yes
