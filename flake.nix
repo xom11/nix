@@ -62,6 +62,7 @@
         vmware = lib.mkNixos { device = "vmware"; };
       };
       homeConfigurations = {
+        rog = lib.mkHomeManager { device = "rog"; };
         server = lib.mkHomeManager { device = "server"; };
         desktop = lib.mkHomeManager { device = "desktop"; };
       };
