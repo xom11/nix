@@ -1,54 +1,55 @@
 {
+  lib,
   config,
   pkgs,
-  getPath,
   mkModule,
+  getPath,
   ...
 }: let
+  inherit (builtins) filter map toString;
+  inherit (lib.filesystem) listFilesRecursive;
+  inherit (lib.strings) hasSuffix;
   pwd = getPath ./.;
-  targetDir = ".config/nvimpack";
 in
-  mkModule config ./. {
-    # programs.neovim = {
-    #   enable = true;
-    #   defaultEditor = true;
-    #   viAlias = true;
-    #   vimAlias = true;
-    # };
-    #
-    # home.packages = with pkgs; [
-    #   # conform formatters
-    #   black
-    #   shfmt
-    #   stylua
-    #   alejandra
-    #   prettierd
-    #   yamllint
-    #   yamlfmt
-    #   taplo
-    # ];
+  {
+    imports = filter (hasSuffix ".nix") (
+      map toString (filter (p: p != ./default.nix) (listFilesRecursive ./.))
+    );
+  }
+  // mkModule config ./. {
+    programs.nixvim = {
+      enable = true;
+      nixpkgs.config.allowUnfree = true;
+      colorschemes.catppuccin.enable = true;
 
-    home.file = {
-      # Own config files
-      "${targetDir}/init.lua" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/init.lua";
-      };
-      "${targetDir}/lua/pack.lua" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/lua/pack.lua";
-      };
+      extraPlugins = with pkgs.vimPlugins; [
+        vim-obsession
+        # clipboard-image-nvim
+      ];
 
-      # Shared lua configs from nixvim
-      "${targetDir}/lua/config/keymaps.lua" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/config/keymaps.lua";
-      };
-      "${targetDir}/lua/config/options.lua" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/config/options.lua";
-      };
-      "${targetDir}/lua/extras" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/extras";
-      };
-      "${targetDir}/lua/plugins" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../nixvim/lua/plugins";
-      };
+      extraConfigVim = ''
+      '';
+
+      extraConfigLuaPre = ''
+        if vim.g.have_nerd_font then
+          require('nvim-web-devicons').setup {}
+        end
+
+        -- Add the current directory to runtime path to load extra Lua configs
+        vim.opt.rtp:append("${pwd}")
+
+        require('config.options')
+
+        require('extras')
+
+      '';
+
+      extraConfigLuaPost = ''
+        require('config.keymaps')
+      '';
+
+      extraConfigLua = ''
+
+      '';
     };
   }
