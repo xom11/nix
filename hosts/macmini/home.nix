@@ -77,6 +77,7 @@ in
       zsh.enable = true;
     };
     services = {
+      agenix.enable = true;
       # syncthing.enable = true;
     };
   };

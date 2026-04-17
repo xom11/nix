@@ -7,6 +7,7 @@
   ...
 }: let
   pwd = getPath ./.;
+  agenixEnabled = config.modules.home-manager.services.agenix.enable;
 in
   mkModule config ./. {
     home.activation = {
@@ -22,20 +23,13 @@ in
           ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
         fi
       '';
+    };
 
-      decryptSshConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        mkdir -p ~/.ssh/config.d
-        for f in "${pwd}"/age.d/*.age; do
-          if [ -f "$f" ]; then
-            name=$(basename "$f" .age)
-            rm -f ~/.ssh/config.d/"$name"
-            age -d -i ~/.ssh/id_ed25519 "$f" > ~/.ssh/config.d/"$name" 2>/dev/null || true
-            if [ ! -s ~/.ssh/config.d/"$name" ]; then
-              rm -f ~/.ssh/config.d/"$name"
-            fi
-          fi
-        done
-      '';
+    age.secrets = lib.mkIf agenixEnabled {
+      ssh-config = {
+        file = ./age.d/config.age;
+        path = "${config.home.homeDirectory}/.ssh/config.d/config";
+      };
     };
 
     home.file = {
