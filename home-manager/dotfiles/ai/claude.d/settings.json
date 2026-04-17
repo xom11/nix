@@ -10,7 +10,7 @@
     "defaultMode": "bypassPermissions"
   },
   "effortLevel": "high",
-  "verbose": true,
+  "viewMode": "verbose",
   "env": {
     "CLAUDE_CODE_NO_FLICKER": "1"
   }
