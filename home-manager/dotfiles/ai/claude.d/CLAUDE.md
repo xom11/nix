@@ -1,4 +1,3 @@
-
 # Global Instructions
 
 ## Language Practice
