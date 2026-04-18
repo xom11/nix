@@ -33,5 +33,8 @@ in
       ".gemini/GEMINI.md" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/gemini.d/GEMINI.md";
       };
+      ".gemini/settings.json" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/gemini.d/settings.json";
+      };
     };
   }
