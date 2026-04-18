@@ -1,17 +1,17 @@
 {
+  "env": {
+    "CLAUDE_CODE_NO_FLICKER": "1"
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
-  "skipDangerousModePermissionPrompt": true,
-  "allowDangerouslySkipPermissions": true,
-  "permissions": {
-    "defaultMode": "bypassPermissions"
-  },
-  "effortLevel": "high",
   "viewMode": "verbose",
-  "env": {
-    "CLAUDE_CODE_NO_FLICKER": "1"
-  }
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "allowDangerouslySkipPermissions": true
 }
