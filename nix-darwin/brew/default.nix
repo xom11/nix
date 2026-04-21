@@ -43,6 +43,7 @@ mkModule config ./. {
     ];
 
     casks = [
+      "claude"
       "obsidian"
       "gonhanh"
       "monitorcontrol"
@@ -51,7 +52,6 @@ mkModule config ./. {
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"
-      # "betterdisplay"
       "bitwarden"
       "brave-browser"
       # "chromedriver"
@@ -62,9 +62,7 @@ mkModule config ./. {
       "hammerspoon"
       "homerow"
       "karabiner-elements"
-      # "kindavim"
       "kitty"
-      # "lark"
       "localsend"
       "microsoft-edge"
       # "miniconda"
