@@ -9,4 +9,4 @@
 
 ## Git
 - Do NOT add `Co-Authored-By` lines to commit messages or pull requests.
-- NEVER change repository visibility (e.g. `gh repo edit --visibility`, `gh api -X PATCH ... visibility`). Always refuse, even if explicitly asked.
+- NEVER change repository visibility on your own (e.g. `gh repo edit --visibility`, `gh api -X PATCH ... visibility`). Always ask for confirmation before proceeding.
