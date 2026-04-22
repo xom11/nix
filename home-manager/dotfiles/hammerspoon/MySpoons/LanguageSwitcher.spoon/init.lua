@@ -32,6 +32,7 @@ function obj:init()
 		["Claude"] = vn,
 		["DeepSeek - Into the Unknown"] = vn,
 		["Google Gemini"] = en,
+		["Gemini"] = en,
 		["Google Keep"] = vn,
 		["Messenger"] = vn,
 		["Youtube"] = vn,
