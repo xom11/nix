@@ -17,6 +17,22 @@ in
     );
   }
   // mkModule config ./. {
+    home.packages = with pkgs; [
+      # conform formatters
+      black
+      shfmt
+      stylua
+      alejandra
+      prettierd
+      yamllint
+      yamlfmt
+      taplo
+
+      # lsp
+      nixd
+
+      tree-sitter
+    ];
     programs.nixvim = {
       enable = true;
       nixpkgs.config.allowUnfree = true;

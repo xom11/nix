@@ -1,4 +1,4 @@
--- Installed via nixvim (nix/treesitter.nix)
+vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" } }, { load = true })
 
 -- keymaps
 -- You can use the capture groups defined in `textobjects.scm`
