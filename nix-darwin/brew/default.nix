@@ -26,6 +26,7 @@ mkModule config ./. {
     ];
 
     brews = [
+      "npm"
       "colima"
       "docker"
       "docker-compose"

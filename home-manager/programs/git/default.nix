@@ -30,5 +30,6 @@ in
       delta
       lazygit
       diffnav
+      gitleaks
     ];
   }

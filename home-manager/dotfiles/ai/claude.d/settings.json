@@ -8,10 +8,12 @@
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true
   },
   "viewMode": "verbose",
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
-  "allowDangerouslySkipPermissions": true
+  "allowDangerouslySkipPermissions": true,
+  "skipAutoPermissionPrompt": true
 }
