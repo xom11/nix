@@ -23,8 +23,14 @@ in
   };
   modules.home-manager = {
     dotfiles = {
+      ai.enable = true;
+      kitty.enable = true;
+      rofi.enable = true;
     };
     environments = {
+      fonts.enable = true;
+      i3wm.enable = true;
+      i18n.enable = true;
     };
     pkgs = {
       test.enable = true;
@@ -33,7 +39,7 @@ in
     programs = {
       btop.enable = true;
       git.enable = true;
-      nixvim.enable = true;
+      nvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
       yazi.enable = true;

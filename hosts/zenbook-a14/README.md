@@ -1,6 +1,6 @@
-# ASUS ZenBook A14 (Snapdragon X Elite)
+# ASUS ZenBook A14 (Snapdragon X Plus)
 
-This device runs a Snapdragon ARM chip (`x1e80100`) with limited Linux support. The fixes below are required after a fresh Ubuntu install.
+This device runs a Snapdragon ARM chip (`x1p42100`) with limited Linux support. The fixes below are required after a fresh Ubuntu install.
 
 ## Internet (First Boot)
 
@@ -17,24 +17,59 @@ sudo apt install ubuntu-x1e-settings qcom-firmware-extract -y
 sudo qcom-firmware-extract
 ```
 
-## Power & Fan Control (Unresolved)
+## Power & GPU (Resolved)
 
-Power efficiency is significantly worse than on Windows — battery drains much faster. Fan control does not work; the fan runs at maximum speed at all times regardless of load.
+The default Ubuntu kernel (6.17 generic) has no GPU acceleration or CPU frequency scaling for X1P42100, resulting in ~10W idle power draw with software rendering. The fix is the X1E PPA kernel:
+
+```bash
+sudo add-apt-repository -y ppa:ubuntu-concept/x1e
+sudo apt install -y linux-qcom-x1e
+sudo reboot
+```
+
+This installs kernel `7.0.0-32-qcom-x1e` which includes:
+- **Adreno X1-45 GPU** driver (`compatible = "qcom,adreno-43030c00"` in DTB)
+- **CPU frequency scaling** via SCMI (`schedutil` governor, 1.9–2.9 GHz)
+- Proper device tree for X1P42100
+
+Results: idle power dropped from **~10W to ~4.6W** (on par with Windows).
+
+### GPU Firmware
+
+GPU firmware from Qualcomm's Windows Graphics Driver should be installed for full acceleration:
+
+```bash
+cd /tmp
+git clone https://github.com/alejandroqh/qcom-firmware-updater.git
+cd qcom-firmware-updater
+sudo apt install 7zip msitools unzip curl -y
+bash qcom-firmware-updater.sh --url "https://softwarecenter.qualcomm.com/api/download/software/tools/Windows_Graphics_Driver/Windows/ARM64/260228031.0.148.0/Windows_Graphics_Driver.Core.260228031.0.148.0.Windows-ARM64.zip"
+```
+
+### Additional Power Tweaks
+
+```bash
+# PCIe ASPM (add to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub):
+#   pcie_aspm.policy=powersupersave
+
+# Disable unnecessary services:
+sudo systemctl disable docker.service containerd.service docker.socket
+sudo systemctl disable cups-browsed.service ModemManager.service
+```
 
 ## Fn Keys
 
-Build and install the [zenbook-a14-EC](https://github.com/serdeliuk/zenbook-a14-EC) kernel module:
+Build and install the [zenbook-a14-EC](https://github.com/serdeliuk/zenbook-a14-EC) kernel module. Must be rebuilt after each kernel upgrade:
 
 ```bash
 cd /tmp
 git clone https://github.com/serdeliuk/zenbook-a14-EC.git
 cd zenbook-a14-EC
 make
-sudo insmod hid-asus-ec.ko
 sudo cp hid-asus-ec.ko /lib/modules/$(uname -r)/kernel/drivers/hid/
 sudo depmod -a
 sudo modprobe hid-asus-ec
-echo "hid-asus-ec" | sudo tee -a /etc/modules
+echo "hid-asus-ec" | sudo tee /etc/modules-load.d/hid-asus-ec.conf
 ```
 
 ## Audio

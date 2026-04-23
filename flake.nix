@@ -65,6 +65,7 @@
         rog = lib.mkHomeManager { device = "rog"; };
         server = lib.mkHomeManager { device = "server"; };
         desktop = lib.mkHomeManager { device = "desktop"; };
+        zenbook-a14 = lib.mkHomeManager { device = "zenbook-a14"; };
       };
       systemConfigs = {
         desktop = lib.mkSystemManager { device = "desktop"; };
