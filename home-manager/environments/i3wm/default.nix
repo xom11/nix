@@ -10,8 +10,8 @@
   lb_libs = with pkgs; [
     fontconfig
     mono6
-    xorg.libX11
-    xorg.libX11.dev
+    libx11
+    libx11.dev
     zlib
     stdenv.cc.cc.lib
   ];
@@ -26,7 +26,7 @@ in
       };
     };
     home.packages = with pkgs; [
-      xorg.xmodmap
+      xmodmap
       libnotify
       acpi
       dunst
