@@ -4,30 +4,40 @@
 # Focuses or launches an application window in sway by its app_id.
 #
 # Usage:
-#   sway-focus.sh <APP_ID> <LAUNCH_CMD>
+#   sway-focus.sh <LAUNCH_CMD...>
+#
+# App ID is auto-detected:
+#   - If --app=URL is present: match by domain (works across browsers)
+#   - Otherwise: basename of the first argument (binary name)
 #
 # Behavior:
-#   - If the currently focused window matches APP_ID, switch to the previous window.
-#   - If a window with APP_ID exists, move it to its workspace and focus it.
+#   - If the currently focused window matches, switch to the previous window.
+#   - If a matching window exists, move it to its workspace and focus it.
 #   - If no such window exists, switch to the workspace and launch the application.
 
-APP_ID=$1
-LAUNCH_CMD=$2
-FOCUSED=$(swaymsg -t get_tree | jq -r '.. | select(.focused? == true) | .app_id // .window_properties.instance // empty')
+LAUNCH_CMD="$*"
 
-if [ "$FOCUSED" = "$APP_ID" ]; then
-  swaymsg workspace back_and_forth
+# Auto-detect app_id pattern
+APP_URL=$(echo "$LAUNCH_CMD" | grep -oP '(?<=--app=)https?://\S+')
+if [ -n "$APP_URL" ]; then
+  # Web app: use domain as regex to match any browser's web app id
+  PATTERN=$(echo "$APP_URL" | sed 's|https\?://||; s|/$||; s|/.*||')
 else
-  if swaymsg "[app_id=\"^${APP_ID}$\"] focus" 2>/dev/null; then
-    swaymsg "[app_id=\"^${APP_ID}$\"] move to workspace ${APP_ID}"
-    swaymsg workspace "${APP_ID}"
-    swaymsg "[app_id=\"^${APP_ID}$\"] focus"
-  elif swaymsg "[instance=\"^${APP_ID}$\"] focus" 2>/dev/null; then
-    swaymsg "[instance=\"^${APP_ID}$\"] move to workspace ${APP_ID}"
-    swaymsg workspace "${APP_ID}"
-    swaymsg "[instance=\"^${APP_ID}$\"] focus"
-  else
-    swaymsg workspace "${APP_ID}"
-    exec $LAUNCH_CMD
-  fi
+  # Regular app: exact match on binary name
+  PATTERN="^$(basename "$1")$"
+fi
+
+FOCUSED=$(swaymsg -t get_tree | jq -r '.. | select(.focused? == true) | .app_id // .window_properties.instance // empty')
+MATCH=$(swaymsg -t get_tree | jq -r ".. | select(.app_id? // \"\" | test(\"$PATTERN\")) | .app_id" | head -1)
+WS_NAME=${MATCH:-$PATTERN}
+
+if echo "$FOCUSED" | grep -q "$PATTERN"; then
+  swaymsg workspace back_and_forth
+elif [ -n "$MATCH" ]; then
+  swaymsg "[app_id=\"$MATCH\"] move to workspace $WS_NAME"
+  swaymsg workspace "$WS_NAME"
+  swaymsg "[app_id=\"$MATCH\"] focus"
+else
+  swaymsg workspace "$WS_NAME"
+  exec $LAUNCH_CMD
 fi
