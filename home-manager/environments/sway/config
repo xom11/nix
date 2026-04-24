@@ -8,4 +8,5 @@ font pango:monospace 14
 include conf.d/*.conf
 
 for_window [app_id=".*"] border pixel 0
-for_window [class=".*"] border pixel 0
+
+xwayland disable

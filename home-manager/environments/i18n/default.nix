@@ -32,7 +32,7 @@ in
       ".config/fcitx5/profile" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/fcitx5.d/profile";
       };
-      # ubuntu
+      # X11 (i3wm)
       ".xprofile".text = ''
         export XMODIFIERS="@im=fcitx"
         export GTK_IM_MODULE=fcitx
@@ -40,5 +40,12 @@ in
         export SDL_IM_MODULE=fcitx
         export GLFW_IM_MODULE=ibus
       '';
+    };
+    # Wayland (sway) — sessionVariables are set via systemd user environment
+    home.sessionVariables = {
+      GTK_IM_MODULE = "fcitx";
+      QT_IM_MODULE = "fcitx";
+      XMODIFIERS = "@im=fcitx";
+      SDL_IM_MODULE = "fcitx";
     };
   }

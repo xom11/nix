@@ -11,20 +11,13 @@ let
 in
 mkModule config ./. {
   home.file = {
-    ".config/sway/config" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config";
-    };
-    ".config/sway/conf.d" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/conf.d";
-    };
-    ".config/sway/scripts" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/scripts";
+    ".config/sway" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${pwd}";
     };
   };
   home.packages = with pkgs; [
     libnotify
-    acpi
-    dunst
+    mako
     wl-clipboard
     brightnessctl
     rofi
