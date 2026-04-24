@@ -51,27 +51,6 @@
     config = lib.mkIf cfg.enable moduleContent;
   };
 
-  # Install apt packages on non-NixOS systems (idempotent)
-  hm = inputs.home-manager.lib.hm;
-  mkApt = path: packages: let
-    name = builtins.replaceStrings ["/"] ["-"] (getRelPath path);
-  in {
-    "apt-${name}" = hm.dag.entryAfter ["writeBoundary"] ''
-      if command -v apt-get &>/dev/null; then
-        missing=()
-        for pkg in ${lib.concatStringsSep " " packages}; do
-          if ! dpkg -s "$pkg" &>/dev/null; then
-            missing+=("$pkg")
-          fi
-        done
-        if [ ''${#missing[@]} -gt 0 ]; then
-          echo "Installing apt packages: ''${missing[*]}"
-          sudo apt-get install -y "''${missing[@]}"
-        fi
-      fi
-    '';
-  };
-
   # Check module: check cfg in not default.nix <nixvim/modules>
   ckModule = config: path: cfgContent: let
     relPath = getRelPath path;
@@ -93,7 +72,6 @@
         getRelPath
         getPath
         mkModule
-        mkApt
         ckModule
         ;
     };
