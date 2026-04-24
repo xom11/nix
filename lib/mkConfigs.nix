@@ -26,8 +26,6 @@
     then absPath
     else relPath;
 
-  device = "";
-
   getRelPath = path: let
     # Step 1: /nix/store/* -> /nix/store/*-source/relPath
     nixPath = builtins.toString path;
@@ -68,23 +66,19 @@
         system
         homeDir
         repoPath
-        device
         getRelPath
         getPath
         mkModule
         ckModule
         ;
     };
+  mkArgs = device: args // {inherit device;};
 in {
   # =====================================================================
   # Nix-darwin
   # =====================================================================
   mkDarwin = {device}: let
-    specialArgs =
-      args
-      // {
-        device = device;
-      };
+    specialArgs = mkArgs device;
   in
     inputs.nix-darwin.lib.darwinSystem {
       specialArgs = specialArgs;
@@ -118,11 +112,7 @@ in {
   # NixOS
   # =====================================================================
   mkNixos = {device}: let
-    specialArgs =
-      args
-      // {
-        device = device;
-      };
+    specialArgs = mkArgs device;
   in
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = specialArgs;
@@ -149,11 +139,7 @@ in {
   mkHomeManager = {device}:
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = inputs.nixpkgs.legacyPackages.${system};
-      extraSpecialArgs =
-        args
-        // {
-          device = device;
-        };
+      extraSpecialArgs = mkArgs device;
       modules = [
         ../hosts/${device}/home.nix
         inputs.nixvim.homeModules.nixvim
@@ -163,15 +149,9 @@ in {
   # =====================================================================
   # System Manager
   # =====================================================================
-  mkSystemManager = {device}: let
-    extraSpecialArgs =
-      args
-      // {
-        device = device;
-      };
-  in
+  mkSystemManager = {device}:
     inputs.system-manager.lib.makeSystemConfig {
-      inherit extraSpecialArgs;
+      extraSpecialArgs = mkArgs device;
       modules = [
         # ../hosts/${device}/configuration.nix
         ../system-manager
