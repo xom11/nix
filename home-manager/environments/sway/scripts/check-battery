@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+# Battery low threshold (percentage)
+THRESHOLD=15
+
+# Time to wait between checks (seconds)
+SLEEP_TIME=120
+
+while true; do
+    STATUS=$(acpi -b | grep -o 'Discharging\|Charging\|Full')
+    PERCENT=$(acpi -b | grep -o '[0-9]*%' | sed 's/%//')
+
+    if [ "$STATUS" = "Discharging" ] && [ "$PERCENT" -le "$THRESHOLD" ]; then
+        notify-send -u critical "LOW BATTERY! ($PERCENT%)" "Please plug in your charger immediately."
+    fi
+
+    sleep $SLEEP_TIME
+done
