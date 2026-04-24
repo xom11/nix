@@ -12,10 +12,10 @@ in
 mkModule config ./. {
   home.file = {
     ".config/sway" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${pwd}";
+      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../sway.d";
     };
     ".config/kanshi/config" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/kanshi.conf";
+      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../kanshi.d/kanshi.conf";
     };
   };
   xdg.configFile."environment.d/999-nix-path.conf".text = ''
