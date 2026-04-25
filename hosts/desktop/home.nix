@@ -13,12 +13,6 @@ in {
       git -C ~/.nix pull
       nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
     '';
-    galaxy-update = ''
-      ansible-galaxy install -r  ${cfgDir}/ansible/requirements.yml
-    '';
-    ansible-update = ''
-      ansible-playbook -i "localhost," ${cfgDir}/ansible/main.yml
-    '';
     system-manager-update = ''
       sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#${device}
     '';
