@@ -101,6 +101,7 @@ in {
           home-manager.backupFileExtension = "backup";
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
+            inputs.nix-flatpak.homeManagerModules.nix-flatpak
             inputs.nixvim.homeModules.nixvim
             inputs.agenix.homeManagerModules.default
             ../hosts/${device}/home.nix
