@@ -71,3 +71,4 @@ alias ait='aichat -r teacher'
 
 # nix
 alias u='update'
+alias us='system-manager-update'

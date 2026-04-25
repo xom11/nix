@@ -1,11 +1,11 @@
 {
-  input,
   config,
   pkgs,
   lib,
+  system,
   ...
 }: {
-  nixpkgs.hostPlatform = "aarch64-linux";
+  nixpkgs.hostPlatform = system;
   system-manager.allowAnyDistro = true;
   system-manager.preActivationAssertions = {
     setup_init = {

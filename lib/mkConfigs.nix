@@ -151,9 +151,24 @@ in {
   # =====================================================================
   # System Manager
   # =====================================================================
-  mkSystemManager = {device}:
+  mkSystemManager = {device, system}: let
+    smHomeDir = "/home/${username}";
+    smRepoPath = let
+      absPath = "${smHomeDir}/.nix";
+    in
+      if builtins.pathExists absPath
+      then absPath
+      else "../.nix";
+    smGetPath = path: "${smRepoPath}/${getRelPath path}";
+    specialArgs = inputs // {
+      inherit username device system getRelPath mkModule ckModule;
+      homeDir = smHomeDir;
+      repoPath = smRepoPath;
+      getPath = smGetPath;
+    };
+  in
     inputs.system-manager.lib.makeSystemConfig {
-      extraSpecialArgs = mkArgs device;
+      extraSpecialArgs = specialArgs;
       modules = [
         ../hosts/${device}/configuration.nix
       ];
