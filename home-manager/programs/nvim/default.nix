@@ -32,6 +32,7 @@ in
       nixd
 
       tree-sitter
+      imagemagick
     ];
     programs.nixvim = {
       enable = true;

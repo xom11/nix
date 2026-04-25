@@ -3,6 +3,9 @@ require("snacks").setup({
 	notifier = {
 		enabled = true,
 	},
+	image = {
+		enabled = true,
+	},
 })
 
 -- Macro recording notifications
