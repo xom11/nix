@@ -1,9 +1,5 @@
 vim.pack.add({ { src = "https://github.com/folke/snacks.nvim" } }, { load = true })
 require("snacks").setup({
-	image = {
-		enabled = true,
-		backend = "kitty",
-	},
 	notifier = {
 		enabled = true,
 	},
