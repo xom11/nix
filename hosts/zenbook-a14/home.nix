@@ -36,6 +36,7 @@ in
     pkgs = {
       test.enable = true;
       dev.enable = true;
+      ubuntu.enable = true;
     };
     programs = {
       btop.enable = true;

@@ -11,6 +11,7 @@ mkModule config ./. {
   ];
 
   services.flatpak = {
+    enable = true;
     remotes = [
       {
         name = "flathub";
@@ -19,7 +20,6 @@ mkModule config ./. {
     ];
     packages = [
       "org.videolan.VLC"
-      "com.discordapp.Discord"
       "org.telegram.desktop"
       "com.sindresorhus.Caprine"
       "org.localsend.localsend_app"
