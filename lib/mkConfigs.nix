@@ -142,6 +142,7 @@ in {
       extraSpecialArgs = mkArgs device;
       modules = [
         ../hosts/${device}/home.nix
+        inputs.nix-flatpak.homeManagerModules.nix-flatpak
         inputs.nixvim.homeModules.nixvim
         inputs.agenix.homeManagerModules.default
       ];
