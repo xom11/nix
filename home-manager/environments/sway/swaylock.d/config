@@ -1,0 +1,10 @@
+image=~/.nix/home-manager/dotfiles/images/studio-ghibli-sunny-hut-4k.jpg
+scaling=fill
+font=monospace
+font-size=24
+indicator-idle-visible
+indicator-radius=100
+indicator-thickness=10
+inside-color=00000088
+ring-color=ffffff
+key-hl-color=00ff00
