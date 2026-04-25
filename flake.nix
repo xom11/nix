@@ -69,6 +69,7 @@
       };
       systemConfigs = {
         desktop = lib.mkSystemManager { device = "desktop"; };
+        zenbook-a14 = lib.mkSystemManager { device = "zenbook-a14"; };
       };
     };
   }
