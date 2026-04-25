@@ -155,8 +155,7 @@ in {
     inputs.system-manager.lib.makeSystemConfig {
       extraSpecialArgs = mkArgs device;
       modules = [
-        # ../hosts/${device}/configuration.nix
-        ../system-manager
+        ../hosts/${device}/configuration.nix
       ];
     };
 }

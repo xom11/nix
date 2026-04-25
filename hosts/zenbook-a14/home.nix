@@ -11,6 +11,9 @@ in
       git -C ~nix pull
       nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
     '';
+    system-manager-update = ''
+      sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#${device}
+    '';
   };
   home.sessionVariables = {
      # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
