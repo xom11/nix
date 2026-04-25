@@ -32,6 +32,9 @@ in
       nixd
 
       tree-sitter
+
+      # snacks.nvim image support
+      imagemagick
     ];
     programs.nixvim = {
       enable = true;

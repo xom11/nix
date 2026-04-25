@@ -40,7 +40,11 @@ require("barbecue").setup({})
 -- vim.pack.add({ { src = "https://github.com/nvimdev/dashboard-nvim" } }, { load = true })
 -- require("dashboard").setup({})
 vim.pack.add({ { src = "https://github.com/folke/noice.nvim" } }, { load = true })
-require("noice").setup({})
+require("noice").setup({
+	notify = {
+		view = "snacks",
+	},
+})
 vim.pack.add({ { src = "https://github.com/catgoose/nvim-colorizer.lua" } }, { load = true })
 require("colorizer").setup({})
 vim.pack.add({ { src = "https://github.com/folke/which-key.nvim" } }, { load = true })
