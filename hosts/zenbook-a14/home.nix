@@ -15,6 +15,9 @@ in
       sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#${device}
     '';
   };
+  home.sessionPath = [
+    "/run/system-manager/sw/bin"
+  ];
   home.sessionVariables = {
      # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
