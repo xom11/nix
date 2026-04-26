@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   getPath,
   mkModule,
   ...
@@ -8,37 +7,12 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
-    home.file = {
-      ".config/sway" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../sway.d";
-      };
-      ".config/kanshi/config" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../kanshi.d/kanshi.conf";
-      };
-      ".config/swaylock/config" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../swaylock.d/config";
-      };
+    home.file.".config/swaylock/config" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../swaylock.d/config";
     };
     home.aptPackages = [
       "sway"
       "swaylock"
       "xdg-desktop-portal-wlr"
-    ];
-    home.packages = with pkgs; [
-      libnotify
-      mako
-      wl-clipboard
-      brightnessctl
-      rofi
-      grim
-      slurp
-      swaybg
-      swayidle
-      autotiling
-      bluetui
-      wtype
-      cliphist
-      kanshi
-      jq
     ];
   }

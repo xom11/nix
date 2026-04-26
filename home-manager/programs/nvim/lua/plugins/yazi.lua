@@ -2,6 +2,7 @@ vim.pack.add({ { src = "https://github.com/mikavilpas/yazi.nvim" } }, { load = t
 
 require("yazi").setup({
 	open_for_directories = false,
+	floating_window_scaling_factor = 0.99,
 	keymaps = {
 		show_help = "<f1>",
 	},

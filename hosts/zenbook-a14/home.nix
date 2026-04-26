@@ -22,6 +22,9 @@ in
      # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
+    base = {
+      ubuntu.enable = true;
+    };
     dotfiles = {
       ai.enable = true;
       kitty.enable = true;
@@ -30,6 +33,7 @@ in
     environments = {
       fonts.enable = true;
       # i3wm.enable = true;
+      sway.enable = true;
       sway.ubuntu.enable = true;
       i18n.enable = true;
     };
