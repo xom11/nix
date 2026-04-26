@@ -12,10 +12,10 @@ layer=overlay
 anchor=top-right
 outer-margin=8
 
-background-color=#1e1e2e
+background-color=#1e1e2eCC
 text-color=#cdd6f4
 border-color=#89b4fa
-progress-color=over #313244
+progress-color=over #313244CC
 
 [urgency=low]
 border-color=#a6e3a1
@@ -26,5 +26,5 @@ border-color=#89b4fa
 
 [urgency=critical]
 border-color=#f38ba8
-background-color=#1e1e2e
+background-color=#1e1e2eF5
 default-timeout=0
