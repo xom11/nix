@@ -47,11 +47,6 @@ require("colorizer").setup({})
 vim.pack.add({ { src = "https://github.com/folke/which-key.nvim" } }, { load = true })
 require("which-key").setup({})
 
--- Tools
-vim.pack.add({ { src = "https://github.com/tpope/vim-dadbod" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/kristijanhusak/vim-dadbod-ui" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/kristijanhusak/vim-dadbod-completion" } }, { load = true })
-
 -- Auto-load all plugin configs
 local source = debug.getinfo(1, "S").source:sub(2)
 local dir = vim.fn.fnamemodify(source, ":h")
