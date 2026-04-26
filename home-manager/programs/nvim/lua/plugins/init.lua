@@ -1,5 +1,3 @@
-vim = vim
-
 -- Theme
 vim.pack.add({ { src = "https://github.com/catppuccin/nvim" } }, { load = true })
 vim.cmd.colorscheme("catppuccin")
@@ -37,8 +35,7 @@ vim.pack.add({ { src = "https://github.com/SmiteshP/nvim-navic" } }, { load = tr
 require("nvim-navic").setup({ lsp = { auto_attach = true } })
 vim.pack.add({ { src = "https://github.com/utilyre/barbecue.nvim" } }, { load = true })
 require("barbecue").setup({})
--- vim.pack.add({ { src = "https://github.com/nvimdev/dashboard-nvim" } }, { load = true })
--- require("dashboard").setup({})
+require("plugins.snacks")
 vim.pack.add({ { src = "https://github.com/folke/noice.nvim" } }, { load = true })
 require("noice").setup({
 	notify = {
@@ -51,7 +48,6 @@ vim.pack.add({ { src = "https://github.com/folke/which-key.nvim" } }, { load = t
 require("which-key").setup({})
 
 -- Tools
-vim.pack.add({ { src = "https://github.com/tpope/vim-obsession" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/tpope/vim-dadbod" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/kristijanhusak/vim-dadbod-ui" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/kristijanhusak/vim-dadbod-completion" } }, { load = true })
