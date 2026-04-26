@@ -8,6 +8,6 @@ require("yazi").setup({
 })
 
 local map = vim.keymap.set
-map({ "n", "v" }, "<leader>ey", "<CMD>Yazi<CR>", { desc = "Yazi: open at current file" })
+map({ "n", "v" }, "<leader>ee", "<CMD>Yazi<CR>", { desc = "Yazi: open at current file" })
 map("n", "<leader>ec", "<CMD>Yazi cwd<CR>", { desc = "Yazi: open in cwd" })
 map("n", "<leader>er", "<CMD>Yazi toggle<CR>", { desc = "Yazi: resume last session" })

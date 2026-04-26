@@ -58,8 +58,8 @@ local opts = {
 require("neo-tree").setup(opts)
 
 local map = vim.keymap.set
-map("n", "<leader>et", "<CMD>Neotree toggle<CR>", { silent = true, desc = "Neotree: toggle sidebar" })
-map("n", "<leader>ee", "<CMD>Neotree reveal current<CR>", { silent = true, desc = "Neotree: open buffer" })
+-- map("n", "<leader>et", "<CMD>Neotree toggle<CR>", { silent = true, desc = "Neotree: toggle sidebar" })
+-- map("n", "<leader>ee", "<CMD>Neotree reveal current<CR>", { silent = true, desc = "Neotree: open buffer" })
 map("n", "-", "<CMD>Neotree reveal current<CR>", { silent = true, desc = "Neotree: open buffer" })
 
 local function jump_skip_neotree(dir)
