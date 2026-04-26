@@ -1,0 +1,30 @@
+font=FiraCode Nerd Font 14
+width=480
+height=220
+margin=16
+padding=20
+border-size=2
+border-radius=14
+max-icon-size=64
+default-timeout=6000
+ignore-timeout=0
+layer=overlay
+anchor=top-right
+outer-margin=8
+
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+progress-color=over #313244
+
+[urgency=low]
+border-color=#a6e3a1
+default-timeout=4000
+
+[urgency=normal]
+border-color=#89b4fa
+
+[urgency=critical]
+border-color=#f38ba8
+background-color=#1e1e2e
+default-timeout=0

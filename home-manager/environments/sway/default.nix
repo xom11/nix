@@ -15,6 +15,9 @@ in
       ".config/kanshi/config" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/kanshi.d/kanshi.conf";
       };
+      ".config/mako/config" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/mako.d/config";
+      };
     };
     home.packages = with pkgs; [
       libnotify
