@@ -1,26 +1,7 @@
-{ pkgs, device, ... }:
-let
-  cfgDir = "~/.nix/hosts/${device}";
-in
-{
+{pkgs, ...}: {
   imports = [
     ../../home-manager
   ];
-  home.shellAliases = {
-    update = ''
-      git -C ~nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
-    '';
-    system-manager-update = ''
-      sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#${device}
-    '';
-  };
-  home.sessionPath = [
-    "/run/system-manager/sw/bin"
-  ];
-  home.sessionVariables = {
-     # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-  };
   modules.home-manager = {
     base = {
       ubuntu.enable = true;

@@ -1,23 +1,18 @@
-{ pkgs, device, ...}:
-let
+{pkgs, ...}: let
   ssd = "/Volumes/ssd";
-in
-{
+in {
   nixpkgs.overlays = [
     (import ../../overlays)
   ];
   imports = [
     ../../home-manager
   ];
-  home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
-  };
   home.sessionVariables = {
     # Homebrew
     HOMEBREW_CACHE = "${ssd}/cache/Homebrew";
     # uv
     UV_CACHE_DIR = "${ssd}/cache/uv";
-    UV_DATA_DIR  = "${ssd}/data/uv";
+    UV_DATA_DIR = "${ssd}/data/uv";
     # npm
     NPM_CONFIG_CACHE = "${ssd}/cache/npm";
     # Colima/Lima VM disk
@@ -45,6 +40,9 @@ in
   ];
 
   modules.home-manager = {
+  base = {
+  macos.enable = true;
+  };
     environments = {
       fonts.enable = true;
     };

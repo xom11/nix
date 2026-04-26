@@ -1,27 +1,15 @@
-{ pkgs, device, ... }:
-let
-  cfgDir = "~/.nix/hosts/${device}";
-in
-{
+{pkgs, ...}: let
+in {
   imports = [
     ../../home-manager
   ];
-  home.shellAliases = {
-    update = ''
-      git -C ~/.nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
-    '';
-    galaxy-update = ''
-      ansible-galaxy install -r  ${cfgDir}/ansible/requirements.yml
-    '';
-    ansible-update = ''
-      ansible-playbook -i "localhost," ${cfgDir}/ansible/main.yml
-    '';
-  };
   home.sessionVariables = {
-      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+    LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
+    base = {
+      ubuntu.enable = true;
+    };
     dotfiles = {
       ai.enable = true;
     };

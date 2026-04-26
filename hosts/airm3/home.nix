@@ -1,18 +1,17 @@
-{ pkgs, device, ... }:
-{
- nixpkgs.overlays = [
+{pkgs, ...}: {
+  nixpkgs.overlays = [
     (import ../../overlays)
   ];
   imports = [
     ../../home-manager
   ];
-  home.shellAliases = {
-    update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
-  };
   home.packages = [
     pkgs.bws
   ];
   modules.home-manager = {
+    base = {
+      macos.enable = true;
+    };
     environments = {
       fonts.enable = true;
     };
