@@ -17,19 +17,21 @@
 
 LAUNCH_CMD="$*"
 
-# Auto-detect app_id pattern
+# Auto-detect app_id pattern and default workspace name
 APP_URL=$(echo "$LAUNCH_CMD" | grep -oP '(?<=--app=)https?://\S+')
 if [ -n "$APP_URL" ]; then
   # Web app: use domain as regex to match any browser's web app id
-  PATTERN=$(echo "$APP_URL" | sed 's|https\?://||; s|/$||; s|/.*||')
+  DEFAULT_WS=$(echo "$APP_URL" | sed 's|https\?://||; s|/$||; s|/.*||')
+  PATTERN="$DEFAULT_WS"
 else
   # Regular app: exact match on binary name
-  PATTERN="^$(basename "$1")$"
+  DEFAULT_WS=$(basename "$1")
+  PATTERN="^${DEFAULT_WS}$"
 fi
 
 FOCUSED=$(swaymsg -t get_tree | jq -r '.. | select(.focused? == true) | .app_id // .window_properties.instance // empty')
 MATCH=$(swaymsg -t get_tree | jq -r ".. | select(.app_id? // \"\" | test(\"$PATTERN\")) | .app_id" | head -1)
-WS_NAME=${MATCH:-$PATTERN}
+WS_NAME=${MATCH:-$DEFAULT_WS}
 
 if echo "$FOCUSED" | grep -q "$PATTERN"; then
   swaymsg workspace back_and_forth
