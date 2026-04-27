@@ -44,6 +44,9 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    beckon.url = "github:xom11/beckon";
+    beckon.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =

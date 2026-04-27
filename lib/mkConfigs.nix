@@ -139,7 +139,22 @@ in {
   # =====================================================================
   mkHomeManager = {device}:
     inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = inputs.nixpkgs.legacyPackages.${system};
+      # Construct pkgs with overlays so user packages from `../overlays`
+      # (e.g. raiseorlaunch) resolve in standalone home-manager. Standalone
+      # HM does not honour `nixpkgs.overlays` set inside modules because
+      # `pkgs` is provided here rather than constructed by HM itself.
+      #
+      # Flake-shipped overlays (beckon) are pulled in directly from the
+      # corresponding input — `nix flake update beckon` bumps the version,
+      # no manual rev/hash/Cargo.lock to maintain.
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [
+          (import ../overlays)
+          inputs.beckon.overlays.default
+        ];
+        config.allowUnfree = true;
+      };
       extraSpecialArgs = mkArgs device;
       modules = [
         ../hosts/${device}/home.nix

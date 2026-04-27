@@ -20,6 +20,7 @@ in
       };
     };
     home.packages = with pkgs; [
+      beckon
       libnotify
       mako
       wl-clipboard
