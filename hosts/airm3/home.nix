@@ -1,12 +1,14 @@
-{pkgs, ...}: {
+{pkgs, beckon, ...}: {
   nixpkgs.overlays = [
     (import ../../overlays)
+    beckon.overlays.default
   ];
   imports = [
     ../../home-manager
   ];
   home.packages = [
     pkgs.bws
+    pkgs.beckon
   ];
   modules.home-manager = {
     base = {

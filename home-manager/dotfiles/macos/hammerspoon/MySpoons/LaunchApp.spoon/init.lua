@@ -1,3 +1,18 @@
+--- LaunchApp.spoon — beckon-backed focus-or-launch.
+---
+--- The previous version (`init.lua.backup`) implemented the
+--- focus / hide / toggle-back logic in pure Lua via osascript +
+--- hs.application.launchOrFocusByBundleID + hs.window.orderedWindows.
+---
+--- This version delegates the whole algorithm to `beckon` (Rust CLI). The
+--- spoon's only job now is binding hotkeys and calling out to beckon with
+--- the user-friendly Name. beckon resolves the Name against
+--- LaunchServices, and runs the full focus / launch / cycle / toggle / hide
+--- algorithm — including step 5a (cycle within an app's windows) which the
+--- old Lua version skipped.
+---
+--- See https://github.com/xom11/beckon
+
 local obj = {}
 obj.__index = obj
 
@@ -5,7 +20,7 @@ local hyper = { "cmd", "ctrl", "alt" }
 
 local defaultShortcuts = {
 	{ "b", "Vivaldi" },
-  { "c", "Claude" },
+	{ "c", "Claude" },
 	{ "d", "Discord" },
 	{ "f", "Finder" },
 	{ "h", "Gemini" },
@@ -19,12 +34,12 @@ local defaultShortcuts = {
 	{ "o", "Obsidian" },
 	{ "y", "Youtube" },
 	{ "z", "Zalo" },
-  { "q", "Qutebrowser" },
-  { "j", "Tao Monitor" },
+	{ "q", "Qutebrowser" },
+	{ "j", "Tao Monitor" },
 }
 local extendShortcuts = {
 	{ "a", "Launchpad" },
-  { "b", "Brave Browser" },
+	{ "b", "Brave Browser" },
 	{ "c", "Google Chrome" },
 	{ "d", "DeepSeek - Into the Unknown" },
 	{ "m", "Gmail" },
@@ -34,81 +49,52 @@ local extendShortcuts = {
 
 local rb = hs.loadSpoon("RecursiveBinder")
 
-local function moveCursorToCenter()
-	local focusedApp = hs.application.frontmostApplication()
-
-	if focusedApp then
-		local focusedWindow = focusedApp:focusedWindow()
-
-		if focusedWindow then
-			local frame = focusedWindow:frame()
-
-			local centerX = frame.x + frame.w / 2
-			local centerY = frame.y + frame.h / 2
-
-			hs.mouse.setAbsolutePosition({ x = centerX, y = centerY })
-		end
-	end
+-- Path to the beckon binary. We DON'T use `hs.execute(cmd, true)` because
+-- the second arg sources the user's login shell (~/.zshrc) before each
+-- invocation — on a typical machine that's 200–1000 ms, on this user's
+-- setup it exceeds 10 s. Calling beckon directly from a known absolute
+-- path bypasses shell startup entirely.
+--
+-- /etc/profiles/per-user/<user>/bin is where home-manager's useUserPackages
+-- places the symlinks for `home.packages`, so this resolves the same binary
+-- that `which beckon` would resolve from a normal terminal session.
+local function beckonPath()
+	local user = os.getenv("USER") or "kln"
+	return "/etc/profiles/per-user/" .. user .. "/bin/beckon"
 end
 
-local function launch(appName)
-	-- Error when using window instead of application: pwa
-	local focusedApp = hs.application.frontmostApplication()
-	local _, focusedBundleID = hs.osascript.applescript([[id of app (path to frontmost application as text)]])
-	local _, targetBundleID = hs.osascript.applescript([[id of app "]] .. appName .. [["]])
-
-	if not targetBundleID then
-		hs.alert.show("Application '" .. appName .. "' not found!")
-		return
-	end
-  -- print("Focused Bundle ID: " .. tostring(focusedBundleID))
-  -- print("Target Bundle ID: " .. tostring(targetBundleID))
-
-	if focusedBundleID == targetBundleID then
-		-- focusedApp:hide()
-    -- ERROR: browser not using vimium/surfingkeys when hiding and focusing again
-    -- FIX: Switch to another app window if possible, else hide
-		local windows = hs.window.orderedWindows()
-		local foundOtherApp = false
-
-    -- BUG: windows[2] maybe not work
-    -- FIX: loop through all windows
-		for i = 2, #windows do
-			local win = windows[i]
-			local winApp = win:application()
-			if winApp and winApp:bundleID() ~= focusedBundleID and win:isStandard() then
-				win:focus()
-				foundOtherApp = true
-				break
+-- Fire and forget via hs.task — non-blocking. beckon exits in ~20 ms but
+-- macOS focus changes are async anyway, so there's nothing useful to wait
+-- for. We attach a callback that surfaces a desktop alert if beckon exits
+-- with non-zero status (typical: app id didn't resolve).
+local function beckon(name)
+	local task
+	task = hs.task.new(beckonPath(), function(exitCode, _stdout, stderr)
+		if exitCode ~= 0 then
+			local msg = (stderr or ""):gsub("%s+$", "")
+			if msg == "" then
+				msg = "exit code " .. tostring(exitCode)
 			end
+			hs.alert.show("beckon " .. name .. ": " .. msg, 3)
 		end
-
-		if not foundOtherApp then
-      focusedApp:hide()
-		end
-
-	else
-		hs.application.launchOrFocusByBundleID(targetBundleID)
-		moveCursorToCenter()
-	end
+	end, { name })
+	task:start()
 end
 
 function obj:init()
 	for _, shortcut in ipairs(defaultShortcuts) do
 		hs.hotkey.bind(hyper, shortcut[1], function()
-			launch(shortcut[2])
+			beckon(shortcut[2])
 		end)
 	end
 
-	-- Build a keymap for extendShortcuts so that hyper + a + <key> launches the app
+	-- hyper + a + <key> → launch from extendShortcuts
 	local keymap = {}
 	for _, shortcut in ipairs(extendShortcuts) do
-		-- rb.singleKey will add 'shift' modifier automatically for uppercase letters
 		keymap[rb.singleKey(shortcut[1], shortcut[2])] = function()
-			launch(shortcut[2])
+			beckon(shortcut[2])
 		end
 	end
-
 	local starter = rb.recursiveBind(keymap)
 	hs.hotkey.bind(hyper, "a", starter)
 end
