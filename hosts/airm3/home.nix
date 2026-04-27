@@ -16,17 +16,19 @@
       fonts.enable = true;
     };
     dotfiles = {
-      # aerospace.enable = true;
+      macos = {
+        hammerspoon.enable = true;
+        sleepwatcher.enable = true;
+      };
+      terminal = {
+        kitty.enable = true;
+      };
+      browser = {
+        firefox.enable = true;
+      };
       ai.enable = true;
       conda.enable = true;
-      hammerspoon.enable = true;
-      # karabiner.enable = true;
-      kitty.enable = true;
-      # qutebrowser.enable = true;
-
-      sleepwatcher.enable = true;
       vscode.enable = true;
-      firefox.enable = true;
     };
     pkgs = {
       test.enable = true;
