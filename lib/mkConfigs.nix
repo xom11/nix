@@ -170,6 +170,7 @@ in {
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
         inputs.nixvim.homeModules.nixvim
         inputs.agenix.homeManagerModules.default
+        inputs.nix-apt.homeManagerModules.default
       ];
     };
   # =====================================================================

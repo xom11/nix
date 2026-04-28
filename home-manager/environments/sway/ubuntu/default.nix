@@ -10,9 +10,12 @@ in
     home.file.".config/swaylock/config" = {
       source = config.lib.file.mkOutOfStoreSymlink "${pwd}/../swaylock.d/config";
     };
-    home.aptPackages = [
-      "sway"
-      "swaylock"
-      "xdg-desktop-portal-wlr"
-    ];
+    services.nix-apt = {
+      enable = true;
+      aptPackages = [
+        "sway"
+        "swaylock"
+        "xdg-desktop-portal-wlr"
+      ];
+    };
   }

@@ -4,11 +4,14 @@
   ...
 }:
 mkModule config ./. {
-  home.aptPackages = [
-    "kitty"
-    "flatpak"
-    "gnome-software-plugin-flatpak"
-  ];
+  services.nix-apt = {
+    enable = true;
+    aptPackages = [
+      "kitty"
+      "flatpak"
+      "gnome-software-plugin-flatpak"
+    ];
+  };
 
   services.flatpak = {
     enable = true;

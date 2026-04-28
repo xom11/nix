@@ -328,6 +328,21 @@
         "type": "github"
       }
     },
+    "nix-apt": {
+      "locked": {
+        "lastModified": 1777389478,
+        "narHash": "sha256-11CkGa2w7nph3h0htZlwrgcWAGzJWCKp+JXV8bT2XR0=",
+        "owner": "xom11",
+        "repo": "nix-apt",
+        "rev": "c65d4f49e803d7fd48564fc803de8d83c4a1dfef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xom11",
+        "repo": "nix-apt",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -523,6 +538,7 @@
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
         "ibus-bamboo": "ibus-bamboo",
+        "nix-apt": "nix-apt",
         "nix-darwin": "nix-darwin",
         "nix-flatpak": "nix-flatpak",
         "nix-homebrew": "nix-homebrew",

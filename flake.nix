@@ -47,6 +47,8 @@
     beckon.url = "github:xom11/beckon";
     beckon.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-apt.url = "github:xom11/nix-apt";
+
   };
 
   outputs =
