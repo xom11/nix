@@ -39,7 +39,7 @@ $dotfiles = @(
     }
     # PART: WezTerm
     @{
-        src  = "$homeManagerPath\dotfiles\wezterm\wezterm.lua";
+        src  = "$homeManagerPath\dotfiles\terminal\wezterm\wezterm.lua";
         dest = "$env:USERPROFILE\.config\wezterm\wezterm.lua"
     }
     # PART: SSH
