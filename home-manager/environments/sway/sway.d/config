@@ -1,3 +1,5 @@
+# vim: ft=swayconfig
+
 set $mod Mod4
 set $cap Mod4+Mod1+Ctrl
 set $tab Mod4+Ctrl+Shift
