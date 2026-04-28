@@ -1,8 +1,9 @@
 #!/bin/sh
 
-# sway-beckon.sh <WORKSPACE> <BECKON_ID...>
+# sway-beckon.sh <BECKON_ID...>
 #
 # Focus-or-launch with strict app-per-workspace, no flicker.
+# Workspace name == BECKON_ID (the friendly app name).
 #
 # Behavior:
 #   - Already running: move window to WORKSPACE first, then switch (so the
@@ -15,9 +16,8 @@
 
 set -e
 
-WS="$1"
-shift
 ID="$*"
+WS="$ID"
 
 RESOLVED=$(beckon -r "$ID" 2>/dev/null || true)
 APP_ID=$(printf '%s\n' "$RESOLVED" | awk -F': +' '/Runtime id:/ {print $2; exit}')
