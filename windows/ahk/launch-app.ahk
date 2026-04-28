@@ -1,74 +1,48 @@
 #Requires AutoHotkey v2.0
-SetTitleMatchMode 2 ; Exact 3, Relative 2 
 
-Launch(exePath, winTitle, args := "") {
+Beckon(name) {
+    try RunWait('beckon.exe "' name '"', , "Hide")
+}
 
-    if !WinExist(winTitle) {
-        try {
-            RunAsUser(exePath, args)
-            if WinWait(winTitle, , 5)
-                WinActivate(winTitle)
-        } catch {
-            MsgBox ": " . exePath
-        }
-    } else {
-        if WinActive(winTitle)
-        ; WinMinimize(winTitle)
-        ; Send("!{Tab}")
+; ── Apps ──
+^#!b:: Beckon("Vivaldi")
+^#!c:: Beckon("Claude")
+^#!d:: Beckon("Discord")
+^#!g:: Beckon("Google Gemini")
+^#!k:: Beckon("Google Keep")
+^#!m:: Beckon("Messenger")
+^#!n:: Beckon("Notion")
+^#!t:: Beckon("Telegram Web")
+^#!y:: Beckon("YouTube")
+^#!z:: Beckon("Zalo")
+^#!Space:: Beckon("windowsterminal.exe")
+^#!f:: {
+    if WinExist("ahk_class CabinetWClass") {
+        if WinActive("ahk_class CabinetWClass")
             Send("!{Esc}")
         else
-            WinActivate(winTitle)
+            WinActivate("ahk_class CabinetWClass")
+    } else {
+        Run("explorer.exe")
     }
 }
 
-RunAsUser(target, args := "", workingDir := "") {
-    try {
-        ; Get the Shell's folder view object
-        shellFolderView := ObjBindMethod(ComObject("Shell.Application").Windows.FindWindowSW(0, 0, 8, 0, 1).Document, "Application")
-        ; Use ShellExecute to run the target as the user
-        shellFolderView().ShellExecute(target, args, workingDir, "open", 1)
-    } catch {
-        Run(args ? target . ' ' . args : target)
-    }
+; ── Settings (URI scheme) ──
+^#!s:: {
+    if !WinExist("ahk_exe ApplicationFrameHost.exe")
+        Run("ms-settings:")
+    else if WinActive("ahk_exe ApplicationFrameHost.exe")
+        Send("!{Esc}")
+    else
+        WinActivate("ahk_exe ApplicationFrameHost.exe")
 }
 
-
-; A_programs C:\Users\<User>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
-; LocalAppData C:\Users\<User>\AppData\Local\Microsoft
-; A_ProgramsCommon C:\ProgramData\Microsoft\Windows\Start Menu\Programs
-LocalAppData := EnvGet("LocalAppData") 
-browser := A_Programs . "\Vivaldi.lnk"
-browserTitle := "Vivaldi"
-
-^#!b:: Launch(browser, browserTitle)
-^#!g:: Launch(browser, "Gemini", " --app=https://gemini.google.com")
-^#!y:: Launch(browser, "YouTube", " --app=https://www.youtube.com")
-^#!m:: Launch(browser, "Messenger", " --app=https://www.messenger.com")
-^#!k:: Launch(browser, "Google Keep", " --app=https://keep.google.com")
-^#!d:: Launch(browser, "Discord", " --app=https://discord.com/app")
-^#!t:: Launch(browser, "Telegram", " --app=https://web.telegram.org")
-^#!n:: Launch(browser, "Notion", " --app=https://www.notion.so/")
-^#!c:: Launch(browser, "Claude", " --app=https://claude.ai/new")
-
-; ^#!t:: Launch(A_Programs . "\Telegram Desktop\Telegram.lnk", "ahk_exe Telegram.exe")
-; ^#!d:: Launch(A_Programs . "\Discord Inc\Discord.lnk", "ahk_exe Discord.exe")
-; ^#!n:: Launch(A_Programs . "\Notion.lnk", "ahk_exe Notion.exe")
-
-; ^#!v:: Launch(A_Programs . "\Visual Studio Code\Visual Studio Code.lnk", "ahk_exe Code.exe")
-^#!z:: Launch(A_Programs . "\Zalo.lnk", "ahk_exe zalo.exe")
-^#!Space:: Launch(LocalAppData . "\Microsoft\WindowsApps\wt.exe", "ahk_exe WindowsTerminal.exe")
-; ^#!Space:: Launch("wezterm-gui.exe", "ahk_exe wezterm-gui.exe")
-^#!f:: Launch("explorer.exe", "ahk_class CabinetWClass")
-^#!s:: Launch("ms-settings:", "ahk_exe ApplicationFrameHost.exe")
-
-
+; ── WhichKey submenu ──
 #Include lib/which-key.ahk
 menuApps := Map(
-    "d", { Desc: "DeepSeek", Action: (*) =>
-        Launch(browser, "DeepSeek", " --app=https://chat.deepseek.com/") },
-    "m", { Desc: "Gmail", Action: (*) =>
-        Launch(browser, "Gmail", " --app=https://mail.google.com/") },
-    "c", { Desc: "Chrome", Action: (*) =>
-        Launch(A_ProgramsCommon . "\Google Chrome.lnk", "Google Chrome") },
+    "d", { Desc: "DeepSeek", Action: (*) => Beckon("DeepSeek") },
+    "m", { Desc: "Gmail", Action: (*) => Beckon("Gmail") },
+    "c", { Desc: "Chrome", Action: (*) => Beckon("Google Chrome") },
+    "f", { Desc: "Facebook", Action: (*) => Beckon("Facebook") },
 )
 ^#!a:: WhichKey("🚀 Quick Apps", menuApps)
