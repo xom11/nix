@@ -1,4 +1,4 @@
-{inputs, ...}: let
+{inputs, flakeOverlays, ...}: let
   system = builtins.currentSystem;
   lib = inputs.nixpkgs.lib;
 
@@ -85,6 +85,10 @@ in {
       system = system;
       modules = [
         ../hosts/${device}/configuration.nix
+        # Flake-shipped overlays (declared in flake.nix → flakeOverlays).
+        # Applied at the system level so `pkgs.<tool>` is available for
+        # nix-darwin's `environment.systemPackages` etc.
+        { nixpkgs.overlays = flakeOverlays; }
         inputs.nix-homebrew.darwinModules.nix-homebrew
         {
           nix-homebrew = {
@@ -101,6 +105,9 @@ in {
           home-manager.backupFileExtension = "backup";
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${username}.imports = [
+            # HM builds its own pkgs (useGlobalPkgs is unset), so the
+            # system-level overlays don't reach here. Inject again.
+            { nixpkgs.overlays = flakeOverlays; }
             inputs.nix-flatpak.homeManagerModules.nix-flatpak
             inputs.nixvim.homeModules.nixvim
             inputs.agenix.homeManagerModules.default
@@ -121,11 +128,16 @@ in {
       modules = [
         inputs.disko.nixosModules.disko
         ../hosts/${device}/configuration.nix
+        # Flake-shipped overlays (declared in flake.nix → flakeOverlays).
+        # System-level — for `environment.systemPackages` etc.
+        { nixpkgs.overlays = flakeOverlays; }
         inputs.home-manager.nixosModules.home-manager
         {
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.users.${args.username}.imports = [
+            # HM-side overlays (HM builds its own pkgs).
+            { nixpkgs.overlays = flakeOverlays; }
             inputs.nix-flatpak.homeManagerModules.nix-flatpak
             inputs.agenix.homeManagerModules.default
             inputs.nixvim.homeModules.nixvim
@@ -144,15 +156,12 @@ in {
       # HM does not honour `nixpkgs.overlays` set inside modules because
       # `pkgs` is provided here rather than constructed by HM itself.
       #
-      # Flake-shipped overlays (beckon) are pulled in directly from the
-      # corresponding input — `nix flake update beckon` bumps the version,
-      # no manual rev/hash/Cargo.lock to maintain.
+      # Flake-shipped overlays come from `flakeOverlays` (declared in
+      # flake.nix) — `nix flake update <tool>` bumps versions, no manual
+      # rev/hash/Cargo.lock to maintain.
       pkgs = import inputs.nixpkgs {
         inherit system;
-        overlays = [
-          (import ../overlays)
-          inputs.beckon.overlays.default
-        ];
+        overlays = [ (import ../overlays) ] ++ flakeOverlays;
         config.allowUnfree = true;
       };
       extraSpecialArgs = mkArgs device;

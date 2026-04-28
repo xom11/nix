@@ -52,7 +52,14 @@
   outputs =
     { ... }@inputs:
     let
-      lib = import ./lib { inherit inputs ; }; 
+      # Overlays shipped by flake inputs. Add new tools here — every host
+      # (darwin / nixos / standalone HM) picks them up automatically via
+      # mkConfigs.nix, so `pkgs.<tool>` is available without per-host
+      # wiring. Adding a new tool: declare the input above, then append
+      # `inputs.<tool>.overlays.default` to this list.
+      flakeOverlays = [ inputs.beckon.overlays.default ];
+
+      lib = import ./lib { inherit inputs flakeOverlays; };
 
     in
     {

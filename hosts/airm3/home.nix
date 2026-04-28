@@ -1,7 +1,6 @@
-{pkgs, beckon, ...}: {
+{pkgs, ...}: {
   nixpkgs.overlays = [
     (import ../../overlays)
-    beckon.overlays.default
   ];
   imports = [
     ../../home-manager

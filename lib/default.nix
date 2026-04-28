@@ -1,6 +1,6 @@
-{ inputs, ... }:
+{ inputs, flakeOverlays, ... }:
 let
-  mkConfigs = import ./mkConfigs.nix { inherit inputs ; };
+  mkConfigs = import ./mkConfigs.nix { inherit inputs flakeOverlays; };
 in
 {
   inherit (mkConfigs)

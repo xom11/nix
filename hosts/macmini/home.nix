@@ -35,6 +35,7 @@ in {
 
   home.packages = with pkgs; [
     bws
+    beckon
     # fcitx5-macos
     # neofetch2
   ];
