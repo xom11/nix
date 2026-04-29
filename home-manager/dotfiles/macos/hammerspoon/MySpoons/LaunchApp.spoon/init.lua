@@ -38,7 +38,7 @@ local defaultShortcuts = {
 	{ "j", "Tao Monitor" },
 }
 local extendShortcuts = {
-	{ "a", "Launchpad" },
+	{ "a", "Apps" },
 	{ "b", "Brave Browser" },
 	{ "c", "Google Chrome" },
 	{ "d", "DeepSeek - Into the Unknown" },
