@@ -25,7 +25,7 @@ function obj:init()
 		["Vivaldi"] = en,
 		["Zalo"] = vn,
 		["iTerm2"] = en,
-		["kitty"] = en,
+		["kitty"] = vn,
 		["Notion"] = vn,
 
     -- pwa apps
