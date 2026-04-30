@@ -17,7 +17,10 @@ require("luasnip.loaders.from_vscode").lazy_load()
 vim.pack.add({ { src = "https://github.com/JoosepAlviste/nvim-ts-context-commentstring" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/numToStr/Comment.nvim" } }, { load = true })
 require("Comment").setup({
-	pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+	pre_hook = function(ctx)
+		local cs = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()(ctx)
+		return cs or vim.bo.commentstring
+	end,
 })
 
 -- Editor
