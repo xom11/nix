@@ -15,6 +15,5 @@
   "viewMode": "verbose",
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
   "allowDangerouslySkipPermissions": true
 }

@@ -15,6 +15,38 @@ Host dk
 Host macmini
   HostName 100.109.43.45
   User lenamkhanh
+  # ---- Web / frontend ----
+  LocalForward 3000 localhost:3000     # Next.js / React / web app
+  LocalForward 3001 localhost:3001     # API server / backend (Node, NestJS, …)
+  LocalForward 3002 localhost:3002     # Grafana
+  LocalForward 4200 localhost:4200     # Angular dev server
+  LocalForward 5173 localhost:5173     # Vite dev server
+  LocalForward 8000 localhost:8000     # Django / FastAPI / generic Python web
+  LocalForward 8080 localhost:8080     # Generic web / Spring Boot / proxy
+  LocalForward 8081 localhost:8081     # Adminer / second web service
+  # ---- Mail / dev tooling ----
+  LocalForward 1025 localhost:1025     # Mailhog / Mailpit SMTP
+  LocalForward 8025 localhost:8025     # Mailhog / Mailpit web UI
+  # ---- Databases ----
+  LocalForward 3306 localhost:3306     # MySQL / MariaDB
+  LocalForward 5432 localhost:5432     # PostgreSQL
+  LocalForward 27017 localhost:27017   # MongoDB
+  # ---- Cache / search / queue ----
+  LocalForward 6379 localhost:6379     # Redis
+  LocalForward 9200 localhost:9200     # Elasticsearch / OpenSearch HTTP
+  LocalForward 5601 localhost:5601     # Kibana
+  LocalForward 5672 localhost:5672     # RabbitMQ AMQP
+  LocalForward 15672 localhost:15672   # RabbitMQ management UI
+  LocalForward 9092 localhost:9092     # Kafka broker
+  # ---- Object storage ----
+  LocalForward 9000 localhost:9000     # MinIO S3 API
+  LocalForward 9001 localhost:9001     # MinIO console
+  # ---- Observability / tracing ----
+  LocalForward 9090 localhost:9090     # Prometheus
+  LocalForward 16686 localhost:16686   # Jaeger UI
+  # ---- Keepalive ----
+  ServerAliveInterval 60
+  ServerAliveCountMax 3
 Host airm3
   HostName 100.65.126.76
   User kln
