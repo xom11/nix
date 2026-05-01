@@ -80,9 +80,6 @@ in
         for f in "${pwd}"/age.d/*.age; do
           [ -f "$f" ] && source <(age -d -i ~/.ssh/id_ed25519 "$f" 2>/dev/null)
         done
-
-        }
-
       '';
     };
   }
