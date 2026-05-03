@@ -16,6 +16,7 @@
     environments = {
       fonts.enable = true;
       # i3wm.enable = true;
+      gnome.enable = true;
       sway.enable = true;
       sway.ubuntu.enable = true;
       i18n.enable = true;
