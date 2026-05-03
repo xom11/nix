@@ -19,7 +19,7 @@ with lib.hm.gvariant; {
       favorite-apps = [];
       disable-extension-version-validation = true;
       enabled-extensions = [
-        "run-or-raise@edvard.cz"
+        # "run-or-raise@edvard.cz"
         "clipboard-history@alexsaveau.dev"
         "blur-my-shell@aunetx"
         "kimpanel@kde.org"
@@ -69,9 +69,9 @@ with lib.hm.gvariant; {
     "org/gnome/shell/extensions/clipboard-history" = {
       toggle-menu = ["<Alt>v"];
     };
-    "org/gnome/shell/extensions/run-or-raise" = {
-      center-mouse-to-focused-window = true;
-    };
+    # "org/gnome/shell/extensions/run-or-raise" = {
+    #   center-mouse-to-focused-window = true;
+    # };
     "org/gnome/shell/extensions/switcher" = {
       only-current-workspace = true;
       fade-enable = true;
