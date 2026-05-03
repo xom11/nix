@@ -9,6 +9,9 @@ Include ~/.ssh/age.d/*
 
 Host *
     AddKeysToAgent yes
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%r@%h:%p
+    ControlPersist 10m
 Host dk
   HostName 100.126.180.8
   User dk

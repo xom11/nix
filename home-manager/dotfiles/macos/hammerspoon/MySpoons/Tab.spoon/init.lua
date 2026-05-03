@@ -30,10 +30,20 @@ function obj:init()
 		hs.loadSpoon("ABattery")
 		spoon.ABattery:toggleShow()
 	end)
-	-- PART:Screenshot tool
-  -- using cmd + shift + 4 instead for paste in some apps that don't support image pasting, e.g. Claude-cli
+	-- PART: Screenshot tool — save local /tmp/ss.png + clipboard, push to macmini + rog
+	-- using cmd + shift + 4 instead for paste in some apps that don't support image pasting, e.g. Claude-cli
+	-- on remote, paste into Claude Code by typing: @/tmp/ss.png
 	hs.hotkey.bind(tab, "s", function()
-		hs.execute("screencapture -i -c")
+		local path = "/tmp/ss.png"
+		hs.execute("/usr/sbin/screencapture -i " .. path)
+		if hs.fs.attributes(path) then
+			local img = hs.image.imageFromPath(path)
+			if img then
+				hs.pasteboard.writeObjects(img)
+			end
+			hs.execute("/usr/bin/scp " .. path .. " macmini:/tmp/ss.png &")
+			hs.execute("/usr/bin/scp " .. path .. " rog:/tmp/ss.png &")
+		end
 	end)
 
 	-- PART: Emoji picker
