@@ -2,7 +2,7 @@
   apps = [
     {
       key = "b";
-      app = "Vivaldi";
+      app = "Brave";
     }
     {
       key = "c";
