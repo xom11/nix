@@ -12,7 +12,7 @@
     "vercel@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true
   },
-  "viewMode": "verbose",
+  "viewMode": "default",
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "allowDangerouslySkipPermissions": true
