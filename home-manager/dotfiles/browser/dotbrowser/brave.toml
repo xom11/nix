@@ -30,6 +30,11 @@ focus_location    = ["Control+KeyL"]
 "brave.tabs.vertical_tabs_enabled"   = true
 "brave.tabs.vertical_tabs_collapsed" = true
 
+# MRU (most-recently-used) tab cycling — makes select_previous_tab /
+# select_next_tab jump to the last-focused tab instead of the positional
+# neighbor. Affects ALL shortcuts bound to those actions (Alt+J/K + Ctrl+O/I).
+"brave.mru_cycling_enabled" = true
+
 # Bookmarks bar + address bar.
 "bookmark_bar.show_on_all_tabs"         = false
 "brave.always_show_bookmark_bar_on_ntp" = false

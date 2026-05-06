@@ -54,8 +54,8 @@ map("L", "D");
 // Close all tab
 map("gx", "gxx");
 
-// Open a URL in current tab
-map("<Space><Space>", "go");
+// Open a URL in new tab (switch if already open)
+map("<Space><Space>", "t");
 
 // Tab forward and backward
 map("[b", "B");
