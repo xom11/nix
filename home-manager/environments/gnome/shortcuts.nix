@@ -8,7 +8,7 @@
     switch-to-workspace-2 = ["<Super>2"];
     switch-to-workspace-3 = ["<Super>3"];
     switch-to-workspace-4 = ["<Super>4"];
-    toggle-maximized = ["<Super>Up" "<Super><Alt><Ctrl>Up"];
+    toggle-maximized = ["<Super>Up" "<Ctrl><Alt><Super>slash"];
     unmaximize = ["<Super>Down" "<Super><Alt><Ctrl>Down"];
     show-desktop = ["<Super>d"];
     minimize = ["<Super>h"];
@@ -32,14 +32,17 @@
   "org/gnome/shell/app-switcher" = {
     current-workspace-only = true;
   };
+  "org/gnome/mutter" = {
+    edge-tiling = true;
+  };
   "org/gnome/mutter/keybindings" = {
-    toggle-tiled-left = ["<Super>Left" "<Super><Alt><Ctrl>Left"];
-    toggle-tiled-right = ["<Super>Right" "<Super><Alt><Ctrl>Right"];
+    toggle-tiled-left = ["<Super>Left" "<Ctrl><Alt><Super>period"];
+    toggle-tiled-right = ["<Super>Right" "<Ctrl><Alt><Super>comma"];
   };
   "org/gnome/settings-daemon/plugins/media-keys" = {
     screensaver = ["<Super><Alt>l"];
     logout = ["<Super><Alt><Shift>l"];
-    shutdown = ["<Super><Atl><Shift>s"];
+    shutdown = ["<Super><Alt><Shift>s"];
     reboot = ["<Super><Alt><Shift>r"];
     # suspend = ["<Super><Alt><Shift>"];
   };
