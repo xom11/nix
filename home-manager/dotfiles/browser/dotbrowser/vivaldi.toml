@@ -1,0 +1,21 @@
+# `uvx dotbrowser vivaldi apply`
+# Format: lowercase tokens joined by `+`. `meta+` = Cmd on macOS / Super
+# on Linux. Use `dotbrowser vivaldi shortcuts list` to discover commands.
+
+[shortcuts]
+
+# vim-style hjkl: Alt+H/L for history, Alt+J/K for tab switching (MRU).
+COMMAND_PAGE_BACK                  = ["alt+h"]
+COMMAND_PAGE_FORWARD               = ["alt+l"]
+COMMAND_TAB_SWITCH_BACK_HISTORY    = ["alt+k"]
+COMMAND_TAB_SWITCH_FORWARD_HISTORY = ["alt+j"]
+
+COMMAND_NEW_TAB              = ["ctrl+t"]
+COMMAND_CLOSE_TAB            = ["ctrl+w"]
+COMMAND_PAGE_REFRESH         = ["ctrl+r"]
+COMMAND_FOCUS_SEARCHFIELD    = ["ctrl+s"]
+COMMAND_FIND_IN_PAGE         = ["ctrl+f"]
+COMMAND_SHOW_DOWNLOADS_PANEL = ["ctrl+j"]
+COMMAND_SHOW_HISTORY         = ["ctrl+h"]
+COMMAND_ADD_BOOKMARK         = ["ctrl+d"]
+COMMAND_FOCUS_ADDRESSFIELD   = ["ctrl+l"]
