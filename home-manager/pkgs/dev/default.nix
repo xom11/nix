@@ -53,6 +53,7 @@ mkModule config ./. {
     nodemon
     nodejs_22
     pm2
+    pnpm
     yarn
     bun
     live-server
