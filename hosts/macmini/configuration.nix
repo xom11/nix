@@ -40,6 +40,7 @@
       "xquartz"
       # "beeper"
       "tablepro"
+      "macs-fan-control"
     ];
   };
 }
