@@ -1,6 +1,4 @@
-# `uvx dotbrowser vivaldi apply`
-# Format: lowercase tokens joined by `+`. `meta+` = Cmd on macOS / Super
-# on Linux. Use `dotbrowser vivaldi shortcuts list` to discover commands.
+# uvx dotbrowser vivaldi apply ~nix/home-manager/dotfiles/browser/dotbrowser/vivaldi.toml -k 
 
 [shortcuts]
 
@@ -19,3 +17,23 @@ COMMAND_SHOW_DOWNLOADS_PANEL = ["ctrl+j"]
 COMMAND_SHOW_HISTORY         = ["ctrl+h"]
 COMMAND_ADD_BOOKMARK         = ["ctrl+d"]
 COMMAND_FOCUS_ADDRESSFIELD   = ["ctrl+l"]
+
+[settings]
+
+"vivaldi.tabs.bar.position" = 1  # 0=top, 1=left, 2=right, 3=bottom
+
+[pwa]
+
+urls = [
+  "https://gemini.google.com",
+  "https://claude.ai/new",
+  "https://keep.google.com",
+  "https://www.youtube.com",
+  "https://chat.deepseek.com",
+  "https://mail.google.com/",
+  "https://www.notion.so/",
+  "https://discord.com/app",
+  "https://www.facebook.com/messages",
+  "https://web.telegram.org"
+]
+

@@ -1,4 +1,4 @@
-# `uvx dotbrowser brave apply` — all three namespaces in one file.
+# uvx dotbrowser brave apply ~nix/home-manager/dotfiles/browser/dotbrowser/brave.toml -k
 
 [shortcuts]
 
@@ -74,14 +74,14 @@ focus_location    = ["Control+KeyL"]
 #
 [pwa]
 urls = [
-  "https://gemini.google.com",
-  "https://claude.ai/new",
-  "https://keep.google.com",
-  "https://www.youtube.com",
-  "https://chat.deepseek.com",
-  "https://mail.google.com/",
-  "https://www.notion.so/",
-  "https://discord.com/app",
-  "https://www.facebook.com/messages",
-  "https://web.telegram.org"
+  # "https://gemini.google.com",
+  # "https://claude.ai/new",
+  # "https://keep.google.com",
+  # "https://www.youtube.com",
+  # "https://chat.deepseek.com",
+  # "https://mail.google.com/",
+  # "https://www.notion.so/",
+  # "https://discord.com/app",
+  # "https://www.facebook.com/messages",
+  # "https://web.telegram.org"
 ]
