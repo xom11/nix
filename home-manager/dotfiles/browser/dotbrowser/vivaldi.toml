@@ -11,7 +11,7 @@ COMMAND_TAB_SWITCH_FORWARD_HISTORY = ["alt+j"]
 COMMAND_NEW_TAB              = ["ctrl+t"]
 COMMAND_CLOSE_TAB            = ["ctrl+w"]
 COMMAND_PAGE_REFRESH         = ["ctrl+r"]
-COMMAND_PAGE_REFRESH_HARD    = ["ctrl+shift+r"]
+COMMAND_PAGE_RELOAD_NOCACHE  = ["ctrl+shift+r"]
 COMMAND_FOCUS_SEARCHFIELD    = ["ctrl+s"]
 COMMAND_FIND_IN_PAGE         = ["ctrl+f"]
 COMMAND_SHOW_DOWNLOADS_PANEL = ["ctrl+j"]
@@ -35,6 +35,7 @@ urls = [
   "https://www.notion.so/",
   "https://discord.com/app",
   "https://www.facebook.com/messages",
+  "https://www.messenger.com"
   "https://web.telegram.org"
 ]
 
