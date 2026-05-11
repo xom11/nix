@@ -24,6 +24,15 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/claude.d/settings.json";
       };
 
+      # codex
+      ".codex/AGENTS.md" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/codex.d/AGENTS.md";
+      };
+      ".codex/config.toml" = {
+        force = true;
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/codex.d/config.toml";
+      };
+
       # aichat
       "${aichatDir}/roles" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/aichat.d/roles";
