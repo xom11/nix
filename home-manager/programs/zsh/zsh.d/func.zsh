@@ -30,7 +30,7 @@ _uv_run_mod() {
 compdef _uv_run_mod uv
 
 age-edit() {
-  local secrets_dir=~/.nix/home-manager/dotfiles/secrets
+  local secrets_dir=~/.nix/home-manager/services/agenix
   local file
   if [[ "$1" = /* ]]; then
     file="$1"

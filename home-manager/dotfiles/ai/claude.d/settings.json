@@ -11,10 +11,32 @@
     "typescript-lsp@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "context-mode@context-mode": true
+  },
+  "extraKnownMarketplaces": {
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/claude-context-mode"
+      }
+    }
   },
   "viewMode": "default",
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
-  "allowDangerouslySkipPermissions": true
+  "allowDangerouslySkipPermissions": true,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/lenamkhanh/.claude/hooks/context-mode-cache-heal.mjs\""
+          }
+        ]
+      }
+    ]
+  }
 }

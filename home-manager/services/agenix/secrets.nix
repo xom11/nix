@@ -1,12 +1,4 @@
-l agenix -e home-manager/programs/ssh/age.d/config.age
-error:
-       … while calling the 'import' builtin
-         at «string»:1:14:
-            1| (let rules = import ./secrets.nix; in rules."home-manager/programs/ssh/age.d/config.age".publicKeys)
-             |              ^
-
-       error: path '/Users/lenamkhanh/.nix/secrets.nix' does not exist
-et
+let
   inherit (builtins) filter map toString attrNames readDir listToAttrs;
   lib = import <nixpkgs/lib>;
   inherit (lib.filesystem) listFilesRecursive;

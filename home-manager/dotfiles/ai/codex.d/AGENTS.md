@@ -10,3 +10,7 @@
 ## Git
 - Do NOT add `Co-Authored-By` lines to commit messages or pull requests.
 - NEVER change repository visibility on your own (e.g. `gh repo edit --visibility`, `gh api -X PATCH ... visibility`). Always ask for confirmation before proceeding.
+
+## Repository Instructions
+- When entering or working in a repository, check for `CLAUDE.md` files in the repository root and relevant parent/current directories.
+- If a `CLAUDE.md` file exists, read it and treat it as repository guidance, unless it conflicts with higher-priority system, developer, user, or `AGENTS.md` instructions.
