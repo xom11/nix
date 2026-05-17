@@ -110,11 +110,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779011075,
-        "narHash": "sha256-XS2qK438l3SL1uiemWbe+zwDLUSo0CIfHUK/fLQPFiI=",
+        "lastModified": 1779011715,
+        "narHash": "sha256-m+dMeR7UFDKrvRLXqWRnoETYjW20IvC+JsxPs1Hkni8=",
         "owner": "xom11",
         "repo": "dotbrowser",
-        "rev": "329f9c3170917d827f6c91003f4357b2af438184",
+        "rev": "7e0e541a76ca6526138c16fb3eb7c16981257633",
         "type": "github"
       },
       "original": {

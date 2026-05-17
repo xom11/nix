@@ -12,7 +12,11 @@
   dotbrowser = lib.getExe pkgs.dotbrowser;
 
   apply = browser: toml: ''
-    ${dotbrowser} ${browser} apply ${toml} -k || true
+    # Activation strips PATH, but dotbrowser shells out to `sudo` (and on
+    # macOS `pkill`/`pgrep`) by name. Prepend the standard system bins so
+    # those lookups succeed; otherwise apply crashes with FileNotFoundError.
+    PATH=/usr/bin:/bin:/run/wrappers/bin:$PATH \
+      ${dotbrowser} ${browser} apply ${toml} -k || true
   '';
 in {
   options = lib.setAttrByPath pathList {
