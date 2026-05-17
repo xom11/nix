@@ -103,6 +103,26 @@
         "type": "github"
       }
     },
+    "dotbrowser": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779011075,
+        "narHash": "sha256-XS2qK438l3SL1uiemWbe+zwDLUSo0CIfHUK/fLQPFiI=",
+        "owner": "xom11",
+        "repo": "dotbrowser",
+        "rev": "329f9c3170917d827f6c91003f4357b2af438184",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xom11",
+        "repo": "dotbrowser",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -533,6 +553,7 @@
         "agenix": "agenix",
         "beckon": "beckon",
         "disko": "disko",
+        "dotbrowser": "dotbrowser",
         "home-manager": "home-manager_2",
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",

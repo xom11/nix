@@ -47,6 +47,9 @@
     beckon.url = "github:xom11/beckon";
     beckon.inputs.nixpkgs.follows = "nixpkgs";
 
+    dotbrowser.url = "github:xom11/dotbrowser";
+    dotbrowser.inputs.nixpkgs.follows = "nixpkgs";
+
     nix-apt.url = "github:xom11/nix-apt";
 
   };
@@ -59,7 +62,10 @@
       # mkConfigs.nix, so `pkgs.<tool>` is available without per-host
       # wiring. Adding a new tool: declare the input above, then append
       # `inputs.<tool>.overlays.default` to this list.
-      flakeOverlays = [ inputs.beckon.overlays.default ];
+      flakeOverlays = [
+        inputs.beckon.overlays.default
+        inputs.dotbrowser.overlays.default
+      ];
 
       lib = import ./lib { inherit inputs flakeOverlays; };
 
