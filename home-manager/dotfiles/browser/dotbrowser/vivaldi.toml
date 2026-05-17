@@ -35,7 +35,7 @@ urls = [
   "https://www.notion.so/",
   "https://discord.com/app",
   "https://www.facebook.com/messages",
-  "https://www.messenger.com"
-  "https://web.telegram.org"
+  "https://www.messenger.com",
+  "https://web.telegram.org",
 ]
 
