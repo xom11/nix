@@ -64,3 +64,10 @@ Host rog
 Host rog.local
   User rog
   ForwardAgent yes
+
+# l3n4k4 GitHub account (active gh account, replaces khanhkhanhlele)
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_l3n4k4
+  IdentitiesOnly yes

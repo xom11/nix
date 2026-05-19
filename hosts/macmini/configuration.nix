@@ -33,6 +33,8 @@
       # "ollama"
       # "livekit"
       "ffmpeg@6"
+      "mkcert" 
+      "caddy"
     ];
     casks = [
       "dbeaver-community"
