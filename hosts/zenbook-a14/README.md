@@ -57,20 +57,64 @@ sudo systemctl disable docker.service containerd.service docker.socket
 sudo systemctl disable cups-browsed.service ModemManager.service
 ```
 
-## Fn Keys
+## EC Drivers (Fn Keys, Fan, Temp, Profile)
 
-Build and install the [zenbook-a14-EC](https://github.com/serdeliuk/zenbook-a14-EC) kernel module. Must be rebuilt after each kernel upgrade:
+Use [Sombre-Osmoze/asus-zenbook-a14-ec](https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec) — it ships two out-of-tree modules and supersedes `serdeliuk/zenbook-a14-EC`. Must be rebuilt after each kernel upgrade:
 
 ```bash
 cd /tmp
-git clone https://github.com/serdeliuk/zenbook-a14-EC.git
-cd zenbook-a14-EC
+git clone https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec.git
+cd asus-zenbook-a14-ec
 make
-sudo cp hid-asus-ec.ko /lib/modules/$(uname -r)/kernel/drivers/hid/
+
+# HID driver (keyboard backlight + Fn hotkeys)
+sudo cp hid_asus_ec.ko /lib/modules/$(uname -r)/kernel/drivers/hid/
+# EC driver (hwmon + platform_profile) — see "Status" below before loading
+sudo cp asus_zenbook_a14_ec.ko /lib/modules/$(uname -r)/kernel/drivers/platform/
+
 sudo depmod -a
-sudo modprobe hid-asus-ec
-echo "hid-asus-ec" | sudo tee /etc/modules-load.d/hid-asus-ec.conf
+sudo modprobe hid_asus_ec
+echo "hid_asus_ec" | sudo tee /etc/modules-load.d/zenbook-a14-ec.conf
 ```
+
+### Patched `platform_profile.ko` (required for the EC driver)
+
+The stock `platform_profile.ko` from the PPA kernel refuses to init on DT-only ARM64 (`acpi_disabled` guard) → `devm_platform_profile_register` is never exported → `asus_zenbook_a14_ec` can't load. The repo ships a patch (`patches/0001-platform_profile-allow-non-ACPI-systems.patch`) that removes that guard. Rebuilding only the one module is enough (no full kernel rebuild, no reboot):
+
+```bash
+# Enable source for the PPA, then:
+sudo apt install -y libssl-dev libelf-dev dpkg-dev
+mkdir -p ~/kbuild && cd ~/kbuild
+apt source linux-image-$(uname -r)
+cd linux-qcom-x1e-*/
+
+patch -p1 < /tmp/asus-zenbook-a14-ec/patches/0001-platform_profile-allow-non-ACPI-systems.patch
+cp /boot/config-$(uname -r) .config
+make olddefconfig
+cp /usr/src/linux-headers-$(uname -r)/Module.symvers .
+make modules_prepare
+make -j$(nproc) M=drivers/acpi modules
+
+# Replace the stock module
+sudo rm /lib/modules/$(uname -r)/kernel/drivers/acpi/platform_profile.ko.zst
+sudo cp drivers/acpi/platform_profile.ko /lib/modules/$(uname -r)/kernel/drivers/acpi/
+sudo depmod -a
+sudo modprobe platform_profile
+sudo modprobe asus_zenbook_a14_ec
+```
+
+**Must be redone after every kernel upgrade** — the symbol CRCs in `Module.symvers` change, so the patched module needs to be rebuilt against the new kernel headers.
+
+### Verified sysfs (after load)
+
+| Path | Purpose |
+|---|---|
+| `/sys/class/hwmon/hwmonN/fan1_input` | Fan RPM |
+| `/sys/class/hwmon/hwmonN/pwm1`, `pwm1_enable` | Manual fan PWM (1=manual, 2=auto) |
+| `/sys/class/hwmon/hwmonN/temp1_input` | EC thermistor (m°C) |
+| `/sys/class/platform-profile/platform-profile-0/profile` | `quiet` / `balanced` / `performance` (drives fan curve) |
+
+`sensors` will show `asus_zenbook_a14_ec-isa-000a` with `fan:` and `ec:` lines. KDE/GNOME's "Power Mode" dropdown should pick up the platform-profile class device once `power-profiles-daemon` is restarted.
 
 ## Audio
 
