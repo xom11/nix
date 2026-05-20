@@ -11,31 +11,29 @@
 
   dotbrowser = lib.getExe pkgs.dotbrowser;
 
-  apply = browser: toml: ''
-    # Activation strips PATH, but dotbrowser shells out to `sudo` (and on
-    # macOS `pkill`/`pgrep`) by name. Prepend the standard system bins so
-    # those lookups succeed; otherwise apply crashes with FileNotFoundError.
-    PATH=/usr/bin:/bin:/run/wrappers/bin:$PATH \
-      ${dotbrowser} ${browser} apply ${toml} -k || true
-  '';
+  # Activation strips PATH; sudo + dotbrowser need pkill, pgrep, osascript,
+  # open, defaults, plutil. Cover macOS (/usr/bin, /usr/sbin) and NixOS
+  # (/run/wrappers/bin). Passed to sudo so the child process inherits it.
+  systemPath = "/usr/bin:/bin:/usr/sbin:/sbin:/run/wrappers/bin";
+
+  apply = browser: toml:
+    lib.hm.dag.entryAfter ["writeBoundary"] ''
+      PATH=${systemPath}:$PATH \
+        sudo -n PATH=${systemPath}:$PATH ${dotbrowser} ${browser} apply ${toml} -k \
+        || echo "[dotbrowser] ${browser} apply failed — see error above" >&2
+    '';
 in {
   options = lib.setAttrByPath pathList {
     vivaldi.enable = lib.mkEnableOption "Apply vivaldi.toml via dotbrowser";
     brave.enable = lib.mkEnableOption "Apply brave.toml via dotbrowser";
   };
 
-  config.home.file = lib.mkMerge [
+  config.home.activation = lib.mkMerge [
     (lib.mkIf cfg.vivaldi.enable {
-      ".config/dotbrowser/vivaldi.toml" = {
-        source = ./vivaldi.toml;
-        onChange = apply "vivaldi" ./vivaldi.toml;
-      };
+      dotbrowserVivaldi = apply "vivaldi" ./vivaldi.toml;
     })
     (lib.mkIf cfg.brave.enable {
-      ".config/dotbrowser/brave.toml" = {
-        source = ./brave.toml;
-        onChange = apply "brave" ./brave.toml;
-      };
+      dotbrowserBrave = apply "brave" ./brave.toml;
     })
   ];
 }
