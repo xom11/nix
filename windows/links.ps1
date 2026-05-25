@@ -42,6 +42,11 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:USERPROFILE\.claude\commands" }
     )
 
+    'dotfiles.ai.codex' = @(
+        @{ Source = "$Hm\dotfiles\ai\codex.d\config.toml"
+           Target = "$env:USERPROFILE\.codex\config.toml" }
+    )
+
     'dotfiles.ai.gemini' = @(
         @{ Source = "$Hm\dotfiles\ai\gemini.d\GEMINI.md"
            Target = "$env:USERPROFILE\.gemini\GEMINI.md" }

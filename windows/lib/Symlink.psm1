@@ -48,9 +48,13 @@ function Invoke-Symlinks {
     param(
         [Parameter(Mandatory)][array]$Pairs
     )
+    $ok = $true
     foreach ($p in $Pairs) {
-        [void](New-IdempotentSymlink -Source $p.Source -Target $p.Target)
+        if (-not (New-IdempotentSymlink -Source $p.Source -Target $p.Target)) {
+            $ok = $false
+        }
     }
+    return $ok
 }
 
 Export-ModuleMember -Function New-IdempotentSymlink, Invoke-Symlinks

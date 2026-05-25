@@ -15,6 +15,7 @@
         'dotfiles.vscode'
         'dotfiles.terminal.wezterm'
         'dotfiles.ai.claude'
+        'dotfiles.ai.codex'
         'dotfiles.ai.gemini'
         'dotfiles.ai.aichat'
 

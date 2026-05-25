@@ -101,7 +101,8 @@ local keymaps = {
 	-- ai agents
 	{ { "n", "v" }, "<leader>aa", make_ai_term(21, "claude"), "ToggleTerm: claude" },
 	{ { "n", "v" }, "<leader>ag", make_ai_term(22, "gemini"), "ToggleTerm: gemini" },
-	{ { "n", "v" }, "<leader>ac", make_ai_term(24, "copilot"), "ToggleTerm: copilot" },
+	-- { { "n", "v" }, "<leader>ac", make_ai_term(24, "copilot"), "ToggleTerm: copilot" },
+	{ { "n", "v" }, "<leader>ac", make_ai_term(24, "codex"), "ToggleTerm: codex" },
 	{ { "n", "v" }, "<leader>ao", make_ai_term(25, "opencode"), "ToggleTerm: opencode" },
 	-- git
 	{ "n", "<leader>gg", make_term(31, { cmd = "lazygit" }), "ToggleTerm: lazygit" },
