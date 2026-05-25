@@ -1,8 +1,10 @@
 @{
-    Description = 'Scoop CLI tools (zip-based, all work via patched 7-Zip dep)'
+    Description = 'Scoop: all portable CLI dev tools (scoop v0.5.3+ supports admin install)'
     Apply = {
         param($Ctx)
         Install-ScoopPackages -Packages @(
+            'git'
+            'nodejs'
             'gh'
             'bat'
             'ripgrep'

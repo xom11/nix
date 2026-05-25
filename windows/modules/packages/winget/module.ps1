@@ -1,5 +1,5 @@
 @{
-    Description = 'Winget: GUI apps, system tools, fonts, plus git/nodejs (NSIS/MSI installers scoop ARM64 cant extract)'
+    Description = 'Winget: GUI apps + system tools + fonts (all CLI dev tools live in scoop)'
     Apply = {
         param($Ctx)
         Install-WingetPackages @(
@@ -17,19 +17,14 @@
             'Microsoft.PowerShell'
             'wez.wezterm'
             'JanDeDobbeleer.OhMyPosh'
-            'ajeetdsouza.zoxide'          # used by pwsh profile
+            'ajeetdsouza.zoxide'
 
             # ---- Fonts ----
             'DEVCOM.JetBrainsMonoNerdFont'
 
-            # ---- System / elevation ----
+            # ---- System tools ----
             'AutoHotkey.AutoHotkey'
-            'gerardog.gsudo'              # de-elevation for scoop
-            '7zip.7zip'                   # required: scoop pulls 7z.exe from here to patch its broken ARM64 7zip manifest
-
-            # ---- NSIS-only on ARM64, scoop cant extract ----
-            'Git.Git'
-            'OpenJS.NodeJS'
+            'gerardog.gsudo'              # de-elevation in shell (sudo equivalent)
 
             # ---- Service ----
             'Syncthing.Syncthing'
