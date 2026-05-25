@@ -1,11 +1,8 @@
 @{
-    Description = 'Scoop CLI dev tools (auto de-elevated via gsudo when admin)'
+    Description = 'Scoop CLI tools (zip-based, all work via patched 7-Zip dep)'
     Apply = {
         param($Ctx)
         Install-ScoopPackages -Packages @(
-            # ---- Original scoop list ----
-            'git'
-            'nodejs'
             'gh'
             'bat'
             'ripgrep'
@@ -19,8 +16,6 @@
             'shfmt'
             'yamlfmt'
             'stylua'
-
-            # ---- Not in winget ----
             'kanata'
         )
     }

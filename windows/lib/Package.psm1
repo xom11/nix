@@ -22,22 +22,19 @@ function Invoke-AsUser {
 }
 
 function Install-Scoop7zipFromSystem {
-    # Scoop's 7zip manifest pre_install uses wrong NSIS flags on ARM64 -> install fails ->
-    # everything depending on 7zip fails too. Workaround: copy system 7-Zip (installed via
-    # winget package 7zip.7zip) into scoop's expected app dir so scoop sees the dep satisfied.
+    # scoop's 7zip bootstrap fails on this machine regardless of arch (arm64 NSIS or x64 MSI
+    # both need 7z to extract themselves - chicken-egg). Plant system 7-Zip files (from winget
+    # package 7zip.7zip) into scoop's app dir so scoop sees the dep satisfied and proceeds.
+    # Without this, every scoop package declared with "depends": "7zip" gets blocked.
     $scoop7z = "$env:USERPROFILE\scoop\apps\7zip\current\7z.exe"
     if (Test-Path $scoop7z) { return }
 
     $sys7zDir = "$env:ProgramFiles\7-Zip"
-    if (-not (Test-Path "$sys7zDir\7z.exe")) {
-        Write-Warn "system 7-Zip not found - skipping scoop 7zip workaround (winget install 7zip.7zip)"
-        return
-    }
+    if (-not (Test-Path "$sys7zDir\7z.exe")) { return }
 
     Write-Info "patching scoop 7zip with system 7-Zip files"
     $scoopAppRoot = "$env:USERPROFILE\scoop\apps\7zip"
-    $version = '26.01'
-    $versionDir = Join-Path $scoopAppRoot $version
+    $versionDir = Join-Path $scoopAppRoot '26.01'
     Remove-Item $versionDir -Recurse -Force -ErrorAction SilentlyContinue
     New-Item -ItemType Directory -Path $versionDir -Force | Out-Null
     Copy-Item "$sys7zDir\*" $versionDir -Recurse -Force
