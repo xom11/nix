@@ -57,12 +57,19 @@ function Install-PSModules {
         Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
     }
 
+    # Use AllUsers scope so pwsh 7 sees the modules too. CurrentUser scope from
+    # Windows PowerShell 5.1 only populates ~\Documents\WindowsPowerShell\Modules
+    # which pwsh 7 does NOT include in $PSModulePath by default.
+    $sharedPath = 'C:\Program Files\WindowsPowerShell\Modules'
     foreach ($m in $Modules) {
-        if (Get-Module -ListAvailable -Name $m) {
+        $existing = Get-Module -ListAvailable -Name $m |
+                    Where-Object { $_.ModuleBase -like "$sharedPath*" } |
+                    Select-Object -First 1
+        if ($existing) {
             Write-Skip "psmodule:$m"
         } else {
-            Write-Info "Install-Module $m"
-            Install-Module -Name $m -Scope CurrentUser -Force -AllowClobber -SkipPublisherCheck
+            Write-Info "Install-Module $m -Scope AllUsers"
+            Install-Module -Name $m -Scope AllUsers -Force -AllowClobber -SkipPublisherCheck
         }
     }
 }
