@@ -1,27 +1,11 @@
 @{
-    Description = 'Scoop CLI dev tools (auto de-elevated via gsudo when admin)'
+    Description = 'Scoop: only packages not available in winget (kanata, stylua, yamlfmt). Auto de-elevated via gsudo when admin.'
     Apply = {
         param($Ctx)
         Install-ScoopPackages -Packages @(
-            # ---- Original scoop list (portable CLI dev tools) ----
-            'git'
-            'nodejs'
-            'gh'
-            'bat'
-            'ripgrep'
-            'fzf'
-            'fastfetch'
-            'neovim'
-            'lazygit'
-            'lazydocker'
-            'yazi'
-            'aichat'
-            'shfmt'
-            'yamlfmt'
-            'stylua'
-
-            # ---- Not in winget ----
             'kanata'        # keyboard remapper CLI
+            'stylua'        # Lua formatter
+            'yamlfmt'       # YAML formatter
         )
     }
 }

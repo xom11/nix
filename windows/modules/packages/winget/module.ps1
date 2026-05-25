@@ -1,5 +1,5 @@
 @{
-    Description = 'Winget: GUI apps + system-level tools + fonts (CLI dev tools live in scoop module)'
+    Description = 'Winget: GUI apps + system tools + CLI dev tools (scoop ARM64 has shim bugs)'
     Apply = {
         param($Ctx)
         Install-WingetPackages @(
@@ -24,7 +24,23 @@
             # ---- System / elevation ----
             'AutoHotkey.AutoHotkey'
             'gerardog.gsudo'              # for de-elevation in shell + scoop bootstrap
-            '7zip.7zip'                   # used by scoop (7zipextract_use_external) on ARM64
+            '7zip.7zip'                   # used by scoop (7zipextract_use_external)
+            'ajeetdsouza.zoxide'          # used by pwsh profile
+
+            # ---- CLI dev tools ----
+            'Git.Git'
+            'OpenJS.NodeJS'
+            'GitHub.cli'
+            'sharkdp.bat'
+            'BurntSushi.ripgrep.MSVC'
+            'junegunn.fzf'
+            'Fastfetch-cli.Fastfetch'
+            'Neovim.Neovim'
+            'JesseDuffield.lazygit'
+            'JesseDuffield.Lazydocker'
+            'sxyazi.yazi'
+            'sigoden.AIChat'
+            'mvdan.shfmt'
 
             # ---- Service ----
             'Syncthing.Syncthing'
