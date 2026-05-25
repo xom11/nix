@@ -1,11 +1,10 @@
 @{
     Modules = @(
         # ---- packages ----
-        'packages.winget'             # all apps + CLI tools (replaces scoop)
+        'packages.winget'             # all apps + CLI tools + 7zip + gsudo
+        'packages.scoop'              # non-winget packages (auto de-elevates via gsudo)
         'packages.psmodules'          # PowerShell modules
         'packages.npm'                # global npm packages (needs nodejs from winget)
-        # scoop-only packages (kanata, stylua, im-select, yamlfmt) installed
-        # separately by user: windows\scripts\install-scoop.ps1 (non-admin)
 
         # ---- dotfiles (Windows-native) ----
         'dotfiles.pwsh'
