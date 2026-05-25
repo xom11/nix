@@ -15,38 +15,9 @@ Beckon(name) {
 ^#!t:: Beckon("Telegram Web")
 ^#!y:: Beckon("YouTube")
 ^#!z:: Beckon("Zalo")
-; Windows Terminal is MSIX -> beckon -L cant catalog it. Inline focus-or-launch.
-^#!Space:: {
-    if WinExist("ahk_exe WindowsTerminal.exe") {
-        if WinActive("ahk_exe WindowsTerminal.exe")
-            Send "!{Esc}"
-        else
-            WinActivate
-    } else {
-        Run "wt.exe"
-    }
-}
-^#!f:: {
-    if WinExist("ahk_class CabinetWClass") {
-        if WinActive("ahk_class CabinetWClass")
-            Send("!{Esc}")
-        else
-            WinActivate("ahk_class CabinetWClass")
-    } else {
-        Run("explorer.exe")
-    }
-}
-
-; ── Settings (URI scheme) ──
-^#!s:: {
-    if !WinExist("ahk_exe ApplicationFrameHost.exe")
-        Run("ms-settings:")
-    else if WinActive("ahk_exe ApplicationFrameHost.exe")
-        Send("!{Esc}")
-    else
-        WinActivate("ahk_exe ApplicationFrameHost.exe")
-}
-
+^#!Space:: Beckon("Terminal")
+^#!f:: Beckon("File Explorer")
+^#!s:: Beckon("Settings") 
 ; ── WhichKey submenu ──
 #Include lib/which-key.ahk
 menuApps := Map(
