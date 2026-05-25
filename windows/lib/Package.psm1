@@ -21,8 +21,41 @@ function Invoke-AsUser {
     }
 }
 
+function Install-Scoop7zipFromSystem {
+    # Scoop's 7zip manifest pre_install uses wrong NSIS flags on ARM64 -> install fails ->
+    # everything depending on 7zip fails too. Workaround: copy system 7-Zip (installed via
+    # winget package 7zip.7zip) into scoop's expected app dir so scoop sees the dep satisfied.
+    $scoop7z = "$env:USERPROFILE\scoop\apps\7zip\current\7z.exe"
+    if (Test-Path $scoop7z) { return }
+
+    $sys7zDir = "$env:ProgramFiles\7-Zip"
+    if (-not (Test-Path "$sys7zDir\7z.exe")) {
+        Write-Warn "system 7-Zip not found - skipping scoop 7zip workaround (winget install 7zip.7zip)"
+        return
+    }
+
+    Write-Info "patching scoop 7zip with system 7-Zip files"
+    $scoopAppRoot = "$env:USERPROFILE\scoop\apps\7zip"
+    $version = '26.01'
+    $versionDir = Join-Path $scoopAppRoot $version
+    Remove-Item $versionDir -Recurse -Force -ErrorAction SilentlyContinue
+    New-Item -ItemType Directory -Path $versionDir -Force | Out-Null
+    Copy-Item "$sys7zDir\*" $versionDir -Recurse -Force
+
+    $current = Join-Path $scoopAppRoot 'current'
+    if (Test-Path $current) {
+        $existing = Get-Item $current -Force
+        if ($existing.LinkType) { Remove-Item $current -Force }
+        else { Remove-Item $current -Recurse -Force }
+    }
+    New-Item -ItemType Junction -Path $current -Target $versionDir | Out-Null
+}
+
 function Install-Scoop {
-    if (Get-Command scoop -ErrorAction SilentlyContinue) { return $true }
+    if (Get-Command scoop -ErrorAction SilentlyContinue) {
+        Install-Scoop7zipFromSystem
+        return $true
+    }
 
     if (Test-IsAdmin) {
         if (-not (Get-Command gsudo -ErrorAction SilentlyContinue)) {
@@ -42,11 +75,7 @@ function Install-Scoop {
         return $false
     }
 
-    # Tell scoop to use system 7-Zip (avoids ARM64 7zip pre_install bug in main bucket)
-    if (Get-Command 7z -ErrorAction SilentlyContinue) {
-        Write-Info "scoop config 7zipextract_use_external true"
-        Invoke-AsUser scoop config 7zipextract_use_external $true | Out-Null
-    }
+    Install-Scoop7zipFromSystem
     return $true
 }
 
