@@ -32,6 +32,12 @@ Write-Host "Configuring Devices, Power, and Startup..." -ForegroundColor "Yellow
 # Power: Disable Hibernation
 powercfg /hibernate off
 
+# Power: turn off display + sleep after 1 hour (60 min) idle, both AC + DC
+powercfg /change monitor-timeout-ac 60
+powercfg /change monitor-timeout-dc 60
+powercfg /change standby-timeout-ac 60
+powercfg /change standby-timeout-dc 60
+
 # Darkmode:
 $Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Value 0
