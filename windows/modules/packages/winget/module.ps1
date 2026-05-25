@@ -40,6 +40,7 @@
             'sxyazi.yazi'
             'sigoden.AIChat'
             'mvdan.shfmt'
+            'ajeetdsouza.zoxide'          # zoxide (used by pwsh profile)
 
             # ---- Services / utilities ----
             'Syncthing.Syncthing'
