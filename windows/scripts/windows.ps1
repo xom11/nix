@@ -15,6 +15,10 @@ Rename-Computer -NewName "KLN-PC" -Force -ErrorAction SilentlyContinue
 # Enable Developer Mode: Enable: 1, Disable: 0
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" "AllowDevelopmentWithoutDevLicense" 1
 
+# Enable Windows 11 built-in sudo: 0=disabled, 1=new window, 2=disable input, 3=inline (preferred)
+if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Sudo")) {New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Sudo" -Type Folder | Out-Null}
+Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Sudo" "Enabled" 3
+
 # Sound: Disable Startup Sound: Enable: 0, Disable: 1
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" "DisableStartupSound" 1
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" "DisableStartupSound" 1
