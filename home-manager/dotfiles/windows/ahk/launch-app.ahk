@@ -15,7 +15,17 @@ Beckon(name) {
 ^#!t:: Beckon("Telegram Web")
 ^#!y:: Beckon("YouTube")
 ^#!z:: Beckon("Zalo")
-^#!Space:: Beckon("windowsterminal.exe")
+; Windows Terminal is MSIX -> beckon -L cant catalog it. Inline focus-or-launch.
+^#!Space:: {
+    if WinExist("ahk_exe WindowsTerminal.exe") {
+        if WinActive("ahk_exe WindowsTerminal.exe")
+            Send "!{Esc}"
+        else
+            WinActivate
+    } else {
+        Run "wt.exe"
+    }
+}
 ^#!f:: {
     if WinExist("ahk_class CabinetWClass") {
         if WinActive("ahk_class CabinetWClass")
