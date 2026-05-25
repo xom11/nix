@@ -1,5 +1,5 @@
 @{
-    Description = 'Winget packages (apps + CLI tools, replaces scoop)'
+    Description = 'Winget: GUI apps + system-level tools + fonts (CLI dev tools live in scoop module)'
     Apply = {
         param($Ctx)
         Install-WingetPackages @(
@@ -10,7 +10,7 @@
             'Microsoft.VisualStudioCode'
             'Obsidian.Obsidian'
             'Tailscale.Tailscale'
-            'VNGCorp.Zalo'
+            # 'VNGCorp.Zalo'              # winget download keeps failing (0x80072f05); install manually
             '9PFXXSHC64H3'                # Raycast (Microsoft Store)
 
             # ---- Terminals / shells ----
@@ -23,26 +23,10 @@
 
             # ---- System / elevation ----
             'AutoHotkey.AutoHotkey'
-            'gerardog.gsudo'              # optional, for de-elevation in shell
+            'gerardog.gsudo'              # for de-elevation in shell + scoop bootstrap
             '7zip.7zip'                   # used by scoop (7zipextract_use_external) on ARM64
 
-            # ---- Dev CLI (moved from scoop) ----
-            'Git.Git'
-            'OpenJS.NodeJS'
-            'GitHub.cli'
-            'sharkdp.bat'
-            'BurntSushi.ripgrep.MSVC'
-            'junegunn.fzf'
-            'Fastfetch-cli.Fastfetch'
-            'Neovim.Neovim'
-            'JesseDuffield.lazygit'
-            'JesseDuffield.Lazydocker'
-            'sxyazi.yazi'
-            'sigoden.AIChat'
-            'mvdan.shfmt'
-            'ajeetdsouza.zoxide'          # zoxide (used by pwsh profile)
-
-            # ---- Services / utilities ----
+            # ---- Service ----
             'Syncthing.Syncthing'
         )
     }
