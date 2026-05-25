@@ -2,7 +2,7 @@
 
 userDir := EnvGet("USERPROFILE")
 
-global KanataExe := userDir . "\.local\bin\kanata.exe"
+global KanataExe := "kanata.exe"  ; resolved via PATH (scoop shim)
 global KanataConfig := userDir . "\.nix\configs\kanata\kanata_windows.kbd"
 
 StartKanata()

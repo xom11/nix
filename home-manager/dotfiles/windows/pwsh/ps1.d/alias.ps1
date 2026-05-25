@@ -37,7 +37,7 @@ function glog {
 }
 function kr {
     Stop-Process -Name kanata -ErrorAction SilentlyContinue
-    Start-Process "$env:USERPROFILE\.local\bin\kanata.exe" -ArgumentList "-c `"$env:USERPROFILE\.nix\configs\kanata\kanata_windows.kbd`"" -WindowStyle Hidden
+    Start-Process kanata.exe -ArgumentList "-c `"$env:USERPROFILE\.nix\configs\kanata\kanata_windows.kbd`"" -WindowStyle Hidden
 }
 function ks {
     Stop-Process -Name kanata -ErrorAction SilentlyContinue
