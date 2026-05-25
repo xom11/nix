@@ -61,16 +61,27 @@ function Install-ScoopPackages {
     if ($Buckets) {
         $current = @(scoop bucket list 2>$null | ForEach-Object { $_.Name })
         foreach ($b in $Buckets) {
-            if ($current -notcontains $b) {
-                Write-Info "scoop bucket add $b"
-                scoop bucket add $b
+            # 'name=url' for custom buckets, 'name' for known buckets
+            $parts = $b -split '=', 2
+            $name = $parts[0]
+            $url  = if ($parts.Count -eq 2) { $parts[1] } else { $null }
+            if ($current -notcontains $name) {
+                if ($url) {
+                    Write-Info "scoop bucket add $name $url"
+                    scoop bucket add $name $url
+                } else {
+                    Write-Info "scoop bucket add $name"
+                    scoop bucket add $name
+                }
             }
         }
     }
 
     $installed = @(scoop list 6>$null | ForEach-Object { $_.Name } | Where-Object { $_ })
     foreach ($pkg in $Packages) {
-        if ($installed -contains $pkg) {
+        # Strip 'bucket/' prefix when checking installed (scoop list shows bare names)
+        $name = ($pkg -split '/', 2)[-1]
+        if ($installed -contains $name) {
             Write-Skip "scoop:$pkg"
         } else {
             Write-Info "scoop install $pkg"

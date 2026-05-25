@@ -2,7 +2,10 @@
     Description = 'Scoop: all portable CLI dev tools (scoop v0.5.3+ supports admin install)'
     Apply = {
         param($Ctx)
-        Install-ScoopPackages -Buckets @('extras') -Packages @(
+        Install-ScoopPackages -Buckets @(
+            'extras'
+            'xom11=https://github.com/xom11/scoop-bucket'
+        ) -Packages @(
             'git'
             'nodejs'
             'gh'
@@ -19,6 +22,7 @@
             'yamlfmt'
             'stylua'
             'kanata'
+            'xom11/beckon'
         )
     }
 }

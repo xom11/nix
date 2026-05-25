@@ -19,7 +19,7 @@
   apply = browser: toml:
     lib.hm.dag.entryAfter ["writeBoundary"] ''
       PATH=${systemPath}:$PATH \
-        sudo -n PATH=${systemPath}:$PATH ${dotbrowser} ${browser} apply ${toml} -k \
+        sudo -n PATH=${systemPath}:$PATH ${dotbrowser} ${browser} apply ${toml}\
         || echo "[dotbrowser] ${browser} apply failed — see error above" >&2
     '';
 in {
