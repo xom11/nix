@@ -1,3 +1,4 @@
+$env:SHELL = "pwsh"
 Import-Module Terminal-Icons
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 # Seed zoxide with dotfile directories in home

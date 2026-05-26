@@ -23,6 +23,10 @@
             'stylua'
             'kanata'
             'xom11/beckon'
+            'python'
+            'go'
+            'rustup'
+            'uv'
         )
     }
 }
