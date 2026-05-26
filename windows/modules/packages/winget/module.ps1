@@ -13,6 +13,7 @@
             'Vivaldi.Vivaldi'
             # 'VNGCorp.Zalo'              # winget download fails (0x80072f05); install manually
             '9PFXXSHC64H3'                # Raycast (Microsoft Store)
+            'Warp.Warp'
 
             # ---- Terminals / shells ----
             'Microsoft.PowerShell'

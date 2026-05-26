@@ -20,6 +20,9 @@ trust_level = "trusted"
 [projects.'c:\users\kln\documents\dev\beckon']
 trust_level = "trusted"
 
+[projects.'c:\users\kln']
+trust_level = "trusted"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 

@@ -43,6 +43,8 @@ $Hm = $Ctx.HomeManagerDir
     )
 
     'dotfiles.ai.codex' = @(
+        @{ Source = "$Hm\dotfiles\ai\codex.d\AGENTS.md"
+           Target = "$env:USERPROFILE\.codex\AGENTS.md" }
         @{ Source = "$Hm\dotfiles\ai\codex.d\config.toml"
            Target = "$env:USERPROFILE\.codex\config.toml" }
     )
