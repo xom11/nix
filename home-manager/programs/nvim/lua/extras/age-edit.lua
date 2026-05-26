@@ -27,6 +27,7 @@ local group = vim.api.nvim_create_augroup("AgeTransparent", { clear = true })
 local function disable_persistence()
 	vim.opt_local.swapfile = false
 	vim.opt_local.undofile = false
+	vim.bo.buftype = "acwrite"
 end
 
 vim.api.nvim_create_autocmd("BufNewFile", {
@@ -67,12 +68,14 @@ vim.api.nvim_create_autocmd("BufWriteCmd", {
 	callback = function(args)
 		local path = vim.fn.fnamemodify(args.match, ":p")
 		local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-		local tmp = vim.fn.tempname()
-		vim.fn.writefile(lines, tmp)
-		vim.fn.system({ "age", "-R", recipients_file, "-o", path, tmp })
-		local code = vim.v.shell_error
-		os.remove(tmp)
-		if code ~= 0 then
+		local content = table.concat(lines, "\n")
+		if #lines > 0 then
+			content = content .. "\n"
+		end
+
+		vim.fn.system({ "age", "-R", recipients_file, "-o", path }, content)
+
+		if vim.v.shell_error ~= 0 then
 			vim.notify("age encrypt failed", vim.log.levels.ERROR)
 			return
 		end
