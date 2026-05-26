@@ -22,6 +22,7 @@ Describe 'windows/apply.ps1 shared entry point' {
             'programs.yazi'
             'services.ahk'
             'services.syncthing'
+            'services.sshd'
         )
     }
 

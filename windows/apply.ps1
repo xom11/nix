@@ -32,9 +32,10 @@ $modules = @(
     'programs.nvim'
     'programs.yazi'
 
-    # ---- services (scheduled tasks) ----
+    # ---- services ----
     'services.ahk'
     'services.syncthing'
+    'services.sshd'
 )
 
 function Wait-ForExit {
