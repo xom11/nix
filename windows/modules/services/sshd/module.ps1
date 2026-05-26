@@ -18,28 +18,58 @@
             Write-OK "capability: $capabilityName"
         }
 
-        Set-Service -Name sshd -StartupType Automatic
-        if ((Get-Service -Name sshd).Status -ne 'Running') {
-            Start-Service -Name sshd
+        $sshd = Get-Service -Name sshd
+        $sshdChanged = $false
+        if ($sshd.StartType -ne 'Automatic') {
+            Set-Service -Name sshd -StartupType Automatic
+            $sshdChanged = $true
         }
-        Write-OK 'service: sshd (Automatic, Running)'
+        if ($sshd.Status -ne 'Running') {
+            Start-Service -Name sshd
+            $sshdChanged = $true
+        }
+        if ($sshdChanged) {
+            Write-OK 'service: sshd (Automatic, Running)'
+        } else {
+            Write-Skip 'service: sshd (Automatic, Running)'
+        }
 
         $firewallRuleName = 'OpenSSH-Server-In-TCP'
         $firewallRule = Get-NetFirewallRule -Name $firewallRuleName -ErrorAction SilentlyContinue
         if (-not $firewallRule) {
             New-NetFirewallRule -Name $firewallRuleName -DisplayName 'OpenSSH Server (sshd)' `
                 -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22 | Out-Null
+            Write-OK 'firewall: inbound TCP 22 (OpenSSH-Server-In-TCP)'
         } else {
-            Set-NetFirewallRule -Name $firewallRuleName -Enabled True -Direction Inbound -Action Allow
-            $firewallRule | Get-NetFirewallPortFilter |
-                Set-NetFirewallPortFilter -Protocol TCP -LocalPort 22
+            $portFilter = $firewallRule | Get-NetFirewallPortFilter
+            $firewallMatches = "$($firewallRule.Enabled)" -eq 'True' -and
+                "$($firewallRule.Direction)" -eq 'Inbound' -and
+                "$($firewallRule.Action)" -eq 'Allow' -and
+                "$($portFilter.Protocol)" -eq 'TCP' -and
+                "$($portFilter.LocalPort)" -eq '22'
+            if ($firewallMatches) {
+                Write-Skip 'firewall: inbound TCP 22 (OpenSSH-Server-In-TCP)'
+            } else {
+                Set-NetFirewallRule -Name $firewallRuleName -Enabled True -Direction Inbound -Action Allow
+                $portFilter | Set-NetFirewallPortFilter -Protocol TCP -LocalPort 22
+                Write-OK 'firewall: inbound TCP 22 (OpenSSH-Server-In-TCP)'
+            }
         }
-        Write-OK 'firewall: inbound TCP 22 (OpenSSH-Server-In-TCP)'
 
-        Set-Service -Name ssh-agent -StartupType Disabled
-        if ((Get-Service -Name ssh-agent).Status -ne 'Stopped') {
-            Stop-Service -Name ssh-agent -Force
+        $sshAgent = Get-Service -Name ssh-agent
+        $sshAgentChanged = $false
+        if ($sshAgent.StartType -ne 'Disabled') {
+            Set-Service -Name ssh-agent -StartupType Disabled
+            $sshAgentChanged = $true
         }
-        Write-OK 'service: ssh-agent (Disabled, Stopped)'
+        if ($sshAgent.Status -ne 'Stopped') {
+            Stop-Service -Name ssh-agent -Force
+            $sshAgentChanged = $true
+        }
+        if ($sshAgentChanged) {
+            Write-OK 'service: ssh-agent (Disabled, Stopped)'
+        } else {
+            Write-Skip 'service: ssh-agent (Disabled, Stopped)'
+        }
     }
 }
