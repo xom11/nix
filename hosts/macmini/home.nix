@@ -52,8 +52,8 @@ in {
         kitty.enable = true;
       };
       browser = {
-        qutebrowser.enable = true;
-        firefox.enable = true;
+        # qutebrowser.enable = true;
+        # firefox.enable = true;
         dotbrowser = {
           vivaldi.enable = true;
           brave.enable = true;
