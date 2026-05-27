@@ -22,6 +22,8 @@ COMMAND_FOCUS_ADDRESSFIELD   = ["ctrl+l"]
 [settings]
 
 "vivaldi.tabs.bar.position" = 1  # 0=top, 1=left, 2=right, 3=bottom
+"vivaldi.panels.position" = 1    # 0=left, 1=right
+"vivaldi.auto_hide.enabled" = true
 
 [pwa]
 
