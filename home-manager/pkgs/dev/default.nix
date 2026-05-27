@@ -34,7 +34,7 @@ mkModule config ./. {
     just
 
     # Tui
-    gobang
+    # gobang
     lazydocker
     # mongo-tui
 
