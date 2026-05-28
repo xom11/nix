@@ -1,4 +1,4 @@
-# uvx dotbrowser vivaldi apply ~nix/home-manager/dotfiles/browser/dotbrowser/vivaldi.toml -k 
+# uvx dotbrowser vivaldi apply ~nix/home-manager/dotfiles/browser/dotbrowser/vivaldi.toml
 
 [shortcuts]
 
@@ -39,5 +39,6 @@ urls = [
   "https://www.facebook.com/messages",
   "https://www.messenger.com",
   "https://web.telegram.org",
+  "https://chatgpt.com/",
 ]
 

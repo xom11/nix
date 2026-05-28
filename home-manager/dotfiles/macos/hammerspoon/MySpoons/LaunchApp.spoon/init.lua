@@ -20,8 +20,7 @@ local hyper = { "cmd", "ctrl", "alt" }
 
 local defaultShortcuts = {
 	{ "b", "Vivaldi" },
-	-- { "c", "Claude" },
-	{ "c", "Codex" },
+	{ "c", "ChatGPT" },
 	{ "d", "Discord" },
 	{ "f", "Finder" },
 	{ "h", "Gemini" },
