@@ -23,6 +23,7 @@ mkModule config ./. {
     taps = [
       # "homebrew-zathura/zathura" # zathura
       "laishulu/homebrew" # macism
+      "kunkka19xx/tap"
     ];
 
     brews = [
@@ -45,6 +46,7 @@ mkModule config ./. {
 
     casks = [
       "claude"
+      "look"
       "obsidian"
       "gonhanh"
       "monitorcontrol"

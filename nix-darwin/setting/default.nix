@@ -94,6 +94,9 @@
           NSAutomaticWindowAnimationsEnabled = false;
           com.apple.trackpad.scaling = 3;
         };
+        "com.apple.Spotlight" = {
+          PasteboardHistoryVersion = 2;
+        };
         "com.apple.symbolichotkeys" = {
           AppleSymbolicHotKeys = {
             # To find the ID of a specific shortcut, you can use:

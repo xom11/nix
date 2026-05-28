@@ -36,6 +36,12 @@ settings.scrollStepSize = 200;
 // Disable surfingkeys on specific URLs
 settings.blocklistPattern = /https?:\/\/(www\.youtube\.com|localhost(:\d+)?|127\.0\.0\.1(:\d+)?).*/;
 
+// Default search engine
+settings.defaultSearchEngine = "gg";
+
+// Do not auto-focus the first result in omnibar (allows Enter to search raw input)
+settings.autoFocusResults = false;
+
 /***********************
 SECTION: KEY MAPPINGS
 ***********************/
@@ -97,16 +103,34 @@ api.mapkey("ont", "Open newtab", function () {
   api.tabOpenLink("www.google.com");
 });
 
-// leader key
-api.mapkey("<Space>g", "Search Google via omnibar", function () {
-  api.Front.openOmnibar({ type: "SearchEngine", extra: "gg" });
-});
 /***********************
 SECTION: SHORTCUTS URLS
 ***********************/
+function toggleFocusUrl(url) {
+  const matchesUrl = (candidateUrl) => candidateUrl.startsWith(url);
+
+  if (matchesUrl(window.location.href)) {
+    api.RUNTIME("goToLastTab");
+    return;
+  }
+
+  api.RUNTIME("getTabs", { queryInfo: { currentWindow: true } }, ({ tabs }) => {
+    const tab = Array.isArray(tabs)
+      ? tabs.find(({ url: tabUrl }) => tabUrl && matchesUrl(tabUrl))
+      : null;
+
+    if (tab?.id != null) {
+      api.RUNTIME("focusTab", { tabId: tab.id });
+    } else {
+      api.tabOpenLink(url);
+    }
+  });
+}
+
 // prettier-ignore
 [
-  ["ogH", "Open Github",            "https://github.com"],
-  ["ogS", "Open Github stars page", "https://github.com/stars"],
-  ["ofB", "Open Facebook",          "https://www.facebook.com/"],
-].forEach(([key, desc, url]) => api.mapkey(key, desc, () => api.tabOpenLink(url)));
+  ["<Space>gh", "Toggle GitHub",            "https://github.com"],
+  ["<Space>gs", "Toggle GitHub stars page", "https://github.com/stars"],
+  ["<Space>fb", "Toggle Facebook",          "https://www.facebook.com/"],
+].forEach(([key, desc, url]) => api.mapkey(key, desc, () => toggleFocusUrl(url)));
+
