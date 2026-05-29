@@ -132,5 +132,6 @@ function toggleFocusUrl(url) {
   ["<Space>gh", "GitHub",            "https://github.com"],
   ["<Space>gs", "GitHub stars page", "https://github.com/stars"],
   ["<Space>fb", "Facebook",          "https://www.facebook.com/"],
+  ["<Space>ht", "hoctotbachkoa",     "https://hoctotbachkoa.com/"],
 ].forEach(([key, desc, url]) => api.mapkey(key, desc, () => toggleFocusUrl(url)));
 
