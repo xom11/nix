@@ -30,7 +30,7 @@
       # "postgresql"
       # "nginx"
       "httpie"
-      # "ollama"
+      "ollama"
       # "livekit"
       "ffmpeg@6"
       "mkcert" 
