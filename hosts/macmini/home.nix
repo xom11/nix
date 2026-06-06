@@ -31,6 +31,8 @@ in {
     PRISMA_ENGINES_CACHE_DIR = "${ssd}/cache/prisma";
     # micromamba
     MAMBA_ROOT_PREFIX = "${ssd}/micromamba";
+    # Ollama
+    OLLAMA_MODELS = "${ssd}/ollama/models";
   };
 
   home.packages = with pkgs; [
