@@ -29,6 +29,9 @@ trust_level = "trusted"
 [projects."/Users/lenamkhanh/Documents/dev/dotbrowser"]
 trust_level = "trusted"
 
+[projects."/Users/kln/.nix"]
+trust_level = "trusted"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 

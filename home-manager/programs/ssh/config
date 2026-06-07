@@ -12,12 +12,14 @@ Host *
 Host dk
   HostName 100.126.180.8
   User dk
-Host macmini
-  HostName 100.109.43.45
-  User lenamkhanh
+
+Host macmini-tunnel rog-tunnel
+  SessionType none
+  ForkAfterAuthentication yes
+  ExitOnForwardFailure yes
   # ---- Web / frontend ----
   LocalForward 3000 localhost:3000     # Next.js / React / web app
-  LocalForward 3001 localhost:3001     # API server / backend (Node, NestJS, …)
+  LocalForward 3001 localhost:3001     # API server / backend (Node, NestJS, ...)
   LocalForward 3002 localhost:3002     # Grafana
   LocalForward 4200 localhost:4200     # Angular dev server
   LocalForward 5173 localhost:5173     # Vite dev server
@@ -44,7 +46,13 @@ Host macmini
   # ---- Observability / tracing ----
   LocalForward 9090 localhost:9090     # Prometheus
   LocalForward 16686 localhost:16686   # Jaeger UI
-  # ---- Keepalive ----
+
+Host macmini macmini-tunnel
+  HostName 100.109.43.45
+  User lenamkhanh
+  ControlMaster auto
+  ControlPath ~/.ssh/control-%n-%C
+  ControlPersist 8h
   ServerAliveInterval 60
   ServerAliveCountMax 3
 Host airm3
@@ -54,9 +62,14 @@ Host x1
   HostName x1g6-kln
   User kln
   ForwardAgent yes
-Host rog
+Host rog rog-tunnel
   HostName 100.71.234.89
   User rog
+  ControlMaster auto
+  ControlPath ~/.ssh/control-%n-%C
+  ControlPersist 8h
+  ServerAliveInterval 60
+  ServerAliveCountMax 3
   ForwardAgent yes
 Host rog.local
   User rog
