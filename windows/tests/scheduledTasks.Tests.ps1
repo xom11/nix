@@ -22,7 +22,7 @@ Describe 'windows scheduled service task modules' {
                 Principal = [pscustomobject]@{
                     UserId    = $script:UserId
                     LogonType = 'Interactive'
-                    RunLevel  = 'Highest'
+                    RunLevel  = 'Limited'
                 }
                 Settings = [pscustomobject]@{
                     Enabled                       = $true
@@ -53,9 +53,9 @@ Describe 'windows scheduled service task modules' {
                     Enabled                       = $true
                     DisallowStartIfOnBatteries    = $false
                     StopIfGoingOnBatteries        = $false
-                    ExecutionTimeLimit            = [TimeSpan]::Zero
+                    ExecutionTimeLimit            = 'PT0S'
                     RestartCount                  = 3
-                    RestartInterval               = (New-TimeSpan -Minutes 1)
+                    RestartInterval               = 'PT1M'
                 }
                 Description = 'Run Syncthing continuously in background'
             }
@@ -71,26 +71,6 @@ Describe 'windows scheduled service task modules' {
 
             Mock Get-Command { [pscustomobject]@{ Source = $script:AhkExe } }
             Mock Test-Path { $true }
-            Mock New-ScheduledTaskAction {
-                [pscustomobject]@{ Execute = $Execute; Arguments = $Argument }
-            }
-            Mock New-ScheduledTaskTrigger {
-                [pscustomobject]@{
-                    CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
-                    UserId   = $User
-                }
-            }
-            Mock New-ScheduledTaskPrincipal {
-                [pscustomobject]@{ UserId = $UserId; LogonType = "$LogonType"; RunLevel = "$RunLevel" }
-            }
-            Mock New-ScheduledTaskSettingsSet {
-                [pscustomobject]@{
-                    Enabled                    = $true
-                    DisallowStartIfOnBatteries = $false
-                    StopIfGoingOnBatteries     = $false
-                    StartWhenAvailable         = $true
-                }
-            }
             Mock Register-ScheduledTask { }
             Mock Write-OK { }
             Mock Write-Skip { }
@@ -126,28 +106,6 @@ Describe 'windows scheduled service task modules' {
             $script:UserId = [Security.Principal.WindowsIdentity]::GetCurrent().Name
 
             Mock Get-Command { [pscustomobject]@{ Source = $script:SyncthingExe } }
-            Mock New-ScheduledTaskAction {
-                [pscustomobject]@{ Execute = $Execute; Arguments = $Argument }
-            }
-            Mock New-ScheduledTaskTrigger {
-                [pscustomobject]@{
-                    CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
-                    UserId   = $User
-                }
-            }
-            Mock New-ScheduledTaskPrincipal {
-                [pscustomobject]@{ UserId = $UserId; LogonType = "$LogonType"; RunLevel = "$RunLevel" }
-            }
-            Mock New-ScheduledTaskSettingsSet {
-                [pscustomobject]@{
-                    Enabled                    = $true
-                    DisallowStartIfOnBatteries = $false
-                    StopIfGoingOnBatteries     = $false
-                    ExecutionTimeLimit         = [TimeSpan]::Zero
-                    RestartCount               = 3
-                    RestartInterval            = (New-TimeSpan -Minutes 1)
-                }
-            }
             Mock Register-ScheduledTask { }
             Mock Write-OK { }
             Mock Write-Skip { }

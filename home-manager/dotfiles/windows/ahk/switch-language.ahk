@@ -26,7 +26,7 @@ SetTimer(AutoSwitchLanguage, 500)
 lastHwnd := 0
 
 AutoSwitchLanguage() {
-    global lastHwnd
+    global lastHwnd, EN, VN
     activeHwnd := WinActive("A")
 
     ; Only trigger if the active window changes
@@ -34,16 +34,25 @@ AutoSwitchLanguage() {
         return
 
     if WinActive("ahk_group VI_Group") {
-        SetInputLang(VN)
+        SetInputLang(VN, activeHwnd)
     }
     else {
-        SetInputLang(EN )
+        SetInputLang(EN, activeHwnd)
     }
 
     lastHwnd := activeHwnd
 }
 
-SetInputLang(langID) {
+SetInputLang(langID, hwnd := 0) {
+    if !hwnd
+        hwnd := WinActive("A")
+    if !hwnd
+        return
+
     ; WM_INPUTLANGCHANGEREQUEST = 0x0050
-    PostMessage(0x0050, 0, langID, , "A")
+    try {
+        PostMessage(0x0050, 0, langID, , "ahk_id " hwnd)
+    } catch {
+        return
+    }
 }

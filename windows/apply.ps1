@@ -33,6 +33,7 @@ $modules = @(
     'programs.yazi'
 
     # ---- services ----
+    'services.kanata'
     'services.ahk'
     'services.syncthing'
     'services.sshd'

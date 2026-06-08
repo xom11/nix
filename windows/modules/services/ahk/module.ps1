@@ -1,5 +1,5 @@
 @{
-    Description = 'Scheduled task: AutoHotkey main.ahk at logon (Run as Admin)'
+    Description = 'Scheduled task: AutoHotkey main.ahk at logon'
     Apply = {
         param($Ctx)
         $taskName = 'AHKrunning'
@@ -33,7 +33,7 @@
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute $ahkExe -Argument "`"$ahkFile`""
         $trigger   = New-ScheduledTaskTrigger -AtLogon
-        $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Highest
+        $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
         $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
 
         $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
