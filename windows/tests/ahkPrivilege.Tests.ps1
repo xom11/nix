@@ -29,10 +29,11 @@ Describe 'windows AutoHotkey privilege model' {
         $kanataTaskModule | Should Match 'kanata_windows\.kbd'
     }
 
-    It 'runs Kanata from the GUI binary after the logon session settles' {
+    It 'runs Kanata from the TTY binary after the logon session settles' {
         $kanataTaskModule = Get-Content -Raw $script:KanataTaskModulePath
 
-        $kanataTaskModule | Should Match 'kanata_windows_gui_winIOv2_x64\.exe'
+        $kanataTaskModule | Should Match 'kanata_windows_tty_winIOv2_x64\.exe'
+        $kanataTaskModule | Should Not Match 'kanata_windows_gui_winIOv2_x64\.exe'
         $kanataTaskModule | Should Match '\$trigger\.Delay\s*=\s*''PT30S'''
         $kanataTaskModule | Should Match 'WorkingDirectory'
         $kanataTaskModule | Should Not Match 'scoop\\shims\\kanata\.exe'

@@ -10,7 +10,7 @@
             "$env:USERPROFILE\scoop\apps\kanata\current"
         )
         foreach ($dir in $kanataDirs) {
-            $candidate = Join-Path $dir 'kanata_windows_gui_winIOv2_x64.exe'
+            $candidate = Join-Path $dir 'kanata_windows_tty_winIOv2_x64.exe'
             if (Test-Path $candidate) {
                 $kanataExe = $candidate
                 $kanataDir = $dir
