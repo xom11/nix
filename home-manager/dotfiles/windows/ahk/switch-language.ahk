@@ -47,12 +47,19 @@ SetInputLang(langID, hwnd := 0) {
     if !hwnd
         hwnd := WinActive("A")
     if !hwnd
-        return
+        return false
+
+    layoutID := Type(langID) = "String" ? langID : Format("{:08X}", langID)
+    hkl := DllCall("LoadKeyboardLayout", "Str", layoutID, "UInt", 1, "Ptr")
+    if !hkl
+        return false
+    DllCall("ActivateKeyboardLayout", "Ptr", hkl, "UInt", 0, "Ptr")
 
     ; WM_INPUTLANGCHANGEREQUEST = 0x0050
     try {
-        PostMessage(0x0050, 0, langID, , "ahk_id " hwnd)
+        PostMessage(0x0050, 0, hkl, , "ahk_id " hwnd)
+        return true
     } catch {
-        return
+        return false
     }
 }

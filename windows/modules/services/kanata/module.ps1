@@ -4,33 +4,35 @@
         param($Ctx)
         $taskName = 'Kanata'
 
-        $kanataExe = $null
-        $kanataDir = $null
-        $kanataDirs = @(
-            "$env:USERPROFILE\scoop\apps\kanata\current"
-        )
-        foreach ($dir in $kanataDirs) {
-            $candidate = Join-Path $dir 'kanata_windows_tty_winIOv2_x64.exe'
-            if (Test-Path $candidate) {
-                $kanataExe = $candidate
-                $kanataDir = $dir
-                break
-            }
+        $ahkExe = $null
+        foreach ($name in 'AutoHotkey64','AutoHotkey','AutoHotkey32') {
+            $cmd = Get-Command $name -ErrorAction SilentlyContinue
+            if ($cmd) { $ahkExe = $cmd.Source; break }
+        }
+        if (-not $ahkExe) {
+            $candidates = @(
+                "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+                "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey.exe"
+                "$env:ProgramFiles\AutoHotkey\AutoHotkey.exe"
+                "${env:ProgramFiles(x86)}\AutoHotkey\AutoHotkey.exe"
+            )
+            $ahkExe = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
         }
 
-        $kanataConfig = Join-Path $Ctx.ConfigsDir 'kanata\kanata_windows.kbd'
-        if (-not $kanataExe) {
-            Write-Warn "kanata not found (install via scoop: kanata)"
+        $kanataLauncher = Join-Path $Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-kanata.ahk'
+        $kanataLauncherDir = Split-Path $kanataLauncher -Parent
+        if (-not $ahkExe) {
+            Write-Warn "AutoHotkey not found (install via winget: AutoHotkey.AutoHotkey)"
             return
         }
-        if (-not (Test-Path $kanataConfig)) {
-            Write-Warn "kanata config missing: $kanataConfig"
+        if (-not (Test-Path $kanataLauncher)) {
+            Write-Warn "kanata launcher missing: $kanataLauncher"
             return
         }
 
         $userId      = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $description = 'Run Kanata keyboard remapper with elevated privileges'
-        $action      = New-ScheduledTaskAction -Execute $kanataExe -Argument "-c `"$kanataConfig`"" -WorkingDirectory $kanataDir
+        $action      = New-ScheduledTaskAction -Execute $ahkExe -Argument "`"$kanataLauncher`"" -WorkingDirectory $kanataLauncherDir
         $trigger     = New-ScheduledTaskTrigger -AtLogOn -User $userId
         $trigger.Delay = 'PT30S'
         $principal   = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Highest
@@ -58,11 +60,11 @@
             $existingTask.Settings.StartWhenAvailable -eq $settings.StartWhenAvailable -and
             $existingTask.Description -eq $description
         if ($taskMatches) {
-            Write-Skip "scheduled task: $taskName ($kanataExe)"
+            Write-Skip "scheduled task: $taskName ($ahkExe)"
             return
         }
 
         Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description $description -Force | Out-Null
-        Write-OK "scheduled task: $taskName ($kanataExe)"
+        Write-OK "scheduled task: $taskName ($ahkExe)"
     }
 }

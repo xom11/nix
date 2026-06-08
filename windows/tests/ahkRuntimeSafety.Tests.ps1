@@ -28,7 +28,13 @@ ExitApp(0)
     It 'pins language switching to the hwnd observed by the timer' {
         $script:SwitchLanguage | Should Match 'SetInputLang\(VN, activeHwnd\)'
         $script:SwitchLanguage | Should Match 'SetInputLang\(EN, activeHwnd\)'
-        $script:SwitchLanguage | Should Match 'PostMessage\(0x0050, 0, langID, , "ahk_id " hwnd\)'
+        $script:SwitchLanguage | Should Match 'PostMessage\(0x0050, 0, hkl, , "ahk_id " hwnd\)'
+    }
+
+    It 'loads and activates keyboard layouts before requesting the target window switch' {
+        $script:SwitchLanguage | Should Match 'LoadKeyboardLayout'
+        $script:SwitchLanguage | Should Match 'ActivateKeyboardLayout'
+        $script:SwitchLanguage | Should Match 'Format\("\{:08X\}", langID\)'
     }
 
     It 'keeps window snapping errors from surfacing as AutoHotkey dialogs' {

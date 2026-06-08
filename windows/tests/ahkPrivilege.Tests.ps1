@@ -2,6 +2,7 @@ Describe 'windows AutoHotkey privilege model' {
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
         $script:MainAhk = Get-Content -Raw (Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\main.ahk')
+        $script:LaunchKanata = Get-Content -Raw (Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\launch-kanata.ahk')
         $script:AhkTaskModule = Get-Content -Raw (Join-Path $RepoRoot 'windows\modules\services\ahk\module.ps1')
         $script:ApplyText = Get-Content -Raw (Join-Path $RepoRoot 'windows\apply.ps1')
         $script:KanataTaskModulePath = Join-Path $RepoRoot 'windows\modules\services\kanata\module.ps1'
@@ -26,16 +27,23 @@ Describe 'windows AutoHotkey privilege model' {
         $script:ApplyText | Should Match ([regex]::Escape("'services.kanata'"))
         $kanataTaskModule | Should Match 'kanata'
         $kanataTaskModule | Should Match 'RunLevel Highest'
-        $kanataTaskModule | Should Match 'kanata_windows\.kbd'
+        $script:LaunchKanata | Should Match 'kanata_windows\.kbd'
     }
 
-    It 'runs Kanata from the TTY binary after the logon session settles' {
+    It 'runs Kanata through the hidden AutoHotkey launcher after the logon session settles' {
         $kanataTaskModule = Get-Content -Raw $script:KanataTaskModulePath
 
-        $kanataTaskModule | Should Match 'kanata_windows_tty_winIOv2_x64\.exe'
+        $kanataTaskModule | Should Match 'AutoHotkey64'
+        $kanataTaskModule | Should Match 'launch-kanata\.ahk'
+        $kanataTaskModule | Should Not Match 'kanata_windows_tty_winIOv2_x64\.exe'
         $kanataTaskModule | Should Not Match 'kanata_windows_gui_winIOv2_x64\.exe'
         $kanataTaskModule | Should Match '\$trigger\.Delay\s*=\s*''PT30S'''
         $kanataTaskModule | Should Match 'WorkingDirectory'
         $kanataTaskModule | Should Not Match 'scoop\\shims\\kanata\.exe'
+    }
+
+    It 'keeps the Kanata launcher hidden and independent of PATH' {
+        $script:LaunchKanata | Should Match 'scoop\\shims\\kanata\.exe'
+        $script:LaunchKanata | Should Match 'Run\(KanataExe .+ "Hide"\)'
     }
 }
