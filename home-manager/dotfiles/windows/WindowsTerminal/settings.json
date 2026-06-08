@@ -25,28 +25,28 @@
     "keybindings": 
     [
         {
-            "id": "User.sendInput.8F63D3A9",
-            "keys": "shift+enter"
-        },
-        {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
+            "id": "Terminal.PrevTab",
+            "keys": "ctrl+shift+left"
         },
         {
             "id": "Terminal.NextTab",
             "keys": "ctrl+shift+right"
         },
         {
-            "id": "Terminal.PrevTab",
-            "keys": "ctrl+shift+left"
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
         },
         {
-            "id": "Terminal.OpenNewTab",
-            "keys": "ctrl+shift+t"
+            "id": "User.sendInput.8F63D3A9",
+            "keys": "shift+enter"
         },
         {
             "id": "Terminal.PrevTab",
             "keys": "ctrl+shift+h"
+        },
+        {
+            "id": "Terminal.OpenNewTab",
+            "keys": "ctrl+shift+t"
         },
         {
             "id": "Terminal.NextTab",
@@ -136,6 +136,18 @@
             },
             {
                 "guid": "{2d113717-772d-5dd6-a20f-0ff764f35d61}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{8d3842e0-6317-5438-a034-707ffc3262d5}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{ee4bb92b-2f95-50f9-9e4b-282b44c9be22}",
                 "hidden": false,
                 "name": "Developer PowerShell for VS 2022",
                 "source": "Windows.Terminal.VisualStudio"
