@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-// Claude Code statusline — context window, 5h & weekly limits, git, cost.
+// Claude Code statusline — git branch, context window, 5h & weekly limits, cost.
 // Reads the statusLine JSON on stdin, prints one ANSI-colored line.
 // Docs: https://code.claude.com/docs/en/statusline.md
+
+import { execSync } from "node:child_process";
 
 let raw = "";
 process.stdin.on("data", (c) => (raw += c));
@@ -57,11 +59,18 @@ function until(epoch) {
   return "<1m";
 }
 
-// home-relative, shortened cwd
-function shortDir(p, home) {
-  if (!p) return "?";
-  if (home && p.startsWith(home)) p = "~" + p.slice(home.length);
-  return p;
+// current git branch (or short SHA when detached); null if not a repo
+function gitBranch(cwd) {
+  if (!cwd) return null;
+  try {
+    const out = execSync(
+      "git symbolic-ref --short -q HEAD || git rev-parse --short HEAD",
+      { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], timeout: 800 }
+    ).trim();
+    return out || null;
+  } catch {
+    return null;
+  }
 }
 
 function render(d) {
@@ -71,14 +80,11 @@ function render(d) {
   let model = d.model?.display_name || "?";
   if (d.effort?.level) model += dim("·") + d.effort.level;
   if (d.thinking?.enabled) model += " " + c(35, "✦");
-  parts.push(c(36, " ") + bold(model)); //
+  parts.push(c(36, " ") + bold(model)); //
 
-  // ── dir + git branch ──
-  const home = process.env.HOME;
-  let loc = c(34, " ") + shortDir(d.workspace?.current_dir || d.cwd, home); //
-  const branch = d.workspace?.git_worktree || d.worktree?.branch;
-  if (branch) loc += "  " + c(35, " ") + branch; //
-  parts.push(loc);
+  // ── git branch (path intentionally omitted) ──
+  const branch = d.workspace?.git_worktree || gitBranch(d.workspace?.current_dir || d.cwd);
+  if (branch) parts.push(c(35, " ") + branch); //
 
   // ── context window ──
   const cw = d.context_window;
