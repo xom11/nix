@@ -9,7 +9,7 @@
     nixgl.url = "github:nix-community/nixGL";
 
     nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    # nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
