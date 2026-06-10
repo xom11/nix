@@ -26,6 +26,12 @@
   },
   "viewMode": "default",
   "effortLevel": "high",
+  "statusLine": {
+    "type": "command",
+    "command": "node ~/.claude/statusline.mjs",
+    "padding": 0,
+    "refreshInterval": 10
+  },
   "skipDangerousModePermissionPrompt": true,
   "allowDangerouslySkipPermissions": true,
   "hooks": {

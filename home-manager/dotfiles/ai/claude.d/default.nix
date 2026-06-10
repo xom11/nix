@@ -17,5 +17,8 @@ in
       ".claude/settings.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/settings.json";
       };
+      ".claude/statusline.mjs" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/statusline.mjs";
+      };
     };
   }
