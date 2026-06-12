@@ -11,15 +11,14 @@
     "showModelInfoInChat": true,
     "footer": {
       "items": [
-        "model-name",
+        "model",
         "git-branch",
-        "context-used",
+        "context-percentage",
         "quota",
-        "code-changes",
-        "token-count",
+        "tokens",
         "session-id"
       ],
-      "showLabels": false
+      "showLabels": true
     }
   },
   "general": {
