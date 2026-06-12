@@ -5,6 +5,25 @@
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/lenamkhanh/.claude/hooks/context-mode-cache-heal.mjs\""
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node ~/.claude/statusline.mjs",
+    "padding": 0,
+    "refreshInterval": 10
+  },
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
@@ -26,24 +45,6 @@
   },
   "viewMode": "default",
   "effortLevel": "high",
-  "statusLine": {
-    "type": "command",
-    "command": "node ~/.claude/statusline.mjs",
-    "padding": 0,
-    "refreshInterval": 10
-  },
   "skipDangerousModePermissionPrompt": true,
-  "allowDangerouslySkipPermissions": true,
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Users/lenamkhanh/.claude/hooks/context-mode-cache-heal.mjs\""
-          }
-        ]
-      }
-    ]
-  }
+  "allowDangerouslySkipPermissions": true
 }

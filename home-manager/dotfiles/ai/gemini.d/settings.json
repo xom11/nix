@@ -8,7 +8,19 @@
     "theme": "Default",
     "incrementalRendering": true,
     "errorVerbosity": "full",
-    "showModelInfoInChat": true
+    "showModelInfoInChat": true,
+    "footer": {
+      "items": [
+        "model-name",
+        "git-branch",
+        "context-used",
+        "quota",
+        "code-changes",
+        "token-count",
+        "session-id"
+      ],
+      "showLabels": false
+    }
   },
   "general": {
     "vimMode": false,

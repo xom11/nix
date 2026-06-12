@@ -32,6 +32,20 @@ trust_level = "trusted"
 [projects."/Users/kln/.nix"]
 trust_level = "trusted"
 
+[projects."/Users/lenamkhanh"]
+trust_level = "trusted"
+
+[tui]
+status_line = [
+  "model-with-reasoning",
+  "git-branch",
+  "context-remaining",
+  "five-hour-limit",
+  "weekly-limit",
+  "used-tokens",
+  "thread-id",
+]
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 
