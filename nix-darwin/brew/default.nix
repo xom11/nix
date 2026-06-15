@@ -14,7 +14,18 @@ mkModule config ./. {
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      cleanup = "zap";
+      # Homebrew 6.0 deprecated `brew bundle --cleanup` ("no replacement"), and
+      # passing it makes activation print a deprecation warning and prompt
+      # "Do you want to proceed with the cleanup? [y/n]" on every `update`.
+      # Keep it off; prune undeclared/old packages manually when needed with
+      # `brew bundle cleanup --force` or `brew cleanup`.
+      cleanup = "none";
+      # Homebrew >= 6.0 requires non-official taps to be trusted via `brew trust`
+      # before `brew bundle` will load their formulae/casks. Disable that check
+      # so activation doesn't fail on our third-party taps below.
+      extraEnv = {
+        HOMEBREW_NO_REQUIRE_TAP_TRUST = "1";
+      };
     };
 
     masApps = {
