@@ -8,13 +8,13 @@ function obj:init()
 	hs.hotkey.bind(tab, "r", function()
 		hs.reload()
 	end)
-  -- PART: Change language input source
-  hs.hotkey.bind(tab, "e", function()
-    hs.keycodes.setLayout("ABC")
-  end)
-  hs.hotkey.bind(tab, "v", function()
-    hs.keycodes.setMethod("Fcitx5")
-  end)
+	-- PART: Change language input source
+	hs.hotkey.bind(tab, "e", function()
+		hs.keycodes.setLayout("ABC")
+	end)
+	hs.hotkey.bind(tab, "v", function()
+		hs.keycodes.setMethod("Fcitx5")
+	end)
 	-- PART: Toggle Console
 	hs.hotkey.bind(tab, "H", function()
 		hs.toggleConsole()
@@ -53,14 +53,29 @@ function obj:init()
 	local caffeineCanvas = hs.canvas.new({ x = sf.x + sf.w - size - inset, y = sf.y + inset, w = size, h = size })
 	caffeineCanvas:level("overlay"):behaviorAsLabels({ "canJoinAllSpaces", "stationary" })
 	caffeineCanvas:appendElements(
-		{ type = "rectangle", action = "fill", roundedRectRadii = { xRadius = 9, yRadius = 9 }, fillColor = { red = 1, green = 0.25, blue = 0.1, alpha = 0.95 } },
-		{ type = "text", text = "☕", textSize = 18, textAlignment = "center", frame = { x = 0, y = 4, w = size, h = size } }
+		{
+			type = "rectangle",
+			action = "fill",
+			roundedRectRadii = { xRadius = 9, yRadius = 9 },
+			fillColor = { red = 1, green = 0.25, blue = 0.1, alpha = 0.95 },
+		},
+		{
+			type = "text",
+			text = "☕",
+			textSize = 20,
+			textAlignment = "center",
+			frame = { x = 0, y = 4, w = size, h = size },
+		}
 	)
 
 	local function setCaffeine(on)
 		caffeineOn = on
 		hs.caffeinate.set("displayIdle", on)
-		if on then caffeineCanvas:show() else caffeineCanvas:hide() end
+		if on then
+			caffeineCanvas:show()
+		else
+			caffeineCanvas:hide()
+		end
 	end
 
 	hs.hotkey.bind(tab, "c", function()
