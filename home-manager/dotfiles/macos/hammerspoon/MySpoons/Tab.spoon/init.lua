@@ -48,42 +48,19 @@ function obj:init()
 
 	-- PART: Caffeinate toggle — keep main display awake, show corner indicator
 	local caffeineOn = false
-	local caffeineCanvas
-	do
-		local size = 28
-		local inset = 6
-		local frame = hs.screen.primaryScreen():frame()
-		caffeineCanvas = hs.canvas.new({
-			x = frame.x + frame.w - size - inset,
-			y = frame.y + inset,
-			w = size,
-			h = size,
-		})
-		caffeineCanvas:level("overlay")
-		caffeineCanvas:behaviorAsLabels({ "canJoinAllSpaces", "stationary" })
-		caffeineCanvas[1] = {
-			type = "rectangle",
-			action = "fill",
-			roundedRectRadii = { xRadius = 8, yRadius = 8 },
-			fillColor = { red = 0.85, green = 0.55, blue = 0.15, alpha = 0.85 },
-		}
-		caffeineCanvas[2] = {
-			type = "text",
-			text = "☕",
-			textSize = 16,
-			textAlignment = "center",
-			frame = { x = 0, y = 2, w = size, h = size },
-		}
-	end
+	local size, inset = 30, 6
+	local sf = hs.screen.primaryScreen():frame()
+	local caffeineCanvas = hs.canvas.new({ x = sf.x + sf.w - size - inset, y = sf.y + inset, w = size, h = size })
+	caffeineCanvas:level("overlay"):behaviorAsLabels({ "canJoinAllSpaces", "stationary" })
+	caffeineCanvas:appendElements(
+		{ type = "rectangle", action = "fill", roundedRectRadii = { xRadius = 9, yRadius = 9 }, fillColor = { red = 1, green = 0.25, blue = 0.1, alpha = 0.95 } },
+		{ type = "text", text = "☕", textSize = 18, textAlignment = "center", frame = { x = 0, y = 4, w = size, h = size } }
+	)
 
 	local function setCaffeine(on)
 		caffeineOn = on
 		hs.caffeinate.set("displayIdle", on)
-		if on then
-			caffeineCanvas:show()
-		else
-			caffeineCanvas:hide()
-		end
+		if on then caffeineCanvas:show() else caffeineCanvas:hide() end
 	end
 
 	hs.hotkey.bind(tab, "c", function()
