@@ -46,6 +46,50 @@ function obj:init()
 		end
 	end)
 
+	-- PART: Caffeinate toggle — keep main display awake, show corner indicator
+	local caffeineOn = false
+	local caffeineCanvas
+	do
+		local size = 28
+		local inset = 6
+		local frame = hs.screen.primaryScreen():frame()
+		caffeineCanvas = hs.canvas.new({
+			x = frame.x + frame.w - size - inset,
+			y = frame.y + inset,
+			w = size,
+			h = size,
+		})
+		caffeineCanvas:level("overlay")
+		caffeineCanvas:behaviorAsLabels({ "canJoinAllSpaces", "stationary" })
+		caffeineCanvas[1] = {
+			type = "rectangle",
+			action = "fill",
+			roundedRectRadii = { xRadius = 8, yRadius = 8 },
+			fillColor = { red = 0.85, green = 0.55, blue = 0.15, alpha = 0.85 },
+		}
+		caffeineCanvas[2] = {
+			type = "text",
+			text = "☕",
+			textSize = 16,
+			textAlignment = "center",
+			frame = { x = 0, y = 2, w = size, h = size },
+		}
+	end
+
+	local function setCaffeine(on)
+		caffeineOn = on
+		hs.caffeinate.set("displayIdle", on)
+		if on then
+			caffeineCanvas:show()
+		else
+			caffeineCanvas:hide()
+		end
+	end
+
+	hs.hotkey.bind(tab, "c", function()
+		setCaffeine(not caffeineOn)
+	end)
+
 	-- PART: Emoji picker
 	-- spoon.SpoonInstall:andUse("Emojis")
 	-- hs.loadSpoon("Emojis").chooser:rows(15)
