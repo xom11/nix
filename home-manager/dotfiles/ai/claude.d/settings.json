@@ -45,5 +45,6 @@
   "viewMode": "default",
   "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
   "allowDangerouslySkipPermissions": true
 }
