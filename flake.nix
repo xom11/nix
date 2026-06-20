@@ -65,6 +65,8 @@
       flakeOverlays = [
         inputs.beckon.overlays.default
         inputs.dotbrowser.overlays.default
+        # tmux 3.6a copy-mode double-free crash fix (see overlays/tmux-fix.nix).
+        (import ./overlays/tmux-fix.nix)
       ];
 
       lib = import ./lib { inherit inputs flakeOverlays; };
