@@ -43,7 +43,7 @@
     }
   },
   "viewMode": "default",
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "allowDangerouslySkipPermissions": true
 }
