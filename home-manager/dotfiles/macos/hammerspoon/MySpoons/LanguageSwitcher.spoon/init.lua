@@ -1,12 +1,24 @@
 local obj = {}
 obj.__index = obj
--- NOTE:
--- Fcitx5 -> cn -> Gonhanh turn off -> en
--- ABC -> en -> Gonhanh turn on -> vn
 
 -- local en = "Fcitx5"
 local en = "Unicode Hex Input"
 local vn = "ABC"
+local zh = "Pinyin – Simplified"
+
+local function switchLang(name)
+	for _, v in ipairs(hs.keycodes.layouts()) do
+		if v == name then
+			hs.keycodes.setLayout(name)
+			return
+		end
+	end
+	hs.keycodes.setMethod(name)
+end
+hs.hotkey.bind({}, "f18", function() switchLang(en) end)
+hs.hotkey.bind({}, "f19", function() switchLang(vn) end)
+hs.hotkey.bind({}, "f17", function() switchLang(zh) end)
+
 
 spoon.SpoonInstall:andUse("InputSourceSwitch")
 
@@ -25,7 +37,7 @@ function obj:init()
 		["Vivaldi"] = en,
 		["Zalo"] = vn,
 		["iTerm2"] = en,
-		["kitty"] = en,
+		["kitty"] = vn,
 		["Notion"] = vn,
 
     -- pwa apps

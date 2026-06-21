@@ -8,6 +8,9 @@
   del_word_left A-bspc
   del_word_right A-del
   switch_input_method C-spc
+  lang_zh f17   ;; Chinese
+  lang_en f18   ;; English
+  lang_vi f19   ;; Vietnamese
   vol_mute mute
   vol_dn vold
   vol_up volu
