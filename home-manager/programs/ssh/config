@@ -50,9 +50,6 @@ Host macmini-tunnel rog-tunnel
 Host macmini macmini-tunnel
   HostName 100.109.43.45
   User lenamkhanh
-  ControlMaster auto
-  ControlPath ~/.ssh/control-%n-%C
-  ControlPersist 8h
   ServerAliveInterval 60
   ServerAliveCountMax 3
 Host a14
@@ -68,9 +65,6 @@ Host x1
 Host rog rog-tunnel
   HostName 100.71.234.89
   User rog
-  ControlMaster auto
-  ControlPath ~/.ssh/control-%n-%C
-  ControlPersist 8h
   ServerAliveInterval 60
   ServerAliveCountMax 3
   ForwardAgent yes
@@ -84,3 +78,12 @@ Host github.com
   User git
   IdentityFile ~/.ssh/id_ed25519_l3n4k4
   IdentitiesOnly yes
+
+# Connection multiplexing only on macOS/Linux. Windows OpenSSH has no Unix-socket
+# ControlMaster support and dies with "getsockname failed: Not a socket".
+# `uname` succeeds on macOS/Linux (-> multiplexing on) and is absent from the
+# Windows cmd.exe PATH that runs Match exec (-> exec fails -> multiplexing off).
+Match originalhost macmini,macmini-tunnel,rog,rog-tunnel exec "uname"
+  ControlMaster auto
+  ControlPath ~/.ssh/control-%n-%C
+  ControlPersist 8h
