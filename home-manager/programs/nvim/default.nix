@@ -35,7 +35,13 @@ in
     ];
     programs.nixvim = {
       enable = true;
-      nixpkgs.config.allowUnfree = true;
+      # Reuse the host (home-manager) pkgs instead of letting nixvim build
+      # its own instance. Avoids an infinite-recursion eval bug triggered by
+      # newer nixpkgs when nixvim constructs pkgs via `import nixpkgs.source`.
+      # The host pkgs already enables unfree (home-manager/base allowUnfree),
+      # so unfree LSPs/plugins still resolve. Note: useGlobalPackages requires
+      # nixpkgs.config/overlays to be empty (nixvim assertion).
+      nixpkgs.useGlobalPackages = true;
       extraConfigLuaPre = ''
         -- Add the current directory to runtime path to load extra Lua configs
         vim.opt.rtp:append("${pwd}")

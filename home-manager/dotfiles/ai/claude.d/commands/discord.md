@@ -1,3 +1,8 @@
+---
+description: Read Discord messages via DiscordChatExporter CLI
+argument-hint: [channel-id-or-url] [--after YYYY-MM-DD] [--before YYYY-MM-DD] [--last Nd|Nw|Nm] [prompt]
+---
+
 Read Discord messages by exporting them with DiscordChatExporter CLI.
 
 ## Arguments
