@@ -35,6 +35,9 @@ trust_level = "trusted"
 [projects."/Users/lenamkhanh"]
 trust_level = "trusted"
 
+[projects."/Users/lenamkhanh/Documents/dev/swarm"]
+trust_level = "trusted"
+
 [tui]
 status_line = [
   "model-with-reasoning",
