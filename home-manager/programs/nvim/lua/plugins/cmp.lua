@@ -37,8 +37,6 @@ local opts = {
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-			elseif require("copilot.suggestion").is_visible() then
-				require("copilot.suggestion").accept()
 			else
 				fallback()
 			end
