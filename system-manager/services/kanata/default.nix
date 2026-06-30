@@ -14,8 +14,9 @@ in
       wantedBy = ["system-manager.target"];
       serviceConfig = {
       };
+      # kanata-with-cmd so (cmd ...) actions work; service runs as root (no hardening)
       script = ''
-        ${lib.getBin pkgs.kanata}/bin/kanata -c ${configPath}
+        ${lib.getBin pkgs.kanata-with-cmd}/bin/kanata -c ${configPath}
       '';
     };
   }

@@ -20,5 +20,6 @@
 (defalias
   tab_alias (multi lmet lctl lsft)
   cap_alias (multi lmet lctl lalt)
+  demo_cmd XX   ;; no-op; kanata runs as root on macOS so a real (cmd ...) here would run as root
 )
 (include "main.kbd")

@@ -42,7 +42,7 @@ mkModule config ./. {
       "colima"
       "docker"
       "docker-compose"
-      "kanata"
+      # kanata: now via nix (pkgs.kanata-with-cmd) in nix-darwin/launchd/kanata
       # "lima"
       "macism"
       "micromamba"

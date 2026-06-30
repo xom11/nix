@@ -118,6 +118,10 @@
   ;; a @mwl
   ;; d @mwr
 
+  ;; example command bind (kanata-with-cmd): hold spc + g -> @demo_cmd
+  ;; real command only on NixOS (see kanata_nixos.kbd); no-op on mac/ubuntu
+  g @demo_cmd
+
   y home
   u pgdn
   i pgup
