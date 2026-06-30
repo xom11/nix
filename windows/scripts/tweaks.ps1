@@ -32,11 +32,20 @@ Write-Host "Configuring Devices, Power, and Startup..." -ForegroundColor "Yellow
 # Power: Disable Hibernation
 powercfg /hibernate off
 
-# Power: turn off display + sleep after 1 hour (60 min) idle, both AC + DC
+# Power: display + sleep idle timeouts (minutes)
+#   AC (plugged in): display 60, sleep 60
+#   DC (battery):    display 60, sleep 30
 powercfg /change monitor-timeout-ac 60
 powercfg /change monitor-timeout-dc 60
 powercfg /change standby-timeout-ac 60
-powercfg /change standby-timeout-dc 60
+powercfg /change standby-timeout-dc 30
+
+# Power: Lid close action (GUID 5ca8...c936): 0=Do nothing, 1=Sleep, 2=Hibernate, 3=Shut down
+#   AC (plugged in): Sleep immediately
+#   DC (battery):    Do nothing -> stays awake, then sleeps via the 30-min idle timer above
+powercfg /setacvalueindex SCHEME_CURRENT SUB_BUTTONS 5ca83367-6e45-459f-a27b-476b1d01c936 1
+powercfg /setdcvalueindex SCHEME_CURRENT SUB_BUTTONS 5ca83367-6e45-459f-a27b-476b1d01c936 0
+powercfg /setactive SCHEME_CURRENT
 
 # Darkmode:
 $Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"

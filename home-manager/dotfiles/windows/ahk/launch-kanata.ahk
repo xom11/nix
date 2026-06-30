@@ -2,14 +2,17 @@
 
 userDir := EnvGet("USERPROFILE")
 
-global KanataExe := userDir . "\scoop\shims\kanata.exe"
+global KanataExe := userDir . "\scoop\apps\kanata\current\kanata_windows_tty_winIOv2_cmd_allowed_x64.exe"
 global KanataConfig := userDir . "\.nix\configs\kanata\kanata_windows.kbd"
+
+SplitPath(KanataExe, &KanataProc)  ; process name = exe filename, e.g. kanata_..._cmd_allowed_x64.exe
 
 StartKanata()
 StartKanata(*) {
-    if ProcessExist("kanata.exe") {
-        ProcessClose("kanata.exe")
-        ProcessWaitClose("kanata.exe", 2)
+    global KanataProc
+    if ProcessExist(KanataProc) {
+        ProcessClose(KanataProc)
+        ProcessWaitClose(KanataProc, 2)
     }
 
     if GetKeyState("CapsLock", "T") {
