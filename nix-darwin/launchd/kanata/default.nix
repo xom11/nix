@@ -1,20 +1,20 @@
 {
   config,
-  pkgs,
   mkModule,
   getPath,
   repoPath,
   ...
 }: let
   pwd = getPath ./.;
-  # cmd_allowed build from nixpkgs (replaces the Homebrew kanata, which never allows cmd)
-  kanataBin = "${pkgs.kanata-with-cmd}/bin/kanata";
 in
   mkModule config ./. {
     # https://github.com/jtroo/kanata/discussions/1537
+    # NOTE: macOS stays on the Homebrew kanata (stable path keeps the granted
+    # Input Monitoring / Karabiner-driver permission). A nix store path changes
+    # on every update and would require re-granting permission each time.
     launchd.daemons."kanata" = {
       # command = "sudo /opt/homebrew/bin/kanata -c ${pwd}/kanata.macos.kbd -n";
-      command = "${pwd}/script.sh ${repoPath}/configs/kanata/kanata_macos.kbd ${kanataBin}";
+      command = "${pwd}/script.sh ${repoPath}/configs/kanata/kanata_macos.kbd";
       serviceConfig = {
         RunAtLoad = true;
         KeepAlive = true;
