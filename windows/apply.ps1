@@ -35,7 +35,7 @@ $modules = @(
     # ---- services ----
     'services.kanata'
     'services.ahk'
-    'services.syncthing'
+    # 'services.syncthing'        # disabled: no longer auto-run Syncthing at logon
     'services.sshd'
 )
 
