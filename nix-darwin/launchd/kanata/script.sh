@@ -1,5 +1,6 @@
 CONFIG_PATH="$1"
-COMMAND=(sudo /opt/homebrew/bin/kanata -c $CONFIG_PATH -n)
+KANATA_BIN="${2:-/opt/homebrew/bin/kanata}"
+COMMAND=(sudo "$KANATA_BIN" -c "$CONFIG_PATH" -n)
 # LOG_FILE="/tmp/kanata_monitor.log"
 
 # get a list of input devices (vendor and product IDs)
