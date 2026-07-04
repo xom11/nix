@@ -27,15 +27,9 @@
   clear (multi (layer-switch main) (on-press release-virtualkey shift))
 )
 
-(defchords mtl $chord-timeout
-  (q      ) q
-  (  w    ) w
-  (    e  ) e
-  (      r) r
-  (q w    ) $lang_zh   ;; Chinese  (Pinyin - Simplified)
-  (  w e  ) $lang_en   ;; English  (ABC)
-  (    e r) $lang_vi   ;; Vietnamese (Telex)
-)
+;; lang-switch chords (q+w / w+e / e+r) removed 2026-07-04 — language switching now
+;; lives outside kanata: hammerspoon Tab.spoon (mac) + tab-key.ahk (Windows), via
+;; Tab+Q(中) / Tab+W(Việt) / Tab+E(En). q/w/e/r are plain passthrough now.
 
 (defchords mtr $chord-timeout
   (i  ) i
@@ -60,11 +54,7 @@
   tab (tap-hold 200 200 tab @tab_alias)
   ;; caps (t! charmod esc (multi lmet lctl lalt))
   caps (tap-hold 200 200 esc @cap_alias)
-  ;; q (t! charmod q fn)
-  q (chord mtl q)
-  w (chord mtl w)
-  e (chord mtl e)
-  r (chord mtl r)
+  ;; q/w/e/r: transparent passthrough (lang-switch chords removed)
   i (chord mtr i)
   o (chord mtr o)
   a (t! charmod a lsft)

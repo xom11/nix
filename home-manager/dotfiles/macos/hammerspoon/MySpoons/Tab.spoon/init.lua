@@ -8,13 +8,19 @@ function obj:init()
 	hs.hotkey.bind(tab, "r", function()
 		hs.reload()
 	end)
-	-- PART: Change language input source
-	hs.hotkey.bind(tab, "e", function()
-		hs.keycodes.setLayout("ABC")
-	end)
-	hs.hotkey.bind(tab, "v", function()
-		hs.keycodes.setMethod("Fcitx5")
-	end)
+	-- PART: Change language input source — Tab+Q=中文, Tab+W=Tiếng Việt, Tab+E=English
+	local function switchLang(name)
+		for _, v in ipairs(hs.keycodes.layouts()) do
+			if v == name then
+				hs.keycodes.setLayout(name)
+				return
+			end
+		end
+		hs.keycodes.setMethod(name)
+	end
+	hs.hotkey.bind(tab, "q", function() switchLang("Pinyin – Simplified") end)
+	hs.hotkey.bind(tab, "w", function() switchLang("ABC") end)
+	hs.hotkey.bind(tab, "e", function() switchLang("Unicode Hex Input") end)
 	-- PART: Toggle Console
 	hs.hotkey.bind(tab, "H", function()
 		hs.toggleConsole()
