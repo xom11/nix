@@ -29,7 +29,6 @@ hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
 hs.loadSpoon("Tab")
 hs.loadSpoon("LanguageSwitcher")
-hs.loadSpoon("PolishPrompt")
 
 hs.alert.show("Hammerspoon config loaded")
 
