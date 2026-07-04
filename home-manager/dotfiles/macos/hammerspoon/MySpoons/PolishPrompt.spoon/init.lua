@@ -211,7 +211,7 @@ end
 
 -- ── Spoon entry point ──────────────────────────────────────────────────────
 function obj:init()
-    hs.hotkey.bind({ "cmd", "ctrl", "shift" }, "W", toggle)
+    hs.hotkey.bind({ "cmd", "ctrl", "shift" }, "P", toggle)
 end
 
 return obj
