@@ -54,7 +54,15 @@ local function get_layout_async(callback)
 	end
 end
 
+-- Set `vim.g.language_nvim_debug = true` to trace every input-source switch.
+-- If the language still flickers while typing but no "[lang] set ..." messages
+-- appear, the flicker is the IME's own sub-mode toggle, not this script.
 local function set_layout(layout)
+	if vim.g.language_nvim_debug then
+		vim.schedule(function()
+			vim.notify("[lang] set " .. layout .. " (mode=" .. fn.mode() .. ")", vim.log.levels.INFO)
+		end)
+	end
 	local cmd = vim.list_extend(vim.deepcopy(cfg.set), { layout })
 	if vim.system then
 		vim.system(cmd, { detach = true })
@@ -68,63 +76,53 @@ local function get_layout_sync()
 	return result ~= "" and result or english
 end
 
--- Polling keeps last_layout fresh while in insert/terminal mode.
--- Needed because there is no reliable "leave" event when switching apps
--- without first returning to Normal mode (e.g., directly cmd+tabbing away).
-local poll_timer = nil
-
-local function start_poll()
-	if poll_timer then return end
-	poll_timer = uv.new_timer()
-	poll_timer:start(300, 300, function()
-		get_layout_async(function(layout) last_layout = layout end)
+-- Only switch when the current layout actually differs, so we never
+-- re-activate an already-correct input source.
+--
+-- This matters most for CJK input methods whose Chinese/English toggle is an
+-- internal sub-mode that macOS exposes as two oscillating input-source IDs
+-- (e.g. Apple Pinyin: "com.apple.inputmethod.SCIM.ITABC" <-> "com.apple.keylayout.ABC").
+-- Re-selecting such a source mid-composition resets its sub-mode, which is what
+-- showed up as the language "flickering" while typing.
+local function ensure_layout(layout)
+	get_layout_async(function(current)
+		if current ~= layout then set_layout(layout) end
 	end)
-end
-
-local function stop_poll()
-	if poll_timer then
-		poll_timer:stop()
-		poll_timer:close()
-		poll_timer = nil
-	end
 end
 
 local augroup = api.nvim_create_augroup("LanguageSwitch", { clear = true })
 
+-- Entering insert/terminal: restore the source you last used there, ONCE.
+-- No polling and no focus-driven re-setting, so the script never touches the
+-- input source while you are actually typing -- that is what fought the IME
+-- and caused the ITABC<->ABC flicker.
 api.nvim_create_autocmd({ "InsertEnter", "TermEnter" }, {
 	group = augroup,
 	callback = function()
-		set_layout(last_layout)
-		start_poll()
+		ensure_layout(last_layout)
 	end,
 })
 
+-- Leaving insert/terminal: remember what you were using, then force English so
+-- Normal-mode keystrokes are interpreted as commands.
 api.nvim_create_autocmd({ "InsertLeave", "TermLeave" }, {
 	group = augroup,
 	callback = function()
-		stop_poll()
 		last_layout = get_layout_sync()
-		set_layout(english)
+		if last_layout ~= english then set_layout(english) end
 	end,
 })
 
--- Do not query layout on FocusLost: the system layout may have already changed
--- for the newly focused app before this event fires, giving a wrong value.
--- last_layout is kept as-is from the poll or last Leave event.
-api.nvim_create_autocmd("FocusLost", {
-	group = augroup,
-	callback = stop_poll,
-})
-
+-- Returning focus to the window: only force English when NOT in insert/terminal.
+-- Never re-set the source while inserting -- the IME candidate window triggers
+-- spurious FocusGained events (tmux focus-events), and re-selecting the source
+-- mid-composition is exactly what made the language flicker.
 api.nvim_create_autocmd("FocusGained", {
 	group = augroup,
 	callback = function()
-		local mode = fn.mode()
-		if mode == "i" or mode == "t" then
-			set_layout(last_layout)
-			start_poll()
-		else
-			set_layout(english)
+		local m = fn.mode():sub(1, 1)
+		if m ~= "i" and m ~= "R" and m ~= "t" then
+			ensure_layout(english)
 		end
 	end,
 })
