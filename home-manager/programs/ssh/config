@@ -52,8 +52,11 @@ Host macmini macmini-tunnel
   User lenamkhanh
   ServerAliveInterval 60
   ServerAliveCountMax 3
-Host a14
+Host a14-win
   HostName 100.126.58.71
+  User kln
+Host a14-ubuntu
+  HostName 100.102.217.57
   User kln
 Host airm3
   HostName 100.65.126.76
