@@ -22,6 +22,7 @@ Beckon(name) {
 #Include lib/which-key.ahk
 menuApps := Map(
     "d", { Desc: "DeepSeek", Action: (*) => Beckon("DeepSeek") },
+    "b", { Desc: "Brave", Action: (*) => Beckon("Brave") },
     "m", { Desc: "Gmail", Action: (*) => Beckon("Gmail") },
     "c", { Desc: "Chrome", Action: (*) => Beckon("Google Chrome") },
     "f", { Desc: "Facebook", Action: (*) => Beckon("Facebook") },
