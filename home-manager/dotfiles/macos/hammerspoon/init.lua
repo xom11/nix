@@ -28,7 +28,9 @@ hs.loadSpoon("PowerManager")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
 hs.loadSpoon("Tab")
-hs.loadSpoon("LanguageSwitcher")
+-- hs.loadSpoon("LanguageSwitcher")
+hs.loadSpoon("LanguageMemory")
+spoon.LanguageMemory:start()
 
 hs.alert.show("Hammerspoon config loaded")
 

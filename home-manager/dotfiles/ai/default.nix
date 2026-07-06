@@ -10,5 +10,6 @@
       "claude.d".enable = lib.mkDefault true;
       "codex.d".enable = lib.mkDefault true;
       "gemini.d".enable = lib.mkDefault true;
+      # "opencode.d".enable = lib.mkDefault true;
     };
   }
