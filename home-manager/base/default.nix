@@ -15,7 +15,7 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    BROWSER = if pkgs.stdenv.isDarwin then "open -a Vivaldi" else "vivaldi-stable";
+    BROWSER = if pkgs.stdenv.isDarwin then "open -a Brave\\ Browser" else "brave";
     TERMINAL = "kitty";
     SHELL = "${pkgs.zsh}/bin/zsh";
     NIX_CONFIG="extra-experimental-features = nix-command flakes";

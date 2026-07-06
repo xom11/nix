@@ -48,30 +48,36 @@ Host macmini-tunnel rog-tunnel
   LocalForward 16686 localhost:16686   # Jaeger UI
 
 Host macmini macmini-tunnel
-  HostName 100.109.43.45
+  HostName 100.91.203.20
   User lenamkhanh
   ServerAliveInterval 60
   ServerAliveCountMax 3
-Host a14-win
-  HostName 100.126.58.71
-  User kln
-Host a14-ubuntu
-  HostName 100.102.217.57
+Host a14
+  HostName 100.83.225.100
   User kln
 Host airm3
   HostName 100.65.126.76
   User kln
+Host 9r
+  HostName 100.109.55.88
+  User u0_a318
+  Port 8022
+Host 9r.local
+  HostName 192.168.1.35
+  User u0_a318
+  Port 8022
 Host x1
   HostName x1g6-kln
   User kln
   ForwardAgent yes
 Host rog rog-tunnel
-  HostName 100.71.234.89
+  HostName 100.86.200.18
   User rog
   ServerAliveInterval 60
   ServerAliveCountMax 3
   ForwardAgent yes
 Host rog.local
+  HostName 192.168.1.238
   User rog
   ForwardAgent yes
 
