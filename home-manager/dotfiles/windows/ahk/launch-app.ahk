@@ -5,7 +5,7 @@ Beckon(name) {
 }
 
 ; ── Apps ──
-^#!b:: Beckon("Brave Browser")
+^#!b:: Beckon("Brave")
 ^#!c:: Beckon("Claude")
 ^#!d:: Beckon("Discord")
 ^#!g:: Beckon("Google Gemini")
