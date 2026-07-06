@@ -13,7 +13,7 @@ GroupAdd "VI_Group", "ahk_exe winword.exe"
 
 ; Language IDs (LCID)
 EN := 0x0409 ; English (United States)
-VN := "0001042A" ; Vietnamese
+VN := 0x042A ; Vietnamese
 
 ; Fix using EVkey, Evkey active in en (us), so chang en (us) to type vn and en (New Zealand) to type en
 ; Install Evkey, turn on (Tắt layout trên bàn phím khác US)
