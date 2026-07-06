@@ -7,7 +7,7 @@ Hotkey(tabkey "p", ShowBattery)
 Hotkey(tabkey "r", ReloadConfig)
 ; Language switch — Tab+Q=中文, Tab+W=Tiếng Việt, Tab+E=English (SetInputLang from switch-language.ahk)
 Hotkey(tabkey "q", (*) => SetInputLang(0x0804))  ; Chinese (Simplified)
-Hotkey(tabkey "w", (*) => SetInputLang(0x042A))  ; Vietnamese
+Hotkey(tabkey "w", (*) => SetInputLang(VN))  ; Vietnamese Telex
 Hotkey(tabkey "e", (*) => SetInputLang(0x0409))  ; English (US)
 ^#+s::Send "+#s"
 

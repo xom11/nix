@@ -33,6 +33,7 @@
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute $ahkExe -Argument "`"$ahkFile`""
         $trigger   = New-ScheduledTaskTrigger -AtLogon
+        $trigger.Delay = 'PT15S'
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
         $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
 
@@ -44,6 +45,7 @@
             @($existingTask.Triggers).Count -eq 1 -and
             $existingTask.Triggers[0].CimClass.CimClassName -eq $trigger.CimClass.CimClassName -and
             [string]$existingTask.Triggers[0].UserId -eq [string]$trigger.UserId -and
+            [string]$existingTask.Triggers[0].Delay -eq [string]$trigger.Delay -and
             $existingTask.Principal.UserId -eq $principal.UserId -and
             $existingTask.Principal.LogonType -eq $principal.LogonType -and
             $existingTask.Principal.RunLevel -eq $principal.RunLevel -and

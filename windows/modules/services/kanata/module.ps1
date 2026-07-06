@@ -34,7 +34,7 @@
         $description = 'Run Kanata keyboard remapper with elevated privileges'
         $action      = New-ScheduledTaskAction -Execute $ahkExe -Argument "`"$kanataLauncher`"" -WorkingDirectory $kanataLauncherDir
         $trigger     = New-ScheduledTaskTrigger -AtLogOn -User $userId
-        $trigger.Delay = 'PT30S'
+        $trigger.Delay = 'PT5S'
         $principal   = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Highest
         $settings    = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -StartWhenAvailable
 
