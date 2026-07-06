@@ -28,17 +28,17 @@ COMMAND_FOCUS_ADDRESSFIELD   = ["ctrl+l"]
 [pwa]
 
 urls = [
-  "https://gemini.google.com",
-  "https://claude.ai/new",
-  "https://keep.google.com",
-  "https://www.youtube.com",
-  "https://chat.deepseek.com",
-  "https://mail.google.com/",
-  "https://www.notion.so/",
-  "https://discord.com/app",
-  "https://www.facebook.com/messages",
-  "https://www.messenger.com",
-  "https://web.telegram.org",
-  "https://chatgpt.com/",
+  # "https://gemini.google.com",
+  # "https://claude.ai/new",
+  # "https://keep.google.com",
+  # "https://www.youtube.com",
+  # "https://chat.deepseek.com",
+  # "https://mail.google.com/",
+  # "https://www.notion.so/",
+  # "https://discord.com/app",
+  # "https://www.facebook.com/messages",
+  # "https://www.messenger.com",
+  # "https://web.telegram.org",
+  # "https://chatgpt.com/",
 ]
 

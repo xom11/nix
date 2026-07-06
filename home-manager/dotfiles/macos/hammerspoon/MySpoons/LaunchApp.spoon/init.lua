@@ -19,7 +19,7 @@ obj.__index = obj
 local hyper = { "cmd", "ctrl", "alt" }
 
 local defaultShortcuts = {
-	{ "b", "Vivaldi" },
+	{ "b", "Brave Browser" },
 	{ "c", "Claude" },
 	-- { "c", "ChatGPT" },
 	{ "d", "Discord" },
