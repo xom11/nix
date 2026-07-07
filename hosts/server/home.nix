@@ -17,7 +17,6 @@ in
   };
   modules.home-manager = {
     pkgs = {
-      test.enable = true;
       dev.enable = true;
     };
     programs = {

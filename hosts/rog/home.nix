@@ -16,7 +16,6 @@ in {
     environments = {
     };
     pkgs = {
-      test.enable = true;
       dev.enable = true;
     };
     programs = {

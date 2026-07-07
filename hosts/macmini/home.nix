@@ -72,7 +72,6 @@ in {
     };
     pkgs = {
       dev.enable = true;
-      test.enable = true;
     };
     programs = {
       btop.enable = true;

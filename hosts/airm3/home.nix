@@ -36,7 +36,6 @@
       vscode.enable = true;
     };
     pkgs = {
-      test.enable = true;
       dev.enable = true;
     };
     programs = {
