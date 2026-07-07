@@ -94,7 +94,30 @@ mkModule config ./. {
     agenix.packages.${system}.default
   ];
 
+  # ──────────────────────────────────────────────
+  # npm install -g via nix
+  #
+  # nix's npm không thể ghi vào nix-store (read-only).
+  # Giải pháp: set NPM_CONFIG_PREFIX = ~/.npm-global
+  # để npm ghi global packages vào thư mục user.
+  #
+  # Sau khi chạy `npm install -g <pkg>`,
+  # binary sẽ nằm ở ~/.npm-global/bin và được
+  # thêm vào PATH qua home.sessionPath.
+  #
+  # Cách dùng:
+  #   npm install -g typescript
+  #   # → typescript compiler ở ~/.npm-global/bin
+  #   npx tsc --version
+  #
+  # Nếu cần chạy thường xuyên, nên dùng nix's
+  # nodePackages thay vì npm install -g.
+  # ──────────────────────────────────────────────
+
+  home.sessionVariables.NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+
   home.sessionPath = [
     "$HOME/.cargo/bin"
+    "$HOME/.npm-global/bin"
   ];
 }
