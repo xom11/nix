@@ -3,12 +3,7 @@
   ...
 }: {
   imports = [
-    ../../home-manager
+    ../../home-manager/base
+    ../../home-manager/programs/zsh
   ];
-  modules.home-manager = {
-    base.enable = true;
-    programs.zsh.enable = true;
-    pkgs.dev.enable = false;
-    pkgs.gui.enable = false;
-  };
 }
