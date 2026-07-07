@@ -84,6 +84,7 @@
         server = lib.mkHomeManager { device = "server"; };
         desktop = lib.mkHomeManager { device = "desktop"; };
         zenbook-a14 = lib.mkHomeManager { device = "zenbook-a14"; };
+        minimal = lib.mkHomeManager { device = "minimal"; };
       };
       systemConfigs = inputs.nixpkgs.lib.genAttrs ["aarch64-linux" "x86_64-linux"] (system: {
         desktop = lib.mkSystemManager { device = "desktop"; inherit system; };

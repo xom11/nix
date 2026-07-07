@@ -29,8 +29,6 @@
     gitclonenix = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ ! -d ~/.nix ]; then
         ${pkgs.git}/bin/git clone https://github.com/xom11/nix.git ~/.nix -q --depth 1
-      # else
-      #   ${pkgs.git}/bin/git -C ~/.nix pull -q
       fi
     '';
   };

@@ -20,11 +20,11 @@
 
   repoPath = let
     absPath = "${homeDir}/.nix";
-    relPath = "../.nix";
+    srcRoot = builtins.toString ../.;
   in
     if builtins.pathExists absPath
     then absPath
-    else relPath;
+    else srcRoot;
 
   getRelPath = path: let
     # Step 1: /nix/store/* -> /nix/store/*-source/relPath
