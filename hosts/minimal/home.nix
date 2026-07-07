@@ -1,9 +1,17 @@
+{ pkgs, device, ... }:
+let
+  cfgDir = "~/.nix/hosts/${device}";
+in
 {
-  pkgs,
-  ...
-}: {
   imports = [
-    ../../home-manager/base
-    ../../home-manager/programs/zsh
+    ../../home-manager
   ];
+  home.sessionVariables = {
+      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+  };
+  modules.home-manager = {
+    programs = {
+      zsh.enable = true;
+    };
+  };
 }
