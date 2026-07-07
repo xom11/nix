@@ -84,6 +84,6 @@ urls = [
   "https://discord.com/app",
   "https://www.facebook.com/messages",
   "https://www.messenger.com",
-  "https://web.telegram.org",
+  # "https://web.telegram.org",
   "https://chatgpt.com/",
 ]
