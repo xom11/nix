@@ -19,7 +19,6 @@ spoon.SpoonInstall:andUse("AllBrightness")
 
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")
-spoon.TrackpadReverse:start()
 
 hs.loadSpoon("LaunchApp")
 -- hs.loadSpoon("LaunchTerminal")
@@ -30,7 +29,6 @@ hs.loadSpoon("Fn")
 hs.loadSpoon("Tab")
 -- hs.loadSpoon("LanguageSwitcher")
 hs.loadSpoon("LanguageMemory")
-spoon.LanguageMemory:start()
 
 hs.alert.show("Hammerspoon config loaded")
 

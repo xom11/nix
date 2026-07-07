@@ -47,5 +47,10 @@ function obj:stop()
 	return self
 end
 
+-- Auto-start on load
+pcall(function()
+	obj:start()
+end)
+
 return obj
 
