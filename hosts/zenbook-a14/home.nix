@@ -27,6 +27,8 @@
     pkgs = {
       dev.enable = true;
       ubuntu.enable = true;
+      lang.enable = true;
+      tools.enable = true;
     };
     programs = {
       btop.enable = true;

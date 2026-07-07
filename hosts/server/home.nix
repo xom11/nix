@@ -18,6 +18,8 @@ in
   modules.home-manager = {
     pkgs = {
       dev.enable = true;
+      lang.enable = true;
+      tools.enable = true;
     };
     programs = {
       git.enable = true;

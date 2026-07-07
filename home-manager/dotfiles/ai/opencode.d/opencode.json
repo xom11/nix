@@ -25,6 +25,7 @@
   },
   "model": "9router/combo1",
   "permission": "allow",
+  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"],
   "agent": {
     "explorer": {
       "description": "Fast explorer subagent for codebase exploration",

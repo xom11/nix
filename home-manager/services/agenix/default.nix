@@ -18,6 +18,10 @@ in
     home.packages = [
       pkgs.age
       agenix.packages.${system}.default
+      pkgs.gnupg
+      pkgs.mkpasswd
+      pkgs.pass
+
     ];
 
     age.identityPaths = [identityPath];

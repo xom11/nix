@@ -1,51 +1,23 @@
 {
   config,
   pkgs,
+  agenix,
+  system,
   mkModule,
   ...
 }:
 mkModule config ./. {
   home.packages = with pkgs; [
-    # CLI essentials
-    bat
-    eza
-    fastfetch
-    fzf
-    gum
-    htop
-    jq
-    ncdu
-    ripgrep
-    tldr
-    tree
-    zoxide
-
-    # Archive
-    unrar
-    unzip
-    zip
-
-    # Network
-    cloudflared
-    curl
-    nmap
-    wget
-
-    # Editor
-    vim
-
-    # System
-    util-linux
-
-    # Misc
+    ansible
+    codespell
+    hugo
+    lazydocker
+    ripdrag
+    worktrunk
     caligula
-    discordchatexporter-cli
-    yq-go
-
-    # Secrets
-    age
-    gnupg
-    mkpasswd
-    pass
+    vim
+  ] ++ [
+    agenix.packages.${system}.default
   ];
 }
+

@@ -37,6 +37,8 @@
     };
     pkgs = {
       dev.enable = true;
+      lang.enable = true;
+      tools.enable = true;
     };
     programs = {
       btop.enable = true;

@@ -28,6 +28,8 @@
       test.enable = true;
       dev.enable = true;
       gui.enable = true;
+      lang.enable = true;
+      tools.enable = true;
     };
     programs = {
       btop.enable = true;

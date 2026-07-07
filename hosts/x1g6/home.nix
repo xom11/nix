@@ -29,6 +29,8 @@
       cli.enable = true;
       gui.enable = true;
       dev.enable = true;
+      lang.enable = true;
+      tools.enable = true;
     };
     programs = {
       nixvim.enable = true;
