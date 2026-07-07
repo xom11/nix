@@ -17,4 +17,7 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/roles";
       };
     };
+    home.packages = with pkgs; [
+      aichat
+    ];
   }

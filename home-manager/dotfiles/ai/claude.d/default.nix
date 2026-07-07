@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   mkModule,
   getPath,
   ...
@@ -21,4 +22,7 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/statusline.mjs";
       };
     };
+    home.packages = with pkgs; [
+      claude-code
+    ];
   }

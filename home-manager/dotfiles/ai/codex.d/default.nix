@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   mkModule,
   getPath,
   ...
@@ -16,4 +17,7 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/config.toml";
       };
     };
+    home.packages = with pkgs; [
+      codex
+    ];
   }

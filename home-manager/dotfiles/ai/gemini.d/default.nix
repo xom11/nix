@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   mkModule,
   getPath,
   ...
@@ -15,4 +16,7 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/settings.json";
       };
     };
+    home.packages = with pkgs; [
+      gemini-cli
+    ];
   }
