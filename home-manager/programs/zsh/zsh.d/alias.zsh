@@ -68,9 +68,7 @@ alias tkss='tmux kill-session -t '
 # ai
 alias aie='aichat -e'
 alias ait='aichat -r teacher'
-alias claude-chat="claude --bare --strict-mcp-config --mcp-config '[]' --tools ''"
-alias codex-chat='codex --sandbox read-only'
-alias gemini-chat='gemini --approval-mode plan'
+alias oc='opencode'
 
 # nix
 alias u='update'

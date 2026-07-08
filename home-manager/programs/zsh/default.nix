@@ -16,7 +16,7 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/zsh.d";
       };
     };
-    home.pkgs = with pkgs; [
+    home.packages = with pkgs; [
       eza
       fastfetch
       zoxide
