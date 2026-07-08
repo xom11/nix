@@ -26,10 +26,6 @@
       };
       browser = {
         firefox.enable = true;
-        dotbrowser = {
-          vivaldi.enable = true;
-          brave.enable = true;
-        };
       };
       ai.enable = true;
       conda.enable = true;
