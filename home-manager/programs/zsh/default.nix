@@ -16,6 +16,15 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/zsh.d";
       };
     };
+    home.pkgs = with pkgs; [
+      eza
+      fastfetch
+      zoxide
+      ripgrep
+      fzf
+      tree
+      bat
+    ];
     programs.zsh = {
       enable = true;
       dotDir = "${config.xdg.configHome}/zsh";
@@ -46,18 +55,17 @@ in
           "rust"
         ];
       };
-      plugins =
-        [
-          {
-            name = "fzf-tab";
-            src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-          }
-          {
-            name = "powerlevel10k";
-            src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
-            file = "powerlevel10k.zsh-theme";
-          }
-        ];
+      plugins = [
+        {
+          name = "fzf-tab";
+          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
+        }
+        {
+          name = "powerlevel10k";
+          src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
+          file = "powerlevel10k.zsh-theme";
+        }
+      ];
       sessionVariables = {
       };
 

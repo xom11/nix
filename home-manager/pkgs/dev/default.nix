@@ -7,18 +7,11 @@
 mkModule config ./. {
   home.packages = with pkgs; [
     # CLI essentials
-    bat
-    eza
-    fastfetch
-    fzf
     gum
     htop
     jq
     ncdu
-    ripgrep
     tldr
-    tree
-    zoxide
     gh
     git
     just
