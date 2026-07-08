@@ -14,6 +14,7 @@ in
   modules.home-manager = {
     programs = {
       zsh.enable = true;
+      ssh.enable = true;
     };
   };
 }
