@@ -4,8 +4,8 @@
         param($Ctx)
         Install-NpmPackages @(
             '@anthropic-ai/claude-code'
-            '@google/gemini-cli'
-            '@github/copilot'
+            # '@google/gemini-cli'
+            # '@github/copilot'
         )
     }
 }
