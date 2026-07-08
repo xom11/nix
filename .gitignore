@@ -3,7 +3,6 @@
 .env
 .claude/
 .anitigravitycli/
-.codegraph/
 .gemini/
 result
 .worktrees/
