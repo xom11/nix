@@ -12,7 +12,6 @@
         kitty.enable = true;
       };
       browser = {
-        dotbrowser.vivaldi.enable = true;
       };
       rofi.enable = true;
     };
