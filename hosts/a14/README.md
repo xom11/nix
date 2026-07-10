@@ -1,58 +1,91 @@
 # ASUS ZenBook A14 (UX3407QA) — Linux on Snapdragon X Plus
 
-Verified working on **Ubuntu 26.04 LTS "resolute", kernel `7.0.0-27-generic`** (`linux-image-generic-hwe-26.04`), 2026-07-10.
+Verified on **Ubuntu 26.04 LTS "resolute", kernel `7.0.0-27-generic`**
+(`linux-image-generic-hwe-26.04`), 2026-07-10. Boots to the desktop in ~7.2 s.
 
 | Component | Status | Needs |
 |---|---|---|
 | Display / GPU (Adreno X1-45) | works | dracut config (§3) |
 | CPU frequency scaling | works | module + governor (§4) |
-| Audio (speakers + mics) | works | Windows firmware (§2) |
+| Audio (speakers, mics, jack) | works | Windows firmware (§2) |
 | Battery / charging | works | Windows firmware (§2) |
-| Wi-Fi (WCN6855, NFA725A) | works, but the PCIe link trains on only ~1 boot in 3 | Windows firmware + repacked board file (§5) |
+| Bluetooth | works out of the box | — |
+| NVMe, touchpad, keyboard, USB-C | work out of the box | — |
+| Wi-Fi (WCN6855, NFA725A) | works — but the PCIe link fails to train on ~1 boot in 3 (§5) | Windows firmware + repacked board file (§5) |
 | Fn keys, kbd backlight | works | out-of-tree module (§6) |
-| Fan, temp, power profile | works, but must be loaded by hand — autoloading it breaks `reboot` | out-of-tree module (§6) |
-| Bluetooth, webcam, fingerprint | untested | — |
+| Fan, temp, power profile | works, but **must be loaded by hand** (§6) | out-of-tree module (§6) |
+| Webcam, hardware video decode | do not work | needs a patched kernel (§7) |
 
 ## Read this before changing anything
 
-The old version of this file targeted an older Ubuntu and told you to install
-the `ppa:ubuntu-concept/x1e` kernel (`linux-qcom-x1e`). **That is no longer
-needed and you should not do it.** As of kernel 7.0 the stock Ubuntu kernel
-already has everything: the `x1p42100-asus-zenbook-a14-lcd` device tree, the
-`msm`/Adreno driver, and SCMI cpufreq. The remaining problems are all
-*packaging* and *proprietary firmware* problems, not kernel problems.
+### The stock Ubuntu kernel is enough — except possibly for Wi-Fi
 
-Three facts that will save you hours:
+An older version of this file told you to install `ppa:ubuntu-concept/x1e`'s
+`linux-qcom-x1e`. As of kernel 7.0 the **stock** Ubuntu kernel already carries
+the `x1p42100-asus-zenbook-a14-lcd` device tree, the `msm`/Adreno driver and
+SCMI cpufreq, so you do not need the PPA for GPU, cpufreq or power. Everything
+below is written for the stock kernel, and works on it.
 
-1. **Ubuntu 26.04 uses `dracut`, not `initramfs-tools`.** `update-initramfs`
-   is a compatibility shim that calls dracut. Anything you drop in
-   `/etc/initramfs-tools/hooks/` is silently ignored. Use
-   `/etc/dracut.conf.d/*.conf` or `/usr/lib/dracut/modules.d/`.
+**But:** the flaky Wi-Fi PCIe link (§5) has *not* been tested against
+`linux-qcom-x1e`, and there is real reason to think that kernel fixes it — see
+"The one thing left to try" in §5. Do not repeat the old file's mistake in the
+other direction and assume the PPA is worthless.
 
-2. **Over SSH you cannot see the GPU or the sound card.** `/dev/dri/renderD128`
-   is `root:render` and `/dev/snd/*` is `root:audio`; both are handed to the
-   *seat* user via a systemd-logind ACL, and an SSH session has no seat. So
-   `vulkaninfo` reports `llvmpipe` and `aplay -l` reports "no soundcards found"
-   even when both work perfectly on the desktop. Verify with `sudo`, or read
-   `/proc/asound/cards` and `/sys/kernel/debug/dri/1/gpu` instead.
+### How to debug this machine
 
-3. **Never `modprobe -r ath11k_pci`.** See §5 — it can wedge the Wi-Fi card so
-   that only a full power-off recovers it.
+Both times something killed the boot on this laptop, the answer was already
+sitting in the persistent journal, and both times guessing first cost hours.
 
-Hardware IDs you will need:
+1. **Read the dead boot's own journal.** `journalctl --list-boots` shows short
+   boots. For each one, `journalctl -k -b -N -o short-monotonic | tail` gives
+   the last kernel line before the machine died — that line named the culprit
+   in both cases (`asus_zenbook_a14_ec`, then `Bluetooth: hci0`). Correlate
+   across boots before forming a theory:
+   `for b in 0 -1 -2 …; do journalctl -k -b $b | grep -c '<marker>'; done`.
+
+2. **A hard hang leaves no panic and no kdump**, even though `efi_pstore` is
+   registered and `crashkernel=` is reserved. Absence of a dump tells you
+   nothing. That is why `quiet` and `splash` are stripped from the command
+   line (§8) — the console is the only witness.
+
+3. **Ubuntu 26.04 uses `dracut`, not `initramfs-tools`.** `update-initramfs` is
+   a shim that calls dracut. Anything in `/etc/initramfs-tools/hooks/` is
+   silently ignored. Use `/etc/dracut.conf.d/*.conf`.
+
+4. **Over SSH you cannot see the GPU or the sound card.** `/dev/dri/renderD128`
+   is `root:render`, `/dev/snd/*` is `root:audio`; both are handed to the *seat*
+   user by a logind ACL, and an SSH session has no seat. `vulkaninfo` will say
+   `llvmpipe` and `aplay -l` will say "no soundcards found" while both work
+   perfectly on the desktop. Check with `sudo`, or read `/proc/asound/cards`
+   and `/sys/kernel/debug/dri/1/gpu`.
+
+5. **Never put unvalidated code in the early boot path.** Two of the three
+   crashes documented here were self-inflicted: autoloading the EC driver (§6)
+   and a hand-patched `pwrseq-qcom-wcn.ko` in the initrd (§5). Neither the
+   hardware nor stock Ubuntu is at fault. Before a change that affects boot,
+   know your escape hatch: the GRUB menu (3 s, §8) offers `7.0.0-14-generic`,
+   and `e` at the menu lets you append `systemd.mask=…` or
+   `modprobe.blacklist=…` to the kernel line. Keep the fallback kernel's
+   `updates/` directory untouched.
+
+6. **`modprobe -r ath11k_pci` hangs forever** after an RDDM firmware crash.
+
+### Hardware IDs
 
 ```
 SoC        qcom,x1p42100          /proc/device-tree/compatible
 Model      ASUS Zenbook A14 (UX3407QA, LCD)
 GPU        Adreno X1-45, firmware qcom/gen71500_{sqe.fw,gmu.bin,zap.mbn}
 Wi-Fi      WCN6855 hw2.1, NFA725A module, PCI 17cb:1103 subsys 14cd:950a
+           WLAN host bridge 1c08000.pci = PCI domain 0004
+NVMe       host bridge 1bf8000.pci = PCI domain 0006
 Windows    /dev/nvme0n1p14, NTFS, LABEL=OS   (dual boot; firmware source)
 ```
 
 ## 1. First boot — internet
 
-Wi-Fi does not work until §5 is done. Connect a phone over USB and enable USB
-tethering.
+Wi-Fi does not work until §5 is done, and even afterwards it is absent on
+roughly one boot in three. Connect a phone over USB and enable USB tethering.
 
 > The USB-C port re-enumerates when the ADSP comes up (§2), which drops the
 > tethered NIC and kills your SSH session. The machine is *not* hung. Re-plug
@@ -60,8 +93,8 @@ tethering.
 
 ## 2. Proprietary firmware from the Windows partition → audio + battery
 
-`qcom-firmware-extract` is now a normal Ubuntu package (universe). It mounts
-the Windows partition read-only, copies 11 firmware files into
+`qcom-firmware-extract` is a normal Ubuntu package now (universe). It mounts the
+Windows partition read-only, copies 11 firmware files into
 `/lib/firmware/updates/qcom/x1p42100/ASUSTeK/zenbook-a14/`, wraps them in a
 `.deb`, installs it, and rebuilds the initrd.
 
@@ -72,13 +105,13 @@ sudo reboot
 ```
 
 This gives you `qcadsp8380.mbn` and `qccdsp8380.mbn`, without which
-`remoteproc0` (adsp) and `remoteproc1` (cdsp) stay `offline` — and with them
+`remoteproc0` (adsp) and `remoteproc1` (cdsp) stay `offline` — and with them,
 `aplay -l` finds no card and `/sys/class/power_supply/qcom-battmgr-bat` has no
 readings.
 
 **Reboot; do not `echo start > /sys/class/remoteproc/remoteproc0/state`.**
-Starting the DSP by hand works, but it brings up `pmic_glink` mid-session,
-which re-enumerates USB-C and drops your tethered network.
+Starting the DSP by hand works, but it brings up `pmic_glink` mid-session, which
+re-enumerates USB-C and drops your tethered network.
 
 Nothing else is needed for audio. The Zenbook A14 topology
 (`X1E80100-ASUS-Zenbook-A14-tplg.bin`) and a matching UCM profile already ship
@@ -93,21 +126,21 @@ cat /proc/asound/cards                          # X1E80100-ASUS-Zenbook-A14
 upower -i /org/freedesktop/UPower/devices/battery_qcom_battmgr_bat
 ```
 
-## 3. GPU — Adreno microcode must be inside the initrd
+## 3. GPU — the Adreno microcode must be inside the initrd
 
-Symptom: software rendering, ~10 W idle, and in `dmesg`
+Symptom: software rendering, high idle power, and in `dmesg`
 
 ```
-msm_dpu ...: Direct firmware load for qcom/gen71500_sqe.fw failed with error -2
-msm_dpu ...: [drm:adreno_request_fw [msm]] *ERROR* failed to load gen71500_sqe.fw
+msm_dpu …: Direct firmware load for qcom/gen71500_sqe.fw failed with error -2
+msm_dpu …: [drm:adreno_request_fw [msm]] *ERROR* failed to load gen71500_sqe.fw
 ```
 
 Cause: the `50ubuntu-x1e-settings` dracut module force-includes `msm.ko` in the
 initrd, so the GPU probes at ~1.77 s — about 0.3 s *before* the root filesystem
 is mounted at ~2.07 s. That same dracut module copies `qcom/x1e80100/**` and
 `qcom/x1p42100/**` into the initrd, but the Adreno microcode lives at the *top
-level* of `qcom/`, so it is left behind. The files exist on disk (package
-`linux-firmware-qualcomm-graphics`); the initrd just cannot see them.
+level* of `qcom/`, so it is left behind. The files are on disk (package
+`linux-firmware-qualcomm-graphics`); the initrd simply cannot see them.
 
 ```bash
 sudo tee /etc/dracut.conf.d/zenbook-a14-adreno.conf >/dev/null <<'EOF'
@@ -117,17 +150,17 @@ sudo update-initramfs -u -k all
 sudo reboot
 ```
 
-Verify (note `sudo` — see "Read this first"):
+Verify (note the `sudo` — see "How to debug this machine"):
 
 ```bash
 sudo lsinitramfs /boot/initrd.img-$(uname -r) | grep gen71500   # 3 files
-sudo journalctl -k -b | grep gen71500        # "loaded ... from new location"
+sudo journalctl -k -b | grep gen71500        # "loaded … from new location"
 sudo vulkaninfo --summary | grep deviceName  # Adreno X1-45
 sudo cat /sys/kernel/debug/dri/1/gpu | head -2   # gpu-initialized: 1
 ```
 
-If a future kernel asks for a differently-named microcode, `dmesg` will name
-the file; adjust `install_items` accordingly.
+If a future kernel asks for a differently-named microcode, `dmesg` names the
+file; adjust `install_items`.
 
 ## 4. CPU frequency scaling
 
@@ -135,19 +168,23 @@ Symptom: `/sys/devices/system/cpu/cpu0/cpufreq/` does not exist, all 8 cores
 pinned at one frequency.
 
 Cause: `scmi-cpufreq.ko` is built as a module and carries **no modalias**, so
-udev never autoloads it even though the SCMI firmware interface came up fine.
+udev never autoloads it, even though the SCMI firmware interface came up fine.
 It is not missing — it just has to be loaded explicitly.
 
 ```bash
 echo scmi-cpufreq | sudo tee /etc/modules-load.d/scmi-cpufreq.conf
 
 # schedutil, not the ondemand default: the SCMI driver registers energy-model
-# perf domains, which only schedutil consumes.
+# perf domains, and only schedutil consumes them.
 sudo tee /etc/default/grub.d/zenbook-a14.cfg >/dev/null <<'EOF'
-GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT cpufreq.default_governor=schedutil"
+GRUB_CMDLINE_LINUX_DEFAULT="$(printf '%s' "$GRUB_CMDLINE_LINUX_DEFAULT" | sed -e 's/\<quiet\>//g' -e 's/\<splash\>//g') cpufreq.default_governor=schedutil"
+GRUB_TIMEOUT_STYLE=menu
+GRUB_TIMEOUT=3
 EOF
 sudo update-grub
 ```
+
+(The `sed`, the menu and the missing `quiet splash` are explained in §8.)
 
 Verify: `driver=scmi`, `governor=schedutil`, range 710400–2956800 kHz.
 
@@ -155,12 +192,15 @@ Verify: `driver=scmi`, `governor=schedutil`, range 710400–2956800 kHz.
 cd /sys/devices/system/cpu/cpu0/cpufreq && cat scaling_driver scaling_governor cpuinfo_{min,max}_freq
 ```
 
-## 5. Wi-Fi — repacked `board-2.bin` + Windows firmware
+## 5. Wi-Fi
 
 Two independent things are missing, and fixing only one gives you a firmware
-crash instead of a working card.
+crash instead of a working card. Then, separately, the PCIe link itself is
+unreliable.
 
-**(a) Board data.** `dmesg` shows
+### (a) Board data
+
+`dmesg` shows
 
 ```
 ath11k_pci: failed to fetch board data for bus=pci,vendor=17cb,device=1103,
@@ -175,8 +215,10 @@ one. The Windows driver names the exact file: `qcwlanhsp8380.inf` maps
 `SUBSYS_950A14CD` to section `QcWlan_AS_NFA725a_2_1`, which copies
 `bdwlan_wcn685x_2p1_nfa725a_UX3407Q.elf`.
 
-**(b) Firmware.** Ubuntu's `ath11k/WCN6855/hw2.1/amss.bin` is the
-`SILICONZ_LITE` build. It **cannot parse the Windows board data** and dies with
+### (b) Firmware
+
+Ubuntu's `ath11k/WCN6855/hw2.1/amss.bin` is the `SILICONZ_LITE` build. It
+**cannot parse the Windows board data** and dies with
 `firmware crashed: MHI_CB_EE_RDDM` the moment the BDF is downloaded. You need
 Windows' `SILICONZ_WOS` firmware to go with it. `m3.bin` differs too and must
 also come from Windows. `regdb.bin` does not — the upstream one is fine.
@@ -233,26 +275,26 @@ nmcli device wifi list
 `Failed to set the requested Country regulatory setting` / `failed to process
 regulatory info -22` in `dmesg` is benign — scanning and association work.
 
-### The Wi-Fi PCIe link trains unreliably — this is *not* a firmware problem
+### (c) The PCIe link trains unreliably — not a firmware problem
 
-Roughly two boots in three, the `1c08000` host bridge (the WLAN slot) fails
-link training and the **entire `0004` PCI domain never appears**:
+On **5 of 13 measured boots** (~1 in 3) the `1c08000` host bridge fails link
+training and the entire `0004` PCI domain never appears:
 
 ```
+qcom-pcie 1c08000.pci: error -ETIMEDOUT: cannot initialize host
 qcom-pcie 1c08000.pci: probe with driver qcom-pcie failed with error -110
 $ lspci | grep -i network      # nothing; only the 0006 NVMe domain exists
 ```
 
-Measured over 8 boots: `7.0.0-14-generic` 1/1 enumerated, `7.0.0-27-generic`
-2/7. It happens with and without any of the firmware above, so do not go
-looking for a `board-2.bin` bug when you see this — ath11k never even gets a
-device. Things that do **not** help: a warm reboot, a full power-off,
-unbinding/rebinding `qcom-pcie`, unbinding/rebinding `pci-pwrctrl-pwrseq`.
-`pwrseq_qcom_wcn` and `pci_pwrctrl_pwrseq` are loaded and fine.
+It happens with and without any of the firmware above, so do not go hunting for
+a `board-2.bin` bug when you see this — ath11k never gets a device at all. A
+warm reboot or a cold boot just re-rolls the dice; unbinding/rebinding
+`qcom-pcie` or `pci-pwrctrl-pwrseq` does nothing. `pwrseq_qcom_wcn` and
+`pci_pwrctrl_pwrseq` are loaded and healthy.
 
 What does work, **from a fully booted system**, is asking the platform bus to
-probe the device again. It usually takes some seconds, and one attempt has been
-seen to block for over two minutes before the card appears:
+probe the device again. It usually takes seconds; one attempt was seen to block
+for over two minutes:
 
 ```bash
 sudo sh -c 'echo 1c08000.pci > /sys/bus/platform/drivers_probe'
@@ -262,61 +304,82 @@ sudo sh -c 'echo 1c08000.pci > /sys/bus/platform/drivers_probe'
 `wlan-pcie-retry.service` runs it `After=multi-user.target`, `Type=simple`,
 skipped by `ConditionPathExists=!/sys/bus/pci/devices/0004:01:00.0` when the
 link came up on its own. Late and non-blocking on purpose: this write is only
-ever exercised from a booted system, nothing should wait on it, and running it
-before udev has settled is untested.
+ever exercised from a booted system, and nothing should wait on it.
 
-Also avoid `modprobe -r ath11k_pci` — after an RDDM firmware crash the unload
-hangs indefinitely.
+On a failing boot the machine is otherwise **fine** — you get a usable desktop
+without Wi-Fi. (That stops being true if you patch `pwrseq`; see below.)
 
-### Upstream status: known, unfixed
+### (d) Upstream status: known, unfixed
 
-The `-110` is `-ETIMEDOUT` from `dw_pcie_wait_for_link()`, which retries
+`-110` is `-ETIMEDOUT` from `dw_pcie_wait_for_link()`, which retries
 `PCIE_LINK_WAIT_MAX_RETRIES = 10` times at `PCIE_LINK_WAIT_SLEEP_MS = 90` —
-about 900 ms total, and never widened. Since Linux 7.0 that function
-distinguishes `-ENODEV` (LTSSM in Detect, no device) and `-EIO` (Poll, device
-inactive) from `-ETIMEDOUT`, and only `-ETIMEDOUT` aborts the probe. So this is
-not "the card has not powered up yet" — training starts and never completes.
+about 900 ms, never widened. Since Linux 7.0 that function distinguishes
+`-ENODEV` (LTSSM in Detect: no device) and `-EIO` (Poll: device inactive) from
+`-ETIMEDOUT`, and only `-ETIMEDOUT` aborts the probe. **So this is not "the card
+has not powered up yet"** — training starts and never completes.
 
-The `pwrseq-qcom-wcn` maintainer says as much in the comment added by
-`29da3e8748f9` ("power: sequencing: qcom-wcn: explain why we need the WLAN_EN
-GPIO hack"):
+The `pwrseq-qcom-wcn` maintainer says so in the comment added by `29da3e8748f9`
+("power: sequencing: qcom-wcn: explain why we need the WLAN_EN GPIO hack"):
 
 > some platforms still fail to probe the WLAN controller. This is caused by the
 > Qcom PCIe controller and needs a workaround in the controller driver
 
-That workaround does not exist yet. No upstream commit targets this, and no
-public bug report matches `qcom-pcie 1c08000.pci … error -110` on x1p42100.
+That workaround does not exist in mainline. No upstream commit targets this, and
+no public bug report matches `qcom-pcie 1c08000.pci … error -110` on x1p42100.
 
-### What does NOT work — measured
+### (e) What does NOT work — measured
 
-**Do not raise the WCN6855 `pwup_delay_ms`.** Rebuilding
-`pwrseq-qcom-wcn.ko` with `pwup_delay_ms` 50 → 300 and `gpio_enable_delay_ms`
-5 → 20, installed into `updates/`, made things **worse**, not better:
+**Do not raise the WCN6855 `pwup_delay_ms`.** Rebuilding `pwrseq-qcom-wcn.ko`
+with `pwup_delay_ms` 50 → 300 and `gpio_enable_delay_ms` 5 → 20, installed into
+`updates/`, made things **worse**:
 
 - `-110` went from ~5 of 13 boots to **3 of 4**;
-- and every one of those three then **killed the machine at ~6.5 s**, right
-  after `Bluetooth: hci0` finished initialising, never reaching
-  `graphical.target`. With the stock module, `-110` boots come up fine (no
-  Wi-Fi, but a usable desktop).
+- and each of those three then **killed the machine at ~6.5 s**, right after
+  `Bluetooth: hci0` finished initialising, never reaching `graphical.target`.
 
-Wi-Fi and Bluetooth share one WCN6855 and one `pwrseq_qcom_wcn` PMU. Whatever
-that longer delay changes, it makes bringing up the Bluetooth target on a PMU
-whose WLAN target failed fatal. Revert with `rm
-/lib/modules/$(uname -r)/updates/pwrseq-qcom-wcn.ko && sudo depmod -a && sudo
-update-initramfs -u -k all`.
+Wi-Fi and Bluetooth share one WCN6855 and one `pwrseq_qcom_wcn` PMU; the longer
+delay apparently makes bringing up the Bluetooth target on a PMU whose WLAN
+target failed fatal. The theory was wrong from the start — see (d): `-ETIMEDOUT`
+already told us the card was powered. Revert with
 
-Untried, from Qualcomm's generic PCIe link-training guidance (not verified on
-this DT): `qcom,refclk-always-on` on the PHY node, and `pcie_aspm=off`.
+```bash
+sudo rm /lib/modules/$(uname -r)/updates/pwrseq-qcom-wcn.ko
+sudo depmod -a && sudo update-initramfs -u -k all
+```
+
+### (f) The one thing left to try: `linux-qcom-x1e`
+
+**This is the most promising lead and it has not been tested.**
+
+`ppa:ubuntu-concept/x1e` publishes `linux-qcom-x1e` **7.0.0-32.32 for
+`resolute`**. It is Qualcomm's patched tree — exactly where upstream says the
+missing `qcom-pcie` workaround belongs. And the owner of this machine reports
+that on every *previous* Ubuntu install here, done by following the old version
+of this file (which installed that kernel), **Wi-Fi never dropped across
+reboots.**
+
+Test it additively, without touching apt sources or upgrading anything else —
+download the `.deb`s from the PPA and `dpkg -i` them, keeping `7.0.0-27-generic`
+installed and reachable from the GRUB menu. Then count `-110` over several
+boots.
+
+Trade-offs: no security updates from the Ubuntu archive; and the out-of-tree
+modules of §6 must be rebuilt for the new kernel version
+(`./rebuild-oot-modules.sh`), so Fn keys and the keyboard backlight are missing
+until you do.
+
+Also untried, from Qualcomm's generic PCIe link-training guidance (not verified
+on this DT): `qcom,refclk-always-on` on the PHY node, and `pcie_aspm=off`.
 
 ## 6. EC drivers — fan, temperature, Fn keys, keyboard backlight
 
 Uses [Sombre-Osmoze/asus-zenbook-a14-ec](https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec)
-(supersedes `serdeliuk/zenbook-a14-EC`). Two out-of-tree modules, plus a patched
+(supersedes `serdeliuk/zenbook-a14-EC`): two out-of-tree modules, plus a patched
 `platform_profile.ko`.
 
 `asus_zenbook_a14_ec` calls `devm_platform_profile_register()`, exported by
-`platform_profile.ko`. On this machine ACPI is off — `dmesg` says
-`ACPI: Interpreter disabled` and `/sys/firmware/acpi` does not exist — so the
+`platform_profile.ko`. ACPI is off on this machine — `dmesg` says
+`ACPI: Interpreter disabled`, and `/sys/firmware/acpi` does not exist — so the
 stock module refuses to initialise:
 
 ```
@@ -328,32 +391,41 @@ That is the `if (acpi_disabled) return -EOPNOTSUPP;` guard in
 `drivers/acpi/platform_profile.c`, still present in 7.0. The repo's
 `patches/0001-platform_profile-allow-non-ACPI-systems.patch` removes it and
 NULL-guards the `acpi_kobj` dereferences. Only that one module has to be
-rebuilt — no kernel rebuild, no reboot.
+rebuilt — no kernel rebuild, no reboot. Requires Secure Boot off
+(`mokutil --sb-state`); it is off by default here.
 
-Requires Secure Boot off (`mokutil --sb-state`); it is off by default here.
-
-Run [`rebuild-oot-modules.sh`](./rebuild-oot-modules.sh) — it installs
+Run [`rebuild-oot-modules.sh`](./rebuild-oot-modules.sh). It installs
 `linux-source-7.0.0`, extracts just `platform_profile.c`, patches it, builds it
-together with the two EC modules, and installs everything into
+together with the two EC modules, and installs all three into
 `/lib/modules/$(uname -r)/updates/`.
+
+> Install into `updates/`, never on top of `kernel/drivers/acpi/`. `depmod`'s
+> search order on Ubuntu is `updates ubuntu built-in`, so `updates/` wins, the
+> distro file stays intact, and reverting is `rm` + `depmod -a`.
+
+**Re-run the script after every kernel upgrade** — the modules live under
+`/lib/modules/<version>/`, so a new kernel simply has none.
 
 ### `asus_zenbook_a14_ec` must NOT be autoloaded — it breaks warm reboot
 
-This is the single most important thing on this page. Autoloading the EC driver
-via `/etc/modules-load.d/` makes `reboot` fail: the machine comes back up,
-runs for ~4.3 s, and then hangs or silently resets into a loop. Only holding the
-power button and cold-booting recovers it. Windows is unaffected, and a cold
-boot is always fine, which is what makes it look like a firmware problem.
+This is the single most important line on this page. Autoloading the EC driver
+via `/etc/modules-load.d/` makes `reboot` fail: the machine comes back up, runs
+~4.3 s, then hangs or silently resets into a loop. Only holding the power button
+and cold-booting recovers it. Windows is unaffected, and a cold boot is always
+fine — which is exactly what makes it look like a firmware problem. **It is not.
+Stock Ubuntu on this laptop reboots cleanly; this bug is created by loading the
+driver.**
 
-The driver's last log line on a dying boot is always the same:
+The last log line on a dying boot is always the same:
 
 ```
 asus_zenbook_a14_ec: no thermal zones available; manual mode will fall back to EC temp
 ```
 
-and the very next thing it does — `i2c_transfer()` in `asus_ec_read()`, the
-first read of the EC — never returns. It never reaches `online: fan0 tach=…`.
-Across seven boots the correlation was total:
+and the very next thing the driver does — `i2c_transfer()` inside `__ec_rb()`
+(`asus_zenbook_a14_ec.c:209`), the first read of the EC — never returns. It
+never reaches `online: fan0 tach=…`. Across seven boots the correlation was
+total:
 
 | `online: fan0 tach` printed | reached `graphical.target` |
 |---|---|
@@ -361,8 +433,11 @@ Across seven boots the correlation was total:
 | no (3 boots) | no, all 3 — hang or reset |
 
 Loading the driver leaves the EC in a state that wedges the *next* warm boot's
-first read. A cold boot resets the EC, which is why the first `modprobe` after
-power-on always works. So:
+first read; a cold boot resets the EC, which is why the first `modprobe` after
+power-on always works. Reported upstream:
+[issue #1](https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec/issues/1) — the
+driver has a `.remove` but no `.shutdown` hook, so nothing quiesces the EC on
+the reboot path.
 
 ```bash
 printf 'hid_asus_ec\n' | sudo tee /etc/modules-load.d/zenbook-a14-ec.conf
@@ -370,30 +445,21 @@ echo 'blacklist asus_zenbook_a14_ec' | sudo tee /etc/modprobe.d/zenbook-a14-ec-n
 ```
 
 `hid_asus_ec` (Fn hotkeys, keyboard backlight) goes through i2c-hid, not the EC
-bus, and is safe to autoload.
+bus, and is safe to autoload. With this in place the machine did 5 consecutive
+warm reboots at ~7.2 s each.
 
-When you want fan speed, temperature, or the performance profile, load it by
-hand — and unload it before rebooting:
+When you want fan speed, temperature or the performance profile, load it by hand
+and unload it before rebooting:
 
 ```bash
 sudo modprobe asus_zenbook_a14_ec
-...
+…
 sudo modprobe -r asus_zenbook_a14_ec     # or just poweroff instead of reboot
 ```
 
-`modprobe -r` runs the driver's `.remove()`; a reboot after load + unload came
-up clean. Whether that reliably restores the EC, or only appeared to because the
-next boot never touched it, is **not established** — treat `poweroff` as the
-safe path. Reporting this upstream to
-[Sombre-Osmoze/asus-zenbook-a14-ec](https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec)
-is worthwhile; the driver has no `.shutdown()` hook.
-
-> Install into `updates/`, not on top of `kernel/drivers/acpi/`. `depmod`'s
-> search order on Ubuntu is `updates ubuntu built-in`, so `updates/` wins, the
-> distro file stays intact, and reverting is `rm` + `depmod -a`.
-
-**Re-run the script after every kernel upgrade.** The modules live under
-`/lib/modules/<version>/`, so a new kernel simply has none.
+`modprobe -r` runs `.remove()`, and one reboot after a load + unload came up
+clean — but that boot never touched the EC again, so whether `.remove()` truly
+restores it is **not established**. Treat `poweroff` as the safe path.
 
 Verify:
 
@@ -423,10 +489,24 @@ echo performance | sudo tee /sys/class/platform-profile/platform-profile-0/profi
 ```
 
 A newer `power-profiles-daemon` that understands `/sys/class/platform-profile/`
-fixes this. The EC repo also ships `scripts/ppd-bridge.py`, a drop-in D-Bus
+would fix this. The EC repo also ships `scripts/ppd-bridge.py`, a drop-in D-Bus
 replacement for `power-profiles-daemon` — not installed here.
 
-## 7. Optional power tweaks
+## 7. What does not work, and why
+
+- **Webcam.** The `qcom-camss` ISP binds and creates `/dev/video*`, but the
+  `ov02c10` sensor never probes. It needs the device-tree patches from
+  [alexVinarskis/linux-x1e80100-zenbook-a14](https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14),
+  which are maintained against `linux-next` and which that repo marks WIP and
+  "not fully working" on the X1P variant.
+- **Hardware video decode.** No `iris`/`venus` driver is present at all —
+  `/dev/video*` are camss nodes, not a decoder. Same repo, same WIP status.
+- **TPM.** Firmware TPM, unsupported.
+- `alejandroqh/qcom-firmware-updater` is **not** useful here: it installs GPU and
+  video firmware that `linux-firmware` already ships, plus Iris firmware for a
+  driver that does not exist.
+
+## 8. Optional power tweaks
 
 Disable services that are useless on this machine (Docker is not installed):
 
@@ -436,17 +516,18 @@ sudo systemctl disable --now cups-browsed.service ModemManager.service
 
 **Verbose boot.** `/etc/default/grub.d/zenbook-a14.cfg` strips `quiet` and
 `splash` and gives GRUB a 3-second menu. Both are deliberate: this machine has
-hung during boot with no panic and no dump, and the GRUB menu is the only way
-back to `7.0.0-14-generic` (or to a `systemd.mask=…` escape hatch) without a
-rescue USB. The drop-in edits `GRUB_CMDLINE_LINUX_DEFAULT` with `sed` instead
-of reassigning it, so the `crashkernel=` reservation that `kdump-tools.cfg`
-appends — it sorts earlier — is not clobbered.
+hung during boot with no panic and no dump (§6, §5e), and the GRUB menu is the
+only way back to `7.0.0-14-generic`, or to a `systemd.mask=…` /
+`modprobe.blacklist=…` escape hatch, without a rescue USB. The drop-in edits
+`GRUB_CMDLINE_LINUX_DEFAULT` with `sed` instead of reassigning it, so the
+`crashkernel=` reservation that `kdump-tools.cfg` appends — it sorts earlier —
+is not clobbered.
 
-**PCIe ASPM.** `pcie_aspm.policy` is a runtime-writable module parameter, so
-test it before committing it to GRUB:
+**PCIe ASPM.** `pcie_aspm.policy` is a runtime-writable module parameter, so test
+it before committing it to GRUB:
 
 ```bash
-cat /sys/module/pcie_aspm/parameters/policy          # [default] ... powersupersave
+cat /sys/module/pcie_aspm/parameters/policy          # [default] … powersupersave
 echo powersupersave | sudo tee /sys/module/pcie_aspm/parameters/policy
 # exercise NVMe + Wi-Fi, then check for AER / nvme resets / ath11k errors
 sudo dmesg | grep -icE 'AER|nvme.*(error|reset)|ath11k.*(crash|fail)'
@@ -454,7 +535,7 @@ echo default | sudo tee /sys/module/pcie_aspm/parameters/policy   # revert
 ```
 
 `powersupersave` was stable here (NVMe reads/writes and Wi-Fi scans clean, zero
-PCIe errors) but the idle-power benefit was **not measured** — the laptop was on
+PCIe errors), but the idle-power benefit was **not measured** — the laptop was on
 AC, and `power_now` then reports charging power, not system draw. Measure
 unplugged first:
 
@@ -466,17 +547,17 @@ To make it permanent, append `pcie_aspm.policy=powersupersave` to the
 `GRUB_CMDLINE_LINUX_DEFAULT` line in `/etc/default/grub.d/zenbook-a14.cfg` and
 run `sudo update-grub`.
 
-## 8. GDM login loop after `home-manager switch`
+## 9. GDM login loop after `home-manager switch`
 
-Symptom: you type your password, the screen blinks, and you are back at the
-login screen. `journalctl -b -u gdm` shows `GdmDisplay: Session never
-registered, failing`, and some user service logs `No GSettings schemas are
-installed on the system`.
+Symptom: you type your password, the screen blinks, and you are back at the login
+screen. `journalctl -b -u gdm` shows `GdmDisplay: Session never registered,
+failing`, and some user service logs `No GSettings schemas are installed on the
+system`.
 
 Cause: `home-manager/base/ubuntu/default.nix` writes
-`~/.config/environment.d/99-nix-path.conf`. systemd's *user* manager starts
-with no `XDG_DATA_DIRS`, so a bare `${XDG_DATA_DIRS}` expands to nothing and
-`/usr/share` is dropped from the list. GNOME then cannot find
+`~/.config/environment.d/99-nix-path.conf`. systemd's *user* manager starts with
+no `XDG_DATA_DIRS`, so a bare `${XDG_DATA_DIRS}` expands to nothing and
+`/usr/share` is dropped. GNOME then cannot find
 `/usr/share/glib-2.0/schemas/gschemas.compiled`, `gnome-session` dies, and GDM
 gives up on the session.
 
@@ -491,22 +572,23 @@ systemctl --user show-environment | grep XDG_DATA_DIRS   # must contain /usr/sha
 This bites *any* Ubuntu host using `modules.home-manager.base.ubuntu.enable`,
 not just this one.
 
-## 9. Files this setup owns
+## 10. Files this setup owns
 
 ```
-/etc/dracut.conf.d/zenbook-a14-adreno.conf         Adreno microcode -> initrd   (§3)
-/etc/default/grub.d/zenbook-a14.cfg                cpufreq.default_governor      (§4)
+/etc/dracut.conf.d/zenbook-a14-adreno.conf         Adreno microcode -> initrd    (§3)
+/etc/default/grub.d/zenbook-a14.cfg                governor, verbose boot, menu  (§4, §8)
 /etc/modules-load.d/scmi-cpufreq.conf              cpufreq driver                (§4)
 /etc/modules-load.d/zenbook-a14-ec.conf            hid_asus_ec only              (§6)
 /etc/modprobe.d/zenbook-a14-ec-noauto.conf         blacklist asus_zenbook_a14_ec (§6)
-/etc/systemd/system/wlan-pcie-retry.service        late, non-blocking link retry (§5)
 /etc/modprobe.d/cfg80211-regdom.conf               regulatory domain             (§5)
-/usr/local/sbin/wlan-pcie-retry                    manual WLAN link retry, NOT a service (§5)
+/etc/systemd/system/wlan-pcie-retry.service        late, non-blocking link retry (§5c)
+/usr/local/sbin/wlan-pcie-retry                    its ExecStart; safe by hand   (§5c)
 /lib/firmware/updates/ath11k/WCN6855/hw2.1/        board-2.bin, amss.bin, m3.bin (§5)
-/lib/firmware/updates/qcom/x1p42100/ASUSTeK/...    ADSP/CDSP, from qcom-firmware-extract (§2)
-/lib/modules/$(uname -r)/updates/                  platform_profile, asus_zenbook_a14_ec, hid_asus_ec (§6)
+/lib/firmware/updates/qcom/x1p42100/ASUSTeK/…      ADSP/CDSP, from qcom-firmware-extract (§2)
+/lib/modules/$(uname -r)/updates/                  platform_profile, asus_zenbook_a14_ec,
+                                                   hid_asus_ec — the EC one is blacklisted (§6)
 ```
 
-Everything is additive — `/lib/firmware/updates/` and `/lib/modules/*/updates/`
-shadow the distro files rather than replacing them. To undo any piece, delete
-the file and run `sudo depmod -a` and/or `sudo update-initramfs -u -k all`.
+Everything is additive: `/lib/firmware/updates/` and `/lib/modules/*/updates/`
+shadow the distro files rather than replacing them. To undo any piece, delete the
+file and run `sudo depmod -a` and/or `sudo update-initramfs -u -k all`.
