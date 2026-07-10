@@ -8,7 +8,7 @@ Verified working on **Ubuntu 26.04 LTS "resolute", kernel `7.0.0-27-generic`** (
 | CPU frequency scaling | works | module + governor (§4) |
 | Audio (speakers + mics) | works | Windows firmware (§2) |
 | Battery / charging | works | Windows firmware (§2) |
-| Wi-Fi (WCN6855, NFA725A) | works | Windows firmware + repacked board file (§5) |
+| Wi-Fi (WCN6855, NFA725A) | works, but the PCIe link trains on only ~1 boot in 3 | Windows firmware + repacked board file (§5) |
 | Fan, temp, Fn keys, kbd backlight | works | out-of-tree modules (§6) |
 | Bluetooth, webcam, fingerprint | untested | — |
 
@@ -249,37 +249,43 @@ device. Things that do **not** help: a warm reboot, a full power-off,
 unbinding/rebinding `qcom-pcie`, unbinding/rebinding `pci-pwrctrl-pwrseq`.
 `pwrseq_qcom_wcn` and `pci_pwrctrl_pwrseq` are loaded and fine.
 
-What does work is asking the platform bus to probe the device again:
+What does work, **from a fully booted system**, is asking the platform bus to
+probe the device again. A single attempt has been seen to block for over two
+minutes before the card appears:
 
 ```bash
 sudo sh -c 'echo 1c08000.pci > /sys/bus/platform/drivers_probe'
 ```
 
-This blocks for ~100 s inside `dw_pcie_wait_for_link()` and then the card shows
-up. `wlan-pcie-retry.service` automates it — it is skipped when the link came
-up on its own:
+`/usr/local/sbin/wlan-pcie-retry` wraps that in a three-attempt loop. Run it by
+hand when you boot without Wi-Fi.
 
-```ini
-# /etc/systemd/system/wlan-pcie-retry.service
-[Unit]
-Description=Retry the WLAN PCIe host-bridge probe (x1p42100 link trains unreliably)
-After=multi-user.target
-ConditionPathExists=!/sys/bus/pci/devices/0004:01:00.0
-
-[Service]
-Type=simple
-ExecStart=/usr/local/sbin/wlan-pcie-retry
-
-[Install]
-WantedBy=multi-user.target
-```
-
-with `/usr/local/sbin/wlan-pcie-retry` retrying `drivers_probe` up to three
-times. `Type=simple` matters: each attempt blocks for ~100 s, so boot must not
-wait on it.
+> **Do not automate this at boot.** A `Type=oneshot` unit doing exactly the
+> above, ordered `After=sysinit.target` and `Before=NetworkManager.service`,
+> put the machine into a **reboot loop** — it never reached a login prompt and
+> had to be rescued from the GRUB command line with
+> `systemd.mask=wlan-pcie-retry.service` appended to the kernel line. Probing
+> that PCIe bridge while udev is still settling appears to kill the kernel
+> outright: no panic, no crash dump, just a restart. Late in boot it is
+> untested; from an idle desktop it is fine.
 
 Also avoid `modprobe -r ath11k_pci` — after an RDDM firmware crash the unload
 hangs indefinitely.
+
+### A rarer, unexplained boot hang
+
+One boot in nine hung at ~6.1 s, while `NetworkManager` and `wpa_supplicant`
+were starting, never reaching `graphical.target`. It left no panic and no
+kdump; the journal just stops. The last kernel line was Bluetooth's QCA setup
+completing. It happened on a boot where the WLAN PCIe link had failed — but
+four other boots failed the same way and came up fine, so the link failure is a
+correlate, not the cause. Wi-Fi and Bluetooth share one WCN6855 and one
+`pwrseq_qcom_wcn`, which is the obvious place to look next.
+
+Because of this, `quiet` and `splash` are stripped from the kernel command line
+(§7) — the last console message is the only evidence the next hang will leave.
+
+Recovery is a full power-off, not a reboot.
 
 ## 6. EC drivers — fan, temperature, Fn keys, keyboard backlight
 
@@ -361,6 +367,14 @@ Disable services that are useless on this machine (Docker is not installed):
 sudo systemctl disable --now cups-browsed.service ModemManager.service
 ```
 
+**Verbose boot.** `/etc/default/grub.d/zenbook-a14.cfg` strips `quiet` and
+`splash` and gives GRUB a 3-second menu. Both are deliberate: this machine has
+hung during boot with no panic and no dump, and the GRUB menu is the only way
+back to `7.0.0-14-generic` (or to a `systemd.mask=…` escape hatch) without a
+rescue USB. The drop-in edits `GRUB_CMDLINE_LINUX_DEFAULT` with `sed` instead
+of reassigning it, so the `crashkernel=` reservation that `kdump-tools.cfg`
+appends — it sorts earlier — is not clobbered.
+
 **PCIe ASPM.** `pcie_aspm.policy` is a runtime-writable module parameter, so
 test it before committing it to GRUB:
 
@@ -418,8 +432,7 @@ not just this one.
 /etc/modules-load.d/scmi-cpufreq.conf              cpufreq driver                (§4)
 /etc/modules-load.d/zenbook-a14-ec.conf            EC + HID modules              (§6)
 /etc/modprobe.d/cfg80211-regdom.conf               regulatory domain             (§5)
-/etc/systemd/system/wlan-pcie-retry.service        retry flaky WLAN PCIe link    (§5)
-/usr/local/sbin/wlan-pcie-retry                    ^ its ExecStart               (§5)
+/usr/local/sbin/wlan-pcie-retry                    manual WLAN link retry, NOT a service (§5)
 /lib/firmware/updates/ath11k/WCN6855/hw2.1/        board-2.bin, amss.bin, m3.bin (§5)
 /lib/firmware/updates/qcom/x1p42100/ASUSTeK/...    ADSP/CDSP, from qcom-firmware-extract (§2)
 /lib/modules/$(uname -r)/updates/                  platform_profile, asus_zenbook_a14_ec, hid_asus_ec (§6)
