@@ -268,6 +268,46 @@ before udev has settled is untested.
 Also avoid `modprobe -r ath11k_pci` — after an RDDM firmware crash the unload
 hangs indefinitely.
 
+### Upstream status: known, unfixed
+
+The `-110` is `-ETIMEDOUT` from `dw_pcie_wait_for_link()`, which retries
+`PCIE_LINK_WAIT_MAX_RETRIES = 10` times at `PCIE_LINK_WAIT_SLEEP_MS = 90` —
+about 900 ms total, and never widened. Since Linux 7.0 that function
+distinguishes `-ENODEV` (LTSSM in Detect, no device) and `-EIO` (Poll, device
+inactive) from `-ETIMEDOUT`, and only `-ETIMEDOUT` aborts the probe. So this is
+not "the card has not powered up yet" — training starts and never completes.
+
+The `pwrseq-qcom-wcn` maintainer says as much in the comment added by
+`29da3e8748f9` ("power: sequencing: qcom-wcn: explain why we need the WLAN_EN
+GPIO hack"):
+
+> some platforms still fail to probe the WLAN controller. This is caused by the
+> Qcom PCIe controller and needs a workaround in the controller driver
+
+That workaround does not exist yet. No upstream commit targets this, and no
+public bug report matches `qcom-pcie 1c08000.pci … error -110` on x1p42100.
+
+### What does NOT work — measured
+
+**Do not raise the WCN6855 `pwup_delay_ms`.** Rebuilding
+`pwrseq-qcom-wcn.ko` with `pwup_delay_ms` 50 → 300 and `gpio_enable_delay_ms`
+5 → 20, installed into `updates/`, made things **worse**, not better:
+
+- `-110` went from ~5 of 13 boots to **3 of 4**;
+- and every one of those three then **killed the machine at ~6.5 s**, right
+  after `Bluetooth: hci0` finished initialising, never reaching
+  `graphical.target`. With the stock module, `-110` boots come up fine (no
+  Wi-Fi, but a usable desktop).
+
+Wi-Fi and Bluetooth share one WCN6855 and one `pwrseq_qcom_wcn` PMU. Whatever
+that longer delay changes, it makes bringing up the Bluetooth target on a PMU
+whose WLAN target failed fatal. Revert with `rm
+/lib/modules/$(uname -r)/updates/pwrseq-qcom-wcn.ko && sudo depmod -a && sudo
+update-initramfs -u -k all`.
+
+Untried, from Qualcomm's generic PCIe link-training guidance (not verified on
+this DT): `qcom,refclk-always-on` on the PHY node, and `pcie_aspm=off`.
+
 ## 6. EC drivers — fan, temperature, Fn keys, keyboard backlight
 
 Uses [Sombre-Osmoze/asus-zenbook-a14-ec](https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec)
