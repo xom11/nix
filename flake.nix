@@ -83,12 +83,12 @@
         rog = lib.mkHomeManager { device = "rog"; };
         server = lib.mkHomeManager { device = "server"; };
         desktop = lib.mkHomeManager { device = "desktop"; };
-        zenbook-a14 = lib.mkHomeManager { device = "zenbook-a14"; };
+        a14 = lib.mkHomeManager { device = "a14"; };
         minimal = lib.mkHomeManager { device = "minimal"; };
       };
       systemConfigs = inputs.nixpkgs.lib.genAttrs ["aarch64-linux" "x86_64-linux"] (system: {
         desktop = lib.mkSystemManager { device = "desktop"; inherit system; };
-        zenbook-a14 = lib.mkSystemManager { device = "zenbook-a14"; inherit system; };
+        a14 = lib.mkSystemManager { device = "a14"; inherit system; };
       });
     };
   }
