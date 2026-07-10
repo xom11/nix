@@ -39,6 +39,7 @@
       zsh.enable = true;
     };
     services = {
+      kanata.enable = true;
       # syncthing.enable = true;
     };
   };
