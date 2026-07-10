@@ -9,7 +9,8 @@ Verified working on **Ubuntu 26.04 LTS "resolute", kernel `7.0.0-27-generic`** (
 | Audio (speakers + mics) | works | Windows firmware (§2) |
 | Battery / charging | works | Windows firmware (§2) |
 | Wi-Fi (WCN6855, NFA725A) | works, but the PCIe link trains on only ~1 boot in 3 | Windows firmware + repacked board file (§5) |
-| Fan, temp, Fn keys, kbd backlight | works | out-of-tree modules (§6) |
+| Fn keys, kbd backlight | works | out-of-tree module (§6) |
+| Fan, temp, power profile | works, but must be loaded by hand — autoloading it breaks `reboot` | out-of-tree module (§6) |
 | Bluetooth, webcam, fingerprint | untested | — |
 
 ## Read this before changing anything
@@ -250,42 +251,22 @@ unbinding/rebinding `qcom-pcie`, unbinding/rebinding `pci-pwrctrl-pwrseq`.
 `pwrseq_qcom_wcn` and `pci_pwrctrl_pwrseq` are loaded and fine.
 
 What does work, **from a fully booted system**, is asking the platform bus to
-probe the device again. A single attempt has been seen to block for over two
-minutes before the card appears:
+probe the device again. It usually takes some seconds, and one attempt has been
+seen to block for over two minutes before the card appears:
 
 ```bash
 sudo sh -c 'echo 1c08000.pci > /sys/bus/platform/drivers_probe'
 ```
 
-`/usr/local/sbin/wlan-pcie-retry` wraps that in a three-attempt loop. Run it by
-hand when you boot without Wi-Fi.
-
-> **Do not automate this at boot.** A `Type=oneshot` unit doing exactly the
-> above, ordered `After=sysinit.target` and `Before=NetworkManager.service`,
-> put the machine into a **reboot loop** — it never reached a login prompt and
-> had to be rescued from the GRUB command line with
-> `systemd.mask=wlan-pcie-retry.service` appended to the kernel line. Probing
-> that PCIe bridge while udev is still settling appears to kill the kernel
-> outright: no panic, no crash dump, just a restart. Late in boot it is
-> untested; from an idle desktop it is fine.
+`/usr/local/sbin/wlan-pcie-retry` wraps that in a three-attempt loop, and
+`wlan-pcie-retry.service` runs it `After=multi-user.target`, `Type=simple`,
+skipped by `ConditionPathExists=!/sys/bus/pci/devices/0004:01:00.0` when the
+link came up on its own. Late and non-blocking on purpose: this write is only
+ever exercised from a booted system, nothing should wait on it, and running it
+before udev has settled is untested.
 
 Also avoid `modprobe -r ath11k_pci` — after an RDDM firmware crash the unload
 hangs indefinitely.
-
-### A rarer, unexplained boot hang
-
-One boot in nine hung at ~6.1 s, while `NetworkManager` and `wpa_supplicant`
-were starting, never reaching `graphical.target`. It left no panic and no
-kdump; the journal just stops. The last kernel line was Bluetooth's QCA setup
-completing. It happened on a boot where the WLAN PCIe link had failed — but
-four other boots failed the same way and came up fine, so the link failure is a
-correlate, not the cause. Wi-Fi and Bluetooth share one WCN6855 and one
-`pwrseq_qcom_wcn`, which is the obvious place to look next.
-
-Because of this, `quiet` and `splash` are stripped from the kernel command line
-(§7) — the last console message is the only evidence the next hang will leave.
-
-Recovery is a full power-off, not a reboot.
 
 ## 6. EC drivers — fan, temperature, Fn keys, keyboard backlight
 
@@ -316,10 +297,56 @@ Run [`rebuild-oot-modules.sh`](./rebuild-oot-modules.sh) — it installs
 together with the two EC modules, and installs everything into
 `/lib/modules/$(uname -r)/updates/`.
 
-```bash
-./rebuild-oot-modules.sh
-printf 'asus_zenbook_a14_ec\nhid_asus_ec\n' | sudo tee /etc/modules-load.d/zenbook-a14-ec.conf
+### `asus_zenbook_a14_ec` must NOT be autoloaded — it breaks warm reboot
+
+This is the single most important thing on this page. Autoloading the EC driver
+via `/etc/modules-load.d/` makes `reboot` fail: the machine comes back up,
+runs for ~4.3 s, and then hangs or silently resets into a loop. Only holding the
+power button and cold-booting recovers it. Windows is unaffected, and a cold
+boot is always fine, which is what makes it look like a firmware problem.
+
+The driver's last log line on a dying boot is always the same:
+
 ```
+asus_zenbook_a14_ec: no thermal zones available; manual mode will fall back to EC temp
+```
+
+and the very next thing it does — `i2c_transfer()` in `asus_ec_read()`, the
+first read of the EC — never returns. It never reaches `online: fan0 tach=…`.
+Across seven boots the correlation was total:
+
+| `online: fan0 tach` printed | reached `graphical.target` |
+|---|---|
+| yes (4 boots) | yes, all 4 |
+| no (3 boots) | no, all 3 — hang or reset |
+
+Loading the driver leaves the EC in a state that wedges the *next* warm boot's
+first read. A cold boot resets the EC, which is why the first `modprobe` after
+power-on always works. So:
+
+```bash
+printf 'hid_asus_ec\n' | sudo tee /etc/modules-load.d/zenbook-a14-ec.conf
+echo 'blacklist asus_zenbook_a14_ec' | sudo tee /etc/modprobe.d/zenbook-a14-ec-noauto.conf
+```
+
+`hid_asus_ec` (Fn hotkeys, keyboard backlight) goes through i2c-hid, not the EC
+bus, and is safe to autoload.
+
+When you want fan speed, temperature, or the performance profile, load it by
+hand — and unload it before rebooting:
+
+```bash
+sudo modprobe asus_zenbook_a14_ec
+...
+sudo modprobe -r asus_zenbook_a14_ec     # or just poweroff instead of reboot
+```
+
+`modprobe -r` runs the driver's `.remove()`; a reboot after load + unload came
+up clean. Whether that reliably restores the EC, or only appeared to because the
+next boot never touched it, is **not established** — treat `poweroff` as the
+safe path. Reporting this upstream to
+[Sombre-Osmoze/asus-zenbook-a14-ec](https://github.com/Sombre-Osmoze/asus-zenbook-a14-ec)
+is worthwhile; the driver has no `.shutdown()` hook.
 
 > Install into `updates/`, not on top of `kernel/drivers/acpi/`. `depmod`'s
 > search order on Ubuntu is `updates ubuntu built-in`, so `updates/` wins, the
@@ -430,7 +457,9 @@ not just this one.
 /etc/dracut.conf.d/zenbook-a14-adreno.conf         Adreno microcode -> initrd   (§3)
 /etc/default/grub.d/zenbook-a14.cfg                cpufreq.default_governor      (§4)
 /etc/modules-load.d/scmi-cpufreq.conf              cpufreq driver                (§4)
-/etc/modules-load.d/zenbook-a14-ec.conf            EC + HID modules              (§6)
+/etc/modules-load.d/zenbook-a14-ec.conf            hid_asus_ec only              (§6)
+/etc/modprobe.d/zenbook-a14-ec-noauto.conf         blacklist asus_zenbook_a14_ec (§6)
+/etc/systemd/system/wlan-pcie-retry.service        late, non-blocking link retry (§5)
 /etc/modprobe.d/cfg80211-regdom.conf               regulatory domain             (§5)
 /usr/local/sbin/wlan-pcie-retry                    manual WLAN link retry, NOT a service (§5)
 /lib/firmware/updates/ath11k/WCN6855/hw2.1/        board-2.bin, amss.bin, m3.bin (§5)
