@@ -2,3 +2,9 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determin
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 nix run github:nix-community/home-manager -- switch --impure -b backup --flake "github:xom11/nix/main#a14" --refresh
 add-visudo && add-authkey && set-zsh
+# kanata (+ tailscale) run as system-manager system services; this sets up
+# /dev/uinput permissions declaratively, so no manual `usermod`/udev is needed.
+sudo nix run 'github:numtide/system-manager' -- switch --flake "github:xom11/nix/main#a14"
+
+sudo chsh -s $HOME/.nix-profile/bin/zsh $USER
+
