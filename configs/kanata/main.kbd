@@ -27,10 +27,6 @@
   clear (multi (layer-switch main) (on-press release-virtualkey shift))
 )
 
-;; lang-switch chords (q+w / w+e / e+r) removed 2026-07-04 — language switching now
-;; lives outside kanata: hammerspoon Tab.spoon (mac) + tab-key.ahk (Windows), via
-;; Tab+Q(中) / Tab+W(Việt) / Tab+E(En). q/w/e/r are plain passthrough now.
-
 (defchords mtr $chord-timeout
   (i  ) i
   (  o) o
@@ -107,10 +103,6 @@
   ;; s @mwu
   ;; a @mwl
   ;; d @mwr
-
-  ;; example command bind (kanata-with-cmd): hold spc + g -> @demo_cmd
-  ;; real command only on NixOS (see kanata_nixos.kbd); no-op on mac/ubuntu
-  g @demo_cmd
 
   y home
   u pgdn

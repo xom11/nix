@@ -13,15 +13,13 @@ in
   mkModule config ./. {
     services.kanata = {
       enable = true;
-      # cmd_allowed build so (cmd ...) actions work; default pkgs.kanata refuses cmd
-      package = pkgs.kanata-with-cmd;
+      package = pkgs.kanata;
       keyboards = {
         default = {
-          extraDefCfg = "danger-enable-cmd yes";
+          # match the shared defcfg.kbd the other platforms include
+          extraDefCfg = "process-unmapped-keys yes";
           config = configFile;
         };
       };
     };
-    # kanata runs with a minimal PATH; give cmd actions the binaries they call
-    systemd.services."kanata-default".path = [pkgs.coreutils pkgs.util-linux];
   }

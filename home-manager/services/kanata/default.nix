@@ -17,10 +17,7 @@ mkModule config ./. {
     };
 
     Service = {
-      # kanata-with-cmd so (cmd ...) actions work; default pkgs.kanata refuses cmd
-      ExecStart = "${lib.getBin pkgs.kanata-with-cmd}/bin/kanata --cfg ${repoPath}/configs/kanata/kanata_ubuntu.kbd";
-      # kanata runs with a minimal PATH; give cmd actions the binaries they call
-      Environment = ["PATH=${lib.makeBinPath [pkgs.coreutils pkgs.util-linux]}"];
+      ExecStart = "${lib.getBin pkgs.kanata}/bin/kanata --cfg ${repoPath}/configs/kanata/kanata_ubuntu.kbd";
       # notify: kanata signals readiness when it enters the processing loop, same
       # as the nixpkgs services.kanata module. Restart=no: a keyboard grabber
       # shouldn't respawn — on a permission failure it would just loop (which is

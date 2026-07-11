@@ -16,9 +16,5 @@
 (defalias
   tab_alias (multi lmet lctl lsft)
   cap_alias (multi lmet lctl lalt)
-  ;; example shell-command bind for kanata-with-cmd. Runs as the kanata DynamicUser
-  ;; (unprivileged) under heavy systemd hardening — fine for harmless commands.
-  ;; Privileged actions (suspend/poweroff) need a polkit rule or relaxed hardening.
-  demo_cmd (cmd touch /tmp/kanata-cmd-works)
 )
 ;; (include "main.kbd")  ;; appended by nixos/services/kanata

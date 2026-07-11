@@ -20,7 +20,6 @@
   ;; (was: layer-while-held tablayer — the uppercase shift-layer; dropped for the modifier.)
   tab_alias (multi lmet lctl lsft)
   cap_alias (layer-while-held caplayer)
-  demo_cmd XX  ;; no-op (main.kbd extend layer refs @demo_cmd; unused on Windows)
 )
 (include "main.kbd")
 ;; fix bug hold cap + aaaa, detail in readme

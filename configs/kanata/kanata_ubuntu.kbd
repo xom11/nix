@@ -17,8 +17,5 @@
 (defalias
   tab_alias (multi lmet lctl lsft)
   cap_alias (multi lmet lctl lalt)
-  ;; example shell-command bind for kanata-with-cmd. Ubuntu runs kanata as a
-  ;; home-manager user service (as you, not root) — see home-manager/services/kanata
-  demo_cmd (cmd touch /tmp/kanata-cmd-works)
 )
 (include "main.kbd")

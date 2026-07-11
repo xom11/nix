@@ -4,8 +4,8 @@ For Linux hosts where Nix is a guest — Ubuntu and friends, where `nixos/servic
 is unavailable and `system-manager/services/kanata` would mean running kanata as root.
 This module instead writes a `systemd.user.service` that runs kanata as **you**.
 
-The binary is `pkgs.kanata-with-cmd` (plain `pkgs.kanata` refuses `(cmd …)` actions,
-which `configs/kanata/main.kbd` uses). It is in the binary cache for both
+The binary is plain `pkgs.kanata` — the config uses no `(cmd …)` actions, so the
+`kanata-with-cmd` build isn't needed. It is in the binary cache for both
 `x86_64-linux` and `aarch64-linux`, so nothing is compiled.
 
 Enable it per-host:
