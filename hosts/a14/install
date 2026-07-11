@@ -5,6 +5,8 @@ add-visudo && add-authkey && set-zsh
 # kanata (+ tailscale) run as system-manager system services; this sets up
 # /dev/uinput permissions declaratively, so no manual `usermod`/udev is needed.
 sudo nix run 'github:numtide/system-manager' -- switch --flake "github:xom11/nix/main#a14"
-
-sudo chsh -s $HOME/.nix-profile/bin/zsh $USER
+# system-manager writes the /dev/uinput udev rule but does not reload udev, so
+# apply it now (a reboot would too, via static_node) and (re)start kanata.
+sudo udevadm control --reload-rules && sudo udevadm trigger --sysname-match=uinput
+sudo systemctl restart kanata.service
 
