@@ -37,9 +37,9 @@
       "caddy"
     ];
     casks = [
-      "dbeaver-community"
-      "postman"
-      "xquartz"
+      # "dbeaver-community"
+      # "postman"
+      # "xquartz"
       # "beeper"
       "tablepro"
       "macs-fan-control"
