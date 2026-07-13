@@ -5,13 +5,10 @@
     ../../profiles/core.nix
     ../../profiles/linux-gui.nix
   ];
-  home.shellAliases = {
-    update = ''
-      git -C ~nix pull
-      sudo nixos-rebuild switch --impure --refresh --flake ~/.nix#x1g6
-    '';
-  };
   modules.home-manager = {
+    base = {
+      nixos.enable = true;
+    };
     dotfiles = {
       # browser.qutebrowser.enable = true;
       vscode.enable = true;

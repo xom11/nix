@@ -73,12 +73,48 @@ All modules receive these extra args (defined in `lib/mkConfigs.nix`):
   it must be a writable working tree (`home-manager/base` clones it on first switch)
 - `getRelPath path` — the module's path relative to the repo root
 - `getPath path` — converts a Nix store path back to its real filesystem path under `repoPath`
+- `autoImport dir` — every nested `default.nix` under `dir`, except `dir`'s own
 - `mkModule`, `ckModule` — module helpers (see below)
 - plus every flake input, by name
 
 `mkSystemManager` deliberately passes a **reduced** set (`device`, `system`,
-`mkModule`, `ckModule`) — splatting `inputs` there would shadow system-manager's
-own `_module.args.system-manager` with the flake input of the same name.
+`autoImport`, `mkModule`, `ckModule`) — splatting `inputs` there would shadow
+system-manager's own `_module.args.system-manager` with the flake input of the
+same name.
+
+### Profiles
+
+`profiles/` holds the module sets shared across hosts, so the common toolkit is
+defined once rather than copied into every `hosts/*/home.nix` (that copying is
+what let three hosts silently rot). A host imports the profiles it wants:
+
+```nix
+imports = [ ../../home-manager ../../profiles/core.nix ../../profiles/linux-gui.nix ];
+```
+
+| Profile | Contents | Used by |
+|---|---|---|
+| `core.nix` | zsh, git, nvim, tmux, yazi, ssh, btop, pkgs.{dev,lang,tools} | every host except `minimal` |
+| `linux-gui.nix` | fonts, i18n, rofi, terminal.kitty — **no window manager** | a14, desktop, x1g6, vmware |
+| `macos.nix` | base.macos, fonts, kitty, conda, vscode, hammerspoon, sleepwatcher | macmini, airm3 |
+
+Profiles enable with `lib.mkDefault`, so a host **opts out visibly** instead of
+by omission:
+
+```nix
+modules.home-manager.programs.git.enable = false;   # hosts/vmware
+```
+
+They live at the repo root on purpose. Anything under `home-manager/` is
+auto-imported into every host, which would make a profile unconditional rather
+than opt-in.
+
+When changing a profile, confirm the hosts you did not intend to touch are
+unaffected — `drvPath` should be byte-identical for a pure refactor:
+
+```bash
+nix eval --impure --raw .#homeConfigurations.<host>.activationPackage.drvPath
+```
 
 ### mkModule pattern
 
@@ -131,8 +167,10 @@ nixos/               # NixOS system: base, programs, systemPackages,
                      #   services/{environments,hibernate,ibus,kanata,keyd}
 system-manager/      # system-level config on non-NixOS Linux (a14, desktop):
                      #   base, etc/trackpad, services/{docker,kanata,keyd,openssh}
+profiles/            # shared module sets: core, linux-gui, macos (see below)
 home-manager/
-  base/              # username, homeDir, stateVersion, sessionVariables; + macos/, ubuntu/
+  base/              # username, homeDir, stateVersion, sessionVariables
+                     #   + macos/, ubuntu/, nixos/ — each carries that platform's `update` alias
   programs/          # btop, git, nvim, ssh, tmux, yazi, zsh
   dotfiles/          # ai/{aichat.d,claude.d,codex.d,gemini.d,opencode.d}
                      # browser/{firefox,qutebrowser}, terminal/{alacritty,kitty}
@@ -149,9 +187,12 @@ windows/             # live parallel PowerShell config; reuses the shared dotfil
 ```
 
 Modules are auto-discovered — `home-manager/default.nix` (and the equivalent in
-`nixos/`, `nix-darwin/`, `system-manager/`) imports every nested `default.nix`
-recursively. There is no import list to update, but note the corollary: a module
-nobody enables is still evaluated on every rebuild.
+`nixos/`, `nix-darwin/`, `system-manager/`) is just `imports = autoImport ./.`,
+which pulls in every nested `default.nix`. There is no import list to update, but
+note the corollary: a module nobody enables still has its options declared on
+every rebuild. That is cheap (the body sits behind `mkIf cfg.enable`), so keeping
+an unused module around for reference is fine — but a **broken** one is a landmine,
+since enabling it is all it takes to break eval.
 
 ### Dotfile linking pattern
 
@@ -171,7 +212,9 @@ the store, or the dotfiles are read-only and get collected on the next GC.
 ### Adding a new module
 
 1. Create `home-manager/<category>/<name>/default.nix` using `mkModule config ./. { ... }`
-2. Enable it per-device in `hosts/{device}/home.nix` under `modules.home-manager.<category>.<name>.enable = true`
+2. Enable it — in `profiles/core.nix` if every host should get it, otherwise
+   per-device in `hosts/{device}/home.nix` under
+   `modules.home-manager.<category>.<name>.enable = true`
 3. Confirm the hosts you touched still evaluate (see "Checking a host" above)
 
 ## Git
