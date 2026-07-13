@@ -1,7 +1,7 @@
-{pkgs, ...}: let
-in {
+{pkgs, ...}: {
   imports = [
     ../../home-manager
+    ../../profiles/core.nix
   ];
   home.sessionVariables = {
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
@@ -12,22 +12,6 @@ in {
     };
     dotfiles = {
       ai.enable = true;
-    };
-    environments = {
-    };
-    pkgs = {
-      dev.enable = true;
-      lang.enable = true;
-      tools.enable = true;
-    };
-    programs = {
-      btop.enable = true;
-      git.enable = true;
-      nvim.enable = true;
-      ssh.enable = true;
-      tmux.enable = true;
-      yazi.enable = true;
-      zsh.enable = true;
     };
     services = {
       # syncthing.enable = true;

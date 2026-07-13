@@ -3,6 +3,8 @@
 in {
   imports = [
     ../../home-manager
+    ../../profiles/core.nix
+    ../../profiles/macos.nix
   ];
   home.sessionVariables = {
     # Homebrew
@@ -40,16 +42,8 @@ in {
   ];
 
   modules.home-manager = {
-    base = {
-      macos.enable = true;
-    };
-    environments = {
-      fonts.enable = true;
-    };
     dotfiles = {
-      terminal = {
-        kitty.enable = true;
-      };
+      ai.enable = true;
       browser = {
         # qutebrowser.enable = true;
         # firefox.enable = true;
@@ -59,27 +53,8 @@ in {
         # };
       };
       macos = {
-        hammerspoon.enable = true;
         # karabiner.enable = true;
-        sleepwatcher.enable = true;
       };
-      ai.enable = true;
-      conda.enable = true;
-      vscode.enable = true;
-    };
-    pkgs = {
-      dev.enable = true;
-      lang.enable = true;
-      tools.enable = true;
-    };
-    programs = {
-      btop.enable = true;
-      git.enable = true;
-      nvim.enable = true;
-      ssh.enable = true;
-      tmux.enable = true;
-      yazi.enable = true;
-      zsh.enable = true;
     };
     services = {
       agenix.enable = true;

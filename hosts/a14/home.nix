@@ -1,6 +1,8 @@
 {pkgs, ...}: {
   imports = [
     ../../home-manager
+    ../../profiles/core.nix
+    ../../profiles/linux-gui.nix
   ];
   modules.home-manager = {
     base = {
@@ -8,35 +10,17 @@
     };
     dotfiles = {
       ai.enable = true;
-      terminal = {
-        kitty.enable = true;
-      };
       browser = {
       };
-      rofi.enable = true;
     };
     environments = {
-      fonts.enable = true;
       # i3wm.enable = true;
       gnome.enable = true;
       sway.enable = true;
       sway.ubuntu.enable = true;
-      i18n.enable = true;
     };
     pkgs = {
-      dev.enable = true;
       ubuntu.enable = true;
-      lang.enable = true;
-      tools.enable = true;
-    };
-    programs = {
-      btop.enable = true;
-      git.enable = true;
-      nvim.enable = true;
-      ssh.enable = true;
-      tmux.enable = true;
-      yazi.enable = true;
-      zsh.enable = true;
     };
     services = {
       # syncthing.enable = true;

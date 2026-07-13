@@ -2,11 +2,11 @@
   pkgs,
   device,
   ...
-}: let
-  cfgDir = "~/.nix/hosts/${device}";
-in {
+}: {
   imports = [
     ../../home-manager
+    ../../profiles/core.nix
+    ../../profiles/linux-gui.nix
   ];
   home.shellAliases = {
     update = ''
@@ -23,27 +23,9 @@ in {
   modules.home-manager = {
     dotfiles = {
       ai.enable = true;
-      terminal.kitty.enable = true;
-      rofi.enable = true;
     };
     environments = {
-      fonts.enable = true;
       i3wm.enable = true;
-      i18n.enable = true;
-    };
-    pkgs = {
-      dev.enable = true;
-      lang.enable = true;
-      tools.enable = true;
-    };
-    programs = {
-      btop.enable = true;
-      git.enable = true;
-      nvim.enable = true;
-      ssh.enable = true;
-      tmux.enable = true;
-      yazi.enable = true;
-      zsh.enable = true;
     };
     services = {
       # syncthing.enable = true;
