@@ -25,15 +25,33 @@
   # home-manager/base clones the repo here before the link phase.
   repoPath = "${homeDir}/.nix";
 
+  # A module's path relative to the flake root. Every option path in the repo
+  # derives from this, so it is worth not coupling it to how Nix happens to name
+  # store paths: the old version split on the literal "-source/", which silently
+  # produced a wrong option path for any directory nested under a `*-source` dir
+  # and failed with a contextless "index out of bounds" otherwise.
+  srcRoot = builtins.toString ../.;
   getRelPath = path: let
-    # Step 1: /nix/store/* -> /nix/store/*-source/relPath
-    nixPath = builtins.toString path;
-    # Step 2: split by "-source/"
-    relPath = builtins.elemAt (lib.strings.splitString "-source/" nixPath) 1;
+    root = "${srcRoot}/";
+    p = builtins.toString path;
   in
-    relPath;
+    if lib.hasPrefix root p
+    then lib.removePrefix root p
+    else throw "getRelPath: ${p} is outside the flake root ${root}";
 
   getPath = path: "${repoPath}/${getRelPath path}";
+
+  # Every nested default.nix under `dir`, except dir's own. This is how each
+  # module root (home-manager/, nixos/, nix-darwin/, system-manager/) discovers
+  # its modules -- there is no import list to maintain.
+  autoImport = dir: let
+    inherit (builtins) filter map toString;
+    inherit (lib.filesystem) listFilesRecursive;
+    inherit (lib.strings) hasSuffix;
+  in
+    filter (hasSuffix "/default.nix") (
+      map toString (filter (p: p != dir + "/default.nix") (listFilesRecursive dir))
+    );
 
   # Create module: option + config
   mkModule = config: path: moduleContent: let
@@ -81,6 +99,7 @@
         repoPath
         getRelPath
         getPath
+        autoImport
         mkModule
         ckModule
         ;
@@ -169,7 +188,7 @@ in {
   mkSystemManager = {device, system}:
     inputs.system-manager.lib.makeSystemConfig {
       specialArgs = {
-        inherit device system mkModule ckModule;
+        inherit device system autoImport mkModule ckModule;
       };
       modules = [
         ../hosts/${device}/configuration.nix
