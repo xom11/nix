@@ -33,6 +33,13 @@ in
 
       tree-sitter
     ];
+
+    # The only thing pinning the 43 plugins that vim.pack clones at runtime —
+    # the flake pins nixvim, not them. mkOutOfStoreSymlink (not a store copy)
+    # because vim.pack *writes* this file: plugin bumps land as a repo diff.
+    home.file."${config.xdg.configHome}/nvim/nvim-pack-lock.json".source =
+      config.lib.file.mkOutOfStoreSymlink "${pwd}/nvim-pack-lock.json";
+
     programs.nixvim = {
       enable = true;
       # Reuse the host (home-manager) pkgs instead of letting nixvim build

@@ -46,9 +46,16 @@ vim.api.nvim_create_autocmd("BufReadCmd", {
 		local id = read_identity()
 		local out = vim.fn.systemlist({ "age", "-d", "-i", id, path })
 		if vim.v.shell_error ~= 0 then
+			-- Leave the buffer empty but unwritable. Without this the BufWriteCmd
+			-- below would happily encrypt those zero lines back over the ciphertext.
+			vim.b.age_decrypt_failed = true
+			vim.bo.modifiable = false
+			vim.bo.readonly = true
+			vim.bo.modified = false
 			vim.notify("age decrypt failed:\n" .. table.concat(out, "\n"), vim.log.levels.ERROR)
 			return
 		end
+		vim.b.age_decrypt_failed = false
 		vim.api.nvim_buf_set_lines(0, 0, -1, false, out)
 		vim.bo.modified = false
 		-- Pick a filetype from the inner extension if there is one
@@ -66,6 +73,10 @@ vim.api.nvim_create_autocmd("BufWriteCmd", {
 	group = group,
 	pattern = "*.age",
 	callback = function(args)
+		if vim.b.age_decrypt_failed then
+			vim.notify("refusing to write: this buffer never decrypted", vim.log.levels.ERROR)
+			return
+		end
 		local path = vim.fn.fnamemodify(args.match, ":p")
 		local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 		local content = table.concat(lines, "\n")

@@ -29,7 +29,13 @@ vim.pack.add({ { src = "https://github.com/windwp/nvim-autopairs" } }, { load = 
 require("nvim-autopairs").setup({})
 vim.pack.add({ { src = "https://github.com/mg979/vim-visual-multi" } }, { load = true })
 vim.pack.add({ { src = "https://github.com/okuuva/auto-save.nvim" } }, { load = true })
-require("auto-save").setup({})
+require("auto-save").setup({
+	-- Never autosave *.age: writing re-runs the encrypt step in extras/age-edit.lua,
+	-- so a stray keystroke would rewrite the secret on every InsertLeave.
+	condition = function(buf)
+		return not vim.api.nvim_buf_get_name(buf):match("%.age$") and vim.bo[buf].buftype ~= "acwrite"
+	end,
+})
 
 -- UI
 vim.pack.add({ { src = "https://github.com/nvim-lualine/lualine.nvim" } }, { load = true })

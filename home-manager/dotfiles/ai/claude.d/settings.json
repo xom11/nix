@@ -3,6 +3,9 @@
     "CLAUDE_CODE_NO_FLICKER": "0"
   },
   "permissions": {
+    "allow": [
+      "mcp__codegraph__*"
+    ],
     "defaultMode": "bypassPermissions"
   },
   "hooks": {
@@ -12,6 +15,16 @@
           {
             "type": "command",
             "command": "\"/Users/lenamkhanh/.claude/hooks/context-mode-cache-heal.mjs\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
           }
         ]
       }
@@ -44,8 +57,8 @@
   },
   "viewMode": "default",
   "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
-  "allowDangerouslySkipPermissions": true,
-  "tui": "fullscreen"
+  "allowDangerouslySkipPermissions": true
 }

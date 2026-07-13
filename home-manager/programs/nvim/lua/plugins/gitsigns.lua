@@ -22,10 +22,7 @@ map({ "n", "v" }, "<leader>hr", "<cmd>Gitsigns reset_hunk<CR>", { desc = "Reset 
 
 -- Actions (Buffer)
 map("n", "<leader>hS", "<cmd>Gitsigns stage_buffer<CR>", { desc = "Stage buffer" })
-map("n", "<leader>hU", function()
-    local file = vim.fn.expand("%")
-    vim.cmd("!git restore --staged " .. file)
-end, { desc = "Undo stage buffer" })
+map("n", "<leader>hU", "<cmd>Gitsigns reset_buffer_index<CR>", { desc = "Undo stage buffer" })
 map("n", "<leader>hR", "<cmd>Gitsigns reset_buffer<CR>", { desc = "Reset buffer" })
 
 -- Blame
