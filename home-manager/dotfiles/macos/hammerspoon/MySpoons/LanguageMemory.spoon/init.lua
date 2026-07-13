@@ -39,43 +39,15 @@ local appWatcher
 -- Helper: chuyển sourceID → setLayout/setMethod
 -- ──────────────────────────────────────────────
 
--- Cache: danh sách layout name → sourceID
--- "Unicode Hex Input" → "com.apple.keylayout.UnicodeHexInput"
-local layoutIDs = {}
-local methodIDs = {}
-
--- Xây dựng cache 1 lần
-local function buildCache()
-    layoutIDs = {}
-    methodIDs = {}
-
-    local layouts = hs.keycodes.layouts(true)   -- sourceIDs
-    for _, sid in ipairs(layouts) do
-        layoutIDs[sid] = true
-    end
-
-    local methods = hs.keycodes.methods(true)   -- sourceIDs
-    for _, sid in ipairs(methods) do
-        methodIDs[sid] = true
-    end
-end
-
--- Check xem sourceID có phải layout hay method
-local function isLayout(sourceID)
-    return layoutIDs[sourceID] or false
-end
-local function isMethod(sourceID)
-    return methodIDs[sourceID] or false
-end
-
--- Set input source từ sourceID
+-- Set input source từ sourceID.
+--
+-- Không cache layouts/methods nữa: cache chỉ dựng 1 lần lúc start, nên input
+-- source bật thêm sau đó sẽ *học* được (onInputChange không check cache) nhưng
+-- không bao giờ *khôi phục* được — triệu chứng "nhớ ngôn ngữ nhưng không tự
+-- chuyển". hs.keycodes.currentSourceID nhận cả layout lẫn method, nên hai nhánh
+-- kia vốn cũng trả về y hệt nhau.
 local function setSource(sourceID)
-    if isLayout(sourceID) then
-        return hs.keycodes.currentSourceID(sourceID)
-    elseif isMethod(sourceID) then
-        return hs.keycodes.currentSourceID(sourceID)
-    end
-    return false
+    return hs.keycodes.currentSourceID(sourceID)
 end
 
 -- ──────────────────────────────────────────────
@@ -134,7 +106,6 @@ end
 -- ──────────────────────────────────────────────
 
 function obj:start()
-    buildCache()
     load()
 
     -- Watch app focus

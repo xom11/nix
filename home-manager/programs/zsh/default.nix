@@ -9,8 +9,19 @@
 }: let
   zshDir = "${config.xdg.configHome}/zsh/zsh.d";
   pwd = getPath ./.;
+  agenixEnabled = config.modules.home-manager.services.agenix.enable;
+  apikeyPath = "${config.xdg.configHome}/zsh/apikey.zsh";
 in
   mkModule config ./. {
+    # Decrypted once at activation, not once per interactive shell. agenix
+    # ships `age`, so without it there is nothing to decrypt with.
+    age.secrets = lib.mkIf agenixEnabled {
+      zsh-apikey = {
+        file = ./age.d/apikey.zsh.age;
+        path = apikeyPath;
+      };
+    };
+
     home.file = {
       "${zshDir}" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/zsh.d";
@@ -85,9 +96,9 @@ in
           [ -f "${zshDir}/os/linux.zsh" ] && source "${zshDir}/os/linux.zsh"
         ''}
 
-        for f in "${pwd}"/age.d/*.age; do
-          [ -f "$f" ] && source <(age -d -i ~/.ssh/id_ed25519 "$f" 2>/dev/null)
-        done
+        ${lib.optionalString agenixEnabled ''
+          [ -r "${apikeyPath}" ] && source "${apikeyPath}"
+        ''}
       '';
     };
   }

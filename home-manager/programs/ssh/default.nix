@@ -11,11 +11,18 @@
 in
   mkModule config ./. {
     home.activation = {
+      # Merge, never overwrite. This used to `rm -rf` the file on every switch,
+      # which silently dropped any key added out of band -- on a box reached
+      # only over ssh, that locks you out. Revoking a key is a manual edit.
       copyAuthorizedKeys = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        rm -rf ~/.ssh/authorized_keys;
-        mkdir -p ~/.ssh;
-        cp ${./authorized_keys} ~/.ssh/authorized_keys;
-        chmod 600 ~/.ssh/authorized_keys;
+        mkdir -p ~/.ssh && chmod 700 ~/.ssh
+        [ -L ~/.ssh/authorized_keys ] && rm -f ~/.ssh/authorized_keys
+        touch ~/.ssh/authorized_keys
+        while IFS= read -r key; do
+          case "$key" in "" | "#"*) continue ;; esac
+          grep -qxF "$key" ~/.ssh/authorized_keys || printf '%s\n' "$key" >> ~/.ssh/authorized_keys
+        done < ${./authorized_keys}
+        chmod 600 ~/.ssh/authorized_keys
       '';
 
       genSshKeyGen = lib.hm.dag.entryAfter ["writeBoundary"] ''

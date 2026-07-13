@@ -21,6 +21,9 @@ in
       ".claude/statusline.mjs" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/statusline.mjs";
       };
+      ".claude/hooks" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/hooks";
+      };
     };
     home.packages = with pkgs; [
       claude-code
