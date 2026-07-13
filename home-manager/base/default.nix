@@ -11,7 +11,6 @@
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
-  nixpkgs.config.allowUnfree = true;
 
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -26,9 +25,13 @@
   ];
 
   home.activation = {
-    gitclonenix = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ ! -d ~/.nix ]; then
-        ${pkgs.git}/bin/git clone https://github.com/xom11/nix.git ~/.nix -q --depth 1
+    # Every dotfiles module symlinks out-of-store into ~/.nix, so on a fresh
+    # machine the working tree has to land before linkGeneration runs —
+    # otherwise the first switch leaves a home full of dangling symlinks.
+    gitclonenix = lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+      if [ ! -d "${config.home.homeDirectory}/.nix" ]; then
+        $DRY_RUN_CMD ${pkgs.git}/bin/git clone https://github.com/xom11/nix.git \
+          "${config.home.homeDirectory}/.nix" -q --depth 1
       fi
     '';
   };

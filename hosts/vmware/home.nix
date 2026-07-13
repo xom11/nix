@@ -19,22 +19,20 @@
       i3wm.enable = true;
     };
     dotfiles = {
-      kitty.enable = true;
-      # qutebrowser.enable = true;
+      terminal.kitty.enable = true;
+      # browser.qutebrowser.enable = true;
       rofi.enable = true;
       # vscode.enable = true;
     };
     pkgs = {
-      test.enable = true;
       dev.enable = true;
-      gui.enable = true;
       lang.enable = true;
       tools.enable = true;
     };
     programs = {
       btop.enable = true;
       # git.enable = true;
-      nixvim.enable = true;
+      nvim.enable = true;
       ssh.enable = true;
       tmux.enable = true;
       yazi.enable = true;

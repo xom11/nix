@@ -18,13 +18,12 @@
     then "/Users/${username}"
     else "/home/${username}";
 
-  repoPath = let
-    absPath = "${homeDir}/.nix";
-    srcRoot = builtins.toString ../.;
-  in
-    if builtins.pathExists absPath
-    then absPath
-    else srcRoot;
+  # Target of every mkOutOfStoreSymlink. Must be a writable working tree:
+  # falling back to the store copy would make dotfiles read-only and leave
+  # them dangling after the next GC (the symlink is a plain string, so the
+  # store path is not a reference of the home-manager generation).
+  # home-manager/base clones the repo here before the link phase.
+  repoPath = "${homeDir}/.nix";
 
   getRelPath = path: let
     # Step 1: /nix/store/* -> /nix/store/*-source/relPath
@@ -58,6 +57,20 @@
     config = lib.mkIf cfg.enable cfgContent;
   };
 
+  # Local packages (../overlays) + flake-shipped overlays. Applied at the
+  # system level for darwin/nixos and to the pkgs built by mkHomeManager, so
+  # `pkgs.<tool>` resolves the same way under every builder.
+  allOverlays = [(import ../overlays)] ++ flakeOverlays;
+
+  # Flake inputs every home-manager config imports, regardless of builder.
+  # Declared once — a module added here reaches darwin, nixos and standalone.
+  hmModules = [
+    inputs.nix-flatpak.homeManagerModules.nix-flatpak
+    inputs.nixvim.homeModules.nixvim
+    inputs.agenix.homeManagerModules.default
+    inputs.nix-apt.homeManagerModules.default
+  ];
+
   args =
     inputs
     // {
@@ -85,10 +98,7 @@ in {
       system = system;
       modules = [
         ../hosts/${device}/configuration.nix
-        # Flake-shipped overlays (declared in flake.nix → flakeOverlays).
-        # Applied at the system level so `pkgs.<tool>` is available for
-        # nix-darwin's `environment.systemPackages` etc.
-        { nixpkgs.overlays = flakeOverlays; }
+        {nixpkgs.overlays = allOverlays;}
         inputs.nix-homebrew.darwinModules.nix-homebrew
         {
           nix-homebrew = {
@@ -101,19 +111,14 @@ in {
         }
         inputs.home-manager.darwinModules.home-manager
         {
+          # Reuse the system pkgs (already carries allOverlays + allowUnfree)
+          # instead of letting home-manager instantiate nixpkgs a second time.
+          home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "backup";
           home-manager.extraSpecialArgs = specialArgs;
-          home-manager.users.${username}.imports = [
-            # HM builds its own pkgs (useGlobalPkgs is unset), so the
-            # system-level overlays don't reach here. Inject again.
-            { nixpkgs.overlays = flakeOverlays; }
-            inputs.nix-flatpak.homeManagerModules.nix-flatpak
-            inputs.nixvim.homeModules.nixvim
-            inputs.agenix.homeManagerModules.default
-            inputs.nix-apt.homeManagerModules.default
-            ../hosts/${device}/home.nix
-          ];
+          home-manager.users.${username}.imports =
+            hmModules ++ [../hosts/${device}/home.nix];
         }
       ];
     };
@@ -129,22 +134,14 @@ in {
       modules = [
         inputs.disko.nixosModules.disko
         ../hosts/${device}/configuration.nix
-        # Flake-shipped overlays (declared in flake.nix → flakeOverlays).
-        # System-level — for `environment.systemPackages` etc.
-        { nixpkgs.overlays = flakeOverlays; }
+        {nixpkgs.overlays = allOverlays;}
         inputs.home-manager.nixosModules.home-manager
         {
+          home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
-          home-manager.users.${args.username}.imports = [
-            # HM-side overlays (HM builds its own pkgs).
-            { nixpkgs.overlays = flakeOverlays; }
-            inputs.nix-flatpak.homeManagerModules.nix-flatpak
-            inputs.agenix.homeManagerModules.default
-            inputs.nixvim.homeModules.nixvim
-            inputs.nix-apt.homeManagerModules.default
-            ../hosts/${device}/home.nix
-          ];
+          home-manager.users.${username}.imports =
+            hmModules ++ [../hosts/${device}/home.nix];
         }
       ];
     };
@@ -153,34 +150,25 @@ in {
   # =====================================================================
   mkHomeManager = {device}:
     inputs.home-manager.lib.homeManagerConfiguration {
-      # Construct pkgs with overlays so user packages from `../overlays`
-      # (e.g. raiseorlaunch) resolve in standalone home-manager. Standalone
-      # HM does not honour `nixpkgs.overlays` set inside modules because
+      # Standalone HM does not honour `nixpkgs.overlays` set inside modules —
       # `pkgs` is provided here rather than constructed by HM itself.
-      #
-      # Flake-shipped overlays come from `flakeOverlays` (declared in
-      # flake.nix) — `nix flake update <tool>` bumps versions, no manual
-      # rev/hash/Cargo.lock to maintain.
       pkgs = import inputs.nixpkgs {
         inherit system;
-        overlays = [ (import ../overlays) ] ++ flakeOverlays;
+        overlays = allOverlays;
         config.allowUnfree = true;
       };
       extraSpecialArgs = mkArgs device;
-      modules = [
-        ../hosts/${device}/home.nix
-        inputs.nix-flatpak.homeManagerModules.nix-flatpak
-        inputs.nixvim.homeModules.nixvim
-        inputs.agenix.homeManagerModules.default
-        inputs.nix-apt.homeManagerModules.default
-      ];
+      modules = hmModules ++ [../hosts/${device}/home.nix];
     };
   # =====================================================================
   # System Manager
   # =====================================================================
+  # NOTE: keep the arg set explicit. Splatting `inputs` in here would shadow
+  # system-manager's own `_module.args.system-manager` with the flake input of
+  # the same name, and the activation script resolves to a bogus path.
   mkSystemManager = {device, system}:
     inputs.system-manager.lib.makeSystemConfig {
-      extraSpecialArgs = {
+      specialArgs = {
         inherit device system mkModule ckModule;
       };
       modules = [

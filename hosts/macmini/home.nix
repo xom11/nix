@@ -1,9 +1,6 @@
 {pkgs, ...}: let
   ssd = "/Volumes/ssd";
 in {
-  nixpkgs.overlays = [
-    (import ../../overlays)
-  ];
   imports = [
     ../../home-manager
   ];

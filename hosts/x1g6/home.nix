@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     ../../home-manager
@@ -13,37 +13,30 @@
     environments = {
       i18n.enable = true;
       fonts.enable = true;
-      x11.enable = true;
+      i3wm.enable = true;
     };
     dotfiles = {
-      btop.enable = true;
-      i3.enable = true;
-      kitty.enable = true;
-      # qutebrowser.enable = true;
+      terminal.kitty.enable = true;
+      # browser.qutebrowser.enable = true;
       vscode.enable = true;
       rofi.enable = true;
-      ssh.enable = true;
-      yazi.enable = true;
     };
     pkgs = {
-      cli.enable = true;
-      gui.enable = true;
       dev.enable = true;
       lang.enable = true;
       tools.enable = true;
     };
     programs = {
-      nixvim.enable = true;
+      btop.enable = true;
       git.enable = true;
-      tmux.enable = true;
-      zsh.enable = true;
+      nvim.enable = true;
       ssh.enable = true;
-    };
-
-    sources = {
-      raiseorlaunch.enable = true;
+      tmux.enable = true;
+      yazi.enable = true;
+      zsh.enable = true;
     };
   };
   home.packages = [
+    pkgs.raiseorlaunch
   ];
 }

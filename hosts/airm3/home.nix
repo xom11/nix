@@ -1,7 +1,4 @@
 {pkgs, ...}: {
-  nixpkgs.overlays = [
-    (import ../../overlays)
-  ];
   imports = [
     ../../home-manager
   ];

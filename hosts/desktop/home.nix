@@ -23,7 +23,7 @@ in {
   modules.home-manager = {
     dotfiles = {
       ai.enable = true;
-      kitty.enable = true;
+      terminal.kitty.enable = true;
       rofi.enable = true;
     };
     environments = {

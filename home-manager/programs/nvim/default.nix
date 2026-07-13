@@ -45,7 +45,8 @@ in
       # Reuse the host (home-manager) pkgs instead of letting nixvim build
       # its own instance. Avoids an infinite-recursion eval bug triggered by
       # newer nixpkgs when nixvim constructs pkgs via `import nixpkgs.source`.
-      # The host pkgs already enables unfree (home-manager/base allowUnfree),
+      # The host pkgs already enables unfree (allowUnfree is set where pkgs is
+      # constructed: nixos/base, nix-darwin/base, lib/mkConfigs for standalone),
       # so unfree LSPs/plugins still resolve. Note: useGlobalPackages requires
       # nixpkgs.config/overlays to be empty (nixvim assertion).
       nixpkgs.useGlobalPackages = true;

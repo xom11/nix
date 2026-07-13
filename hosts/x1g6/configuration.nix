@@ -6,11 +6,12 @@
     ./disko.nix
     ./hardware.nix
   ];
-  modules = {
-    services = {
-      desktop-environment.enable = true;
-      # kanata.enable = true;
-      keyd.enable = true;
+  modules.nixos.services = {
+    environments = {
+      enable = true;
+      type = "i3wm";
     };
+    # kanata.enable = true;
+    keyd.enable = true;
   };
 }
