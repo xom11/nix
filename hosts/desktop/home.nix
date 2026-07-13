@@ -1,26 +1,18 @@
-{
-  pkgs,
-  device,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ../../home-manager
     ../../profiles/core.nix
     ../../profiles/linux-gui.nix
   ];
-  home.shellAliases = {
-    update = ''
-      git -C ~/.nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
-    '';
-    system-manager-update = ''
-      sudo /nix/var/nix/profiles/default/bin/nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#${device}
-    '';
-  };
   home.sessionVariables = {
     # LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
+    # Carries the `update` + `system-manager-update` aliases (both were
+    # hand-copied here) plus the nix PATH / XDG_DATA_DIRS wiring.
+    base = {
+      ubuntu.enable = true;
+    };
     dotfiles = {
       ai.enable = true;
     };

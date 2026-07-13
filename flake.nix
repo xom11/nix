@@ -38,8 +38,6 @@
     system-manager.url = "github:numtide/system-manager";
     system-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    ibus-bamboo.url = "github:BambooEngine/ibus-bamboo";
-
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     # Without these, agenix drags in its own home-manager and nix-darwin (both

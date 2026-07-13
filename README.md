@@ -133,7 +133,6 @@ modules.home-manager = {
 | `agenix` | Secrets management |
 | `system-manager` | System config for non-NixOS Linux |
 | `nix-flatpak` | Declarative Flatpak |
-| `ibus-bamboo` | Vietnamese input method |
 | `nixgl` | OpenGL wrapper for non-NixOS |
 | `nix-apt` | Declarative apt packages on Debian/Ubuntu |
 | `beckon`, `dotbrowser` | Custom tools, shipped as overlays |

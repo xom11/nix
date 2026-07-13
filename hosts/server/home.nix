@@ -1,25 +1,22 @@
-{ pkgs, device, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ../../home-manager
     ../../profiles/core.nix
   ];
-  home.shellAliases = {
-    update = ''
-      git -C ~/.nix pull
-      nix run github:nix-community/home-manager -- switch --impure -b backup --refresh --flake ~/.nix#${device}
-    '';
-  };
   home.sessionVariables = {
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
+    # Carries the `update` alias (was hand-copied here) plus the nix PATH /
+    # XDG_DATA_DIRS wiring for a systemd user session.
+    base = {
+      ubuntu.enable = true;
+    };
     programs = {
-      # Opting out of core. Both look accidental rather than deliberate -- this
-      # is a box reached only over ssh, and programs.ssh is what installs
-      # authorized_keys. Flip to true once you have confirmed you want them.
+      # Opting out of core. Not obviously deliberate, but left off -- unlike
+      # ssh, nothing depends on it.
       btop.enable = false;
-      ssh.enable = false;
     };
     services = {
       # syncthing.enable = true;

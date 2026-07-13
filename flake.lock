@@ -291,24 +291,6 @@
         "type": "github"
       }
     },
-    "ibus-bamboo": {
-      "inputs": {
-        "nixpkgs": "nixpkgs"
-      },
-      "locked": {
-        "lastModified": 1779206600,
-        "narHash": "sha256-1qj1Fx8RDdA1qEGWn+/nQCAu4HCei+YbF7SHDzuFw2I=",
-        "owner": "BambooEngine",
-        "repo": "ibus-bamboo",
-        "rev": "49e03d7a36b8a8b796950c158b545af8cf9707d4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "BambooEngine",
-        "repo": "ibus-bamboo",
-        "type": "github"
-      }
-    },
     "nix-apt": {
       "locked": {
         "lastModified": 1777391370,
@@ -421,22 +403,6 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1746232882,
-        "narHash": "sha256-MHmBH2rS8KkRRdoU/feC/dKbdlMkcNkB5mwkuipVHeQ=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "7a2622e2c0dbad5c4493cb268aba12896e28b008",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
         "lastModified": 1782978903,
         "narHash": "sha256-bG1LAS3YehMzp4RSXw99o3yMEO/Ktb0Tx29RCtEU0Tk=",
         "owner": "nixos",
@@ -511,14 +477,13 @@
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
-        "ibus-bamboo": "ibus-bamboo",
         "nix-apt": "nix-apt",
         "nix-darwin": "nix-darwin",
         "nix-flatpak": "nix-flatpak",
         "nix-homebrew": "nix-homebrew",
         "nixgl": "nixgl",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
         "system-manager": "system-manager"
       }
