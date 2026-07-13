@@ -54,7 +54,17 @@ in
         vim.opt.rtp:append("${pwd}")
 
         require('config.options')
-        require('plugins')
+
+        -- vim.pack.add throws if a clone fails (offline, upstream gone, rate
+        -- limited). This runs before nixvim's LSP block and before keymaps and
+        -- extras below, so an unguarded throw leaves a bare editor with no LSP
+        -- and no keymaps at all. Degrade to "plugins missing" instead.
+        local plugins_ok, plugins_err = pcall(require, 'plugins')
+        if not plugins_ok then
+          vim.schedule(function()
+            vim.notify('failed to load plugins:\n' .. tostring(plugins_err), vim.log.levels.ERROR)
+          end)
+        end
       '';
 
       extraConfigLuaPost = ''

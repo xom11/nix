@@ -56,12 +56,17 @@ require("colorizer").setup({})
 vim.pack.add({ { src = "https://github.com/folke/which-key.nvim" } }, { load = true })
 require("which-key").setup({})
 
--- Auto-load all plugin configs
+-- Auto-load all plugin configs. pcall so one broken file (or a plugin whose
+-- clone failed) doesn't abort the loop and take every later config with it --
+-- same policy as extras/init.lua.
 local source = debug.getinfo(1, "S").source:sub(2)
 local dir = vim.fn.fnamemodify(source, ":h")
 for _, file in ipairs(vim.fn.glob(dir .. "/*.lua", false, true)) do
 	local name = vim.fn.fnamemodify(file, ":t:r")
 	if name ~= "init" then
-		require("plugins." .. name)
+		local ok, err = pcall(require, "plugins." .. name)
+		if not ok then
+			vim.notify("Error loading plugins." .. name .. "\n" .. tostring(err), vim.log.levels.ERROR)
+		end
 	end
 end

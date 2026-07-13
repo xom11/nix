@@ -107,3 +107,8 @@ local cmdline = {
 
 cmp.setup(opts)
 cmp.setup.cmdline(":", cmdline[":"])
+
+-- Without this, confirming a function from cmp gives you `myFunc`, not `myFunc()`
+-- with the cursor inside. nvim-autopairs is set up in plugins/init.lua, which
+-- runs before this file.
+cmp.event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())

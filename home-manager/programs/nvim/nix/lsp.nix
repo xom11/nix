@@ -8,6 +8,16 @@ ckModule config ./..
   programs.nixvim.plugins = {
     lsp = {
       enable = true;
+      # The seam of the hybrid setup: nixvim owns the LSP config, Lua owns the
+      # completion engine, and nothing wired them together -- servers never
+      # learned what nvim-cmp supports. pcall because plugins/cmp.lua fetches
+      # cmp-nvim-lsp at runtime and may not have loaded.
+      capabilities = ''
+        local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+        if ok then
+          capabilities = vim.tbl_deep_extend("force", capabilities, cmp_nvim_lsp.default_capabilities())
+        end
+      '';
       servers = {
         pyright = {
           enable = true;

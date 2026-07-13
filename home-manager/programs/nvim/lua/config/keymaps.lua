@@ -21,8 +21,22 @@ map("n", "<leader>yr", ":let @+ = expand('%:.')<cr>", { desc = "Copy relative fi
 map("n", "<leader>yf", ":let @+ = expand('%:t')<cr>", { desc = "Copy filename" })
 
 -- PART: Diagnostics
-map("n", "<leader>en", vim.diagnostic.goto_next, { desc = "Go to next error", silent = true })
-map("n", "<leader>ep", vim.diagnostic.goto_prev, { desc = "Go to previous error", silent = true })
+-- goto_next/goto_prev are removed in 0.13, and jump()'s `float` in 0.14 -- hence
+-- jump() + on_jump. Referencing a removed function here would be a hard error at
+-- require time, taking every keymap below it down with it.
+local function diagnostic_jump(count)
+	return function()
+		vim.diagnostic.jump({
+			count = count,
+			on_jump = function(_, bufnr)
+				vim.diagnostic.open_float({ bufnr = bufnr, scope = "cursor", focus = false })
+			end,
+		})
+	end
+end
+
+map("n", "<leader>en", diagnostic_jump(1), { desc = "Go to next error", silent = true })
+map("n", "<leader>ep", diagnostic_jump(-1), { desc = "Go to previous error", silent = true })
 map("n", "<leader>es", vim.diagnostic.open_float, { desc = "Show diagnostic error message", silent = true })
 map("n", "<leader>ey", function()
 	local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
