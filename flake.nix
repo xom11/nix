@@ -5,11 +5,13 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+    nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
 
     nixgl.url = "github:nix-community/nixGL";
+    nixgl.inputs.nixpkgs.follows = "nixpkgs";
 
     nixvim.url = "github:nix-community/nixvim";
-    # nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -40,6 +42,10 @@
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    # Without these, agenix drags in its own home-manager and nix-darwin (both
+    # pinned months back) purely to run its own checks.
+    agenix.inputs.home-manager.follows = "home-manager";
+    agenix.inputs.darwin.follows = "nix-darwin";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -69,8 +75,24 @@
 
       lib = import ./lib { inherit inputs flakeOverlays; };
 
+      systems = [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ];
+      forAllSystems = inputs.nixpkgs.lib.genAttrs systems;
+      pkgsFor = system: inputs.nixpkgs.legacyPackages.${system};
+
     in
     {
+      # Local packages (fcitx5-macos, neofetch2, raiseorlaunch), consumable
+      # from outside this flake.
+      overlays.default = import ./overlays;
+
+      formatter = forAllSystems (system: (pkgsFor system).alejandra);
+
+      devShells = forAllSystems (system: {
+        default = (pkgsFor system).mkShell {
+          packages = with pkgsFor system; [ alejandra nixd deadnix statix ];
+        };
+      });
+
       darwinConfigurations = {
         macmini = lib.mkDarwin { device = "macmini"; };
         airm3 = lib.mkDarwin { device = "airm3"; };
