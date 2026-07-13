@@ -41,7 +41,6 @@ ckModule config ./..
         html.enable = true;
         astro.enable = true;
         phpactor.enable = true;
-        svelte.enable = false;
         dockerls.enable = true;
         bashls.enable = true;
         clangd.enable = true;

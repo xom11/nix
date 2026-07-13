@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/stevearc/conform.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/stevearc/conform.nvim" } }, { load = true, confirm = false })
 
 local opts = {
 	notify_on_error = true,
@@ -13,7 +13,6 @@ local opts = {
 		lua = { "stylua" },
 		markdown = { "prettierd", "prettier", stop_after_first = true },
 		nix = { "alejandra" },
-		ps1 = { "psscriptanalyzer" },
 		python = { "black" },
 		rust = { "rustfmt" },
 		scss = { "prettierd", "prettier", stop_after_first = true },
@@ -21,25 +20,13 @@ local opts = {
 		toml = { "taplo" },
 		typescript = { "prettierd", "prettier", stop_after_first = true },
 		typescriptreact = { "prettierd", "prettier", stop_after_first = true },
-		yaml = { "yamllint", "yamlfmt", stop_after_first = true },
+		-- yamllint used to be first here, but it is a linter, not a conform
+		-- formatter -- conform skipped it and fell through to yamlfmt anyway.
+		yaml = { "yamlfmt" },
 	},
-	formatters = {
-		psscriptanalyzer = {
-			command = "pwsh",
-			args = {
-				"-NoProfile",
-				"-NonInteractive",
-				"-Command",
-				[[
-            $inputString = [Console]::In.ReadToEnd()
-            if ([string]::IsNullOrWhiteSpace($inputString)) { exit 0 }
-            $result = Invoke-Formatter -ScriptDefinition $inputString
-            if ($result) { $result } else { $inputString }
-        ]],
-			},
-			stdin = true,
-		},
-	},
+	-- ps1 = { "psscriptanalyzer" } lived here with a custom `pwsh` formatter, but
+	-- pwsh is not on nvim's PATH, so it could only ever fail. Add `powershell` to
+	-- home.packages in default.nix if you want it back.
 	format_on_save = false,
 }
 

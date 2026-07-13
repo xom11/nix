@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" } }, { load = true, confirm = false })
 
 local opts = {
 	auto_clean_after_session_restore = true,

@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/xiyaowong/transparent.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/xiyaowong/transparent.nvim" } }, { load = true, confirm = false })
 
 local opts = {
 	extra_groups = {
@@ -17,13 +17,6 @@ local opts = {
 		-- Lualine
 		"LualineNormal",
 		"LualineNC",
-		-- FzfLua
-		"FzfLuaBorder",
-		"FzfLuaNormal",
-		"FzfLuaTitle",
-		"FzfLuaPreviewBorder",
-		"FzfLuaPreviewNormal",
-		"FzfLuaPreviewTitle",
 	},
 	exclude_groups = {
 		"CursorLine",

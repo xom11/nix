@@ -1,8 +1,10 @@
-vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-frecency.nvim" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-file-browser.nvim" } }, { load = true })
-vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" } }, { load = true, confirm = false })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-frecency.nvim" } }, { load = true, confirm = false })
+-- No telescope-fzf-native: it needs a `make` step vim.pack does not run, so it
+-- was cloned but never built and never load_extension("fzf")'d -- telescope was
+-- using the Lua sorter regardless. Re-add it via pkgs.vimPlugins if wanted.
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-file-browser.nvim" } }, { load = true, confirm = false })
+vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope.nvim" } }, { load = true, confirm = false })
 
 local opts = {
 	defaults = {
@@ -43,7 +45,7 @@ local opts = {
 	},
 }
 
-config = function(_, opts)
+local config = function(_, opts)
 	local telescope = require("telescope")
 	opts.extensions = {
 		["ui-select"] = {

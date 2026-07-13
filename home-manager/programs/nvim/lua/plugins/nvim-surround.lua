@@ -10,7 +10,7 @@
 vim.g.nvim_surround_no_normal_mappings = true
 vim.g.nvim_surround_no_visual_mappings = true
 
-vim.pack.add({ { src = "https://github.com/kylechui/nvim-surround" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/kylechui/nvim-surround" } }, { load = true, confirm = false })
 
 require("nvim-surround").setup({})
 

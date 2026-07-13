@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim" } }, { load = true, confirm = false })
 
 local opts = {
 	current_line_blame = false,

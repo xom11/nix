@@ -3,7 +3,7 @@
 -- explicitly -- `auto_install` is not a real option and gets dropped silently.
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-}, { load = true })
+}, { load = true, confirm = false })
 
 -- Folds
 vim.opt.foldmethod = "expr"

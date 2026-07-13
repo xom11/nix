@@ -1,7 +1,8 @@
-vim.pack.add({ { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" } }, { load = true, confirm = false })
 
 local opts = {
-  file_types = { "markdown", "Avante" },
+  -- "Avante" was in here, but avante.nvim is not installed.
+  file_types = { "markdown" },
 }
 
 require("render-markdown").setup(opts)

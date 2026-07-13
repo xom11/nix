@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/folke/todo-comments.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/folke/todo-comments.nvim" } }, { load = true, confirm = false })
 -- https://github.com/folke/todo-comments.nvim/
 -- Highlight and search for todo comments like TODO, HACK, BUG in your code
 local opts = {

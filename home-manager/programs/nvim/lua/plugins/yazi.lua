@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/mikavilpas/yazi.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/mikavilpas/yazi.nvim" } }, { load = true, confirm = false })
 
 require("yazi").setup({
 	open_for_directories = false,

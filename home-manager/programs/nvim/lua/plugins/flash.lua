@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/folke/flash.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/folke/flash.nvim" } }, { load = true, confirm = false })
 -- https://github.com/folke/flash.nvim/
 local opts = {
 	jump = {

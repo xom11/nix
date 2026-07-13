@@ -1,4 +1,4 @@
-vim.pack.add({ { src = "https://github.com/akinsho/toggleterm.nvim" } }, { load = true })
+vim.pack.add({ { src = "https://github.com/akinsho/toggleterm.nvim" } }, { load = true, confirm = false })
 -- NOTE:
 -- 1. auto_scroll = false for AI terminals: fixes bug when scrolling while AI is generating output
 -- 2. hidden = true: separates terminal from main list, won't be affected by `open_mapping`
@@ -88,11 +88,18 @@ end
 
 -- Terminal mode keymaps
 -- vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
-vim.keymap.set("n", "<Esc>", function()
-	if vim.bo.buftype == "terminal" then
-		vim.cmd("ToggleTerm")
-	end
-end, { desc = "Close terminal in normal mode" })
+--
+-- Buffer-local, not global: this used to claim <Esc> in every normal-mode buffer
+-- just to no-op everywhere except terminals.
+vim.api.nvim_create_autocmd("TermOpen", {
+	group = vim.api.nvim_create_augroup("ToggleTermEsc", { clear = true }),
+	callback = function(args)
+		vim.keymap.set("n", "<Esc>", "<cmd>ToggleTerm<cr>", {
+			buffer = args.buf,
+			desc = "Close terminal in normal mode",
+		})
+	end,
+})
 
 -- Keymaps
 local keymaps = {
