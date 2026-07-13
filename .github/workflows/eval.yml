@@ -1,0 +1,63 @@
+name: Eval
+
+# Every flake output must still evaluate. This is the gate that was missing
+# when desktop/x1g6/vmware rotted: renaming a module in home-manager/ silently
+# breaks any host that has not been rebuilt since, and nothing catches it.
+#
+# `nix flake check` is not usable here -- lib/mkConfigs.nix reads
+# builtins.currentSystem and $USER, so eval is impure by design. `nix eval
+# --impure` per host gives the same coverage.
+#
+# --system pins the host's real architecture, so a14/vmware (aarch64) are
+# checked from the x86_64 runner too. Eval only; nothing is built.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: homeConfigurations
+        run: |
+          for h in rog server desktop minimal; do
+            echo "::group::hm/$h"
+            nix eval --impure --system x86_64-linux ".#homeConfigurations.$h.activationPackage.drvPath"
+            echo "::endgroup::"
+          done
+          echo "::group::hm/a14"
+          nix eval --impure --system aarch64-linux ".#homeConfigurations.a14.activationPackage.drvPath"
+          echo "::endgroup::"
+
+      - name: nixosConfigurations
+        run: |
+          echo "::group::nixos/x1g6"
+          nix eval --impure --system x86_64-linux ".#nixosConfigurations.x1g6.config.system.build.toplevel.drvPath"
+          echo "::endgroup::"
+          echo "::group::nixos/vmware"
+          nix eval --impure --system aarch64-linux ".#nixosConfigurations.vmware.config.system.build.toplevel.drvPath"
+          echo "::endgroup::"
+
+      - name: systemConfigs
+        run: |
+          nix eval --impure ".#systemConfigs.x86_64-linux.desktop.drvPath"
+          nix eval --impure ".#systemConfigs.aarch64-linux.a14.drvPath"
+
+  darwin:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: darwinConfigurations
+        run: |
+          for h in macmini airm3; do
+            echo "::group::darwin/$h"
+            nix eval --impure ".#darwinConfigurations.$h.system.drvPath"
+            echo "::endgroup::"
+          done

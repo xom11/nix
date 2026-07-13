@@ -16,34 +16,11 @@ git clone https://github.com/xom11/nix.git ~/.nix -q --depth 1
 
 ## Architecture
 
-### Flake Outputs
+The flake outputs and the module tree are documented in one place — the repo root —
+so they cannot drift apart:
 
-| Builder | Outputs |
-|---|---|
-| `lib.mkDarwin` | `darwinConfigurations.{macmini,airm3}` |
-| `lib.mkNixos` | `nixosConfigurations.{x1g6,vmware}` |
-| `lib.mkHomeManager` | `homeConfigurations.{server,desktop}` |
-| `lib.mkSystemManager` | `systemConfigs.desktop` |
-
-Each builder wires nix-darwin/NixOS/home-manager with `hosts/{device}/configuration.nix` and `hosts/{device}/home.nix`.
-
-### Module Tree
-
-```
-nix-darwin/          # macOS system modules (brew, launchd, settings)
-home-manager/
-  base/              # username, homeDir, stateVersion, sessionVariables
-  programs/          # bin, btop, git, lazyvim, nixvim, ssh, tmux, yazi, zsh
-  dotfiles/          # app configs linked via mkOutOfStoreSymlink
-  environments/      # fonts, gnome, i18n, i3wm, wayland
-  pkgs/              # dev, test, gui package groups
-  services/          # syncthing
-nixos/               # NixOS base, programs, services, systemPackages
-system-manager/      # alternative system config for non-macOS Linux
-overlays/            # custom packages
-hosts/{device}/      # per-device configuration.nix + home.nix
-configs/             # non-Nix config files: ansible playbooks, kanata layouts
-```
+- [`README.md`](https://github.com/xom11/nix/blob/main/README.md) — platforms, rebuild commands, directory layout
+- [`CLAUDE.md`](https://github.com/xom11/nix/blob/main/CLAUDE.md) — module system, option paths, how to check a host without rebuilding it
 
 ## Troubleshooting
 

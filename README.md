@@ -19,46 +19,54 @@ git clone https://github.com/xom11/nix.git ~/.nix --depth 1
 | Platform | Device | Rebuild Command |
 |----------|--------|-----------------|
 | macOS (nix-darwin) | `macmini`, `airm3` | `sudo darwin-rebuild switch --impure --flake ~/.nix#<device>` |
-| NixOS | `x1g6`, `vmware` | `sudo nixos-rebuild switch --flake ~/.nix#<device>` |
-| Linux (home-manager) | `server`, `desktop` | `home-manager switch --flake ~/.nix#<device>` |
-| Linux (system-manager) | `desktop` | `sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#desktop` |
+| NixOS | `x1g6`, `vmware` | `sudo nixos-rebuild switch --impure --flake ~/.nix#<device>` |
+| Linux (home-manager) | `rog`, `server`, `desktop`, `a14`, `minimal` | `home-manager switch --impure -b backup --flake ~/.nix#<device>` |
+| Linux (system-manager) | `desktop`, `a14` | `sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#<device>` |
 | Windows | — | PowerShell scripts + symlinks (no Nix) |
+
+`--impure` is required: `lib/mkConfigs.nix` reads `$USER` and `builtins.currentSystem` at eval time.
 
 ## Architecture
 
 ```
 flake.nix                # Entry point — inputs & outputs
 lib/                     # mkDarwin, mkNixos, mkHomeManager, mkSystemManager
-hosts/{device}/          # Per-device configuration.nix + home.nix
+hosts/{device}/          # Per-device configuration.nix and/or home.nix
 ├── macmini/             # Apple Mac Mini (M-series)
 ├── airm3/               # MacBook Air M3
 ├── x1g6/                # ThinkPad X1 Carbon Gen 6 (NixOS + i3wm)
-├── vmware/              # VMware VM (NixOS)
+├── vmware/              # VMware VM (NixOS, aarch64)
+├── rog/                 # ASUS ROG laptop (home-manager)
 ├── server/              # Headless Linux server
 ├── desktop/             # Linux desktop (home-manager + system-manager)
-└── zenbook-a14/         # ASUS ZenBook A14 (Snapdragon ARM — requires manual fixes)
+├── a14/                 # ASUS ZenBook A14 (Snapdragon ARM — see hosts/a14/README.md)
+└── minimal/             # Minimal home-manager profile
 nix-darwin/              # macOS system modules
 ├── base/                #   Nix settings, sudo, garbage collection
 ├── brew/                #   Homebrew brews + casks (25+ apps)
 ├── launchd/             #   Launch daemons (kanata)
 └── setting/             #   Dock, Finder, trackpad, keyboard, dark mode
 home-manager/            # User-level modules (cross-platform)
-├── base/                #   User, home dir, env variables
-├── programs/            #   zsh, git, tmux, nixvim, lazyvim, yazi, ssh, btop
-├── dotfiles/            #   Symlinked configs (kitty, vscode, karabiner, ...)
-├── environments/        #   fonts, i3wm, i18n (Vietnamese), wayland
-├── pkgs/                #   Package groups: dev, gui, test
-└── services/            #   syncthing
+├── base/                #   User, home dir, env variables (+ macos/, ubuntu/)
+├── programs/            #   btop, git, nvim, ssh, tmux, yazi, zsh
+├── dotfiles/            #   Symlinked configs (ai/, browser/, terminal/, macos/, vscode, ...)
+├── environments/        #   fonts, gnome, i18n (Vietnamese), i3wm, sway, wayland
+├── pkgs/                #   Package groups: dev, lang, tools, nixos, ubuntu
+└── services/            #   agenix, syncthing
 nixos/                   # NixOS system modules
 ├── base/                #   Boot, network, locale, users, bluetooth
 ├── programs/            #   nix-ld
-├── services/            #   Docker, Tailscale, OpenSSH
-└── systemPackages/      #   Python 3.10-3.13
-system-manager/          # Non-NixOS Linux system config (kanata, sudoers)
+├── services/            #   environments, hibernate, ibus, kanata, keyd
+└── systemPackages/      #   Python 3.11-3.13
+system-manager/          # Non-NixOS Linux system config (a14, desktop)
+├── base/                #   sudoers secure_path
+├── etc/trackpad/        #   libinput trackpad tuning
+└── services/            #   docker, kanata, keyd, openssh
 windows/                 # Windows config (no Nix — PowerShell + symlinks)
-├── ahk/                 #   AutoHotkey v2: window manager, app launcher, kanata, input switcher
-├── dotfiles/            #   PowerShell profile, Windows Terminal, PowerToys + symlink script
-└── scripts/             #   System tweaks (registry), debloat, startup services
+├── lib/                 #   Logging, Package, Symlink modules
+├── modules/             #   packages/ (winget, scoop, npm, psmodules), services/ (ahk, kanata, sshd)
+├── apply.ps1            #   Entry point
+└── links.ps1            #   Symlinks the shared dotfiles from home-manager/dotfiles/
 overlays/                # Custom packages (fcitx5-macos, neofetch2, raiseorlaunch)
 configs/                 # Non-Nix configs: kanata keyboards, Ansible playbooks
 scripts/                 # Install & bootstrap scripts
@@ -95,7 +103,7 @@ modules.home-manager = {
 
 **Terminal** — Zsh + Oh-My-Zsh + Powerlevel10k, Tmux with session persistence, Yazi file manager, 75+ aliases
 
-**Editors** — Three Neovim configs (nixvim, lazyvim, nvimpack) sharing keymaps and plugins
+**Editors** — Neovim via [nixvim](https://github.com/nix-community/nixvim), with the Lua config kept as real files and symlinked in
 
 **Keyboard** — [Kanata](https://github.com/jtroo/kanata) remapper on all platforms (macOS, NixOS, Ubuntu, Windows)
 
@@ -127,6 +135,8 @@ modules.home-manager = {
 | `nix-flatpak` | Declarative Flatpak |
 | `ibus-bamboo` | Vietnamese input method |
 | `nixgl` | OpenGL wrapper for non-NixOS |
+| `nix-apt` | Declarative apt packages on Debian/Ubuntu |
+| `beckon`, `dotbrowser` | Custom tools, shipped as overlays |
 
 ## Documentation
 
@@ -138,7 +148,7 @@ Guides also available in [`docs/`](docs/):
 - [Linux Setup](docs/setup/linux.md)
 - [NixOS Setup](docs/setup/nixos.md)
 - [WSL Setup](docs/setup/wsl.md)
-- [Windows Setup](windows/install.md)
+- [Windows Setup](docs/setup/windows.md)
 - [Creating Modules](docs/guides/modules.md)
 - [Keyboard Shortcuts](docs/guides/shortcuts.md)
 
