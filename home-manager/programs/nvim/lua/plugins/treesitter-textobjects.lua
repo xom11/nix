@@ -51,20 +51,11 @@ vim.keymap.set({ "n", "x", "o" }, "[d", function()
 end, { desc = "Previous conditional" })
 
 
-local ts_repeat_move = require "nvim-treesitter-textobjects.repeatable_move"
+local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
 
--- Repeat movement with ; and ,
--- ensure ; goes forward and , goes backward regardless of the last direction
-vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next, { desc = "Repeat last move next" })
-vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous, { desc = "Repeat last move previous" })
-
--- vim way: ; goes to the direction you were moving.
--- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
--- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
-
-opts = {
-
-}
-return {
-  opts = opts,
-}
+-- Not ; and , -- flash owns those for f/F/t/T repeat (its char mode maps
+-- { f, F, t, T, ;, , }), and this file loads after flash.lua, so binding them
+-- here would silently kill repeat-last-char-motion.
+-- ; always goes forward and , backward, regardless of the last direction.
+vim.keymap.set({ "n", "x", "o" }, "<M-;>", ts_repeat_move.repeat_last_move_next, { desc = "Repeat last move next" })
+vim.keymap.set({ "n", "x", "o" }, "<M-,>", ts_repeat_move.repeat_last_move_previous, { desc = "Repeat last move previous" })

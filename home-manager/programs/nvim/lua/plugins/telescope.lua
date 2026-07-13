@@ -82,7 +82,9 @@ map("n", "<leader><leader>", "<cmd>Telescope frecency workspace=CWD<cr>", { desc
 map("n", "<leader>fc", "<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>", { desc = "Telescope: Current Path" })
 map("n", "<leader>fo", "<cmd>Telescope oldfiles only_cwd=true<cr>", { desc = "Telescope: Oldfiles (CWD)" })
 map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Telescope: LSP Definitions", silent = true, noremap = true })
-map("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "Telescope: LSP References", silent = true, noremap = true })
+-- grr, not gr: Neovim 0.12 ships grn/gra/grr/gri/grt/grx, so binding bare `gr`
+-- makes it a prefix of all six and every press waits out 'timeoutlen' first.
+map("n", "grr", "<cmd>Telescope lsp_references<CR>", { desc = "Telescope: LSP References", silent = true, noremap = true })
 map("n", "gD", "<cmd>Telescope lsp_declarations<CR>", { desc = "Telescope: LSP Declarations", silent = true, noremap = true })
 
 config(nil, opts)
