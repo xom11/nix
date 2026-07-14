@@ -94,7 +94,7 @@ imports = [ ../../home-manager ../../profiles/core.nix ../../profiles/linux-gui.
 
 | Profile | Contents | Used by |
 |---|---|---|
-| `core.nix` | zsh, git, nvim, tmux, yazi, ssh, btop, pkgs.{dev,lang,tools} | every host except `minimal` |
+| `core.nix` | zsh, git, nvim, tmux, herdr, yazi, ssh, btop, pkgs.{dev,lang,tools} | every host except `minimal` |
 | `linux-gui.nix` | fonts, i18n, rofi, terminal.kitty — **no window manager** | a14, desktop, x1g6, vmware |
 | `macos.nix` | base.macos, fonts, kitty, conda, vscode, hammerspoon, sleepwatcher | macmini, airm3 |
 
@@ -171,7 +171,9 @@ profiles/            # shared module sets: core, linux-gui, macos (see below)
 home-manager/
   base/              # username, homeDir, stateVersion, sessionVariables
                      #   + macos/, ubuntu/, nixos/ — each carries that platform's `update` alias
-  programs/          # btop, git, nvim, ssh, tmux, yazi, zsh
+  programs/          # btop, git, herdr, nvim, ssh, tmux, yazi, zsh
+                     #   herdr: config only -- the binary is installed out-of-band,
+                     #   pkgs.herdr does not build on darwin (zig/DarwinSdkNotFound)
   dotfiles/          # ai/{aichat.d,claude.d,codex.d,gemini.d,opencode.d}
                      # browser/{firefox,qutebrowser}, terminal/{alacritty,kitty}
                      # macos/{aerospace,hammerspoon,karabiner,sleepwatcher}

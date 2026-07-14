@@ -12,6 +12,7 @@ in {
     programs = {
       btop.enable = on;
       git.enable = on;
+      herdr.enable = on;
       nvim.enable = on;
       ssh.enable = on;
       tmux.enable = on;
