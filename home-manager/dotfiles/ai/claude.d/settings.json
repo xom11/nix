@@ -14,7 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/context-mode-cache-heal.mjs"
+            "command": "\"/Users/lenamkhanh/.claude/hooks/context-mode-cache-heal.mjs\""
           }
         ]
       }
@@ -45,7 +45,8 @@
     "frontend-design@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "context-mode@context-mode": true
+    "context-mode@context-mode": true,
+    "clangd-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "context-mode": {

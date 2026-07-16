@@ -34,7 +34,8 @@ SECTION: SETTINGS
 settings.scrollStepSize = 200;
 
 // Disable surfingkeys on specific URLs
-settings.blocklistPattern = /https?:\/\/(www\.youtube\.com|localhost(:\d+)?|127\.0\.0\.1(:\d+)?).*/;
+settings.blocklistPattern =
+  /https?:\/\/(www\.youtube\.com|localhost(:\d+)?|127\.0\.0\.1(:\d+)?|.*ninjaverse\.xyz).*/;
 
 // Default search engine
 settings.defaultSearchEngine = "gg";
@@ -129,9 +130,10 @@ function toggleFocusUrl(url) {
 
 // prettier-ignore
 [
-  ["<Space>gh", "GitHub",            "https://github.com"],
+  // ["<Space>gh", "GitHub",            "https://github.com"],
+  ["<Space>gh", "GitHub hoctotbachkhoa",            "https://github.com/Hoctotbachkhoa/hoctotbachkhoa"],
+  ["<Space>gn", "GitHub ninjaverse",            "https://github.com/ninjaverse-xyz/ninjaverse"],
   ["<Space>gs", "GitHub stars page", "https://github.com/stars"],
   ["<Space>fb", "Facebook",          "https://www.facebook.com/"],
-  ["<Space>ht", "hoctotbachkoa",     "https://hoctotbachkoa.com/"],
+  ["<Space>ht", "hoctotbachkoa",     "https://hoctotbachhoa.com/"],
 ].forEach(([key, desc, url]) => api.mapkey(key, desc, () => toggleFocusUrl(url)));
-
