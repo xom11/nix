@@ -7,6 +7,7 @@
 #   3. clone/pull this repo, symlink ~/.ssh/config -> the repo's ssh config
 #      (single source of truth -- edit the repo, `git pull`, done; no rewrite here)
 #   4. set a login password and start sshd (incoming, port 8022)
+#   5. install a Termux:Boot script so sshd auto-starts after reboot
 #
 # Auth is password-based for now -- no keys yet.
 # Run Tailscale on the phone first, then:  sh install.sh
@@ -66,6 +67,20 @@ log "Starting sshd..."
 pkill sshd 2>/dev/null || true
 sshd
 
+# --- 5. Auto-start sshd on boot (Termux:Boot) ---------------------------------
+# Needs the Termux:Boot app installed AND opened once so Android registers it.
+# termux-wake-lock keeps Android from killing sshd in the background.
+BOOT_DIR="$HOME/.termux/boot"
+mkdir -p "$BOOT_DIR"
+cat >"$BOOT_DIR/start-sshd" <<'BOOT'
+#!/data/data/com.termux/files/usr/bin/sh
+# Auto-started by Termux:Boot on device boot.
+termux-wake-lock
+sshd
+BOOT
+chmod +x "$BOOT_DIR/start-sshd"
+log "Installed boot autostart: $BOOT_DIR/start-sshd"
+
 cat <<'EOF'
 
 ============================================================
@@ -83,7 +98,7 @@ cat <<'EOF'
  Notes:
    - Tailscale must be running on this phone.
    - Target machines need PasswordAuthentication enabled in their sshd.
-   - sshd does NOT auto-start after reboot. For that, install the
-     Termux:Boot addon (F-Droid) and have it run 'sshd' on boot.
+   - sshd auto-starts on reboot via ~/.termux/boot/start-sshd.
+     Open the Termux:Boot app ONCE so Android enables autostart.
 ============================================================
 EOF
