@@ -1,3 +1,13 @@
+# vmware — NixOS VM (aarch64)
+
+Rebuild (shell alias: `update`):
+
+```sh
+sudo nixos-rebuild switch --impure --flake ~/.nix#vmware
+```
+
+---
+
 1. Installation ( bootstrapping )
 ```
 curl -L https://raw.githubusercontent.com/xom11/nix/refs/heads/main/hosts/vmware/install.sh | sh

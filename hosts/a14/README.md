@@ -1,5 +1,20 @@
 # ASUS ZenBook A14 (UX3407QA) — Linux on Snapdragon X Plus
 
+## Rebuild
+
+User config — home-manager (shell alias: `update`):
+
+```sh
+home-manager switch --impure -b backup --flake ~/.nix#a14
+```
+
+System config — system-manager (shell alias: `system-manager-update`):
+
+```sh
+sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#a14
+```
+
+
 Verified on **Ubuntu 26.04 LTS "resolute", kernel `7.0.0-27-generic`**
 (`linux-image-generic-hwe-26.04`), 2026-07-10. Boots to the desktop in ~7.2 s.
 

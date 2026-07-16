@@ -1,3 +1,13 @@
+# server — headless Linux (home-manager)
+
+Rebuild (shell alias: `update`):
+
+```sh
+home-manager switch --impure -b backup --flake ~/.nix#server
+```
+
+---
+
 work in server/macos/wsl/...
 ```
 curl -L https://raw.githubusercontent.com/xom11/nix/refs/heads/main/hosts/server/setup.sh | sh
