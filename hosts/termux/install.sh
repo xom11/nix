@@ -6,7 +6,7 @@
 #   2. install openssh (client + sshd) + git
 #   3. clone/pull this repo, symlink ~/.ssh/config -> the repo's ssh config
 #      (single source of truth -- edit the repo, `git pull`, done; no rewrite here)
-#   4. set a login password and start sshd (incoming, port 8022)
+#   4. auto-set a login password and start sshd (incoming, port 8022)
 #   5. install a Termux:Boot script so sshd auto-starts after reboot
 #
 # Auth is password-based for now -- no keys yet.
@@ -53,14 +53,16 @@ ln -sfn "$SSH_CONFIG_SRC" "$HOME/.ssh/config"
 log "Symlinked ~/.ssh/config -> $SSH_CONFIG_SRC"
 
 # --- 4. Incoming sshd (port 8022) ---------------------------------------------
-# Termux sshd listens on 8022; password auth needs a login password set once.
-PW_MARK="$HOME/.ssh/.termux_password_set"
-if [ ! -f "$PW_MARK" ]; then
-  log "Set a password for incoming ssh logins (port 8022):"
-  passwd
-  touch "$PW_MARK"
+# Fresh Termux has NO login password, so sshd password auth fails until one is
+# set. Termux `passwd` reads stdin and never prompts for a current password, so
+# two piped lines set it non-interactively. WEAK on purpose (reachable only over
+# your private Tailscale tailnet) -- change LOGIN_PW or run `passwd` for stronger.
+LOGIN_PW="1"
+log "Setting Termux login password to '$LOGIN_PW' (for incoming ssh on 8022)..."
+if printf '%s\n%s\n' "$LOGIN_PW" "$LOGIN_PW" | passwd >/dev/null 2>&1; then
+  log "Password set."
 else
-  log "Login password already set (delete $PW_MARK to redo 'passwd')."
+  log "Auto-set failed -- run 'passwd' manually."
 fi
 
 log "Starting sshd..."
@@ -94,6 +96,7 @@ cat <<'EOF'
  Incoming (machine -> this phone), port 8022:
    ssh 9r                         (already aliased on your machines)
    ssh -p 8022 <phone-tailscale-ip>
+   login password: 1  (change anytime with: passwd)
 
  Notes:
    - Tailscale must be running on this phone.
