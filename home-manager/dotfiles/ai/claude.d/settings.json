@@ -14,7 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/lenamkhanh/.claude/hooks/context-mode-cache-heal.mjs\""
+            "command": "~/.claude/hooks/context-mode-cache-heal.mjs"
           }
         ]
       }
