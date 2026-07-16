@@ -91,11 +91,15 @@ Host github.com
   IdentityFile ~/.ssh/id_ed25519_l3n4k4
   IdentitiesOnly yes
 
-# Connection multiplexing only on macOS/Linux. Windows OpenSSH has no Unix-socket
-# ControlMaster support and dies with "getsockname failed: Not a socket".
-# `uname` succeeds on macOS/Linux (-> multiplexing on) and is absent from the
-# Windows cmd.exe PATH that runs Match exec (-> exec fails -> multiplexing off).
-Match originalhost macmini,macmini-tunnel,rog,rog-tunnel exec "uname"
+# Connection multiplexing only on macOS/Linux desktops. Two platforms opt out:
+#   - Windows: OpenSSH has no Unix-socket ControlMaster support and dies with
+#     "getsockname failed: Not a socket". `uname` is absent from the cmd.exe
+#     PATH that runs Match exec, so exec fails and multiplexing stays off.
+#   - Termux/Android: $HOME (/data/data/com.termux/files/home) is so long the
+#     control-socket path overflows the ~108-char Unix-socket limit
+#     ("unix_listener: path too long"). `uname -a` says "Android" there, so
+#     `grep -qv Android` fails and multiplexing stays off.
+Match originalhost macmini,macmini-tunnel,rog,rog-tunnel exec "uname -a | grep -qv Android"
   ControlMaster auto
   ControlPath ~/.ssh/control-%n-%C
   ControlPersist 8h
