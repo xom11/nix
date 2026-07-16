@@ -3,11 +3,12 @@
 #
 # One-shot Termux bootstrap for the phone:
 #   1. pkg update && pkg upgrade
-#   2. install openssh (client + sshd) + git
+#   2. install openssh (client + sshd) + git + curl
 #   3. clone/pull this repo, symlink ~/.ssh/config -> the repo's ssh config
 #      (single source of truth -- edit the repo, `git pull`, done; no rewrite here)
 #   4. auto-set a login password and start sshd (incoming, port 8022)
 #   5. install a Termux:Boot script so sshd auto-starts after reboot
+#   6. install a Nerd Font so prompt/file icons render (not boxes)
 #
 # Auth is password-based for now -- no keys yet.
 # Run Tailscale on the phone first, then:  sh install.sh
@@ -27,8 +28,8 @@ pkg update -y
 pkg upgrade -y
 
 # --- 2. Install OpenSSH + git --------------------------------------------------
-log "Installing openssh + git..."
-pkg install -y openssh git
+log "Installing openssh + git + curl..."
+pkg install -y openssh git curl
 
 # --- 3. Clone/pull repo, symlink ssh config -----------------------------------
 if [ -d "$REPO_DIR/.git" ]; then
@@ -82,6 +83,25 @@ sshd
 BOOT
 chmod +x "$BOOT_DIR/start-sshd"
 log "Installed boot autostart: $BOOT_DIR/start-sshd"
+
+# --- 6. Nerd Font (Termux ships without prompt/icon glyphs) --------------------
+# Termux renders a single ~/.termux/font.ttf. Drop in MesloLGS Nerd Font so
+# powerline/git/file icons show instead of boxes. Skipped if a font is present.
+FONT="$HOME/.termux/font.ttf"
+FONT_URL="https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+if [ ! -f "$FONT" ]; then
+  log "Installing MesloLGS Nerd Font..."
+  mkdir -p "$HOME/.termux"
+  if curl -fsSL -o "$FONT" "$FONT_URL"; then
+    termux-reload-settings 2>/dev/null || true
+    log "Nerd Font installed."
+  else
+    log "Font download failed -- skipping (icons may show as boxes)."
+    rm -f "$FONT"
+  fi
+else
+  log "Termux font already present -- leaving it."
+fi
 
 cat <<'EOF'
 
