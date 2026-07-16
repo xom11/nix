@@ -1,5 +1,2 @@
-#!/usr/bin/env bash
-set -euo pipefail
-git clone https://github.com/xom11/nix.git /tmp/nix -q --depth 1
-sudo nix --extra-experimental-features 'nix-command flakes' run github:nix-community/disko -- --mode disko /tmp/nix/hosts/x1g6/disko.nix
-sudo nixos-install --impure --flake /tmp/nix#x1g6
+git clone https://github.com/xom11/nix.git ~/.nix -q --depth 1
+sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
