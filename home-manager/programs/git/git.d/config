@@ -6,9 +6,13 @@
     defaultBranch = main
 
 [credential "https://github.com"]
-    helper = !gh auth git-credential
+	helper = 
+	helper = !/home/kln/.nix-profile/bin/.gh-wrapped auth git-credential
 
 [push]
     autoSetupRemote = true
 
 
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/kln/.nix-profile/bin/.gh-wrapped auth git-credential
