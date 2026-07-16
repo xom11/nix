@@ -7,11 +7,21 @@ Reproducible, multi-platform system configuration powered by [Nix Flakes](https:
 ## Quick Start
 
 ```bash
-# One-line install
+# One-line install (installs Nix + clones the repo)
 curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/install | sh
 
 # Or clone manually
 git clone https://github.com/xom11/nix.git ~/.nix --depth 1
+```
+
+### Android (Termux)
+
+Fresh phone — updates packages, installs openssh, clones the repo, wires SSH
+aliases over Tailscale, auto-sets a login password, and drops in a Nerd Font.
+Its own block so GitHub's copy button grabs exactly this line:
+
+```sh
+pkg install -y curl && curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/termux/install.sh | sh
 ```
 
 ## Supported Platforms
