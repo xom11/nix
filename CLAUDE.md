@@ -82,39 +82,20 @@ All modules receive these extra args (defined in `lib/mkConfigs.nix`):
 system-manager's own `_module.args.system-manager` with the flake input of the
 same name.
 
-### Profiles
+### Per-host module lists
 
-`profiles/` holds the module sets shared across hosts, so the common toolkit is
-defined once rather than copied into every `hosts/*/home.nix` (that copying is
-what let three hosts silently rot). A host imports the profiles it wants:
+Each `hosts/*/home.nix` carries its full `modules.home-manager.*.enable` list —
+there is deliberately **no shared profile layer** (one existed briefly and was
+removed; the owner prefers each host to read as a complete inventory). The
+corollary: renaming or removing a module means updating every host that enables
+it, and nothing but CI will tell you a host was missed. After touching any
+module's directory name or any host file, run the per-host eval check (see
+"Checking a host" above) — CI (`.github/workflows/eval.yml`) runs the same
+checks on push.
 
-```nix
-imports = [ ../../home-manager ../../profiles/core.nix ../../profiles/linux-gui.nix ];
-```
-
-| Profile | Contents | Used by |
-|---|---|---|
-| `core.nix` | zsh, git, nvim, tmux, herdr, yazi, ssh, btop, pkgs.{dev,lang,tools} | every host except `minimal` |
-| `linux-gui.nix` | fonts, i18n, rofi, terminal.kitty — **no window manager** | a14, desktop, x1g6, vmware |
-| `macos.nix` | base.macos, fonts, kitty, conda, vscode, hammerspoon, sleepwatcher | macmini, airm3 |
-
-Profiles enable with `lib.mkDefault`, so a host **opts out visibly** instead of
-by omission:
-
-```nix
-modules.home-manager.programs.git.enable = false;   # hosts/vmware
-```
-
-They live at the repo root on purpose. Anything under `home-manager/` is
-auto-imported into every host, which would make a profile unconditional rather
-than opt-in.
-
-When changing a profile, confirm the hosts you did not intend to touch are
-unaffected — `drvPath` should be byte-identical for a pure refactor:
-
-```bash
-nix eval --impure --raw .#homeConfigurations.<host>.activationPackage.drvPath
-```
+The common toolkit currently enabled on almost every host, for orientation:
+`programs.{btop,git,herdr,nvim,ssh,tmux,yazi,zsh}` + `pkgs.{dev,lang,tools}`.
+When adding a module that every host should get, add it to each host file.
 
 ### mkModule pattern
 
@@ -167,7 +148,6 @@ nixos/               # NixOS system: base, programs, systemPackages,
                      #   services/{environments,hibernate,ibus,kanata,keyd}
 system-manager/      # system-level config on non-NixOS Linux (a14, desktop):
                      #   base, etc/trackpad, services/{docker,kanata,keyd,openssh}
-profiles/            # shared module sets: core, linux-gui, macos (see below)
 home-manager/
   base/              # username, homeDir, stateVersion, sessionVariables
                      #   + macos/, ubuntu/, nixos/ — each carries that platform's `update` alias
@@ -214,9 +194,9 @@ the store, or the dotfiles are read-only and get collected on the next GC.
 ### Adding a new module
 
 1. Create `home-manager/<category>/<name>/default.nix` using `mkModule config ./. { ... }`
-2. Enable it — in `profiles/core.nix` if every host should get it, otherwise
-   per-device in `hosts/{device}/home.nix` under
-   `modules.home-manager.<category>.<name>.enable = true`
+2. Enable it per-device in `hosts/{device}/home.nix` under
+   `modules.home-manager.<category>.<name>.enable = true` (in every host file,
+   if every host should get it)
 3. Confirm the hosts you touched still evaluate (see "Checking a host" above)
 
 ## Git

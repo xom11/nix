@@ -2,21 +2,31 @@
 {
   imports = [
     ../../home-manager
-    ../../profiles/core.nix
   ];
   home.sessionVariables = {
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
   modules.home-manager = {
-    # Carries the `update` alias (was hand-copied here) plus the nix PATH /
-    # XDG_DATA_DIRS wiring for a systemd user session.
+    # Carries the `update` alias plus the nix PATH / XDG_DATA_DIRS wiring
+    # for a systemd user session.
     base = {
       ubuntu.enable = true;
     };
+    pkgs = {
+      dev.enable = true;
+      lang.enable = true;
+      tools.enable = true;
+    };
     programs = {
-      # Opting out of core. Not obviously deliberate, but left off -- unlike
-      # ssh, nothing depends on it.
-      btop.enable = false;
+      # btop deliberately off; ssh installs authorized_keys and ~/.ssh/config,
+      # which this box (reached only over ssh) depends on.
+      git.enable = true;
+      herdr.enable = true;
+      nvim.enable = true;
+      ssh.enable = true;
+      tmux.enable = true;
+      yazi.enable = true;
+      zsh.enable = true;
     };
     services = {
       # syncthing.enable = true;

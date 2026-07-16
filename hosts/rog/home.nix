@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   imports = [
     ../../home-manager
-    ../../profiles/core.nix
   ];
   home.sessionVariables = {
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
@@ -12,6 +11,21 @@
     };
     dotfiles = {
       ai.enable = true;
+    };
+    pkgs = {
+      dev.enable = true;
+      lang.enable = true;
+      tools.enable = true;
+    };
+    programs = {
+      btop.enable = true;
+      git.enable = true;
+      herdr.enable = true;
+      nvim.enable = true;
+      ssh.enable = true;
+      tmux.enable = true;
+      yazi.enable = true;
+      zsh.enable = true;
     };
     services = {
       # syncthing.enable = true;
