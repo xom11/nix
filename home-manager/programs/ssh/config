@@ -59,7 +59,7 @@ Host a14
   HostName 100.102.5.63
   User kln
 Host airm3
-  HostName 100.65.126.76
+  HostName 100.127.95.48
   User kln
 Host 9r
   HostName 100.109.55.88
