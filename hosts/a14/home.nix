@@ -42,6 +42,9 @@
     services = {
       # syncthing.enable = true;
     };
+    programs = {
+      agenix.enable = true;
+    };
   };
   home.packages = [
     pkgs.discordchatexporter-cli
