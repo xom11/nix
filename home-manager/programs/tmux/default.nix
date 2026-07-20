@@ -19,14 +19,6 @@ in
     };
     programs.tmux = {
       enable = true;
-      # tmux 3.7 aborts entering copy-mode (upstream #5267): the fresh
-      # copy-mode grid's calloc'd linedata is not fully zeroed on macOS, so
-      # grid_clear_lines frees garbage pointers. No upstream fix yet (master
-      # only carries diagnostics: asserts + ASAN, unusable daily). Defensive
-      # memset over the observed corruption; drop when a fixed release ships.
-      package = pkgs.tmux.overrideAttrs (old: {
-        patches = (old.patches or []) ++ [ ./5267-zero-linedata.patch ];
-      });
       extraConfig = ''
         source-file ${tmuxDir}/tmux.conf
       '';

@@ -14,7 +14,7 @@ mkModule config ./. {
     lazydocker
     ripdrag
     worktrunk
-    caligula
+    # caligula
     vim
   ] ++ [
     agenix.packages.${system}.default
