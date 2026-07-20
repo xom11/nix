@@ -9,7 +9,7 @@
 }: let
   zshDir = "${config.xdg.configHome}/zsh/zsh.d";
   pwd = getPath ./.;
-  agenixEnabled = config.modules.home-manager.services.agenix.enable;
+  agenixEnabled = config.modules.home-manager.programs.agenix.enable;
   apikeyPath = "${config.xdg.configHome}/zsh/apikey.zsh";
 in
   mkModule config ./. {

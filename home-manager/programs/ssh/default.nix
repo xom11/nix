@@ -7,7 +7,7 @@
   ...
 }: let
   pwd = getPath ./.;
-  agenixEnabled = config.modules.home-manager.services.agenix.enable;
+  agenixEnabled = config.modules.home-manager.programs.agenix.enable;
 in
   mkModule config ./. {
     home.activation = {
