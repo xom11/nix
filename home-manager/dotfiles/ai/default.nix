@@ -11,5 +11,6 @@
       "codex.d".enable = lib.mkDefault true;
       # "gemini.d".enable = lib.mkDefault true;
       "opencode.d".enable = lib.mkDefault true;
+      "pi.d".enable = lib.mkDefault true;
     };
   }

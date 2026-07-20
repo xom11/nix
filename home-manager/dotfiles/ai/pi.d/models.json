@@ -1,0 +1,22 @@
+{
+  "providers": {
+    "9router": {
+      "baseUrl": "http://rog:20128/v1",
+      "api": "openai-completions",
+      "apiKey": "$ROUTER_KEY",
+      "headers": {
+        "Authorization": "Bearer $ROUTER_KEY"
+      },
+      "models": [
+        {
+          "id": "combo1",
+          "name": "Combo1 (9router)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 128000,
+          "maxTokens": 16384
+        }
+      ]
+    }
+  }
+}
