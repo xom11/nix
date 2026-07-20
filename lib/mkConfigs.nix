@@ -188,10 +188,11 @@ in {
   mkSystemManager = {device, system}:
     inputs.system-manager.lib.makeSystemConfig {
       specialArgs = {
-        inherit device system autoImport mkModule ckModule;
+        inherit device system username autoImport mkModule ckModule;
       };
       modules = [
         ../hosts/${device}/configuration.nix
+        { nixpkgs.overlays = allOverlays; }
       ];
     };
 }

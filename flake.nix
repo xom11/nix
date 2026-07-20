@@ -56,6 +56,11 @@
 
     nix-apt.url = "github:xom11/nix-apt";
 
+    fcitx5-lotus = {
+      url = "github:LotusInputMethod/fcitx5-lotus";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -69,6 +74,7 @@
       flakeOverlays = [
         inputs.beckon.overlays.default
         inputs.dotbrowser.overlays.default
+        inputs."fcitx5-lotus".overlays.default
       ];
 
       lib = import ./lib { inherit inputs flakeOverlays; };

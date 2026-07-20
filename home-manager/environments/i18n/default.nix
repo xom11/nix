@@ -14,10 +14,8 @@ in
       type = "fcitx5";
       fcitx5 = {
         addons = with pkgs; [
-          # fcitx5-bamboo
           fcitx5-gtk
-          # fcitx5-unikey
-          qt6Packages.fcitx5-unikey
+          fcitx5-lotus
         ];
         waylandFrontend = true;
         # Do not use settings so that fcitx5 UI can manage its own config
