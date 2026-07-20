@@ -189,7 +189,6 @@ in {
     inputs.system-manager.lib.makeSystemConfig {
       specialArgs = {
         inherit device system username autoImport mkModule ckModule;
-        fcitx5-lotus-pkg = inputs."fcitx5-lotus".packages.${system}.fcitx5-lotus;
       };
       modules = [
         ../hosts/${device}/configuration.nix

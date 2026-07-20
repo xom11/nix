@@ -6,7 +6,6 @@
     services = {
       kanata.enable = true;
       openssh.enable = true;
-      fcitx5-lotus.enable = true;
     };
   };
   # Zenbook A14 (Snapdragon X Plus) — suspend buggy trên ARM, lid switch ignore
