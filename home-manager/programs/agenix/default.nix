@@ -12,7 +12,7 @@
   );
 
   identityPath = "${config.home.homeDirectory}/.ssh/id_ed25519";
-  secretsNix = "${config.home.homeDirectory}/.nix/home-manager/services/agenix/secrets.nix";
+  secretsNix = "${config.home.homeDirectory}/.nix/home-manager/programs/agenix/secrets.nix";
 in
   mkModule config ./. {
     home.packages = [
