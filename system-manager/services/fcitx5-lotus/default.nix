@@ -1,4 +1,4 @@
-{config, lib, pkgs, username, ...}:
+{config, lib, pkgs, username, fcitx5-lotus-pkg, ...}:
 with lib;
 let
   cfg = config.modules.system-manager.services.fcitx5-lotus;
@@ -13,7 +13,7 @@ in {
       KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", MODE="0660", GROUP="input"
     '';
 
-    environment.systemPackages = [pkgs.fcitx5-lotus];
+    environment.systemPackages = [fcitx5-lotus-pkg];
 
     users.users.uinput_proxy = {
       isSystemUser = true;
@@ -32,7 +32,7 @@ in {
         Group = "input";
         Type = "simple";
         ExecStartPre = "${pkgs.acl}/bin/setfacl -m u:uinput_proxy:rw /dev/uinput";
-        ExecStart = "${pkgs.fcitx5-lotus}/bin/fcitx5-lotus-server -u ${username}";
+        ExecStart = "${fcitx5-lotus-pkg}/bin/fcitx5-lotus-server -u ${username}";
         Restart = "on-failure";
         RestartSec = "0";
       };

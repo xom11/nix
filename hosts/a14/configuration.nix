@@ -1,7 +1,6 @@
 {...}: {
   imports = [
     ../../system-manager
-    ../../system-manager/services/fcitx5-lotus
   ];
   modules.system-manager = {
     services = {

@@ -538,6 +538,13 @@ only way back to `7.0.0-14-generic`, or to a `systemd.mask=…` /
 `crashkernel=` reservation that `kdump-tools.cfg` appends — it sorts earlier —
 is not clobbered.
 
+For diagnosing a silent boot-time reset (like §10), temporarily append
+`initcall_debug loglevel=8 log_buf_len=8M` to the kernel line at the GRUB menu
+(`e` key) before hitting Ctrl+X. Every driver probe is logged with its duration;
+the line before the machine dies names the culprit. Remove these parameters once
+you have the evidence — they slow boot by ~0.5 s and consume extra ring-buffer
+memory.
+
 **PCIe ASPM.** `pcie_aspm.policy` is a runtime-writable module parameter, so test
 it before committing it to GRUB:
 
@@ -587,7 +594,116 @@ systemctl --user show-environment | grep XDG_DATA_DIRS   # must contain /usr/sha
 This bites *any* Ubuntu host using `modules.home-manager.base.ubuntu.enable`,
 not just this one.
 
-## 10. Files this setup owns
+## 10. Cold boot failure — Ubuntu doesn't boot; power-cycling or Windows first fixes it
+
+Symptom: pressing the power button to cold-boot into Ubuntu shows the ASUS logo and
+maybe kernel messages for 2–6 s, then the machine silently resets (no panic, no
+oops). On the next cycle the same thing happens — a reset loop until you hold the
+power button for a forced off. Booting Windows **first** (any duration), then
+shutting Windows down cleanly (Start → Power → Shut down), and **then** cold-booting
+into Ubuntu works on the first try.
+
+Reported on UX3407QA + Ubuntu 26.04 + kernel `7.0.0-27-generic`. Not every cold
+boot fails — the pattern above describes the state where the machine will *not*
+boot Ubuntu at all.
+
+### (a) Root cause hypothesis: incomplete firmware init on cold power-on
+
+The UEFI firmware on the Snapdragon X does the minimum platform init on a cold
+power-on. Deeper hardware state — the Embedded Controller (EC), the PMIC voltage
+rails, or the PCIe / NVMe link training sequence — requires an OS to bring it into
+a fully functional state. Windows does this during its boot and leaves the hardware
+in a state that persists across a full shutdown (battery keeps the EC alive, and
+some PMIC / PCIe auxiliary power domains stay up). The next cold boot into Ubuntu
+then inherits hardware that was already primed by Windows, so every driver probe
+succeeds on the first try.
+
+Without Windows, the first cold boot tasks the kernel with initialising hardware
+from a "cold" state that the firmware never fully configured. If a probe or a
+firmware handshake hangs beyond the UEFI boot watchdog timeout — or causes the PMIC
+to trigger a hard reset — the machine reboots with no log.
+
+### (b) Diagnose: capture the failing boot's journal
+
+The console is the only witness (see §0.2). If the journal from a failed boot is
+available, it names the culprit the same way it did for `asus_zenbook_a14_ec` and
+`Bluetooth: hci0`:
+
+```bash
+journalctl --list-boots                         # find the short (<10 s) boot
+journalctl -k -b <N> -o short-monotonic | tail  # last kernel line before reset
+```
+
+If no journal survives (the reset is too hard or the filesystem was not synced),
+`initcall_debug log_buf_len=8M` has been added to the kernel command line via
+`/etc/default/grub.d/zenbook-a14.cfg` (run `sudo update-grub` after changing it).
+Every driver probe is logged with its duration; the line before the machine dies
+names the culprit. A `log_buf_len=8M` buffer helps ensure the early boot messages
+are not overwritten before the reset.
+
+Note: this pair of parameters adds ~0.5 s to every boot and uses extra kernel
+memory. Once the offender is identified, remove `initcall_debug log_buf_len=8M`
+from the `GRUB_CMDLINE_LINUX_DEFAULT` line and re-run `sudo update-grub`.
+
+Check also `pstore` — some resets leave a record there even when the journal dies:
+
+```bash
+ls -l /sys/fs/pstore/
+cat /sys/fs/pstore/dmesg-efi-* 2>/dev/null | head -50
+```
+
+**Known non-fatal errors (present on every boot, do not indicate root cause):**
+
+```
+qcom-qmp-usb-phy 88e3000.phy: phy initialization timed-out
+phy phy-88e3000.phy.4: phy init failed --> -110
+dwc3 a400000.usb: error -ETIMEDOUT: failed to initialize core
+dwc3 a400000.usb: probe with driver dwc3 failed with error -110
+```
+
+The USB-C PHY fails to initialise because the ADSP (which controls the PMIC
+glink for USB-C PD) has not finished booting yet. After the ADSP comes up, USB
+works on the second try. This timeout is harmless and can be ignored during
+cold boot debugging.
+
+### (c) Immediate workarounds
+
+1.  **Disable Windows Fast Startup.** Boot Windows, open PowerShell as
+    Administrator, run `powercfg /h off`. This makes Windows' "Shut down" a true
+    S5 power-off instead of a hybrid hibernate. Re-test cold boot into Ubuntu.
+    (Fast Startup is on by default on every Windows install; it is the single most
+    common source of dual-boot hardware state weirdness on ARM64.)
+
+2.  **Boot Windows first.** Windows → Shut down → immediately select Ubuntu from
+    the GRUB menu. This is the known-working path until a deeper fix lands.
+
+3.  **Delay the UEFI watchdog.** Add `efi=debug` to the kernel command line (GRUB
+    `e` → append, then Ctrl+X). Some UEFI firmware implementations respond to
+    `efi=debug` by turning off the boot watchdog. If the machine now boots, the
+    watchdog timeout was the proximate cause.
+
+4.  **Try the PPA kernel.** The `linux-qcom-x1e` kernel from
+    `ppa:ubuntu-concept/x1e` ships Qualcomm's PCIe and power-management patches
+    that upstream does not carry. See §5f — the procedure (download `.deb`s, keep
+    stock kernel as fallback) and the trade-offs (no security updates, rebuild OOT
+    modules) are identical.
+
+### (d) Collect & report
+
+If none of the above surfaces the offender, gather:
+
+- `sudo journalctl -k -b -1` from the *next* successful boot (the failed boot is
+  the one with the earliest `-b` index that has almost no messages).
+- `sudo journalctl -k -b <N>` from every boot that reset.
+- A photo of the last 10 lines on the console with `initcall_debug`.
+- The output of `sudo cat /sys/firmware/devicetree/base/compatible`
+  and `cat /proc/version`.
+
+Then open an issue upstream or at the kernel's
+[linux-arm-msm](https://lore.kernel.org/linux-arm-msm/) mailing list with the
+hardware IDs from §0.
+
+## 11. Files this setup owns
 
 ```
 /etc/dracut.conf.d/zenbook-a14-adreno.conf         Adreno microcode -> initrd    (§3)
