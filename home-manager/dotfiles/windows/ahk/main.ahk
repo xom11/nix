@@ -3,6 +3,7 @@
 
 #Include lib/ui.ahk
 #Include launch-app.ahk
+#Include evkey-monitor.ahk
 #Include power-manager.ahk
 #Include switch-language.ahk
 #Include window-manager.ahk
