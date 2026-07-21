@@ -2,69 +2,41 @@
 Persistent
 
 ; Monitor VKey process (PhatMT97/VKey — winget install PhatMT97.VKey).
-; Khi VKey restart (process PID moi xuat hien), chay scheduled task "Kanata"
-; de kill va restart Kanata, khoi phuc hook order.
 ;
-; Root cause: Kanata winIOv2 va VKey deu dung WH_KEYBOARD_LL hook tren Windows.
-; Hook chain la LIFO — thang chay sau duoc goi truoc. Khi VKey restart, hook
-; order bi thay doi, VKey khong nhan keyboard input dung. Restart Kanata qua
-; scheduled task lap lai hook order (Kanata sau VKey).
+; Khi VKey tat va chay lai, trigger scheduled task "Kanata" de kill
+; va restart Kanata (Task Scheduler tu dam bao admin context).
+; Viec nay khoi phuc WH_KEYBOARD_LL hook order giua Kanata vs VKey.
+;
+; Root cause: ca Kanata winIOv2 va VKey deu dung WH_KEYBOARD_LL hook.
+; Hook chain la LIFO — khi VKey restart, hook order bi thay doi,
+; VKey khong nhan keyboard input dung.
 
 ; --- Configuration ---
-global VKeyProc := "VKey.exe"
 
-; Track tat ca VKey PIDs da biet
-global __vk_knownPIDs := Map()
-global __vk_initialized := false
+; Thoi gian poll (ms). VKey restart thuong co gap vai giay.
+global __vk_checkInterval := 1000
 
-; Lay tat ca PID cua VKey.exe dang chay (dung WMI)
-GetVKeyPIDs() {
-    pids := []
-    try {
-        wmi := ComObjGet("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
-        results := wmi.ExecQuery("SELECT ProcessId FROM Win32_Process WHERE Name = '" VKeyProc "'")
-        for item in results {
-            pids.Push(item.ProcessId)
-        }
-    }
-    return pids
-}
+; --- State ---
+global __vk_wasRunning := false
+global __vk_firstCheck := true
 
 CheckVKey() {
-    global __vk_knownPIDs, __vk_initialized, VKeyProc
+    global __vk_wasRunning, __vk_firstCheck
 
-    currentPIDs := GetVKeyPIDs()
-    if (currentPIDs.Length = 0) {
-        ; VKey khong chay, reset known set
-        __vk_knownPIDs := Map()
-        __vk_initialized := false
+    isRunning := ProcessExist("VKey.exe")
+
+    if (__vk_firstCheck) {
+        __vk_wasRunning := isRunning
+        __vk_firstCheck := false
         return
     }
 
-    if (!__vk_initialized) {
-        ; Lan dau: ghi nhan tat ca PID hien co
-        __vk_knownPIDs := Map()
-        for _, pid in currentPIDs {
-            __vk_knownPIDs.Set(pid, true)
-        }
-        __vk_initialized := true
-        return
-    }
-
-    ; Kiem tra co PID moi khong
-    hasNewPID := false
-    for _, pid in currentPIDs {
-        if !__vk_knownPIDs.Has(pid) {
-            hasNewPID := true
-            __vk_knownPIDs.Set(pid, true)
-        }
-    }
-
-    if (hasNewPID) {
-        ; VKey da restart — restart Kanata de fix hook chain
+    ; Phat hien VKey tu khong-chay sang dang-chay => restart
+    if (isRunning && !__vk_wasRunning) {
         Run('schtasks /run /tn "Kanata"', , "Hide")
     }
+
+    __vk_wasRunning := isRunning
 }
 
-; Kiem tra moi 2 giay
-SetTimer(CheckVKey, 2000)
+SetTimer(CheckVKey, __vk_checkInterval)
