@@ -2,7 +2,7 @@
 
 userDir := EnvGet("USERPROFILE")
 
-global KanataExe := userDir . "\scoop\apps\kanata\current\kanata_windows_tty_winIOv2_cmd_allowed_x64.exe"
+global KanataExe := userDir . "\scoop\apps\kanata\current\kanata_windows_tty_winIOv2_x64.exe"
 global KanataConfig := userDir . "\.nix\configs\kanata\kanata_windows.kbd"
 
 SplitPath(KanataExe, &KanataProc)  ; process name = exe filename, e.g. kanata_..._cmd_allowed_x64.exe
