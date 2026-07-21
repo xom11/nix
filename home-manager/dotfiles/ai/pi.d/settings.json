@@ -16,5 +16,8 @@
     "maxRetries": 3,
     "baseDelayMs": 2000
   },
-  "enabledModels": ["combo1"]
+  "enabledModels": [
+    "combo1"
+  ],
+  "lastChangelogVersion": "0.80.10"
 }
