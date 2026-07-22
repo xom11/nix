@@ -1,7 +1,7 @@
 {
   "providers": {
     "9router": {
-      "baseUrl": "http://rog:20128/v1",
+      "baseUrl": "http://100.127.63.100:20128/v1",
       "api": "openai-completions",
       "apiKey": "$ROUTER_KEY",
       "headers": {
