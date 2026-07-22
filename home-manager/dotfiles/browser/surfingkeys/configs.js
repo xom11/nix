@@ -131,9 +131,11 @@ function toggleFocusUrl(url) {
 // prettier-ignore
 [
   // ["<Space>gh", "GitHub",            "https://github.com"],
+  ["<Space>9r", "9router",     "http://100.127.63.100:20128/dashboard"],
+  ["<Space>fb", "Facebook",          "https://www.facebook.com/"],
   ["<Space>gh", "GitHub hoctotbachkhoa",            "https://github.com/Hoctotbachkhoa/hoctotbachkhoa"],
   ["<Space>gn", "GitHub ninjaverse",            "https://github.com/ninjaverse-xyz/ninjaverse"],
   ["<Space>gs", "GitHub stars page", "https://github.com/stars"],
-  ["<Space>fb", "Facebook",          "https://www.facebook.com/"],
   ["<Space>ht", "hoctotbachkoa",     "https://hoctotbachhoa.com/"],
+  ["<Space>nd", "netdata",     "https://app.netdata.cloud/"],
 ].forEach(([key, desc, url]) => api.mapkey(key, desc, () => toggleFocusUrl(url)));
