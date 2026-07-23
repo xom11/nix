@@ -12,6 +12,9 @@ const BASE_URL = process.env.ROUTER_ENDPOINT ?? "http://100.127.63.100:20128/v1"
 const AUTH_TOKEN = "Bearer sk-d54741feb1e6e4f9-daczsm-92470a30";
 
 export default function (pi: ExtensionAPI) {
+  // Register provider so baseUrl responds to ROUTER_ENDPOINT env var dynamically
+  pi.registerProvider("9router", { baseUrl: BASE_URL });
+
   pi.registerTool({
     name: "web_search",
     label: "Web Search",
