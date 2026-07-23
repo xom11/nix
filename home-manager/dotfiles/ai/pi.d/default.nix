@@ -18,6 +18,9 @@ in
       ".pi/agent/AGENTS.md" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/AGENTS.md";
       };
+      ".pi/agent/extensions" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/extensions";
+      };
     };
     home.packages = with pkgs; [
       pi-coding-agent

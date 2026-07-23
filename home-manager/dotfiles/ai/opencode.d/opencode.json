@@ -11,13 +11,22 @@
         "combo1": {
           "name": "combo1",
           "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        },
+        "combo2": {
+          "name": "combo2",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        },
+        "taoxyz": {
+          "name": "taoxyz",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
           }
         }
       }
