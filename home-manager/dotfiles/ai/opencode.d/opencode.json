@@ -15,35 +15,15 @@
       "options": {
         "baseURL": "{env:ROUTER_ENDPOINT}",
         "apiKey": "{env:ROUTER_KEY}"
-      },
-      "models": {
-        "combo1": {
-          "name": "combo1",
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
-          }
-        },
-        "combo2": {
-          "name": "combo2",
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
-          }
-        },
-        "taoxyz": {
-          "name": "taoxyz",
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
-          }
-        }
       }
     }
   },
   "model": "9router/combo1",
   "permission": "allow",
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"],
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "./plugin/router-models.mjs"
+  ],
   "agent": {
     "explorer": {
       "description": "Fast explorer subagent for codebase exploration",
