@@ -1,6 +1,60 @@
 {
+  "allowDangerouslySkipPermissions": true,
+  "effortLevel": "xhigh",
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "context-mode@context-mode": true,
+    "frontend-design@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true
+  },
   "env": {
     "CLAUDE_CODE_NO_FLICKER": "0"
+  },
+  "extraKnownMarketplaces": {
+    "context-mode": {
+      "source": {
+        "repo": "mksglu/claude-context-mode",
+        "source": "github"
+      }
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "~/.claude/hooks/context-mode-cache-heal.mjs",
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/lenamkhanh/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "codegraph prompt-hook",
+            "type": "command"
+          }
+        ]
+      }
+    ]
   },
   "permissions": {
     "allow": [
@@ -8,58 +62,14 @@
     ],
     "defaultMode": "bypassPermissions"
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/context-mode-cache-heal.mjs"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "codegraph prompt-hook"
-          }
-        ]
-      }
-    ]
-  },
+  "skipDangerousModePermissionPrompt": true,
   "statusLine": {
-    "type": "command",
     "command": "node ~/.claude/statusline.mjs",
     "padding": 0,
-    "refreshInterval": 10
+    "refreshInterval": 10,
+    "type": "command"
   },
-  "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "context-mode@context-mode": true,
-    "clangd-lsp@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "context-mode": {
-      "source": {
-        "source": "github",
-        "repo": "mksglu/claude-context-mode"
-      }
-    }
-  },
-  "viewMode": "default",
-  "effortLevel": "xhigh",
-  "tui": "fullscreen",
-  "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
-  "allowDangerouslySkipPermissions": true
+  "tui": "fullscreen",
+  "viewMode": "default"
 }

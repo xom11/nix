@@ -1,80 +1,63 @@
-// OpenCode plugin: auto-discover 9router models from /v1/models API
+// OpenCode plugin: inject 9router models from /v1/models API into config
 // Self-contained, zero deps.
+// Uses config() hook — reliable, runs before provider init.
 
-/** @returns {import("@opencode-ai/plugin").PluginHooks} */
 export default async () => ({
-  provider: {
-    id: "9router",
-    models: async (provider) => {
-      const baseURL = /** @type {string|undefined} */ (provider.options?.baseURL);
-      const apiKey  = provider.key ?? /** @type {string|undefined} */ (provider.options?.apiKey);
+  config: async (cfg) => {
+    const routerCfg = cfg?.provider?.["9router"];
+    if (!routerCfg) return;
 
-      if (!baseURL || !apiKey) {
-        console.warn("router-models: no baseURL or apiKey on provider");
-        return {};
-      }
+    const baseURL = routerCfg.options?.baseURL;
+    const apiKey  = routerCfg.options?.apiKey;
+    if (!baseURL || !apiKey) return;
 
-      // Build models URL — /v1/models relative to baseURL
-      let modelsUrl;
-      try {
-        modelsUrl = new URL("./models", baseURL.endsWith("/") ? baseURL : baseURL + "/").href;
-      } catch {
-        modelsUrl = `${baseURL.replace(/\/?$/, "")}/models`;
-      }
+    const resolve = (s) =>
+      typeof s === "string"
+        ? s.replace(/\{env:([^}]+)\}/g, (_, name) => process.env[name] ?? "")
+        : s;
 
-      /** @type {{ data?: Array<{id:string, capabilities?:Record<string,unknown>}> }} */
-      let data;
-      try {
-        const res = await fetch(modelsUrl, {
-          headers: { Authorization: `Bearer ${apiKey}` },
-        });
-        if (!res.ok) {
-          console.warn(`router-models: API ${res.status} ${res.statusText}`);
-          return {};
-        }
-        data = await res.json();
-      } catch (err) {
-        console.warn("router-models: fetch failed", err);
-        return {};
-      }
+    const resolvedURL = resolve(baseURL);
+    const resolvedKey = resolve(apiKey);
+    if (!resolvedURL || !resolvedKey) return;
 
-      if (!data?.data) return {};
+    // ── Fallback models: always available ──
+    const fallback = ["combo1", "combo2", "taoxyz"];
+    routerCfg.models = {};
+    for (const id of fallback) {
+      routerCfg.models[id] = {
+        name: id,
+        modalities: { input: ["text", "image"], output: ["text"] },
+      };
+    }
 
-      /** @type {Record<string, import("@opencode-ai/plugin").ModelV2>} */
-      const models = {};
-      for (const m of data.data) {
-        if (!m.id) continue;
-        const c = m.capabilities ?? {};
-        const hasVision = !!c.vision;
-        const hasTools  = !!c.tools;
-        const hasReason = !!c.reasoning;
-        const ctxWin    = Number(c.contextWindow) || 128_000;
-        const maxOut    = Number(c.maxOutput) || 16_384;
+    // ── Fetch full model list from API ──
+    const modelsUrl = resolvedURL.endsWith("/")
+      ? `${resolvedURL}models`
+      : `${resolvedURL}/models`;
 
-        models[m.id] = {
-          id: m.id,
-          name: m.id,
-          capabilities: {
-            temperature: true,
-            reasoning: hasReason,
-            attachment: hasVision,
-            toolcall: hasTools,
-            interleaved: hasReason,
-            input: {
-              text: true,
-              audio: false,
-              image: hasVision,
-              video: false,
-              pdf: hasVision,
-            },
-            output: { text: true, audio: false, image: false, video: false, pdf: false },
-          },
-          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
-          limit: { context: ctxWin, output: maxOut },
-          status: "active",
-        };
-      }
-      return models;
-    },
+    /** @type {{ data?: Array<{id:string, capabilities?:Record<string,unknown>}> }} */
+    let data;
+    try {
+      const res = await fetch(modelsUrl, {
+        headers: { Authorization: `Bearer ${resolvedKey}` },
+      });
+      if (!res.ok) return;
+      data = await res.json();
+    } catch {
+      return; // network error — keep fallback models
+    }
+    if (!data?.data) return;
+
+    // Replace fallback with full API list
+    for (const m of data.data) {
+      if (!m.id) continue;
+      const c = m.capabilities ?? {};
+      const input = ["text"];
+      if (c.vision) input.push("image");
+      routerCfg.models[m.id] = {
+        name: m.id,
+        modalities: { input, output: ["text"] },
+      };
+    }
   },
 });

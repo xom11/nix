@@ -65,3 +65,6 @@ sandbox = "elevated"
 
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
+
+[features]
+hooks = true
