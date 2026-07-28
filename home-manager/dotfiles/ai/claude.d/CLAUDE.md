@@ -8,6 +8,31 @@
 - NEVER change repository visibility on your own (e.g. `gh repo edit --visibility`, `gh api -X PATCH ... visibility`). Always ask for confirmation before proceeding.
 - Standing authorization: push commits + tags, fast-forward merge feature branches vào main, close GitHub issues/PRs sau khi work xong — không cần hỏi xác nhận từng lần. Vẫn confirm với destructive ops (force push to main, hard reset shared branches, delete remote branches của người khác).
 
+## Web search & fetch
+
+Escalate in this order — cheap and context-light first, paid escape hatch last.
+
+**Search**
+1. `WebSearch` — mặc định. Không tốn tiền router, có sẵn nguồn trích dẫn.
+2. `mcp__router-search__web_search` — khi WebSearch không ra, bị giới hạn khu vực,
+   hoặc cần một provider cụ thể. Mặc định `serper` ($0.001); `exa` cho tìm ngữ
+   nghĩa/nội dung dài, `tavily` khi cần bản tóm tắt kèm answer.
+
+**Fetch** — `WebFetch` và `curl`/`wget` đều bị hook context-mode chặn, đừng thử.
+1. `ctx_fetch_and_index` — mặc định. Tải từ máy này rồi index vào knowledge base,
+   chỉ summary vào context nên rẻ nhất về context.
+2. `mcp__router-search__web_fetch` — khi cách trên trả về trang trắng, 403,
+   Cloudflare, hoặc trang chỉ dựng nội dung bằng JavaScript. Router fetch phía
+   server nên qua được. Mặc định provider `exa` ($0.001); trả về rỗng thì thử lại
+   với `firecrawl` (render JS tốt hơn) rồi `tavily`.
+
+Router là hạ tầng riêng của user (9router qua Tailscale) nhưng nó chuyển tiếp ra
+serper/exa/tavily/firecrawl — SaaS bên ngoài, tính tiền theo lượt gọi. Nên đừng
+gọi vòng hai khi lượt đầu đã đủ dùng.
+
+Nếu tool `mcp__router-search__*` không có trong danh sách thì máy này chưa đăng ký
+nó — dừng ở bước 1, đừng báo lỗi.
+
 <!-- CODEGRAPH_START -->
 ## CodeGraph
 
