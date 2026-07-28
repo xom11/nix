@@ -36,20 +36,85 @@ function obj:init()
 		hs.loadSpoon("ABattery")
 		spoon.ABattery:toggleShow()
 	end)
-	-- PART: Screenshot tool — save local /tmp/ss.png + clipboard, push to macmini + rog
+	-- PART: Screenshot tool — chụp vùng chọn, copy vào clipboard, đẩy sang các máy khác.
 	-- using cmd + shift + 4 instead for paste in some apps that don't support image pasting, e.g. Claude-cli
 	-- on remote, paste into Claude Code by typing: @/tmp/ss.png
+	--
+	-- Không dùng hs.execute ở đây. hs.execute là io.popen + f:read("*a"), tức là chờ EOF trên
+	-- pipe — kể cả khi lệnh có dấu `&`, vì tiến trình nền thừa kế đầu ghi của pipe nên EOF chỉ
+	-- đến khi nó chết hẳn. ssh không đặt ConnectTimeout, nên một host không với tới được (airm3
+	-- mang ra khỏi mạng nhà) treo cả Lua thread của Hammerspoon tới hết TCP timeout, ~75 s mỗi
+	-- host, tuần tự. Trong lúc đó mọi hotkey — kể cả tab+r để reload thoát ra — đều chết.
+	local ssHosts = { "macmini", "rog" }
+	local ssLatest = "/tmp/ss.png"
+	local ssKeep = 20
+
+	-- Mỗi lần chụp là một đường dẫn mới nên /tmp phình dần; giữ lại ssKeep ảnh gần nhất.
+	-- Tên chứa timestamp cố định độ dài nên sort chuỗi = sort thời gian.
+	local function ssPrune()
+		local files = {}
+		local ok = pcall(function()
+			for f in hs.fs.dir("/tmp") do
+				if f:match("^ss%-%d+%-%d+%.png$") then
+					files[#files + 1] = f
+				end
+			end
+		end)
+		if not ok then
+			return
+		end
+		table.sort(files)
+		for i = 1, #files - ssKeep do
+			os.remove("/tmp/" .. files[i])
+		end
+	end
+
+	local function ssPush(path)
+		-- Bỏ qua chính máy đang chạy: bản cũ scp /tmp/ss.png lên macmini kể cả khi đang ngồi
+		-- ở macmini, tức là copy file lên chính nó.
+		local me = (hs.host.localizedName() or ""):lower()
+		for _, host in ipairs(ssHosts) do
+			if host ~= me then
+				hs.task.new("/usr/bin/scp", function(exitCode, _stdout, stderr)
+					if exitCode ~= 0 then
+						local msg = (stderr or ""):gsub("%s+$", "")
+						if msg == "" then
+							msg = "exit code " .. tostring(exitCode)
+						end
+						hs.alert.show("scp " .. host .. ": " .. msg, 3)
+					end
+					-- BatchMode: không bao giờ dừng lại hỏi mật khẩu/passphrase.
+					-- ConnectTimeout: bỏ cuộc sau 5 s thay vì chờ hết TCP timeout.
+				end, { "-o", "BatchMode=yes", "-o", "ConnectTimeout=5", path, host .. ":" .. ssLatest }):start()
+			end
+		end
+	end
+
 	hs.hotkey.bind(tab, "s", function()
-		local path = "/tmp/ss.png"
-		hs.execute("/usr/sbin/screencapture -i " .. path)
-		if hs.fs.attributes(path) then
+		-- Đường dẫn duy nhất mỗi lần chụp. Bản cũ ghi đè một tên cố định, nên khi user bấm Esc
+		-- huỷ vùng chọn thì screencapture không ghi gì, mà hs.fs.attributes() vẫn thấy ảnh của
+		-- lần TRƯỚC còn nằm đó — rồi đem ảnh cũ đó vào clipboard và scp sang cả hai máy.
+		local path = "/tmp/ss-" .. os.date("%Y%m%d-%H%M%S") .. ".png"
+
+		hs.task.new("/usr/sbin/screencapture", function()
+			-- Không xét exit code: screencapture vẫn thoát 0 khi user huỷ. Bằng chứng duy nhất
+			-- đáng tin là file có xuất hiện ở đường dẫn mới hay không.
+			if not hs.fs.attributes(path) then
+				return
+			end
+
 			local img = hs.image.imageFromPath(path)
 			if img then
 				hs.pasteboard.writeObjects(img)
 			end
-			hs.execute("/usr/bin/scp " .. path .. " macmini:/tmp/ss.png &")
-			hs.execute("/usr/bin/scp " .. path .. " rog:/tmp/ss.png &")
-		end
+
+			-- Giữ /tmp/ss.png trỏ về ảnh mới nhất để `@/tmp/ss.png` vẫn dùng được như trước.
+			os.remove(ssLatest)
+			hs.fs.link(path, ssLatest, true)
+
+			ssPush(path)
+			ssPrune()
+		end, { "-i", path }):start()
 	end)
 
 	-- PART: Caffeinate toggle — keep main display awake, show corner indicator
