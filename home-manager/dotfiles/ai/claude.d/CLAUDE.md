@@ -23,8 +23,13 @@ Escalate in this order — cheap and context-light first, paid escape hatch last
    chỉ summary vào context nên rẻ nhất về context.
 2. `mcp__router-search__web_fetch` — khi cách trên trả về trang trắng, 403,
    Cloudflare, hoặc trang chỉ dựng nội dung bằng JavaScript. Router fetch phía
-   server nên qua được. Mặc định provider `exa` ($0.001); trả về rỗng thì thử lại
-   với `firecrawl` (render JS tốt hơn) rồi `tavily`.
+   server nên đôi khi qua được. Mặc định provider `exa` ($0.001); rỗng thì leo
+   sang `firecrawl` (render JS tốt hơn) rồi `tavily` — bản thân tool sẽ báo còn
+   provider nào chưa thử, hết thì nó nói thẳng, đừng gọi thêm.
+
+   Đây **không** phải lối vòng vạn năng: reddit.com hiện chặn cả ba provider
+   (firecrawl từ chối thẳng bằng 403), và `ctx_fetch_and_index` cũng thua nốt.
+   Trang nào cả hai đều thua thì báo user, đừng đốt thêm lượt gọi.
 
 Router là hạ tầng riêng của user (9router qua Tailscale) nhưng nó chuyển tiếp ra
 serper/exa/tavily/firecrawl — SaaS bên ngoài, tính tiền theo lượt gọi. Nên đừng

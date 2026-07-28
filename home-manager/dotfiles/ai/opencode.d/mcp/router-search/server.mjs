@@ -94,6 +94,30 @@ function formatSearch(data) {
   return lines.join('\n');
 }
 
+// Provider fetch nào đã thua trên URL nào, tính trong vòng đời process. Không có
+// nó thì gợi ý leo thang sẽ khuyên thử lại đúng provider vừa thất bại.
+const FETCH_FAILURES = new Map();
+const FETCH_FAILURES_MAX = 200;
+
+const FETCH_PROVIDERS = [
+  ['exa', 'rẻ nhất'],
+  ['firecrawl', 'render JS tốt hơn'],
+  ['tavily', 'hạ tầng khác'],
+];
+
+function noteFetchFailure(url, provider) {
+  if (!url || !provider) return new Set();
+  // Map giữ thứ tự chèn, nên phần tử đầu là cũ nhất -- đủ để chặn phình bộ nhớ
+  // trong một process chạy dài.
+  if (!FETCH_FAILURES.has(url) && FETCH_FAILURES.size >= FETCH_FAILURES_MAX) {
+    FETCH_FAILURES.delete(FETCH_FAILURES.keys().next().value);
+  }
+  const seen = FETCH_FAILURES.get(url) ?? new Set();
+  seen.add(String(provider).toLowerCase());
+  FETCH_FAILURES.set(url, seen);
+  return seen;
+}
+
 function formatFetch(data) {
   const body = data?.content?.text ?? '';
   const len = data?.content?.length ?? body.length;
@@ -107,7 +131,12 @@ function formatFetch(data) {
   // Router trả 200 kèm nội dung rỗng khi provider không lấy được trang (domain
   // chết, bị chặn, trang toàn JS). Nói thẳng ra thay vì trả về khoảng trắng.
   if (!body.trim()) {
-    return `${head}\n\n[trống — provider "${data?.provider ?? '?'}" không lấy được nội dung. Thử lại với provider: "firecrawl" (render JS tốt hơn) hoặc "tavily".]`;
+    const failed = noteFetchFailure(data?.url, data?.provider);
+    const left = FETCH_PROVIDERS.filter(([p]) => !failed.has(p));
+    const hint = left.length
+      ? `Thử lại với provider: ${left.map(([p, why]) => `"${p}" (${why})`).join(' hoặc ')}.`
+      : 'Đã thử hết provider trên URL này — trang chặn cả ba, đừng gọi thêm cho tốn.';
+    return `${head}\n\n[trống — provider "${data?.provider ?? '?'}" không lấy được nội dung. ${hint}]`;
   }
 
   const out = truncated ? body.slice(0, FETCH_MAX_CHARS) : body;
@@ -186,12 +215,18 @@ async function handleToolsCall(id, params) {
       });
       result = text(formatSearch(data));
     } else if (name === 'web_fetch') {
+      const provider = args.provider ?? DEFAULT_FETCH_PROVIDER;
+      // Provider từ chối thẳng (firecrawl 403 với reddit chẳng hạn) cũng là một
+      // lần thua -- không ghi lại thì lần sau vẫn đi gợi ý nó.
       const data = await post('/v1/web/fetch', {
-        model: args.provider ?? DEFAULT_FETCH_PROVIDER,
+        model: provider,
         url: args.url,
         format: args.format ?? 'markdown',
+      }).catch((err) => {
+        noteFetchFailure(args.url, provider);
+        throw err;
       });
-      result = text(formatFetch(data));
+      result = text(formatFetch({ url: args.url, ...data }));
     } else {
       return rpcError(id, -32601, `Tool not found: ${name}`);
     }
