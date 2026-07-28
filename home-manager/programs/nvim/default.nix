@@ -18,6 +18,11 @@ in
   }
   // mkModule config ./. {
     home.packages = with pkgs; [
+      # image format conversion (snacks.image needs this for non-PNG)
+      imagemagick
+      # terminal image viewer (telescope preview, CLI one-off)
+      chafa
+
       # conform formatters
       black
       shfmt

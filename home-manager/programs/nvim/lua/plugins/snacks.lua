@@ -8,6 +8,17 @@ require("snacks").setup({
 	-- files instead of hanging, quickfile paints the buffer before plugins load.
 	bigfile = { enabled = true },
 	quickfile = { enabled = true },
+	image = {
+		enabled = true,
+		doc = {
+			enabled = true,
+			inline = true,
+			float = true,
+			max_width = 80,
+			max_height = 40,
+		},
+		img_dirs = { "img", "images", "assets", "static", "public", "media", "attachments" },
+	},
 })
 
 -- Macro recording notifications

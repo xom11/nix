@@ -1,6 +1,51 @@
 {
-  "allowDangerouslySkipPermissions": true,
-  "effortLevel": "xhigh",
+  "env": {
+    "CLAUDE_CODE_NO_FLICKER": "0"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__codegraph__*"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/context-mode-cache-heal.mjs"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/lenamkhanh/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node ~/.claude/statusline.mjs",
+    "padding": 0,
+    "refreshInterval": 10
+  },
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
     "context-mode@context-mode": true,
@@ -13,63 +58,18 @@
     "typescript-lsp@claude-plugins-official": true,
     "vercel@claude-plugins-official": true
   },
-  "env": {
-    "CLAUDE_CODE_NO_FLICKER": "0"
-  },
   "extraKnownMarketplaces": {
     "context-mode": {
       "source": {
-        "repo": "mksglu/claude-context-mode",
-        "source": "github"
+        "source": "github",
+        "repo": "mksglu/claude-context-mode"
       }
     }
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "~/.claude/hooks/context-mode-cache-heal.mjs",
-            "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/lenamkhanh/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "codegraph prompt-hook",
-            "type": "command"
-          }
-        ]
-      }
-    ]
-  },
-  "permissions": {
-    "allow": [
-      "mcp__codegraph__*"
-    ],
-    "defaultMode": "bypassPermissions"
-  },
-  "skipDangerousModePermissionPrompt": true,
-  "statusLine": {
-    "command": "node ~/.claude/statusline.mjs",
-    "padding": 0,
-    "refreshInterval": 10,
-    "type": "command"
-  },
-  "theme": "dark",
+  "viewMode": "default",
+  "effortLevel": "xhigh",
   "tui": "fullscreen",
-  "viewMode": "default"
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "allowDangerouslySkipPermissions": true
 }

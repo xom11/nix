@@ -6,11 +6,36 @@ vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-frecency.nvi
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope-file-browser.nvim" } }, { load = true, confirm = false })
 vim.pack.add({ { src = "https://github.com/nvim-telescope/telescope.nvim" } }, { load = true, confirm = false })
 
+-- Image extensions chafa can preview
+local image_exts = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff", "heic", "avif" }
+local function is_image(path)
+	local ext = vim.fn.fnamemodify(path, ":e"):lower()
+	return vim.tbl_contains(image_exts, ext) and vim.fn.executable("chafa") == 1
+end
+
 local opts = {
 	defaults = {
 		preview = {
 			treesitter = false,
 		},
+		-- file_previewer is called ONCE per picker with picker options (opts),
+		-- returns a single previewer used for ALL entries. Entry-specific
+		-- logic goes inside get_command/define_preview, not in file_previewer.
+		file_previewer = function(_opts)
+			return require("telescope.previewers").new_termopen_previewer({
+				get_command = function(entry, _status)
+					local path = entry.path or entry.filename or entry.value
+					if path and is_image(path) then
+						return { "chafa", "--symbols=block", "--size=80x40", path }
+					end
+					-- bat gives syntax highlighting in the terminal preview.
+					if vim.fn.executable("bat") == 1 then
+						return { "bat", "--style=plain", "--color=always", path }
+					end
+					return { "cat", path }
+				end,
+			})
+		end,
 		vimgrep_arguments = {
 			"rg",
 			"-L",
