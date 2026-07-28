@@ -32,8 +32,11 @@ Escalate in this order — cheap and context-light first, paid escape hatch last
    Trang nào cả hai đều thua thì báo user, đừng đốt thêm lượt gọi.
 
 Router là hạ tầng riêng của user (9router qua Tailscale) nhưng nó chuyển tiếp ra
-serper/exa/tavily/firecrawl — SaaS bên ngoài, tính tiền theo lượt gọi. Nên đừng
-gọi vòng hai khi lượt đầu đã đủ dùng.
+serper/exa/tavily/firecrawl — SaaS bên ngoài, tính tiền theo lượt gọi.
+
+**Một câu hỏi = một lượt search.** Chỉ gọi lượt hai khi lượt đầu trả về rỗng hoặc
+lạc đề hẳn. Không chạy nhiều provider song song cho cùng một câu hỏi, không tự
+tách một câu hỏi thành 4-5 truy vấn biến thể.
 
 Nếu tool `mcp__router-search__*` không có trong danh sách thì máy này chưa đăng ký
 nó — dừng ở bước 1, đừng báo lỗi.
