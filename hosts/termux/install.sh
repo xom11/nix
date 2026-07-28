@@ -23,9 +23,12 @@ SSH_CONFIG_SRC="$REPO_DIR/home-manager/programs/ssh/config"
 log() { printf '\n\033[1;32m>>> %s\033[0m\n' "$1"; }
 
 # --- 1. Update system ---------------------------------------------------------
+# `-y` only answers apt's own "Do you want to continue? [Y/n]". dpkg's
+# config-file prompt ("*** motd (Y/I/N/O/D/Z) [default=N] ?") ignores it and
+# would hang this script, so take the maintainer's version explicitly.
 log "Updating packages (pkg update && pkg upgrade)..."
-pkg update -y
-pkg upgrade -y
+pkg update -y -o Dpkg::Options::=--force-confnew
+pkg upgrade -y -o Dpkg::Options::=--force-confnew
 
 # --- 2. Install OpenSSH + git --------------------------------------------------
 log "Installing openssh + git + curl..."

@@ -13,7 +13,7 @@ mkModule config ./. {
     hugo
     lazydocker
     ripdrag
-    worktrunk
+    # worktrunk
     # caligula
     vim
   ] ++ [
