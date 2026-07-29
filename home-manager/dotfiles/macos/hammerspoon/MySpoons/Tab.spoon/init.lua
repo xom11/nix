@@ -9,18 +9,34 @@ function obj:init()
 		hs.reload()
 	end)
 	-- PART: Change language input source — Tab+Q=中文, Tab+W=Tiếng Việt, Tab+E=English
-	local function switchLang(name)
-		for _, v in ipairs(hs.keycodes.layouts()) do
-			if v == name then
-				hs.keycodes.setLayout(name)
-				return
-			end
+	--
+	-- Dùng sourceID thay cho tên hiển thị. "Pinyin – Simplified" và "Unicode Hex Input" là
+	-- chuỗi đã bản địa hoá, đổi theo ngôn ngữ hệ thống và theo phiên bản macOS. Bản cũ so
+	-- tên trong hs.keycodes.layouts(), không khớp thì rơi xuống setMethod() — cả hai đều
+	-- không báo gì khi thất bại, và giá trị trả về cũng bị bỏ. Đổi tên một cái là phím chết
+	-- lặng lẽ.
+	--
+	-- sourceID cũng chính là thứ LanguageMemory ghi vào ~/.hammerspoon/LanguageMemory.json,
+	-- nên sau thay đổi này hai chỗ dùng chung một định danh.
+	--
+	-- Ba ID dưới đọc từ chính máy này: đổi sang từng nguồn theo tên rồi hỏi currentSourceID().
+	local SOURCES = {
+		zh = "com.apple.inputmethod.SCIM.ITABC", -- Pinyin – Simplified
+		vi = "com.apple.keylayout.ABC", -- ABC
+		en = "com.apple.keylayout.UnicodeHexInput", -- Unicode Hex Input
+	}
+
+	-- currentSourceID(id) trả true khi đổi được, false khi nguồn chưa được bật trong
+	-- System Settings (và giữ nguyên nguồn đang dùng, không làm hỏng trạng thái).
+	local function switchLang(id)
+		if not hs.keycodes.currentSourceID(id) then
+			hs.alert.show("Không đổi được input source: " .. id, 2)
 		end
-		hs.keycodes.setMethod(name)
 	end
-	hs.hotkey.bind(tab, "q", function() switchLang("Pinyin – Simplified") end)
-	hs.hotkey.bind(tab, "w", function() switchLang("ABC") end)
-	hs.hotkey.bind(tab, "e", function() switchLang("Unicode Hex Input") end)
+
+	hs.hotkey.bind(tab, "q", function() switchLang(SOURCES.zh) end)
+	hs.hotkey.bind(tab, "w", function() switchLang(SOURCES.vi) end)
+	hs.hotkey.bind(tab, "e", function() switchLang(SOURCES.en) end)
 	-- PART: Toggle Console
 	hs.hotkey.bind(tab, "H", function()
 		hs.toggleConsole()
