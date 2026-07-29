@@ -14,7 +14,11 @@
         function Get-InstalledPwshVersion {
             param([string]$Path)
             if (-not (Test-Path $Path)) { return $null }
-            return [version](((Get-Item $Path).VersionInfo.ProductVersion) -replace '-.*$', '')
+            # pwsh reports ProductVersion as '7.6.4 SHA: 929d27f4...+929d27f4...', so take the
+            # leading numeric part rather than casting the whole string.
+            $raw = (Get-Item $Path).VersionInfo.ProductVersion
+            if ($raw -match '^\d+(\.\d+){1,3}') { return [version]$Matches[0] }
+            return $null
         }
 
         function Remove-PackagedPwsh {

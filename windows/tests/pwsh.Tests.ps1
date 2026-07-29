@@ -51,7 +51,15 @@ Describe 'windows packages.pwsh module' {
     Context 'when the MSI build is already current' {
         It 'neither downloads nor runs msiexec' {
             Mock Test-Path { $true }
-            Mock Get-Item { [pscustomobject]@{ VersionInfo = [pscustomobject]@{ ProductVersion = '7.6.4' } } }
+            # The real string pwsh reports, commit hash and all -- casting it straight to
+            # [version] threw and took the whole module down.
+            Mock Get-Item {
+                [pscustomobject]@{
+                    VersionInfo = [pscustomobject]@{
+                        ProductVersion = '7.6.4 SHA: 929d27f4e66dcfba8f5f74ff03105705e483a27d+929d27f4e66dcfba8f5f74ff03105705e483a27d'
+                    }
+                }
+            }
             Mock Invoke-RestMethod { [pscustomobject]@{ tag_name = 'v7.6.4'; assets = @() } }
             Mock Invoke-WebRequest { }
             Mock Get-AppxPackage { $null }
@@ -73,7 +81,11 @@ Describe 'windows packages.pwsh module' {
     Context 'when a newer release exists' {
         It 'downloads the matching MSI and installs it' {
             Mock Test-Path { $true }
-            Mock Get-Item { [pscustomobject]@{ VersionInfo = [pscustomobject]@{ ProductVersion = '7.6.0' } } }
+            Mock Get-Item {
+                [pscustomobject]@{
+                    VersionInfo = [pscustomobject]@{ ProductVersion = '7.6.0 SHA: deadbeef+deadbeef' }
+                }
+            }
             Mock Invoke-RestMethod {
                 [pscustomobject]@{
                     tag_name = 'v7.6.4'
