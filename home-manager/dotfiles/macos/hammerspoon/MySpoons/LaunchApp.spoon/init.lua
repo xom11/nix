@@ -59,9 +59,26 @@ local rb = hs.loadSpoon("RecursiveBinder")
 -- /etc/profiles/per-user/<user>/bin is where home-manager's useUserPackages
 -- places the symlinks for `home.packages`, so this resolves the same binary
 -- that `which beckon` would resolve from a normal terminal session.
-local function beckonPath()
-	local user = os.getenv("USER") or "kln"
-	return "/etc/profiles/per-user/" .. user .. "/bin/beckon"
+-- hs.task đòi đường dẫn tuyệt đối, không nhận tên lệnh trần, nên phải tự dò. Dò một lần lúc
+-- init rồi nhớ lại, thay vì dựng lại chuỗi ở mỗi lần bấm phím.
+--
+-- Ba vị trí phủ cả ba kiểu cài Nix: profile người dùng (home-manager standalone),
+-- useUserPackages của nix-darwin/NixOS, và system profile. Bản cũ chỉ biết đúng vị trí thứ hai.
+local beckonCandidates = {
+	(os.getenv("HOME") or "") .. "/.nix-profile/bin/beckon",
+	"/etc/profiles/per-user/" .. (os.getenv("USER") or "") .. "/bin/beckon",
+	"/run/current-system/sw/bin/beckon",
+}
+
+local beckonBin = nil
+
+local function resolveBeckon()
+	for _, p in ipairs(beckonCandidates) do
+		if hs.fs.attributes(p, "mode") == "file" then
+			return p
+		end
+	end
+	return nil
 end
 
 -- Fire and forget via hs.task — non-blocking. beckon exits in ~20 ms but
@@ -69,8 +86,12 @@ end
 -- for. We attach a callback that surfaces a desktop alert if beckon exits
 -- with non-zero status (typical: app id didn't resolve).
 local function beckon(name)
-	local task
-	task = hs.task.new(beckonPath(), function(exitCode, _stdout, stderr)
+	if not beckonBin then
+		hs.alert.show("beckon: không tìm thấy binary ở " .. #beckonCandidates .. " vị trí đã dò", 4)
+		return
+	end
+
+	local task = hs.task.new(beckonBin, function(exitCode, _stdout, stderr)
 		if exitCode ~= 0 then
 			local msg = (stderr or ""):gsub("%s+$", "")
 			if msg == "" then
@@ -79,10 +100,21 @@ local function beckon(name)
 			hs.alert.show("beckon " .. name .. ": " .. msg, 3)
 		end
 	end, { name })
-	task:start()
+
+	-- start() trả về false khi không exec được (binary biến mất giữa chừng, mất bit thực thi).
+	-- Trong ca đó callback KHÔNG BAO GIỜ chạy, nên nhánh alert ở trên không cứu được — bấm
+	-- phím sẽ không ra gì và cũng không báo gì. Đó chính là hành vi của bản cũ.
+	if not task or not task:start() then
+		hs.alert.show("beckon không chạy được: " .. name, 3)
+	end
 end
 
 function obj:init()
+	beckonBin = resolveBeckon()
+	if not beckonBin then
+		hs.alert.show("LaunchApp: không tìm thấy beckon — 18 phím hyper sẽ không có tác dụng", 5)
+	end
+
 	for _, shortcut in ipairs(defaultShortcuts) do
 		hs.hotkey.bind(hyper, shortcut[1], function()
 			beckon(shortcut[2])
