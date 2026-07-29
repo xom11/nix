@@ -6,6 +6,7 @@ Describe 'windows services.sshd module' {
         function Write-OK { param($Msg) }
         function Write-Skip { param($Msg) }
         function Write-Info { param($Msg) }
+        function Write-Warn { param($Msg) }
         function Get-WindowsCapability { param([switch]$Online, $Name) }
         function Add-WindowsCapability { param([switch]$Online, $Name) }
         function Get-Service { param($Name) }
@@ -25,6 +26,12 @@ Describe 'windows services.sshd module' {
             param([Parameter(ValueFromPipeline)]$InputObject, $Protocol, $LocalPort)
             process { }
         }
+
+        $PwshMsiPath = Join-Path $env:ProgramFiles 'PowerShell\7\pwsh.exe'
+        # The DefaultShell block is guarded by this file existing, so the expected number of
+        # registry writes depends on the machine the suite runs on. Compute it rather than
+        # hardcoding, otherwise the suite only passes where PowerShell 7 MSI is installed.
+        $ExpectedShellWrites = if (Test-Path $PwshMsiPath) { 2 } else { 0 }
     }
 
     It 'exists as a selected OpenSSH service module' {
@@ -69,6 +76,19 @@ Describe 'windows services.sshd module' {
             $ModuleText | Should Match 'Write-Skip\s+''firewall:\s+inbound\s+TCP\s+22'
             $ModuleText | Should Not Match 'sshd_config'
         }
+
+        It 'points the ssh DefaultShell at the MSI build of PowerShell 7, guarded by its presence' {
+            $ModuleText = Get-Content -LiteralPath $ModulePath -Raw
+
+            $ModuleText | Should Match ([regex]::Escape('HKLM:\SOFTWARE\OpenSSH'))
+            $ModuleText | Should Match ([regex]::Escape("Join-Path `$env:ProgramFiles 'PowerShell\7\pwsh.exe'"))
+            $ModuleText | Should Match 'if\s*\(Test-Path\s+\$pwshExe\)'
+            $ModuleText | Should Match 'DefaultShellCommandOption'
+            $ModuleText | Should Match 'Write-Skip\s+"ssh\s+DefaultShell'
+            # A packaged pwsh cannot be launched by sshd, so the WindowsApps alias must never
+            # be what DefaultShell points at.
+            $ModuleText | Should Not Match 'WindowsApps'
+        }
     }
 
     Context 'when applying existing OpenSSH state' {
@@ -84,6 +104,10 @@ Describe 'windows services.sshd module' {
             Mock Write-OK { }
             Mock Write-Skip { }
             Mock Write-Info { }
+            Mock Write-Warn { }
+            # Never let the suite touch HKLM for real.
+            Mock Set-ItemProperty { }
+            Mock New-Item { }
         }
 
         It 'skips correct service and firewall state without mutation' {
@@ -100,6 +124,12 @@ Describe 'windows services.sshd module' {
             Mock Get-NetFirewallPortFilter {
                 [pscustomobject]@{ Protocol = 'TCP'; LocalPort = '22' }
             }
+            Mock Get-ItemProperty {
+                [pscustomobject]@{
+                    DefaultShell              = $PwshMsiPath
+                    DefaultShellCommandOption = '-NoProfile -Command'
+                }
+            }
 
             $module = & $ModulePath
             & $module.Apply @{}
@@ -109,6 +139,7 @@ Describe 'windows services.sshd module' {
             Assert-MockCalled -CommandName Stop-Service -Times 0 -Exactly -Scope It
             Assert-MockCalled -CommandName Set-NetFirewallRule -Times 0 -Exactly -Scope It
             Assert-MockCalled -CommandName Set-NetFirewallPortFilter -Times 0 -Exactly -Scope It
+            Assert-MockCalled -CommandName Set-ItemProperty -Times 0 -Exactly -Scope It
         }
 
         It 'repairs drifted service and firewall state' {
@@ -125,6 +156,9 @@ Describe 'windows services.sshd module' {
             Mock Get-NetFirewallPortFilter {
                 [pscustomobject]@{ Protocol = 'TCP'; LocalPort = '2222' }
             }
+            Mock Get-ItemProperty {
+                [pscustomobject]@{ DefaultShell = 'C:\Windows\System32\cmd.exe' }
+            }
 
             $module = & $ModulePath
             & $module.Apply @{}
@@ -134,6 +168,7 @@ Describe 'windows services.sshd module' {
             Assert-MockCalled -CommandName Stop-Service -Times 1 -Exactly -Scope It
             Assert-MockCalled -CommandName Set-NetFirewallRule -Times 1 -Exactly -Scope It
             Assert-MockCalled -CommandName Set-NetFirewallPortFilter -Times 1 -Exactly -Scope It
+            Assert-MockCalled -CommandName Set-ItemProperty -Times $ExpectedShellWrites -Exactly -Scope It
         }
     }
 }
