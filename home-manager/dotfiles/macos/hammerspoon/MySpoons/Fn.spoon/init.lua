@@ -34,7 +34,18 @@ function obj:init()
             return true, {hs.eventtap.rightClick(currentpos)}
         end
     end
-    fn_tapper = hs.eventtap.new({hs.eventtap.event.types.keyDown}, catcher):start()
+    -- Giữ tham chiếu trên obj chứ không phải trong _G. eventtap không còn ai tham chiếu sẽ bị
+    -- garbage-collect và lặng lẽ ngừng chạy, nên BẮT BUỘC phải neo ở đâu đó — nhưng obj (chính
+    -- là spoon.Fn, sống suốt phiên) đủ rồi, không cần thêm một global nữa.
+    obj.tapper = hs.eventtap.new({hs.eventtap.event.types.keyDown}, catcher):start()
+end
+
+function obj:stop()
+    if obj.tapper then
+        obj.tapper:stop()
+        obj.tapper = nil
+    end
+    return self
 end
 
 return obj

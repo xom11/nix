@@ -1,14 +1,25 @@
-hs = hs
-spoon = spoon
--- Enable Hammerspoon CLI
-hs.ipc.cliInstall()
+-- Enable Hammerspoon CLI (`hs -c "..."`)
+--
+-- cliInstall() chỉ tạo symlink khi cliStatus() trả về ĐÚNG BẰNG `false`. Khi cài dở dang —
+-- ví dụ có /usr/local/bin/hs nhưng thiếu share/man/man1/hs.1 — cliStatus trả về chuỗi
+-- "broken", mà "broken" là truthy nên nhánh tạo symlink không bao giờ chạy: cliInstall() trần
+-- sẽ kẹt vĩnh viễn và in "cli installation problem: incomplete installation" ở mỗi lần load.
+-- Máy này đang đúng trạng thái đó. Gỡ hẳn rồi cài lại là cách duy nhất thoát ra.
+if hs.ipc.cliStatus(nil, true) ~= true then
+    hs.ipc.cliUninstall()
+    hs.ipc.cliInstall()
+end
 
 -- Look for Spoons in ~/.hammerspoon/MySpoons as well
 package.path = package.path .. ";" .. hs.configdir .. "/MySpoons/?.spoon/init.lua"
 package.path = package.path .. ";" .. hs.configdir .. "/LibSpoons/?.spoon/init.lua"
 
-tab = { "cmd", "ctrl", "shift" }
-cap = { "ctrl", "alt", "cmd" }
+-- Bỏ `hs = hs` và `spoon = spoon`: cả hai đều là no-op, Hammerspoon đã đặt sẵn hai global đó
+-- trước khi nạp file này.
+--
+-- Bỏ luôn hai global `tab` và `cap`. `cap` không có file nào dùng; `tab` cũng vậy — Tab.spoon
+-- tự khai báo `local tab` riêng ở dòng 4 của nó. Modifier thật do kanata sinh ra
+-- (configs/kanata/kanata_macos.kbd): Tab giữ = cmd+ctrl+shift, Caps giữ = cmd+ctrl+alt.
 
 -- Spoon bên thứ ba nằm trong ~/.hammerspoon/Spoons, do Nix đặt vào từ input
 -- hammerspoon-spoons đã ghim rev trong flake.lock (xem default.nix cạnh file này).
