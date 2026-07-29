@@ -33,7 +33,6 @@ mkModule config ./. {
 
     taps = [
       # "homebrew-zathura/zathura" # zathura
-      "laishulu/homebrew" # macism
       # "kunkka19xx/tap"
     ];
 
@@ -44,7 +43,6 @@ mkModule config ./. {
       "docker-compose"
       "kanata"
       # "lima"
-      "macism"
       "micromamba"
       "openssl@3"
       "podman"

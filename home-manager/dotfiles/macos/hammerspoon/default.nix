@@ -17,7 +17,7 @@
   #
   # Chỉ hai spoon này thực sự được dùng: RecursiveBinder (LaunchApp.spoon:51 gọi lúc load,
   # thiếu là cả init.lua chết) và AClock (tab+t). AllBrightness từng được nạp nhưng không bao
-  # giờ start(), InputSourceSwitch chỉ phục vụ LanguageSwitcher đang tắt — bỏ cả hai.
+  # giờ start(), InputSourceSwitch chỉ phục vụ LanguageSwitcher (spoon đó nay đã xoá) — bỏ cả hai.
   thirdPartySpoons = ["RecursiveBinder" "AClock"];
 in
   mkModule config ./. {

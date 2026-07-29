@@ -38,11 +38,15 @@ hs.loadSpoon("TrackpadReverse")
 hs.loadSpoon("LaunchApp")
 -- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerManager")
--- hs.loadSpoon("GoNhanh")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
 hs.loadSpoon("Tab")
--- hs.loadSpoon("LanguageSwitcher")
+
+-- Chế độ gõ do `tongue` lo, gọi từ LangSwitch.spoon (phím tắt, nạp qua Tab.spoon) và
+-- LanguageMemory.spoon (nhớ theo từng app). Hai spoon cũ ở đây đã bỏ hẳn: GoNhanh.spoon tự
+-- open/killall GoNhanh — đúng việc tongue sinh ra để làm, và giành mất slot toàn cục
+-- inputSourceChanged của LanguageMemory; LanguageSwitcher.spoon thì đã hỏng từ lâu (cần
+-- InputSourceSwitch, spoon đã bị gỡ khỏi default.nix) và trùng chức năng LanguageMemory.
 hs.loadSpoon("LanguageMemory")
 
 hs.alert.show("Hammerspoon config loaded")

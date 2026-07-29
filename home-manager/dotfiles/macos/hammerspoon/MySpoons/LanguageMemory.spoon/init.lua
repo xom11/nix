@@ -1,11 +1,14 @@
 --- === LanguageMemory ===
 ---
---- Tự động nhớ và khôi phục input source cho từng application (giống fcitx5).
---- Khi focus app X, tự động switch về input source đã dùng lần cuối cho app X.
+--- Tự động nhớ và khôi phục chế độ gõ cho từng application (giống fcitx5).
+--- Khi focus app X, tự động chuyển về chế độ đã dùng lần cuối cho app X.
 ---
 --- 2 chế độ:
---- 1. Học tự động — quan sát khi user đổi input source, ghi nhớ app → sourceID
---- 2. Config thủ công — dùng setApplications(), ưu tiên hơn học tự động
+--- 1. Học tự động — ghi nhớ app → chế độ mỗi khi user bấm phím đổi ngôn ngữ
+--- 2. Config thủ công — dùng setup(), ưu tiên hơn học tự động
+---
+--- Đơn vị lưu trữ là CHẾ ĐỘ của tongue ("vi"/"en"/"zh"), không phải sourceID nữa. Việc đổi
+--- giao cho LangSwitch, tức là cho tongue — xem lý do ở onUserSwitch bên dưới.
 ---
 --- Usage:
 --- ```lua
@@ -18,7 +21,7 @@ obj.__index = obj
 
 -- Metadata
 obj.name = "LanguageMemory"
-obj.version = "1.0"
+obj.version = "2.0"
 obj.author = "kln"
 obj.homepage = "https://github.com/kln/nix"
 obj.license = "MIT"
@@ -26,18 +29,31 @@ obj.license = "MIT"
 local log = hs.logger.new("LanguageMemory", "debug")
 
 -- ──────────────────────────────────────────────
--- Lưu trữ: appName → sourceID
+-- Lưu trữ: appName → mode
 -- ──────────────────────────────────────────────
 
 local memory = {}
 local overrides = {}
 local memoryFile = hs.configdir .. "/LanguageMemory.json"
 
+local langSwitch
 local appWatcher
 local wakeWatcher
+local listening = false
+
+local VALID_MODE = { vi = true, en = true, zh = true }
+
+-- Bộ nhớ đời trước lưu sourceID. Quy ước cũ của repo: ABC = tiếng Việt (GoNhanh chạy nền),
+-- Unicode Hex Input = tiếng Anh. Chuyển đổi ngay lúc đọc để file tự lành, thay vì bắt user
+-- xoá đi rồi dạy lại từ đầu.
+local LEGACY_SOURCE = {
+    ["com.apple.keylayout.ABC"] = "vi",
+    ["com.apple.keylayout.UnicodeHexInput"] = "en",
+    ["com.apple.inputmethod.SCIM.ITABC"] = "zh",
+}
 
 -- Tiến trình giả của hệ thống: chúng phát sự kiện `activated` như app thật nên vẫn bị học,
--- nhưng nhớ input source cho chúng thì vô nghĩa. Bằng chứng: LanguageMemory.json trên máy
+-- nhưng nhớ chế độ gõ cho chúng thì vô nghĩa. Bằng chứng: LanguageMemory.json trên máy
 -- này đã có sẵn mục "loginwindow" (màn hình khoá) từ trước khi có danh sách này.
 local BLACKLIST = {
     ["loginwindow"] = true,
@@ -51,33 +67,6 @@ local BLACKLIST = {
     ["SecurityAgent"] = true,
 }
 
--- Ghi nhớ đúng lần đổi mà CHÍNH TA vừa gây ra, để bỏ qua tiếng vọng của nó.
---
--- onAppFocus gọi setSource() → macOS phát inputSourceChanged → onInputChange chạy và đọc
--- frontmostApplication(). Nếu không chặn, ta học lại chính giá trị mình vừa đặt, và trong lúc
--- chuyển app nhanh thì app đọc được có thể đã là app kế tiếp — tức là gán nhầm nguồn của app
--- cũ cho app mới.
---
--- Cố ý KHÔNG dùng cửa sổ thời gian (kiểu chặn học trong 0,5 s sau mỗi lần focus): làm vậy sẽ
--- nuốt luôn lần đổi hợp lệ nếu user bấm tab+w ngay sau khi chuyển app — đổi một lỗi hiếm lấy
--- một lỗi thường gặp hơn. So khớp cả app lẫn sourceID thì chính xác và không có tác dụng phụ.
-local applied = nil
-
--- ──────────────────────────────────────────────
--- Helper: chuyển sourceID → setLayout/setMethod
--- ──────────────────────────────────────────────
-
--- Set input source từ sourceID.
---
--- Không cache layouts/methods nữa: cache chỉ dựng 1 lần lúc start, nên input
--- source bật thêm sau đó sẽ *học* được (onInputChange không check cache) nhưng
--- không bao giờ *khôi phục* được — triệu chứng "nhớ ngôn ngữ nhưng không tự
--- chuyển". hs.keycodes.currentSourceID nhận cả layout lẫn method, nên hai nhánh
--- kia vốn cũng trả về y hệt nhau.
-local function setSource(sourceID)
-    return hs.keycodes.currentSourceID(sourceID)
-end
-
 -- ──────────────────────────────────────────────
 -- Persist
 -- ──────────────────────────────────────────────
@@ -88,73 +77,74 @@ end
 
 local function load()
     local data = hs.json.read(memoryFile)
-    if data then
-        memory = data
-        -- Dọn các mục đã lỡ học trước khi có BLACKLIST, để file tự lành thay vì bắt user
-        -- chạy :forget() bằng tay.
-        local dropped = 0
-        for name in pairs(BLACKLIST) do
-            if memory[name] then
-                memory[name] = nil
-                dropped = dropped + 1
-            end
-        end
-        if dropped > 0 then
-            save()
-            log.i(string.format("Đã bỏ %d mục pseudo-app khỏi bộ nhớ", dropped))
-        end
-        return true
+    if not data then
+        memory = {}
+        return false
     end
-    memory = {}
-    return false
+    memory = data
+
+    -- Một vòng dọn duy nhất lo cả hai việc: bỏ pseudo-app đã lỡ học trước khi có BLACKLIST,
+    -- và đổi sourceID đời cũ sang tên chế độ. Gán nil cho key ĐANG có là thao tác hợp lệ
+    -- giữa vòng pairs (chỉ thêm key mới mới không được), nên xoá tại chỗ ở đây là an toàn.
+    local changed = 0
+    for name, value in pairs(memory) do
+        if BLACKLIST[name] then
+            memory[name] = nil
+            changed = changed + 1
+        elseif not VALID_MODE[value] then
+            -- Không nhận ra thì bỏ hẳn: thà quên còn hơn khôi phục nhầm.
+            memory[name] = LEGACY_SOURCE[value]
+            changed = changed + 1
+        end
+    end
+    if changed > 0 then
+        save()
+        log.i(string.format("Đã dọn/chuyển đổi %d mục trong bộ nhớ", changed))
+    end
+    return true
 end
 
 -- ──────────────────────────────────────────────
 -- Logic chính
 -- ──────────────────────────────────────────────
 
--- Khi app A được focus: restore ngay lập tức
+-- Khi app A được focus: khôi phục ngay.
+--
+-- Không hỏi "máy đang ở chế độ nào?" trước. Hỏi tốn thêm một tiến trình con, mà câu trả lời
+-- có thể đã cũ ngay lúc ta hành động; trong khi `tongue <mode>` vốn đã idempotent — nó tự đọc
+-- trạng thái thật, chỉ áp phần lệch, và đúng chế độ rồi thì không đụng gì cả.
 local function onAppFocus(appName)
     if not appName then return end
     if BLACKLIST[appName] then return end
 
-    local sid = overrides[appName] or memory[appName]
-    if not sid then return end
+    local mode = overrides[appName] or memory[appName]
+    if not mode then return end
 
-    -- Đã đúng nguồn rồi thì không đụng vào. Nhờ vậy `applied` chỉ được đặt khi thật sự có
-    -- thay đổi, nên chắc chắn sẽ có đúng một sự kiện inputSourceChanged theo sau để tiêu thụ
-    -- nó — không có chuyện cờ còn treo lơ lửng tới lần đổi hợp lệ sau đó.
-    if hs.keycodes.currentSourceID() == sid then return end
-
-    applied = {app = appName, sid = sid}
-    setSource(sid)
+    langSwitch:apply(mode)
 end
 
--- Khi user đổi input source: học ngay
-local function onInputChange()
-    -- Tiêu thụ cờ ngay đầu hàm: nó chỉ được sống qua đúng một sự kiện.
-    local echo = applied
-    applied = nil
-
+-- Học từ chính hành động của người dùng (tab+q/w/e), không phải từ sự kiện của macOS.
+--
+-- Bắt buộc phải vậy: với bộ gõ ngoài thì `vi` và `en` dùng CHUNG một input source (ABC), thứ
+-- phân biệt hai chế độ là bộ gõ đang bật hay tắt. macOS không phát inputSourceChanged cho lần
+-- đổi đó, nên bản cũ — vốn học bằng cách nghe sự kiện ấy — sẽ mù đúng cái chuyển hay dùng
+-- nhất, chỉ còn thấy mỗi lần sang tiếng Trung.
+--
+-- Đổi nguồn tín hiệu như vậy còn xoá luôn bài toán tiếng vọng: LangSwitch chỉ báo cho ta khi
+-- CHÍNH người dùng bấm phím, còn lần khôi phục do ta gây ra đi qua :apply() và im lặng.
+local function onUserSwitch(mode)
     local app = hs.application.frontmostApplication()
     if not app then return end
     local name = app:name()
     if not name then return end
 
     if BLACKLIST[name] then return end
-    if overrides[name] then return end  -- không ghi đè config thủ công
+    if overrides[name] then return end -- không ghi đè config thủ công
+    if memory[name] == mode then return end
 
-    local sid = hs.keycodes.currentSourceID()
-    if not sid then return end
-
-    -- Tiếng vọng của chính lần restore vừa rồi, không phải user đổi.
-    if echo and echo.app == name and echo.sid == sid then return end
-
-    if memory[name] == sid then return end  -- không đổi
-
-    memory[name] = sid
+    memory[name] = mode
     save()
-    log.d("Learned: " .. name .. " → " .. sid)
+    log.d("Learned: " .. name .. " → " .. mode)
 end
 
 -- ──────────────────────────────────────────────
@@ -169,6 +159,16 @@ function obj:start()
 
     load()
 
+    langSwitch = hs.loadSpoon("LangSwitch")
+
+    -- Đăng ký đúng một lần cho mỗi phiên Lua: listener của LangSwitch chỉ có thêm chứ không
+    -- gỡ được, nên start() lần hai sẽ khiến mỗi lần đổi chế độ gọi ta hai lượt. (Reload
+    -- Hammerspoon dựng lại state mới nên cờ này tự về false, đúng như mong muốn.)
+    if not listening then
+        langSwitch:onModeChange(onUserSwitch)
+        listening = true
+    end
+
     -- Watch app focus
     appWatcher = hs.application.watcher.new(function(name, event, app)
         if event == hs.application.watcher.activated then
@@ -177,15 +177,8 @@ function obj:start()
     end)
     appWatcher:start()
 
-    -- Watch input source change → học
-    --
-    -- CHÚ Ý: hs.keycodes.inputSourceChanged chỉ có MỘT slot toàn cục — nó gọi
-    -- keycodes._callback:_stop() rồi thay bằng callback mới. Đừng đăng ký ở chỗ nào khác,
-    -- nếu không cái đăng ký sau sẽ âm thầm gỡ cái này (GoNhanh.spoon từng làm đúng vậy).
-    hs.keycodes.inputSourceChanged(onInputChange)
-
     -- Chỉ riêng `activated` là không đủ: sau khi máy ngủ dậy hoặc mở khoá màn hình, app đang
-    -- focus không phát `activated` lần nữa, nên nguồn nhập vẫn là cái mà loginwindow để lại.
+    -- focus không phát `activated` lần nữa, nên chế độ gõ vẫn là cái mà loginwindow để lại.
     -- Hoãn một nhịp để hệ thống ổn định trước khi đặt lại.
     wakeWatcher = hs.caffeinate.watcher.new(function(event)
         local w = hs.caffeinate.watcher
@@ -213,17 +206,23 @@ function obj:stop()
         wakeWatcher:stop()
         wakeWatcher = nil
     end
-    applied = nil
     log.i("Stopped")
     return self
 end
 
+--- LanguageMemory:setup(config)
+--- Method
+--- config.applications: bảng appName -> chế độ ("vi"/"en"/"zh"), ưu tiên hơn phần tự học.
 function obj:setup(config)
     if config then
         if config.applications then
-            for name, sid in pairs(config.applications) do
-                overrides[name] = sid
-                memory[name] = sid
+            for name, mode in pairs(config.applications) do
+                if VALID_MODE[mode] then
+                    overrides[name] = mode
+                    memory[name] = mode
+                else
+                    log.e(string.format("bỏ qua %s: chế độ không hợp lệ %q", name, tostring(mode)))
+                end
             end
             save()
         end

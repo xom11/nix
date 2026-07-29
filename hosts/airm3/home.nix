@@ -5,6 +5,7 @@
   home.packages = [
     pkgs.bws
     pkgs.beckon
+    pkgs.tongue
   ];
   modules.home-manager = {
     base = {
