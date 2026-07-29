@@ -65,9 +65,12 @@
         $pwshExe = Join-Path $env:ProgramFiles 'PowerShell\7\pwsh.exe'
         if (Test-Path $pwshExe) {
             $sshRegPath = 'HKLM:\SOFTWARE\OpenSSH'
-            # -NoProfile applies only to `ssh <host> <command>`; an interactive `ssh <host>`
-            # still loads the profile. Non-interactive calls skip the ~2s profile cost.
-            $wantedCommandOption = '-NoProfile -Command'
+            # Must stay a SINGLE token: sshd passes this through as one argv entry, so
+            # '-NoProfile -Command' arrives as one literal argument, pwsh reads it as a file
+            # path and every `ssh <host> <cmd>` dies with a usage dump -- which also takes
+            # scp and sftp down with it, since the sftp subsystem is spawned through this
+            # same shell. '-c' is the only form that works, and it does load the profile.
+            $wantedCommandOption = '-c'
 
             if (-not (Test-Path $sshRegPath)) {
                 New-Item -Path $sshRegPath -Force | Out-Null

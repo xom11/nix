@@ -84,6 +84,9 @@ Describe 'windows services.sshd module' {
             $ModuleText | Should Match ([regex]::Escape("Join-Path `$env:ProgramFiles 'PowerShell\7\pwsh.exe'"))
             $ModuleText | Should Match 'if\s*\(Test-Path\s+\$pwshExe\)'
             $ModuleText | Should Match 'DefaultShellCommandOption'
+            # sshd passes the option as one argv entry, so anything with a space in it breaks
+            # every non-interactive ssh call, scp and sftp included.
+            $ModuleText | Should Match '\$wantedCommandOption\s*=\s*''-c'''
             $ModuleText | Should Match 'Write-Skip\s+"ssh\s+DefaultShell'
             # A packaged pwsh cannot be launched by sshd, so the WindowsApps alias must never
             # be what DefaultShell points at.
@@ -127,7 +130,7 @@ Describe 'windows services.sshd module' {
             Mock Get-ItemProperty {
                 [pscustomobject]@{
                     DefaultShell              = $PwshMsiPath
-                    DefaultShellCommandOption = '-NoProfile -Command'
+                    DefaultShellCommandOption = '-c'
                 }
             }
 
