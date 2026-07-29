@@ -76,8 +76,10 @@
             if ($sshReg.DefaultShell -eq $pwshExe -and $sshReg.DefaultShellCommandOption -eq $wantedCommandOption) {
                 Write-Skip "ssh DefaultShell: pwsh 7"
             } else {
-                Set-ItemProperty -Path $sshRegPath -Name DefaultShell -Value $pwshExe -Type String
-                Set-ItemProperty -Path $sshRegPath -Name DefaultShellCommandOption -Value $wantedCommandOption -Type String
+                # No -Type: it is a registry-provider dynamic parameter, which Pester's mocks
+                # cannot bind. A [string] value already lands as REG_SZ, which is what sshd wants.
+                Set-ItemProperty -Path $sshRegPath -Name DefaultShell -Value $pwshExe
+                Set-ItemProperty -Path $sshRegPath -Name DefaultShellCommandOption -Value $wantedCommandOption
                 Write-OK "ssh DefaultShell: $pwshExe"
             }
         } else {
