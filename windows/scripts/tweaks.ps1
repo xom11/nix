@@ -9,8 +9,10 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 ###############################################################################
 Write-Host "Configuring System..." -ForegroundColor "Yellow"
 
-# Set Computer Name
-Rename-Computer -NewName "KLN-PC" -Force -ErrorAction SilentlyContinue
+# Computer name is deliberately not set here. This used to rename the machine to "KLN-PC",
+# which meant re-running the script silently renamed a host that had since been called
+# something else (a14-win answers to ZENBOOK-A14). Hostnames are per-machine identity, not
+# something a shared tweak script should decide -- set it once by hand.
 
 # Enable Developer Mode: Enable: 1, Disable: 0
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" "AllowDevelopmentWithoutDevLicense" 1

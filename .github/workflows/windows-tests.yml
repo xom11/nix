@@ -1,0 +1,58 @@
+name: Windows tests
+
+# The Pester suite under windows/tests was never run by CI, which is exactly how three
+# assertions drifted out of sync with the modules and stayed that way: they asserted PT30S
+# where the code said PT5S, a scoop shim path the launcher had stopped using, and a mock
+# trigger missing the Delay the module compares. Nothing failed, because nothing ran them.
+#
+# The suite is written against the Pester 3.4.0 that ships in Windows PowerShell 5.1, not the
+# Pester 5 syntax (`Should Match`, not `Should -Match`), so it runs under powershell.exe with
+# -MaximumVersion pinned. Newer Pester is present on the runner and would reject the syntax.
+
+on:
+  push:
+    paths:
+      - "windows/**"
+      - "home-manager/dotfiles/windows/**"
+      - ".github/workflows/windows-tests.yml"
+  pull_request:
+    paths:
+      - "windows/**"
+      - "home-manager/dotfiles/windows/**"
+      - ".github/workflows/windows-tests.yml"
+  workflow_dispatch:
+
+jobs:
+  pester:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Pester
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          Import-Module Pester -MaximumVersion 4.99.99
+          $pester = Get-Module Pester
+          Write-Host "Pester $($pester.Version) from $($pester.ModuleBase)"
+          if ($pester.Version.Major -ge 5) {
+            throw "need the in-box Pester 3.x; got $($pester.Version)"
+          }
+
+          # ahkRuntimeSafety actually executes AutoHotkey to prove switch-language.ahk survives
+          # a missing target window. AutoHotkey is not on the runner, so that file is the one
+          # thing this job cannot cover -- it stays a local check.
+          $files = Get-ChildItem "$env:GITHUB_WORKSPACE\windows\tests" -Filter *.Tests.ps1 |
+            Where-Object { $_.Name -ne 'ahkRuntimeSafety.Tests.ps1' }
+          Write-Host "Running: $(($files.Name) -join ', ')"
+
+          $result = Invoke-Pester -Path $files.FullName -PassThru
+          Write-Host "Passed=$($result.PassedCount) Failed=$($result.FailedCount)"
+          if ($result.FailedCount -gt 0) {
+            $result.TestResult | Where-Object { -not $_.Passed } | ForEach-Object {
+              Write-Host "::error::$($_.Describe) > $($_.Name): $($_.FailureMessage)"
+            }
+            exit 1
+          }

@@ -29,8 +29,28 @@ function New-IdempotentSymlink {
                     }
                 } catch { }
             }
+            # A link pointing somewhere else. The link holds no data of its own, so replacing
+            # it costs nothing.
+            Remove-Item $Target -Force -Recurse
+        } else {
+            # A real file or directory is sitting where the link belongs. This used to be
+            # deleted outright by the same Remove-Item -Recurse, which would have taken real
+            # config -- or a whole directory of it -- with it, with no copy kept. Move it aside
+            # instead and let the caller decide what to do with it.
+            $backup = "$Target.bak"
+            $n = 1
+            while (Test-Path $backup) {
+                $backup = "$Target.bak$n"
+                $n++
+            }
+            try {
+                Move-Item -LiteralPath $Target -Destination $backup -Force -ErrorAction Stop
+                Write-Warn "$Target existed as a real path - moved to $backup"
+            } catch {
+                Write-Fail "$Target is in the way and could not be moved aside: $_"
+                return $false
+            }
         }
-        Remove-Item $Target -Force -Recurse
     }
 
     try {
