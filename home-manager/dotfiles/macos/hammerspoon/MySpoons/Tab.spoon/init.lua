@@ -199,5 +199,16 @@ function obj:init()
 	hotkey:bind(tab, "t", function()
 		drawonscreen.toggleAnnotating()
 	end)
+
+	-- Escape cũng thoát. Trong lúc modal mở, DrawOnScreen phủ một canvas nuốt chuột
+	-- (canvasMouseEvents + mouseCallback rỗng ở DrawOnScreen.spoon:48-49, cộng một eventtap
+	-- bắt leftMouseDown/Dragged), nên click không tới được app nào. Bản cũ chỉ thoát được
+	-- bằng đúng tab+d: quên tổ hợp là kẹt, mà chuột thì đã hết tác dụng để mò ra.
+	--
+	-- Cố ý KHÔNG thêm timer tự thoát: nó không reset theo hoạt động vẽ, nên đang trình bày
+	-- quá thời gian là overlay biến mất giữa chừng không báo trước.
+	hotkey:bind({}, "escape", function()
+		hotkey:exit()
+	end)
 end
 return obj
