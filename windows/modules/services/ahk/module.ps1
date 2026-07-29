@@ -32,14 +32,27 @@
         # Use full SID-style identity (USERDOMAIN may be 'WORKGROUP' in SSH sessions)
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute $ahkExe -Argument "`"$ahkFile`""
-        $trigger   = New-ScheduledTaskTrigger -AtLogon
-        $trigger.Delay = 'PT15S'
-        # Repeat the trigger forever as a watchdog. main.ahk is meant to stay resident, but it
-        # was found dead on a machine where the logon run had exited within minutes of boot and
-        # nothing brought it back until the next logon. MultipleInstances is IgnoreNew, so while
-        # the script is alive every repeat is a no-op; once it is gone, the next one revives it.
-        $trigger.Repetition = (New-ScheduledTaskTrigger -Once -At (Get-Date) `
-            -RepetitionInterval (New-TimeSpan -Minutes 5)).Repetition
+        $logonTrigger = New-ScheduledTaskTrigger -AtLogon
+        $logonTrigger.Delay = 'PT15S'
+
+        # Watchdog. main.ahk is meant to stay resident, but it was found dead on a machine
+        # where the logon run had exited within minutes of boot and nothing brought it back
+        # until the next logon.
+        #
+        # This has to be its own trigger. Hanging a Repetition off the logon trigger does not
+        # work: the repetition only starts counting when that trigger next fires, so on an
+        # already-logged-on machine it never runs at all -- six minutes of watching the Task
+        # Scheduler log after registering it that way produced no events whatsoever. A time
+        # trigger anchored in the past is live the moment the task is registered.
+        #
+        # MultipleInstances is IgnoreNew, so every repeat is a no-op while the script is
+        # alive; once it is gone, the next repeat revives it within five minutes.
+        # The anchor is a fixed date, not Get-Date -- a moving StartBoundary would differ on
+        # every apply run and re-register a task that was already correct.
+        $watchdogTrigger = New-ScheduledTaskTrigger -Once -At '2020-01-01T00:00:00' `
+            -RepetitionInterval (New-TimeSpan -Minutes 5)
+
+        $triggers = @($logonTrigger, $watchdogTrigger)
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
         # ExecutionTimeLimit 0 = no limit. The default the task carried was PT72H, which would
         # have had Task Scheduler kill a healthy script after three days of uptime.
@@ -47,16 +60,22 @@
             -StartWhenAvailable -ExecutionTimeLimit 0
 
         $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+        $existingLogon = @($existingTask.Triggers |
+            Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskLogonTrigger' })
+        $existingWatchdog = @($existingTask.Triggers |
+            Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskTimeTrigger' })
+
         $taskMatches = $existingTask -and
             @($existingTask.Actions).Count -eq 1 -and
             $existingTask.Actions[0].Execute -eq $action.Execute -and
             $existingTask.Actions[0].Arguments -eq $action.Arguments -and
-            @($existingTask.Triggers).Count -eq 1 -and
-            $existingTask.Triggers[0].CimClass.CimClassName -eq $trigger.CimClass.CimClassName -and
-            (Test-TaskUserMatch $existingTask.Triggers[0].UserId $trigger.UserId) -and
-            [string]$existingTask.Triggers[0].Delay -eq [string]$trigger.Delay -and
-            [string]$existingTask.Triggers[0].Repetition.Interval -eq [string]$trigger.Repetition.Interval -and
-            [string]$existingTask.Triggers[0].Repetition.Duration -eq [string]$trigger.Repetition.Duration -and
+            @($existingTask.Triggers).Count -eq 2 -and
+            $existingLogon.Count -eq 1 -and
+            $existingWatchdog.Count -eq 1 -and
+            (Test-TaskUserMatch $existingLogon[0].UserId $logonTrigger.UserId) -and
+            [string]$existingLogon[0].Delay -eq [string]$logonTrigger.Delay -and
+            [string]$existingWatchdog[0].Repetition.Interval -eq [string]$watchdogTrigger.Repetition.Interval -and
+            [string]$existingWatchdog[0].Repetition.Duration -eq [string]$watchdogTrigger.Repetition.Duration -and
             (Test-TaskUserMatch $existingTask.Principal.UserId $principal.UserId) -and
             $existingTask.Principal.LogonType -eq $principal.LogonType -and
             $existingTask.Principal.RunLevel -eq $principal.RunLevel -and
@@ -70,7 +89,7 @@
             return
         }
 
-        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force | Out-Null
+        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $triggers -Principal $principal -Settings $settings -Force | Out-Null
         Write-OK "scheduled task: $taskName ($ahkExe)"
     }
 }

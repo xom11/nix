@@ -19,13 +19,20 @@ Describe 'windows scheduled service task modules' {
                     Execute   = $Execute
                     Arguments = "`"$script:AhkFile`""
                 })
-                Triggers = @([pscustomobject]@{
-                    CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
-                    UserId   = $null
-                    Delay    = 'PT15S'
-                    # Watchdog repetition: empty Duration means it repeats indefinitely.
-                    Repetition = [pscustomobject]@{ Interval = 'PT5M'; Duration = '' }
-                })
+                Triggers = @(
+                    [pscustomobject]@{
+                        CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
+                        UserId   = $null
+                        Delay    = 'PT15S'
+                    }
+                    # The watchdog is a separate time trigger, not a repetition hung off the
+                    # logon trigger -- that variant never fires on an already-logged-on machine.
+                    # Empty Duration means it repeats indefinitely.
+                    [pscustomobject]@{
+                        CimClass   = [pscustomobject]@{ CimClassName = 'MSFT_TaskTimeTrigger' }
+                        Repetition = [pscustomobject]@{ Interval = 'PT5M'; Duration = '' }
+                    }
+                )
                 Principal = [pscustomobject]@{
                     # Task Scheduler reads principals back without the domain part, which is
                     # exactly the drift Test-TaskUserMatch has to absorb.

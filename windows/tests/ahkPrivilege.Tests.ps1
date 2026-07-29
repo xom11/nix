@@ -23,10 +23,20 @@ Describe 'windows AutoHotkey privilege model' {
     It 'keeps the resident AutoHotkey script alive across its own death and past 72 hours' {
         # main.ahk is Persistent; the task must not be the thing that ends it, and must bring
         # it back if it dies, since the only other trigger is the next logon.
-        $script:AhkTaskModule | Should Match '\$trigger\.Repetition\s*='
         $script:AhkTaskModule | Should Match 'RepetitionInterval'
         $script:AhkTaskModule | Should Match '-ExecutionTimeLimit 0'
         $script:AhkTaskModule | Should Match 'Repetition\.Interval'
+    }
+
+    It 'arms the watchdog as its own time trigger, live without waiting for a logon' {
+        # A Repetition hung off the logon trigger only starts counting when that trigger next
+        # fires, so it does nothing on a machine that is already logged on.
+        $script:AhkTaskModule | Should Match '\$watchdogTrigger\s*=\s*New-ScheduledTaskTrigger\s+-Once'
+        $script:AhkTaskModule | Should Match 'MSFT_TaskTimeTrigger'
+        $script:AhkTaskModule | Should Not Match '\$logonTrigger\.Repetition\s*='
+        # A moving anchor would re-register the task on every apply run.
+        $script:AhkTaskModule | Should Not Match '-Once\s+-At\s+\(Get-Date\)'
+        $script:AhkTaskModule | Should Match '-Trigger \$triggers'
     }
 
     It 'keeps Kanata isolated in its own elevated scheduled task' {
