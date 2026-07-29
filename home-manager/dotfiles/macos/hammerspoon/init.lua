@@ -10,25 +10,16 @@ package.path = package.path .. ";" .. hs.configdir .. "/LibSpoons/?.spoon/init.l
 tab = { "cmd", "ctrl", "shift" }
 cap = { "ctrl", "alt", "cmd" }
 
-hs.loadSpoon("SpoonInstall")
-
--- KHÔNG gọi spoon.SpoonInstall:updateRepo("default") ở đây. Nó tải index 1,2 MB của repo
--- Spoons bằng hs.http.get — đồng bộ, chặn main thread — ở MỌI lần Hammerspoon khởi động và
--- mọi lần tab+r reload, kể cả khi cả 4 spoon đã nằm sẵn trên đĩa. Docstring của chính
--- SpoonInstall cũng khuyên đừng dùng nó trong file config, và ghi rõ dữ liệu repo không được
--- lưu lại nên lần nào cũng tải lại từ đầu.
+-- Spoon bên thứ ba nằm trong ~/.hammerspoon/Spoons, do Nix đặt vào từ input
+-- hammerspoon-spoons đã ghim rev trong flake.lock (xem default.nix cạnh file này).
 --
--- Bỏ đi là an toàn: andUse() gọi hs.spoons.use(name, arg, true) trước tiên, thấy spoon có sẵn
--- là trả về ngay không đụng mạng; chỉ khi thiếu spoon nó mới tự gọi updateRepo (init.lua:405-445
--- của SpoonInstall). Đo trên macmini: mất ~0,30 s mỗi lần load khi mạng tốt, và chặn tới hết
--- timeout của NSURLSession khi không có mạng — đúng lúc mở airm3 ở nơi chưa nối wifi.
---
--- use_syncinstall phải giữ = true: nếu để async thì spoon chưa sẵn sàng lúc LaunchApp load ở
--- dưới, rb.singleKey sẽ là nil và cả file chết từ đó.
-spoon.SpoonInstall.use_syncinstall = true
-
-spoon.SpoonInstall:andUse("RecursiveBinder")
-spoon.SpoonInstall:andUse("AllBrightness")
+-- Trước đây chỗ này chạy SpoonInstall: nó gọi updateRepo("default") tải index 1,2 MB bằng
+-- hs.http.get — đồng bộ, chặn main thread — ở mọi lần khởi động và mọi lần tab+r reload, kể
+-- cả khi spoon đã nằm sẵn trên đĩa. Tệ hơn: Spoons/ bị .gitignore che, nên trên máy clone
+-- mới mà mạng hỏng thì RecursiveBinder không tải được, rb.singleKey thành nil, LaunchApp
+-- chết ngay dòng dưới và MỌI hotkey sau đó không được bind. Ghim qua Nix cắt cả hai vấn đề:
+-- không lời gọi mạng nào lúc khởi động, và spoon luôn có mặt sau lần build đầu.
+hs.loadSpoon("RecursiveBinder")
 
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")

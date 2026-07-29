@@ -26,7 +26,8 @@ function obj:init()
 		hs.toggleConsole()
 	end)
 	-- PART: Analog clock
-	spoon.SpoonInstall:andUse("AClock")
+	-- AClock do Nix đặt vào ~/.hammerspoon/Spoons từ input hammerspoon-spoons; không cần
+	-- SpoonInstall:andUse() để tải nữa (lời gọi đó vốn cũng thừa vì loadSpoon ngay dưới).
 	hs.loadSpoon("AClock")
 	hs.hotkey.bind(tab, "t", function()
 		spoon.AClock:toggleShow()

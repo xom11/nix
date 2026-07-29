@@ -61,6 +61,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Spoon của bên thứ ba cho Hammerspoon. Ghim ở đây thay vì commit vào repo:
+    # code không phải của mình thì không nằm trong cây làm việc, nhưng vẫn được
+    # flake.lock cố định rev nên tái lập được và không cần mạng lúc Hammerspoon
+    # khởi động. Nâng cấp có chủ đích: nix flake update hammerspoon-spoons
+    hammerspoon-spoons = {
+      url = "github:Hammerspoon/Spoons";
+      flake = false;
+    };
+
   };
 
   outputs =
