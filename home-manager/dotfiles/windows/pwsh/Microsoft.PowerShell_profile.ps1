@@ -6,13 +6,21 @@ $Ps1d = Join-Path $PSScriptRoot 'ps1.d'
 # including the sftp subsystem behind scp -- through `pwsh -c`, so anything only a human
 # needs is pure overhead there. Not exhaustive (pwsh accepts abbreviations), but it covers
 # every launcher that actually starts a shell here: sshd, Windows Terminal, VS Code.
-$Interactive = -not ([Environment]::GetCommandLineArgs() |
-    Where-Object { $_ -match '^-(c|command|f|file|e|encodedcommand|noninteractive)$' })
+# A plain foreach, not a Where-Object pipeline: the pipeline version measured 43 ms, which
+# every scp would have paid, and this runs before anything else can be skipped.
+$Interactive = $true
+foreach ($arg in [Environment]::GetCommandLineArgs()) {
+    if ($arg -match '^-(c|command|f|file|e|encodedcommand|noninteractive)$') {
+        $Interactive = $false
+        break
+    }
+}
 
 # Tools that print their own bootstrap script (oh-my-posh, zoxide, gh) produce the same
 # output until the tool itself is upgraded, so generate it once and dot-source the result
-# afterwards. Regenerating on every start meant the shell spent longer asking tools to
-# print their setup code than doing anything with it.
+# afterwards. `oh-my-posh init pwsh` in particular only emits a 260-byte wrapper that turns
+# around and runs oh-my-posh a second time for the real 60 KB script; caching the 60 KB
+# directly measured 94-105 ms against 227-241 ms for the round trip.
 $InitCache = Join-Path $env:LOCALAPPDATA 'pwsh-init-cache'
 
 function Import-CachedInit {
