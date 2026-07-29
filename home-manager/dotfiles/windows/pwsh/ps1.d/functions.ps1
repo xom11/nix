@@ -1,4 +1,17 @@
 
+# Teach zoxide about the dotfile directories in $HOME. This used to run on every shell start,
+# spawning one zoxide process per directory (10 here, ~230 ms) to re-add entries it already
+# had. Run it by hand after creating a new dotfile directory.
+function Update-ZoxideSeed {
+    if (-not (Get-Command zoxide -ErrorAction SilentlyContinue)) {
+        Write-Warning 'zoxide not installed'
+        return
+    }
+    $dirs = Get-ChildItem -Path $HOME -Directory -Force -Filter '.*'
+    $dirs | ForEach-Object { zoxide add $_.FullName }
+    Write-Host "seeded $($dirs.Count) directories into zoxide"
+}
+
 # Basic commands
 function which($name) { Get-Command $name -ErrorAction SilentlyContinue | Select-Object Definition }
 function touch($file) { "" | Out-File $file -Encoding ASCII }
