@@ -20,6 +20,15 @@ Describe 'windows AutoHotkey privilege model' {
         $script:AhkTaskModule | Should Not Match 'Run as Admin'
     }
 
+    It 'keeps the resident AutoHotkey script alive across its own death and past 72 hours' {
+        # main.ahk is Persistent; the task must not be the thing that ends it, and must bring
+        # it back if it dies, since the only other trigger is the next logon.
+        $script:AhkTaskModule | Should Match '\$trigger\.Repetition\s*='
+        $script:AhkTaskModule | Should Match 'RepetitionInterval'
+        $script:AhkTaskModule | Should Match '-ExecutionTimeLimit 0'
+        $script:AhkTaskModule | Should Match 'Repetition\.Interval'
+    }
+
     It 'keeps Kanata isolated in its own elevated scheduled task' {
         Test-Path -LiteralPath $script:KanataTaskModulePath | Should Be $true
         $kanataTaskModule = Get-Content -Raw $script:KanataTaskModulePath
