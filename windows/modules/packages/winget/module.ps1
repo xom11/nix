@@ -25,11 +25,13 @@
             'DEVCOM.JetBrainsMonoNerdFont'
 
             # ---- System tools ----
+            '7zip.7zip'
             'AutoHotkey.AutoHotkey'
             'gerardog.gsudo'              # de-elevation in shell (sudo equivalent)
+            'PhatMT97.VKey'               # Vietnamese IME; ahk/evkey-monitor.ahk watches it
 
             # ---- Service ----
-            'Syncthing.Syncthing'
+            'Syncthing.Syncthing'         # installed on demand; the logon task is disabled in apply.ps1
         )
     }
 }

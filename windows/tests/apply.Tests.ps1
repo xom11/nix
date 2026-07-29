@@ -10,7 +10,6 @@ Describe 'windows/apply.ps1 shared entry point' {
             'packages.npm'
             'dotfiles.pwsh'
             'dotfiles.windows-terminal'
-            'dotfiles.powertoys'
             'dotfiles.vscode'
             'dotfiles.terminal.wezterm'
             'dotfiles.ai.claude'
@@ -22,14 +21,28 @@ Describe 'windows/apply.ps1 shared entry point' {
             'programs.yazi'
             'services.kanata'
             'services.ahk'
-            'services.syncthing'
             'services.sshd'
+        )
+        # Kept in the file as commented-out entries so the reason survives; they must not be
+        # silently active. The plain-substring assertion below cannot tell the two apart, so
+        # these get their own check.
+        $DisabledModules = @(
+            'dotfiles.powertoys'
+            'services.syncthing'
         )
     }
 
     It 'owns the single Windows module selection directly' {
         foreach ($module in $ExpectedModules) {
-            $ApplyText | Should Match ([regex]::Escape("'$module'"))
+            # (?m) so ^ anchors per line -- PowerShell's -match is single-line by default.
+            $ApplyText | Should Match ("(?m)^\s*'" + [regex]::Escape($module) + "'")
+        }
+    }
+
+    It 'keeps disabled modules commented out rather than active' {
+        foreach ($module in $DisabledModules) {
+            $ApplyText | Should Match ("(?m)^\s*#\s*'" + [regex]::Escape($module) + "'")
+            $ApplyText | Should Not Match ("(?m)^\s*'" + [regex]::Escape($module) + "'")
         }
     }
 

@@ -37,13 +37,16 @@ Describe 'windows AutoHotkey privilege model' {
         $kanataTaskModule | Should Match 'launch-kanata\.ahk'
         $kanataTaskModule | Should Not Match 'kanata_windows_tty_winIOv2_x64\.exe'
         $kanataTaskModule | Should Not Match 'kanata_windows_gui_winIOv2_x64\.exe'
-        $kanataTaskModule | Should Match '\$trigger\.Delay\s*=\s*''PT30S'''
+        $kanataTaskModule | Should Match '\$trigger\.Delay\s*=\s*''PT5S'''
         $kanataTaskModule | Should Match 'WorkingDirectory'
         $kanataTaskModule | Should Not Match 'scoop\\shims\\kanata\.exe'
     }
 
     It 'keeps the Kanata launcher hidden and independent of PATH' {
-        $script:LaunchKanata | Should Match 'scoop\\shims\\kanata\.exe'
+        # The launcher resolves the binary itself rather than going through the scoop shim, so
+        # ProcessExist/ProcessClose can target the real process name before restarting it.
+        $script:LaunchKanata | Should Match 'scoop\\apps\\kanata\\current\\kanata_windows_tty_winIOv2_x64\.exe'
+        $script:LaunchKanata | Should Not Match 'scoop\\shims\\kanata\.exe'
         $script:LaunchKanata | Should Match 'Run\(KanataExe .+ "Hide"\)'
     }
 }

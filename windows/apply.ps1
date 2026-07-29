@@ -9,15 +9,15 @@ $ErrorActionPreference = 'Stop'
 
 $modules = @(
     # ---- packages ----
-    'packages.winget'             # all apps + CLI tools + 7zip + gsudo
-    'packages.scoop'              # non-winget packages (auto de-elevates via gsudo)
+    'packages.winget'             # GUI apps, fonts, system tools
+    'packages.scoop'              # portable CLI dev tools
     'packages.psmodules'          # PowerShell modules
-    'packages.npm'                # global npm packages (needs nodejs from winget)
+    'packages.npm'                # global npm packages (needs nodejs from scoop)
 
     # ---- dotfiles (Windows-native) ----
     'dotfiles.pwsh'
     'dotfiles.windows-terminal'
-    'dotfiles.powertoys'
+    # 'dotfiles.powertoys'        # disabled: PowerToys is not installed on any host
 
     # ---- dotfiles (shared with home-manager) ----
     'dotfiles.vscode'
@@ -49,7 +49,9 @@ function Wait-ForExit {
 
 $IsAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
-# Self-elevate upfront. Everything runs as admin; scoop is de-elevated internally via gsudo.
+# Self-elevate upfront: registering scheduled tasks, adding Windows capabilities and writing
+# firewall rules all need admin. Scoop itself installs per-user under $env:USERPROFILE\scoop
+# regardless, so running it from this elevated process still lands in the invoking user's profile.
 if (-not $IsAdmin) {
     if ($NoElevate -or $env:SSH_CLIENT -or $env:SSH_CONNECTION) {
         Write-Host "ERROR: not running as admin. Open elevated pwsh (or SSH as a local admin user)." -ForegroundColor Red
@@ -78,6 +80,7 @@ try {
     Import-Module (Join-Path $WindowsDir 'lib\Logging.psm1') -Force
     Import-Module (Join-Path $WindowsDir 'lib\Symlink.psm1') -Force
     Import-Module (Join-Path $WindowsDir 'lib\Package.psm1') -Force
+    Import-Module (Join-Path $WindowsDir 'lib\ScheduledTask.psm1') -Force
 
     $Ctx = @{
         RepoRoot       = $RepoRoot

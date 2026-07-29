@@ -16,10 +16,9 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" }
     )
 
-    'dotfiles.powertoys' = @(
-        @{ Source = "$Hm\dotfiles\windows\PowerToys\settings.json"
-           Target = "$env:LOCALAPPDATA\Microsoft\PowerToys\settings.json" }
-    )
+    # 'dotfiles.powertoys' is intentionally absent: PowerToys is not installed on any host, so
+    # the link only created a stray settings.json. The source file is kept in the repo for when
+    # PowerToys comes back -- re-add the entry here and to $modules in apply.ps1 at that point.
 
     'dotfiles.vscode' = @(
         @{ Source = "$Hm\dotfiles\vscode\settings.json"

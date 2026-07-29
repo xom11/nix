@@ -4,6 +4,10 @@ Describe 'windows scheduled service task modules' {
         $AhkModulePath = Join-Path $RepoRoot 'windows\modules\services\ahk\module.ps1'
         $SyncthingModulePath = Join-Path $RepoRoot 'windows\modules\services\syncthing\module.ps1'
 
+        # The modules compare principals through Test-TaskUserMatch; apply.ps1 imports this lib
+        # before running them, so the tests have to provide it too.
+        Import-Module (Join-Path $RepoRoot 'windows\lib\ScheduledTask.psm1') -Force
+
         function Write-OK { param($Msg) }
         function Write-Skip { param($Msg) }
         function Write-Warn { param($Msg) }
@@ -18,9 +22,12 @@ Describe 'windows scheduled service task modules' {
                 Triggers = @([pscustomobject]@{
                     CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
                     UserId   = $null
+                    Delay    = 'PT15S'
                 })
                 Principal = [pscustomobject]@{
-                    UserId    = $script:UserId
+                    # Task Scheduler reads principals back without the domain part, which is
+                    # exactly the drift Test-TaskUserMatch has to absorb.
+                    UserId    = ($script:UserId -split '\\')[-1]
                     LogonType = 'Interactive'
                     RunLevel  = 'Limited'
                 }
@@ -45,7 +52,7 @@ Describe 'windows scheduled service task modules' {
                     UserId   = $script:UserId
                 })
                 Principal = [pscustomobject]@{
-                    UserId    = $script:UserId
+                    UserId    = ($script:UserId -split '\\')[-1]
                     LogonType = 'Interactive'
                     RunLevel  = 'Limited'
                 }

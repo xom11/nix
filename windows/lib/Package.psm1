@@ -8,6 +8,18 @@ function Test-IsAdmin {
     ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
+function Test-WingetPackageInstalled {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Id)
+
+    # Deliberately one query per package instead of substring-matching a single `winget list`
+    # dump: winget truncates the Id column to the console width (visible as 'Microsoft.Win…'
+    # over SSH), so the bulk match reported long ids as missing and reinstalled them every run.
+    # Substring matching also cannot tell 'Microsoft.PowerShell' from 'Microsoft.PowerShell.Preview'.
+    $output = winget list --id $Id --exact --disable-interactivity --accept-source-agreements 2>$null | Out-String
+    return ($LASTEXITCODE -eq 0) -and ($output -notmatch 'No installed package found')
+}
+
 function Install-WingetPackages {
     [CmdletBinding()]
     param([string[]]$Packages)
@@ -17,14 +29,16 @@ function Install-WingetPackages {
         return
     }
 
-    $installedRaw = winget list --accept-source-agreements --disable-interactivity 2>$null
     foreach ($id in $Packages) {
-        if ($installedRaw -match [regex]::Escape($id)) {
+        if (Test-WingetPackageInstalled -Id $id) {
             Write-Skip "winget:$id"
         } else {
             Write-Info "winget install $id"
             winget install --id $id --exact --silent --disable-interactivity `
                 --accept-package-agreements --accept-source-agreements
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warn "winget install $id exited with $LASTEXITCODE"
+            }
         }
     }
 }
@@ -138,4 +152,4 @@ function Install-PSModules {
     }
 }
 
-Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Install-ScoopPackages, Install-WingetPackages, Install-NpmPackages, Install-PSModules
+Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Install-ScoopPackages, Test-WingetPackageInstalled, Install-WingetPackages, Install-NpmPackages, Install-PSModules

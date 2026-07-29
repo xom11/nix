@@ -46,9 +46,9 @@
             $existingTask.Actions[0].WorkingDirectory -eq $action.WorkingDirectory -and
             @($existingTask.Triggers).Count -eq 1 -and
             $existingTask.Triggers[0].CimClass.CimClassName -eq $trigger.CimClass.CimClassName -and
-            [string]$existingTask.Triggers[0].UserId -eq [string]$trigger.UserId -and
+            (Test-TaskUserMatch $existingTask.Triggers[0].UserId $trigger.UserId) -and
             [string]$existingTask.Triggers[0].Delay -eq [string]$trigger.Delay -and
-            $existingTask.Principal.UserId -eq $principal.UserId -and
+            (Test-TaskUserMatch $existingTask.Principal.UserId $principal.UserId) -and
             $existingTask.Principal.LogonType -eq $principal.LogonType -and
             $existingTask.Principal.RunLevel -eq $principal.RunLevel -and
             $existingTask.Settings.Enabled -eq $settings.Enabled -and
