@@ -10,6 +10,7 @@ $ErrorActionPreference = 'Stop'
 $modules = @(
     # ---- packages ----
     'packages.winget'             # GUI apps, fonts, system tools
+    'packages.pwsh'               # PowerShell 7 from the MSI; must precede services.sshd
     'packages.scoop'              # portable CLI dev tools
     'packages.psmodules'          # PowerShell modules
     'packages.npm'                # global npm packages (needs nodejs from scoop)

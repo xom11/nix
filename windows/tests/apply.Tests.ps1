@@ -5,6 +5,7 @@ Describe 'windows/apply.ps1 shared entry point' {
         $ObsoleteHostFile = Join-Path $RepoRoot 'hosts\zenbook-a14\windows.ps1'
         $ExpectedModules = @(
             'packages.winget'
+            'packages.pwsh'
             'packages.scoop'
             'packages.psmodules'
             'packages.npm'

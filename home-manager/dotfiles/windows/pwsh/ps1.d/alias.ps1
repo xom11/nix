@@ -32,18 +32,22 @@ function gu {
     git pull && git add . && git commit -m "$commit_msg" && git push
 }
 function gcl { git clone $args }
-function glog { 
-    git log --graph --oneline --decorate --all 
+function glog {
+    git log --graph --oneline --decorate --all
 }
-function kr {
-    Stop-Process -Name kanata -ErrorAction SilentlyContinue
-    Start-Process kanata.exe -ArgumentList "-c `"$env:USERPROFILE\.nix\configs\kanata\kanata_windows.kbd`"" -WindowStyle Hidden
-}
+# Kanata belongs to an elevated scheduled task (windows/modules/services/kanata); running the
+# task is the restart, and launch-kanata.ahk kills the old process before starting a new one.
+# Starting kanata.exe by hand here gave an unelevated instance instead.
+function kr { schtasks /run /tn "Kanata" | Out-Null }
 function ks {
-    Stop-Process -Name kanata -ErrorAction SilentlyContinue
-    Write-Host "kanata stopped."
+    # `Stop-Process -Name kanata` only ever hit the scoop shim; the binary the shim launches
+    # is named after the build (kanata_windows_tty_winIOv2_x64) and kept the keyboard hooked.
+    $running = Get-Process -Name 'kanata*' -ErrorAction SilentlyContinue
+    if (-not $running) {
+        Write-Host "kanata is not running."
+        return
+    }
+    $running | Stop-Process -Force
+    Write-Host ("kanata stopped ({0})." -f (($running.ProcessName | Sort-Object -Unique) -join ', '))
 }
 function py { python $args }
-# Set-Alias spy source .venv\bin\activate
-function m { micromamba.exe }
-
