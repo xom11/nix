@@ -16,4 +16,6 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
 
 # Git argument completion. The prompt does not need this -- oh-my-posh renders git status
 # itself -- so posh-git is only here for tab completion.
-Import-Module posh-git -ErrorAction SilentlyContinue
+# -Global because this file is dot-sourced from the profile's deferred event action, whose
+# scope is thrown away as soon as it returns.
+Import-Module posh-git -Global -ErrorAction SilentlyContinue

@@ -78,11 +78,16 @@ Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 # posh-git only adds `git` argument completion (oh-my-posh already draws the git status), so
 # none of them has to be ready before the prompt appears. Loading them on the first idle
 # moment takes ~1.6s off every shell start; they are in place before a command can be typed.
+#
+# -Global is load-bearing. An event action runs in its own scope, so a plain Import-Module
+# there loads the module into a scope that is discarded the moment the action returns: the
+# module never reaches the session, and `ls` silently loses its icons while Ctrl+R stays on
+# PSReadLine's own ReverseSearchHistory. Verified both ways on this machine.
 $deferred = {
-    Import-Module Terminal-Icons -ErrorAction SilentlyContinue
+    Import-Module Terminal-Icons -Global -ErrorAction SilentlyContinue
 
     if (Get-Module -ListAvailable -Name PSFzf) {
-        Import-Module PSFzf -ErrorAction SilentlyContinue
+        Import-Module PSFzf -Global -ErrorAction SilentlyContinue
         Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
     }
 
