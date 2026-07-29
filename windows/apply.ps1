@@ -35,6 +35,7 @@ $modules = @(
 
     # ---- services ----
     'services.kanata'
+    'services.kanata-watchdog'    # must follow services.kanata; revives it between logons
     'services.ahk'
     # 'services.syncthing'        # disabled: no longer auto-run Syncthing at logon
     'services.sshd'
