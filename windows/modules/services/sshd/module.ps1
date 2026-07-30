@@ -3,10 +3,21 @@
     Apply = {
         param($Ctx)
 
-        foreach ($capabilityName in @(
-            'OpenSSH.Client~~~~0.0.1.0'
-            'OpenSSH.Server~~~~0.0.1.0'
+        # Get-WindowsCapability -Online goes through DISM and measured 2.4s for the pair, paid
+        # on every run to re-confirm something that has not moved since the first apply. What
+        # the capability actually delivers is these two binaries, so look for them first and
+        # only fall through to DISM when one is genuinely absent.
+        $opensshBin = Join-Path $env:SystemRoot 'System32\OpenSSH'
+        foreach ($ssh in @(
+            @{ Name = 'OpenSSH.Client~~~~0.0.1.0'; Exe = 'ssh.exe' }
+            @{ Name = 'OpenSSH.Server~~~~0.0.1.0'; Exe = 'sshd.exe' }
         )) {
+            $capabilityName = $ssh.Name
+            if (Test-Path (Join-Path $opensshBin $ssh.Exe)) {
+                Write-Skip "capability: $capabilityName"
+                continue
+            }
+
             $capability = Get-WindowsCapability -Online -Name $capabilityName
             if ($capability.State -eq 'Installed') {
                 Write-Skip "capability: $capabilityName"

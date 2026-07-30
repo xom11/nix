@@ -49,6 +49,18 @@ Describe 'windows services.sshd module' {
             $ModuleText | Should Match '(?s)if\s*\(\$capability\.State\s+-eq\s+''Installed''\)\s*\{.*?continue\s*\}.*?Add-WindowsCapability'
         }
 
+        It 'looks for the OpenSSH binaries before paying for a DISM query' {
+            $ModuleText = Get-Content -LiteralPath $ModulePath -Raw
+
+            # Get-WindowsCapability -Online measured 2.4s for the pair on every run. The
+            # binaries are what the capability puts on disk, so their presence answers the
+            # same question for 62ms -- with DISM still there for when one is missing.
+            $ModuleText | Should Match ([regex]::Escape("System32\OpenSSH"))
+            $testPathAt   = $ModuleText.IndexOf('if (Test-Path (Join-Path $opensshBin $ssh.Exe))')
+            $capabilityAt = $ModuleText.IndexOf('$capability = Get-WindowsCapability')
+            ($testPathAt -ge 0 -and $capabilityAt -gt $testPathAt) | Should Be $true
+        }
+
         It 'enables the SSH server and disables the key agent only when drifted' {
             $ModuleText = Get-Content -LiteralPath $ModulePath -Raw
 
