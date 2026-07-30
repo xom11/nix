@@ -6,6 +6,24 @@ Describe 'windows AutoHotkey runtime safety' {
         $script:WindowManagerPath = Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\window-manager.ahk'
         $script:SwitchLanguage = Get-Content -Raw $script:SwitchLanguagePath
         $script:WindowManager = Get-Content -Raw $script:WindowManagerPath
+        $script:LaunchAhkPath = Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\launch-ahk.ahk'
+    }
+
+    It 'parses the watchdog launcher as valid AutoHotkey v2' {
+        # Every other check on launch-ahk.ahk only greps the text; nothing parses it, and a
+        # syntax error there means the watchdog silently stops reviving main.ahk. The launcher
+        # is standalone (no #Include), so /validate is a real gate for it.
+        #
+        # Bounded wait, not a plain call: a load-time error surfaces as a modal dialog, and one
+        # raised in a session with no visible desktop -- an SSH run, for instance -- blocks
+        # forever. That is exactly how a stray AutoHotkey process was once left behind here.
+        $proc = Start-Process -FilePath $script:AhkExe -PassThru -WindowStyle Hidden `
+            -ArgumentList '/validate', "`"$script:LaunchAhkPath`""
+        if (-not $proc.WaitForExit(20000)) {
+            $proc.Kill()
+            throw 'AutoHotkey /validate never finished -- most likely a load-time error dialog'
+        }
+        $proc.ExitCode | Should Be 0
     }
 
     It 'does not crash when switching language for a missing target window' {

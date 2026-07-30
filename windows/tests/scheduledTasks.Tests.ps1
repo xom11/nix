@@ -19,18 +19,14 @@ Describe 'windows scheduled service task modules' {
                     Execute   = $Execute
                     Arguments = "`"$script:AhkFile`""
                 })
+                # Logon is the only trigger. Reviving a dead script belongs to the separate
+                # AHKWatchdog task (see ahkWatchdog.Tests.ps1): a timed repeat here stopped
+                # protecting anything the moment Reload() replaced the tracked process.
                 Triggers = @(
                     [pscustomobject]@{
                         CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
                         UserId   = $null
                         Delay    = 'PT15S'
-                    }
-                    # The watchdog is a separate time trigger, not a repetition hung off the
-                    # logon trigger -- that variant never fires on an already-logged-on machine.
-                    # Empty Duration means it repeats indefinitely.
-                    [pscustomobject]@{
-                        CimClass   = [pscustomobject]@{ CimClassName = 'MSFT_TaskTimeTrigger' }
-                        Repetition = [pscustomobject]@{ Interval = 'PT5M'; Duration = '' }
                     }
                 )
                 Principal = [pscustomobject]@{

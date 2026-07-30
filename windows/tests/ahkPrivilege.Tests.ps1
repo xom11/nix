@@ -4,6 +4,7 @@ Describe 'windows AutoHotkey privilege model' {
         $script:MainAhk = Get-Content -Raw (Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\main.ahk')
         $script:LaunchKanata = Get-Content -Raw (Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\launch-kanata.ahk')
         $script:AhkTaskModule = Get-Content -Raw (Join-Path $RepoRoot 'windows\modules\services\ahk\module.ps1')
+        $script:AhkWatchdogModule = Get-Content -Raw (Join-Path $RepoRoot 'windows\modules\services\ahk-watchdog\module.ps1')
         $script:ApplyText = Get-Content -Raw (Join-Path $RepoRoot 'windows\apply.ps1')
         $script:KanataTaskModulePath = Join-Path $RepoRoot 'windows\modules\services\kanata\module.ps1'
     }
@@ -20,23 +21,31 @@ Describe 'windows AutoHotkey privilege model' {
         $script:AhkTaskModule | Should Not Match 'Run as Admin'
     }
 
-    It 'keeps the resident AutoHotkey script alive across its own death and past 72 hours' {
-        # main.ahk is Persistent; the task must not be the thing that ends it, and must bring
-        # it back if it dies, since the only other trigger is the next logon.
-        $script:AhkTaskModule | Should Match 'RepetitionInterval'
+    It 'never lets the task itself be what ends the resident script' {
+        # main.ahk is Persistent, and the default PT72H the task once carried would have had
+        # Task Scheduler kill a healthy script after three days of uptime.
         $script:AhkTaskModule | Should Match '-ExecutionTimeLimit 0'
-        $script:AhkTaskModule | Should Match 'Repetition\.Interval'
+        $script:AhkTaskModule | Should Match '-Trigger \$triggers'
     }
 
-    It 'arms the watchdog as its own time trigger, live without waiting for a logon' {
-        # A Repetition hung off the logon trigger only starts counting when that trigger next
-        # fires, so it does nothing on a machine that is already logged on.
-        $script:AhkTaskModule | Should Match '\$watchdogTrigger\s*=\s*New-ScheduledTaskTrigger\s+-Once'
-        $script:AhkTaskModule | Should Match 'MSFT_TaskTimeTrigger'
+    It 'arms the watchdog as its own task, live without waiting for a logon' {
+        # Two reasons it is not a trigger on AHKrunning: a Repetition hung off the logon trigger
+        # only starts counting when that trigger next fires, so it does nothing on an
+        # already-logged-on machine; and a timed repeat on the resident task stopped being a
+        # no-op once Reload() replaced the process Task Scheduler tracked. Full account in
+        # windows\modules\services\ahk-watchdog\module.ps1 and ahkWatchdog.Tests.ps1.
+        $script:AhkWatchdogModule | Should Match '\$trigger\s*=\s*New-ScheduledTaskTrigger\s+-Once'
+        $script:AhkWatchdogModule | Should Match 'RepetitionInterval'
         $script:AhkTaskModule | Should Not Match '\$logonTrigger\.Repetition\s*='
         # A moving anchor would re-register the task on every apply run.
-        $script:AhkTaskModule | Should Not Match '-Once\s+-At\s+\(Get-Date\)'
-        $script:AhkTaskModule | Should Match '-Trigger \$triggers'
+        $script:AhkWatchdogModule | Should Not Match '-Once\s+-At\s+\(Get-Date\)'
+    }
+
+    It 'revives the script at the same privilege level the logon task starts it' {
+        # The script inherits the launcher's level, so a Highest watchdog would silently promote
+        # main.ahk to an elevated process on every revival.
+        $script:AhkWatchdogModule | Should Match 'RunLevel Limited'
+        $script:AhkWatchdogModule | Should Not Match 'RunLevel Highest'
     }
 
     It 'keeps Kanata isolated in its own elevated scheduled task' {
