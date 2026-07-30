@@ -155,6 +155,13 @@ home-manager/
                      #   herdr: config only -- the binary is installed out-of-band,
                      #   pkgs.herdr does not build on darwin (zig/DarwinSdkNotFound)
   dotfiles/          # ai/{aichat.d,claude.d,codex.d,gemini.d,opencode.d}
+                     #   claude.d: MCP user-scope lives in ~/.claude.json, which Claude
+                     #   Code rewrites -- not symlinkable, and settings.json takes no
+                     #   mcpServers key. So each machine needs it added out-of-band:
+                     #     claude mcp add --transport http --scope user pixellab \
+                     #       https://api.pixellab.ai/mcp \
+                     #       --header 'Authorization: Bearer ${PIXELLAB_TOKEN}'
+                     #   Single quotes, and URL before --header (it is variadic).
                      # browser/{firefox,qutebrowser}, terminal/{alacritty,kitty}
                      # macos/{aerospace,hammerspoon,karabiner,sleepwatcher}
                      # conda, rofi, run-or-raise, vscode

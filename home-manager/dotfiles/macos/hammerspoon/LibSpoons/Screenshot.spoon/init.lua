@@ -25,7 +25,7 @@ obj.license = "MIT"
 --- Screenshot.hosts
 --- Variable
 --- Các máy sẽ nhận ảnh. Máy đang chạy tự bị loại khỏi danh sách.
-obj.hosts = { "macmini", "rog" }
+obj.hosts = { "macmini"}
 
 --- Screenshot.latest
 --- Variable

@@ -9,10 +9,19 @@
 
   nix.package = pkgs.nix;
 
-  # do garbage collection weekly to keep disk usage low
+  # Garbage-collect daily, not weekly. nix-darwin defaults to Weekday = 7
+  # (Sunday only), which is far too sparse here: macmini rebuilds ~1.5x/day, so
+  # 22 system generations piled up over 14 days and /nix/store reached 52G.
+  # Every `darwin-rebuild switch` also rewrites and reloads this plist, which
+  # resets launchd's calendar tracking -- one more reason not to rely on a
+  # once-a-week slot. Omitting Weekday makes it fire every day.
   nix.gc = {
     automatic = lib.mkDefault true;
-    options = lib.mkDefault "--delete-older-than 7d";
+    interval = lib.mkDefault {
+      Hour = 3;
+      Minute = 15;
+    };
+    options = lib.mkDefault "--delete-older-than 3d";
   };
 
   # Disable auto-optimise-store because of this issue:

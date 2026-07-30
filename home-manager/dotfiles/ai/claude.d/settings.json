@@ -4,7 +4,8 @@
   },
   "permissions": {
     "allow": [
-      "mcp__codegraph__*"
+      "mcp__codegraph__*",
+      "mcp__pixellab__*"
     ],
     "defaultMode": "bypassPermissions"
   },
@@ -57,7 +58,8 @@
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "context-mode": {

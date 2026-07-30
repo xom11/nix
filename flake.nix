@@ -20,6 +20,18 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    # nix-homebrew's own brew-src pin lags: it sits on Homebrew 6.0.12
+    # (2026-07-20), which predates the `command_wrapper` and `generated_script`
+    # cask artifact classes. 65 casks in homebrew-cask already use them, so
+    # `brew bundle` dies parsing firefox/vlc/obs mid-activation -- which leaves
+    # /run/current-system pointing at the previous generation. 6.0.13 is the
+    # first release shipping both. Drop this override once nix-homebrew catches
+    # up (it is at upstream HEAD, so this is upstream lag, not a stale input).
+    brew-src = {
+      url = "github:Homebrew/brew/6.0.13";
+      flake = false;
+    };
+    nix-homebrew.inputs.brew-src.follows = "brew-src";
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
