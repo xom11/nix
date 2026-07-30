@@ -17,15 +17,25 @@ Describe 'update: the Windows half of the shared `update` command' {
     }
 
     It 'runs the shared apply.ps1 without re-elevating or pausing' {
-        $AliasText | Should Match "windows\\\\apply\.ps1"
+        # Single-quoted: PowerShell's double quotes do not treat \ as an escape (the escape
+        # character is the backtick), so "\\\\" would reach the regex engine as four
+        # backslashes and match nothing here.
+        $AliasText | Should Match 'windows\\apply\.ps1'
         $AliasText | Should Match '-NoElevate -NoWait'
     }
 
     It 'leaves package upgrades out of the command' {
         # apply.ps1 installs what is missing and skips the rest; upgrading scoop/winget
         # packages is a separate, manual decision and must not creep in here.
-        $AliasText | Should Not Match 'scoop\s+update'
-        $AliasText | Should Not Match 'winget\s+upgrade'
+        #
+        # Read the function body with comments stripped, not the whole file: the comment
+        # above `update` names both commands to say why they are absent, and asserting over
+        # the raw text fails on the very sentence documenting the rule.
+        $body = [regex]::Match($AliasText, '(?ms)^function update \{.*?^\}').Value
+        $body | Should Not BeNullOrEmpty
+        $code = ($body -split "`n" | Where-Object { $_ -notmatch '^\s*#' }) -join "`n"
+        $code | Should Not Match 'scoop\s+update'
+        $code | Should Not Match 'winget\s+upgrade'
     }
 
     It 'is defined before the profile returns early for non-interactive shells' {
