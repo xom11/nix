@@ -49,6 +49,10 @@ hs.loadSpoon("Tab")
 -- InputSourceSwitch, spoon đã bị gỡ khỏi default.nix) và trùng chức năng LanguageMemory.
 hs.loadSpoon("LanguageMemory")
 
+-- Máy khoá thì im tiếng, đăng nhập lại thì trả nguyên trạng. Không có bindHotkeys: nó chỉ nghe
+-- hs.caffeinate.watcher, mọi việc làm trong init().
+hs.loadSpoon("LockMute")
+
 hs.alert.show("Hammerspoon config loaded")
 
 
