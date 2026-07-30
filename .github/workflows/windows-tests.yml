@@ -41,9 +41,13 @@ jobs:
             throw "need the in-box Pester 3.x; got $($pester.Version)"
           }
 
-          # ahkRuntimeSafety actually executes AutoHotkey to prove switch-language.ahk survives
-          # a missing target window. AutoHotkey is not on the runner, so that file is the one
-          # thing this job cannot cover -- it stays a local check.
+          # ahkRuntimeSafety is the one file that launches AutoHotkey for real -- proving
+          # switch-language.ahk survives a missing target window, and that launch-ahk.ahk
+          # parses. AutoHotkey is not on the runner, so it stays a local check.
+          #
+          # It is the ONLY excluded file, so nothing else may hide there: assertions that just
+          # read the .ahk files as text belong in switchLanguage.Tests.ps1. One that did sit
+          # here drifted through the whole move to tongue unnoticed, for exactly this reason.
           $files = Get-ChildItem "$env:GITHUB_WORKSPACE\windows\tests" -Filter *.Tests.ps1 |
             Where-Object { $_.Name -ne 'ahkRuntimeSafety.Tests.ps1' }
           Write-Host "Running: $(($files.Name) -join ', ')"

@@ -1,11 +1,12 @@
 Describe 'windows AutoHotkey runtime safety' {
+    # Everything here actually launches AutoHotkey, which is why windows-tests.yml skips this
+    # one file: the CI runner has no AutoHotkey. Keep it that way -- assertions that only read
+    # the .ahk files as text belong in switchLanguage.Tests.ps1, where CI does run them. An
+    # assertion parked here once drifted for months precisely because nothing ran it.
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
         $script:AhkExe = 'C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe'
         $script:SwitchLanguagePath = Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\switch-language.ahk'
-        $script:WindowManagerPath = Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\window-manager.ahk'
-        $script:SwitchLanguage = Get-Content -Raw $script:SwitchLanguagePath
-        $script:WindowManager = Get-Content -Raw $script:WindowManagerPath
         $script:LaunchAhkPath = Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\launch-ahk.ahk'
     }
 
@@ -17,6 +18,8 @@ Describe 'windows AutoHotkey runtime safety' {
         # Bounded wait, not a plain call: a load-time error surfaces as a modal dialog, and one
         # raised in a session with no visible desktop -- an SSH run, for instance -- blocks
         # forever. That is exactly how a stray AutoHotkey process was once left behind here.
+        # For the same reason, do not point /validate at a file meant to be #Include'd:
+        # tab-key.ahk alone cannot resolve SwitchMode and hangs on the resulting dialog.
         $proc = Start-Process -FilePath $script:AhkExe -PassThru -WindowStyle Hidden `
             -ArgumentList '/validate', "`"$script:LaunchAhkPath`""
         if (-not $proc.WaitForExit(20000)) {
@@ -41,22 +44,5 @@ ExitApp(0)
         $LASTEXITCODE | Should Be 0
         $output | Should Not Match '==>'
         $output | Should Not Match 'Too many parameters'
-    }
-
-    It 'pins language switching to the hwnd observed by the timer' {
-        $script:SwitchLanguage | Should Match 'SetInputLang\(VN, activeHwnd\)'
-        $script:SwitchLanguage | Should Match 'SetInputLang\(EN, activeHwnd\)'
-        $script:SwitchLanguage | Should Match 'PostMessage\(0x0050, 0, hkl, , "ahk_id " hwnd\)'
-    }
-
-    It 'loads and activates keyboard layouts before requesting the target window switch' {
-        $script:SwitchLanguage | Should Match 'LoadKeyboardLayout'
-        $script:SwitchLanguage | Should Match 'ActivateKeyboardLayout'
-        $script:SwitchLanguage | Should Match 'Format\("\{:08X\}", langID\)'
-    }
-
-    It 'keeps window snapping errors from surfacing as AutoHotkey dialogs' {
-        $script:WindowManager | Should Match 'try\s*\{[\s\S]*WinRestore'
-        $script:WindowManager | Should Match 'catch\s*\{[\s\S]*return'
     }
 }
