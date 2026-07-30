@@ -51,3 +51,39 @@ function ks {
     Write-Host ("kanata stopped ({0})." -f (($running.ProcessName | Sort-Object -Unique) -join ', '))
 }
 function py { python $args }
+# The other hosts get `update` as a home-manager shell alias (base/macos, base/nixos,
+# base/ubuntu); this is the Windows half of the same command. Pull the repo, then converge the
+# machine onto it. Package upgrades stay out on purpose -- apply.ps1 only installs what is
+# missing, and `scoop update` / `winget upgrade` remain manual.
+function update {
+    $repo  = Join-Path $env:USERPROFILE '.nix'
+    $apply = Join-Path $repo 'windows\apply.ps1'
+
+    if (-not (Test-Path $apply)) {
+        Write-Host "ERROR: $apply not found." -ForegroundColor Red
+        return
+    }
+
+    # Unelevated on purpose: pulling under an admin token leaves the new files owned by
+    # Administrators, and plain git afterwards trips over its own dubious-ownership check.
+    # --ff-only rather than a bare pull -- config gets edited on this machine too, and a
+    # diverged history should stop and say so instead of growing a merge commit.
+    git -C $repo pull --ff-only
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: git pull failed - not applying." -ForegroundColor Red
+        return
+    }
+
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    if ($isAdmin) {
+        # Already elevated: this is the SSH path, since sshd logs in as a local admin.
+        & $apply -NoElevate -NoWait
+    } elseif (Get-Command gsudo -ErrorAction SilentlyContinue) {
+        # gsudo shares this console, so the log lands here and the exit code comes back --
+        # unlike -Verb RunAs, which would put both in a window that closes on its own.
+        gsudo pwsh -NoProfile -ExecutionPolicy Bypass -File $apply -NoElevate -NoWait
+    } else {
+        Write-Host "gsudo not found - falling back to the UAC prompt in apply.ps1 (new window)." -ForegroundColor Yellow
+        & $apply
+    }
+}

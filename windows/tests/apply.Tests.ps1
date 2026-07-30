@@ -48,6 +48,14 @@ Describe 'windows/apply.ps1 shared entry point' {
         }
     }
 
+    It 'accepts -NoWait and Wait-ForExit actually honours it' {
+        # `update` runs this through gsudo, which shares the caller's console: without the
+        # switch the run ends on [Console]::ReadKey and sits there holding the terminal.
+        $ApplyText | Should Match '\[switch\]\$NoWait'
+        $waitBody = [regex]::Match($ApplyText, '(?s)function Wait-ForExit \{.*?\r?\n\}').Value
+        $waitBody | Should Match '\$NoWait'
+    }
+
     It 'has no host-specific configuration selection' {
         $ApplyText | Should Not Match '\$HostName'
         $ApplyText | Should Not Match '\$HostFile'

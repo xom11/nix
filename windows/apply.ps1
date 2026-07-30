@@ -2,7 +2,12 @@
 param(
     # Skip self-elevation (use when running over SSH where UAC prompt cannot show).
     # Caller must already be admin, otherwise the script errors out.
-    [switch]$NoElevate
+    [switch]$NoElevate,
+
+    # Skip the "press any key" pause. That pause exists for the self-elevated window, which
+    # owns its own console and would close on exit before anything could be read. gsudo shares
+    # the caller's console instead, so there the pause only blocks the terminal on a keystroke.
+    [switch]$NoWait
 )
 
 $ErrorActionPreference = 'Stop'
@@ -42,6 +47,7 @@ $modules = @(
 )
 
 function Wait-ForExit {
+    if ($NoWait) { return }
     if (-not $env:CI -and -not $env:SSH_CLIENT -and -not $env:SSH_CONNECTION) {
         Write-Host ''
         Write-Host 'Press any key to exit...' -ForegroundColor DarkGray
