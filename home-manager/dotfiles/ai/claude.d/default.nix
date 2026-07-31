@@ -18,6 +18,9 @@ in
       ".claude/settings.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/settings.json";
       };
+      ".claude/keybindings.json" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/keybindings.json";
+      };
       ".claude/statusline.mjs" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/statusline.mjs";
       };

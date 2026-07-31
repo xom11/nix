@@ -1,7 +1,4 @@
 {
-  "env": {
-    "CLAUDE_CODE_NO_FLICKER": "0"
-  },
   "permissions": {
     "allow": [
       "mcp__codegraph__*",
@@ -78,6 +75,12 @@
   "viewMode": "default",
   "effortLevel": "xhigh",
   "tui": "fullscreen",
+  "defaultView": "chat",
+  "autoScrollEnabled": false,
+  "wheelScrollAccelerationEnabled": true,
+  "showMessageTimestamps": true,
+  "showTurnDuration": true,
+  "prefersReducedMotion": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "allowDangerouslySkipPermissions": true
