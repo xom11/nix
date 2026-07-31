@@ -168,6 +168,32 @@ bằng tay.
 
 Tắt cả cụm (`KeepAlive = false`) là sai: hết lặp nhưng cũng hết tự chữa.
 
+Retry này **mù** — launchd chỉ khởi động lại khi mã thoát khác 0, nó không theo
+dõi file key. Nên host bật agenix mà không bao giờ có key sẽ thử lại tới hết
+phiên đăng nhập. Đĩa thì không phình (số generation chỉ nhích khi thành công,
+nên mọi lần trượt đều dùng lại đúng một thư mục, `.tmp` cũng ghi đè cùng chỗ) —
+chỉ log là cộng dồn, đo được **425 byte mỗi lần trượt** (stderr 130 + stdout
+295). Ở nhịp mặc định 10 giây là ~3,7 MB/ngày.
+
+Nên đặt thêm:
+
+```nix
+ThrottleInterval = 60;
+```
+
+Giãn sàn 10 giây của launchd thành một phút: máy mới vẫn tự chữa, host cấu hình
+sai tốn ~600 KB/ngày thay vì ~3,7 MB. Ai sốt ruột thì `agenix-reload` là tức thì.
+
+Đo trên macmini 31/07/2026, thay key thật bằng key lạ rồi đá agent:
+
+```
+t=6s    log 0   → 130 byte
+t=66s   log 130 → 260 byte
+t=126s  log 260 → 390 byte      → đúng nhịp 60 giây
+cắm key thật    → tự giải mã lại sau 5s
+sau đó 90 giây  → log +0, generation +0, state = not running
+```
+
 Systemd unit trên linux là `Type = oneshot` nên không dính lỗi này.
 
 ### 4. `nvim/lua/extras/age-edit.lua` — nối vào `BufWriteCmd`

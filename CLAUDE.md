@@ -224,10 +224,13 @@ by `home.activation` — so a decrypt that fails never fails the switch, it just
 lands in `~/Library/Logs/agenix/stderr`.
 
 `home-manager/programs/agenix` pins that agent's `KeepAlive` to
-`{ SuccessfulExit = false; }`. agenix ships `Crashed = false` alongside it,
-which relaunches the job every ~10s forever; dropping the whole key instead
-would also lose the retry that lets a fresh machine heal itself once the real
-`~/.ssh/id_ed25519` is dropped in (its own generated key decrypts nothing).
+`{ SuccessfulExit = false; }` and its `ThrottleInterval` to 60. agenix ships
+`Crashed = false` alongside `SuccessfulExit`, which relaunches the job every
+~10s forever; dropping the whole key instead would also lose the retry that
+lets a fresh machine heal itself once the real `~/.ssh/id_ed25519` is dropped
+in (its own generated key decrypts nothing). That retry is blind, so a host
+with no usable key logs 425 bytes a minute until one appears — the throttle is
+what keeps that at ~600 KB/day rather than ~3.7 MB.
 
 ### Adding a new module
 

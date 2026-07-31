@@ -111,8 +111,18 @@ in
     # machine generates its own id_ed25519 (see programs/ssh) which cannot
     # decrypt anything, so without the retry it would need a manual
     # `agenix-reload` after the real key is dropped in.
-    launchd.agents.activate-agenix.config.KeepAlive = lib.mkForce {
-      SuccessfulExit = false;
+    #
+    # That retry is blind -- launchd just relaunches on a non-zero exit, it
+    # does not watch the key -- so a host with agenix enabled and no usable
+    # key retries until the session ends. Nothing accumulates on disk (the
+    # generation counter only advances on success, so every failed run reuses
+    # the same directory), but the logs do, at a measured 425 bytes a go.
+    # ThrottleInterval stretches launchd's 10s floor to a minute: a fresh
+    # machine still heals on its own, a misconfigured one costs ~600 KB/day
+    # instead of ~3.7 MB. `agenix-reload` is there when a minute is too long.
+    launchd.agents.activate-agenix.config = {
+      KeepAlive = lib.mkForce {SuccessfulExit = false;};
+      ThrottleInterval = 60;
     };
 
     # Plain-text artefacts for the nvim transparent-edit plugin

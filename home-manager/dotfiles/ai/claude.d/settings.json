@@ -75,14 +75,15 @@
   "viewMode": "default",
   "effortLevel": "xhigh",
   "tui": "fullscreen",
-  "defaultView": "chat",
-  "autoScrollEnabled": true,
-  "wheelScrollAccelerationEnabled": true,
-  "terminalProgressBarEnabled": true,
-  "showMessageTimestamps": true,
-  "showTurnDuration": true,
   "prefersReducedMotion": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
-  "allowDangerouslySkipPermissions": true
+  "autoScrollEnabled": true,
+  "wheelScrollAccelerationEnabled": true,
+  "showTurnDuration": true,
+  "showMessageTimestamps": true,
+  "terminalProgressBarEnabled": true,
+  "defaultView": "chat",
+  "allowDangerouslySkipPermissions": true,
+  "model": "opus[1m]"
 }
