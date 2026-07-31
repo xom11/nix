@@ -99,13 +99,21 @@ in
 
     age.identityPaths = [identityPath];
 
-    # agenix ships KeepAlive = { Crashed = false; SuccessfulExit = false; },
-    # which on launchd means "restart whenever the job exits without crashing"
-    # -- and this job always exits 0. The result is a relaunch every ~10s
-    # forever: 34k generations and a 4.7 MB log by the time it was spotted, and
-    # any `agenix-reload` result silently overwritten within seconds.
-    # RunAtLoad already covers the once-per-switch decrypt this needs.
-    launchd.agents.activate-agenix.config.KeepAlive = lib.mkForce false;
+    # agenix ships KeepAlive = { Crashed = false; SuccessfulExit = false; }.
+    # launchd ORs those conditions, and `Crashed = false` means "relaunch
+    # whenever it exits for any reason other than a crash" -- always true for a
+    # job that exits 0. Hence a relaunch every ~10s forever: 34k generations
+    # and a 4.7 MB log on macmini, plus every `agenix-reload` result silently
+    # overwritten within seconds.
+    #
+    # Drop only that key. `SuccessfulExit = false` is the one upstream wanted:
+    # retry while the decrypt keeps failing, stop once it succeeds. A fresh
+    # machine generates its own id_ed25519 (see programs/ssh) which cannot
+    # decrypt anything, so without the retry it would need a manual
+    # `agenix-reload` after the real key is dropped in.
+    launchd.agents.activate-agenix.config.KeepAlive = lib.mkForce {
+      SuccessfulExit = false;
+    };
 
     # Plain-text artefacts for the nvim transparent-edit plugin
     home.file.".config/agenix/recipients".source = recipients;

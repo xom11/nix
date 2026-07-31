@@ -220,8 +220,14 @@ generated from `age.secrets`, so **adding** a secret still needs a switch —
 only changing one's contents does not.
 
 Note `age.secrets` is consumed by a launchd agent (systemd unit on linux), not
-by `home.activation`. `home-manager/programs/agenix` pins its `KeepAlive` to
-`false`; agenix's own default relaunches the job every ~10s forever.
+by `home.activation` — so a decrypt that fails never fails the switch, it just
+lands in `~/Library/Logs/agenix/stderr`.
+
+`home-manager/programs/agenix` pins that agent's `KeepAlive` to
+`{ SuccessfulExit = false; }`. agenix ships `Crashed = false` alongside it,
+which relaunches the job every ~10s forever; dropping the whole key instead
+would also lose the retry that lets a fresh machine heal itself once the real
+`~/.ssh/id_ed25519` is dropped in (its own generated key decrypts nothing).
 
 ### Adding a new module
 

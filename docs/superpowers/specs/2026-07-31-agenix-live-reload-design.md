@@ -133,9 +133,15 @@ agenix khai báo (`modules/age-home.nix:238-241`):
 KeepAlive = { Crashed = false; SuccessfulExit = false; };
 ```
 
-Với launchd, `Crashed = false` nghĩa là *"khởi động lại khi tiến trình thoát mà
-không crash"* — mà script này luôn thoát 0. Hệ quả: agent chạy lại mỗi ~10 giây,
-mãi mãi. Đo được trên macmini ngày 31/07/2026:
+launchd **OR** hai điều kiện đó, và mỗi khoá có nghĩa riêng:
+
+| Khoá | `false` nghĩa là |
+|---|---|
+| `SuccessfulExit` | khởi động lại khi thoát **khác 0** — thử lại khi lỗi |
+| `Crashed` | khởi động lại khi thoát **không do crash** — luôn đúng với exit 0 |
+
+`Crashed = false` mới là thủ phạm. Hệ quả: agent chạy lại mỗi ~10 giây, mãi mãi.
+Đo được trên macmini ngày 31/07/2026:
 
 ```
 generation lúc T+0 : 34257
@@ -146,14 +152,23 @@ log ~/Library/Logs/agenix/stdout: 4.7 MB
 Với tính năng này thì đó là lỗi chí mạng: mọi kết quả của `agenix-reload` bị
 agent ghi đè trong vòng mươi giây.
 
-Sửa trong module của repo, không đụng upstream:
+Sửa trong module của repo, bỏ **đúng** khoá hỏng:
 
 ```nix
-launchd.agents.activate-agenix.config.KeepAlive = lib.mkForce false;
+launchd.agents.activate-agenix.config.KeepAlive = lib.mkForce {
+  SuccessfulExit = false;
+};
 ```
 
-`RunAtLoad = true` vẫn giữ, nên agent vẫn giải mã một lần mỗi switch — đúng
-những gì nó cần làm. Systemd unit trên linux là `Type = oneshot` nên không dính.
+`SuccessfulExit = false` là thứ upstream thật sự muốn: thử lại chừng nào còn
+giải mã trượt, im khi đã xong. Giữ nó quan trọng vì máy trắng tự sinh
+`id_ed25519` mới (`programs/ssh`, `genSshKeyGen`) mà key mới thì không giải mã
+được gì — không có retry thì cắm key thật vào xong vẫn phải gõ `agenix-reload`
+bằng tay.
+
+Tắt cả cụm (`KeepAlive = false`) là sai: hết lặp nhưng cũng hết tự chữa.
+
+Systemd unit trên linux là `Type = oneshot` nên không dính lỗi này.
 
 ### 4. `nvim/lua/extras/age-edit.lua` — nối vào `BufWriteCmd`
 
