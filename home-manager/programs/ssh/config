@@ -19,11 +19,8 @@ Host macmini
   User lenamkhanh
   ServerAliveInterval 60
   ServerAliveCountMax 3
-Host a14-win
-  HostName 100.83.225.100
-  User kln
 Host a14
-  HostName 100.102.5.63
+  HostName 100.83.225.100
   User kln
 Host airm3
   HostName 100.127.95.48
