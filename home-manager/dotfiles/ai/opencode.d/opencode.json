@@ -37,6 +37,10 @@
   },
   "model": "9router/combo1",
   "permission": "allow",
+  "tool_output": {
+    "max_lines": 500,
+    "max_bytes": 16384
+  },
   "plugin": [
     "superpowers@git+https://github.com/obra/superpowers.git",
     "./plugin/router-models.mjs"

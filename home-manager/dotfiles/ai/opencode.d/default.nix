@@ -12,6 +12,9 @@ in
       ".config/opencode/opencode.json" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/opencode.json";
       };
+      ".config/opencode/tui.json" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/tui.json";
+      };
       ".config/opencode/OPENCODE.md" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/OPENCODE.md";
       };
