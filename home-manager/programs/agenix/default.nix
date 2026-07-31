@@ -24,16 +24,10 @@
   # adding a secret is a Nix change that needs a switch either way, changing
   # one's contents is not.
   secrets = lib.attrValues config.age.secrets;
-  reloadCall = s:
-    lib.concatStringsSep " " [
-      "reload_one"
-      (lib.escapeShellArg (toString s.file))
-      (lib.escapeShellArg s.path)
-      (lib.escapeShellArg s.mode)
-    ];
-  # One line per arm keeps the generated script readable -- a multi-line
-  # interpolation would only indent its first line.
-  reloadArm = s: "${lib.escapeShellArg (toString s.file)}) ${reloadCall s} ;;";
+  # Index-aligned bash arrays rather than generated `case` arms: the lookup
+  # then lives in the script, where it can try more than one spelling of an
+  # argument and where a failure can be counted instead of aborting the run.
+  mkArray = name: f: "${name}=(${lib.concatMapStringsSep " " (s: lib.escapeShellArg (f s)) secrets})";
 
   reload = pkgs.writeShellApplication {
     name = "agenix-reload";
@@ -46,9 +40,16 @@
       fi
       identity="$(head -n1 "$identity_file")"
 
+      ${mkArray "SRC" (s: toString s.file)}
+      ${mkArray "DST" (s: s.path)}
+      ${mkArray "MODE" (s: s.mode)}
+
       tmp=
       trap 'if [ -n "$tmp" ]; then rm -f "$tmp"; fi' EXIT
 
+      # Every failure path below is explicit. reload_all invokes this with
+      # errexit suppressed -- one unreadable secret must not abort the rest --
+      # so a failing command no longer stops the function by itself.
       reload_one() {
         local src="$1" target="$2" mode="$3" dest
         # Resolve through agenix's generation symlink so its layout survives.
@@ -57,32 +58,66 @@
         # switch relinks it.
         dest="$(readlink -f "$target" 2>/dev/null)" || dest=
         [ -n "$dest" ] || dest="$target"
-        mkdir -p "$(dirname "$dest")"
+        mkdir -p "$(dirname "$dest")" || return 1
+
         # Decrypt to a sibling temp file first: a failure here must leave the
-        # previous plaintext untouched rather than truncate it.
-        tmp="$(mktemp "$dest.XXXXXX")"
-        age -d -i "$identity" "$src" > "$tmp"
-        chmod "$mode" "$tmp"
-        mv -f "$tmp" "$dest"
+        # previous plaintext untouched rather than truncate it. The name is
+        # dot-prefixed because consumers glob these directories -- ssh/config
+        # Includes ~/.ssh/age.d/*, so a leftover from a hard kill would be read
+        # as a second config forever.
+        tmp="$(mktemp "$(dirname "$dest")/.agenix-reload.XXXXXX")" || return 1
+        if ! age -d -i "$identity" "$src" > "$tmp"; then
+          rm -f "$tmp"
+          tmp=
+          echo "agenix-reload: decrypt failed: $src" >&2
+          return 1
+        fi
+        if ! { chmod "$mode" "$tmp" && mv -f "$tmp" "$dest"; }; then
+          rm -f "$tmp"
+          tmp=
+          echo "agenix-reload: install failed: $target" >&2
+          return 1
+        fi
         tmp=
         echo "agenix-reload: $target"
       }
 
       reload_all() {
-        :
-        ${lib.concatMapStringsSep "\n  " reloadCall secrets}
+        local i failed=0
+        for i in "''${!SRC[@]}"; do
+          if ! reload_one "''${SRC[i]}" "''${DST[i]}" "''${MODE[i]}"; then
+            failed=$((failed + 1))
+          fi
+        done
+        if [ "$failed" -gt 0 ]; then
+          echo "agenix-reload: $failed of ''${#SRC[@]} secrets failed" >&2
+          return 1
+        fi
+      }
+
+      reload_named() {
+        local arg="$1" resolved i
+        # Match the argument as given first: if the repo is reached through a
+        # symlink, that literal form is what Nix baked into SRC, and it is what
+        # nvim passes. Canonical form is the fallback, so `agenix-reload
+        # apikey.zsh.age` from inside age.d/ hits the same entry instead of
+        # silently reporting it undeclared.
+        resolved="$(realpath "$arg" 2>/dev/null)" || resolved=
+        for i in "''${!SRC[@]}"; do
+          if [ "$arg" = "''${SRC[i]}" ] ||
+            { [ -n "$resolved" ] && [ "$resolved" = "''${SRC[i]}" ]; }; then
+            reload_one "''${SRC[i]}" "''${DST[i]}" "''${MODE[i]}"
+            return
+          fi
+        done
+        # secrets.nix rules cover every *.age in the tree, but only some are
+        # wired into age.secrets. Editing one of the others is not an error.
+        echo "agenix-reload: $arg is not a declared secret, skipping" >&2
       }
 
       case "''${1-}" in
-        "" | all)
-          reload_all
-          ;;
-        ${lib.concatMapStringsSep "\n  " reloadArm secrets}
-        *)
-          # secrets.nix rules cover every *.age in the tree, but only some are
-          # wired into age.secrets. Editing one of the others is not an error.
-          echo "agenix-reload: ''${1-} is not a declared secret, skipping" >&2
-          ;;
+        "" | all) reload_all ;;
+        *) reload_named "$1" ;;
       esac
     '';
   };
