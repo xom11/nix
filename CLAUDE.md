@@ -198,6 +198,31 @@ The symlink target is a plain string, so it is **not** a reference of the
 home-manager generation. It must point into the `~/.nix` working tree — never into
 the store, or the dotfiles are read-only and get collected on the next GC.
 
+### Secrets (agenix)
+
+Secrets get the same "edit without rebuilding" property, but by a different
+route — `.age` is ciphertext, so a symlink alone is no good and a decrypt step
+has to run. Two rules make that work:
+
+```nix
+file = "${pwd}/age.d/apikey.zsh.age";   # string, NOT ./age.d/apikey.zsh.age
+```
+
+A path literal copies the ciphertext into the store and freezes it there until
+the next switch. `types.path` accepts an absolute-path string and leaves it
+alone, so the decrypt reads the working tree. Every `age.secrets.<n>.file` in
+this repo must be written that way.
+
+`agenix-reload <file.age>` then re-decrypts into wherever that secret installs.
+The nvim `age-edit` plugin calls it on `:w`, so editing a secret there applies
+immediately; after `agenix -e` or a `git pull`, run it by hand. The mapping is
+generated from `age.secrets`, so **adding** a secret still needs a switch —
+only changing one's contents does not.
+
+Note `age.secrets` is consumed by a launchd agent (systemd unit on linux), not
+by `home.activation`. `home-manager/programs/agenix` pins its `KeepAlive` to
+`false`; agenix's own default relaunches the job every ~10s forever.
+
 ### Adding a new module
 
 1. Create `home-manager/<category>/<name>/default.nix` using `mkModule config ./. { ... }`
