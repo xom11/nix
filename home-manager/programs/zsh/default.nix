@@ -15,9 +15,14 @@ in
   mkModule config ./. {
     # Decrypted once at activation, not once per interactive shell. agenix
     # ships `age`, so without it there is nothing to decrypt with.
+    #
+    # `file` is a string, not a path literal: a literal would copy the
+    # ciphertext into the store and freeze it there until the next switch.
+    # Pointing at the working tree instead lets `agenix-reload` pick up an edit
+    # immediately -- same reason every dotfile here uses mkOutOfStoreSymlink.
     age.secrets = lib.mkIf agenixEnabled {
       zsh-apikey = {
-        file = ./age.d/apikey.zsh.age;
+        file = "${pwd}/age.d/apikey.zsh.age";
         path = apikeyPath;
       };
     };

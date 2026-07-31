@@ -32,9 +32,11 @@ in
       '';
     };
 
+    # String, not a path literal -- see the note in programs/zsh. ssh re-reads
+    # its Include files on every connection, so a reload here lands instantly.
     age.secrets = lib.mkIf agenixEnabled {
       ssh-config = {
-        file = ./age.d/config.age;
+        file = "${pwd}/age.d/config.age";
         path = "${config.home.homeDirectory}/.ssh/age.d/config";
       };
     };

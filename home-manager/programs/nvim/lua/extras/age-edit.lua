@@ -91,5 +91,17 @@ vim.api.nvim_create_autocmd("BufWriteCmd", {
 			return
 		end
 		vim.bo.modified = false
+
+		-- Re-decrypt into wherever this secret is installed. agenix only does
+		-- that when its launchd agent is reloaded, so without this the live
+		-- plaintext stays stale until the next switch.
+		-- WARN, not ERROR: the ciphertext above was written fine, only the
+		-- installed copy is behind. Absent on hosts without the agenix module.
+		if vim.fn.executable("agenix-reload") == 1 then
+			local reload = vim.fn.system({ "agenix-reload", path })
+			if vim.v.shell_error ~= 0 then
+				vim.notify("agenix-reload failed:\n" .. reload, vim.log.levels.WARN)
+			end
+		end
 	end,
 })
