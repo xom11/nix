@@ -59,6 +59,13 @@ function ConvertFrom-ShellEnv {
 # ném exception .NET thật (terminating, không phụ thuộc $ErrorActionPreference
 # của caller) khi thất bại, nên `return` phía dưới không bao giờ chạy trên
 # đường thất bại.
+#
+# Tham số backup của Replace KHÔNG được truyền $null: trên Windows PowerShell
+# 5.1 (không có [NullString] như PowerShell Core), $null bị marshal thành
+# chuỗi rỗng cho tham số String này, và File.Replace ném "The path is not of
+# a legal form" vì "" không phải path hợp lệ. Truyền một path backup thật,
+# rồi xoá ngay trong finally -- Replace vẫn atomic, chỉ là có thêm một bước
+# dọn dẹp.
 function Write-PwshSecretsFile {
     [CmdletBinding()]
     param(
@@ -86,7 +93,13 @@ function Write-PwshSecretsFile {
         if ($LASTEXITCODE -ne 0) { throw "icacls failed on $tmp" }
 
         if (Test-Path -LiteralPath $Path) {
-            [System.IO.File]::Replace($tmp, $Path, $null)
+            $backup = Join-Path $dir ('.tmp.bak.' + [System.IO.Path]::GetRandomFileName())
+            try {
+                [System.IO.File]::Replace($tmp, $Path, $backup)
+            }
+            finally {
+                if (Test-Path -LiteralPath $backup) { Remove-Item -LiteralPath $backup -Force -ErrorAction SilentlyContinue }
+            }
         } else {
             [System.IO.File]::Move($tmp, $Path)
         }
