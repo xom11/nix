@@ -102,3 +102,22 @@ function Prepend-EnvPath([string]$path) { $env:PATH = "$path;$env:PATH" }
 function Append-EnvPath([string]$path)  { $env:PATH = "$env:PATH;$path" }
 function Prepend-EnvPathIfExists([string]$path) { if (Test-Path $path) { Prepend-EnvPath $path } }
 function Append-EnvPathIfExists([string]$path)  { if (Test-Path $path) { Append-EnvPath $path } }
+
+# ----------------------------
+# Secrets
+# ----------------------------
+
+# Giải mã lại secret và nạp thẳng vào shell đang chạy. `$env:` ánh xạ vào
+# environment block của tiến trình, nên khác Unix -- ở đó `agenix-reload` chỉ
+# ghi lại file, shell đang mở phải source lại.
+#
+# Import-Module nằm trong thân hàm để không tốn gì lúc mở shell.
+function Update-Secrets {
+    $repo = Join-Path $env:USERPROFILE '.nix'
+    Import-Module (Join-Path $repo 'windows\lib\Secrets.psm1') -Force
+    $n = Update-PwshSecrets -RepoRoot $repo
+    if ($null -eq $n) { return }
+    $file = Join-Path $env:LOCALAPPDATA 'pwsh-secrets\apikey.ps1'
+    if (Test-Path -LiteralPath $file) { . $file }
+}
+Set-Alias agenix-reload Update-Secrets

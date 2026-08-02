@@ -58,7 +58,7 @@ function Import-CachedInit {
 }
 
 # ---- always on: plain definitions, cheap enough to matter to scripts too ----
-foreach ($file in 'env.ps1', 'alias.ps1', 'functions.ps1') {
+foreach ($file in 'env.ps1', 'apikey.ps1', 'alias.ps1', 'functions.ps1') {
     $path = Join-Path $Ps1d $file
     if (Test-Path $path) { . $path }
 }
