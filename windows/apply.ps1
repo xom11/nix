@@ -34,6 +34,7 @@ $modules = @(
     'dotfiles.ai.aichat'
 
     # ---- programs (shared with home-manager) ----
+    'programs.agenix'             # needs age from packages.scoop and ps1.d from dotfiles.pwsh
     'programs.ssh'
     'programs.nvim'
     'programs.yazi'

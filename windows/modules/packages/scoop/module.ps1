@@ -29,6 +29,7 @@
             'go'
             'rustup'
             'uv'
+            'age'
         )
     }
 }
