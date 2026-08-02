@@ -67,6 +67,12 @@ function Set-RestrictiveAcl {
         [Parameter(Mandatory)][string]$Principal
     )
 
+    # 'Continue' trong phạm vi hàm này: bất kỳ dòng stderr nào của native command
+    # cũng thành ErrorRecord trong Windows PowerShell 5.1, và dưới
+    # `$ErrorActionPreference = 'Stop'` (apply.ps1 đặt) một dòng cảnh báo vô hại
+    # của icacls đủ để ném terminating error, cướp mất chính nhánh kiểm mã thoát
+    # ngay bên dưới. Mã thoát mới là thứ quyết định ở đây.
+    $ErrorActionPreference = 'Continue'
     & icacls $Path /inheritance:r /grant:r "${Principal}:(R,W)" | Out-Null
     $rc = $LASTEXITCODE
     $global:LASTEXITCODE = 0
@@ -193,7 +199,17 @@ function Update-PwshSecrets {
     $errFile = Join-Path ([System.IO.Path]::GetTempPath()) ('.age-err.' + [System.IO.Path]::GetRandomFileName())
     try {
         $global:LASTEXITCODE = 0
-        $text = & $age.Source -d -i $Identity $ageFile 2>$errFile
+        # `2>` không đủ để trung hoà stderr: Windows PowerShell 5.1 vẫn dựng
+        # ErrorRecord cho từng dòng stderr của native command TRƯỚC khi ghi ra
+        # file, nên dưới `$ErrorActionPreference = 'Stop'` (apply.ps1 đặt) đúng
+        # cái `age` chịu nói lý do lại ném terminating error và cướp mất nhánh
+        # xử lý lỗi bên dưới -- ngược hẳn ý định. Hạ preference bên trong một
+        # scriptblock `& { }` để phạm vi chỉ gói đúng lời gọi này, không rò sang
+        # Write-PwshSecretsFile ở dưới (preference variable có scope động).
+        $text = & {
+            $ErrorActionPreference = 'Continue'
+            & $age.Source -d -i $Identity $ageFile 2>$errFile
+        }
         # Đọc rồi reset ngay: $LASTEXITCODE là biến toàn cục của cả tiến trình
         # PowerShell, không phải cục bộ hàm. Nếu để nguyên giá trị khác 0 ở đây,
         # nó sống sót qua phần còn lại của tiến trình -- kể cả runner Actions

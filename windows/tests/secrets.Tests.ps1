@@ -215,12 +215,17 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
         $acl.AreAccessRulesProtected | Should Be $true
 
         $ids = @($acl.Access | ForEach-Object { $_.IdentityReference.Value })
-        ($ids -contains 'BUILTIN\Users') | Should Be $false
-        ($ids -contains 'Everyone')      | Should Be $false
+        ($ids -contains 'BUILTIN\Users')             | Should Be $false
+        ($ids -contains 'Everyone')                  | Should Be $false
+        ($ids -contains 'NT AUTHORITY\Authenticated Users') | Should Be $false
 
         # Không hardcode tên tài khoản: runner Actions dùng tên khác máy thật.
+        # SYSTEM và Administrators được chấp nhận -- cả hai đoạt được quyền sở
+        # hữu file bất kể DACL, nên loại chúng ra không mua được gì. Nối thành
+        # chuỗi thay vì đếm để khi hỏng thì thông báo nói luôn principal nào.
         $me = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        @($ids | Where-Object { $_ -ne $me }).Count | Should Be 0
+        $allowed = @($me, 'NT AUTHORITY\SYSTEM', 'BUILTIN\Administrators')
+        (@($ids | Where-Object { $allowed -notcontains $_ }) -join ', ') | Should Be ''
     }
 
     # Đường ghi đè đi qua ReplaceFileW, và ReplaceFileW mang DACL của file BỊ THAY
@@ -241,11 +246,13 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
         $acl.AreAccessRulesProtected | Should Be $true
 
         $ids = @($acl.Access | ForEach-Object { $_.IdentityReference.Value })
-        ($ids -contains 'BUILTIN\Users') | Should Be $false
-        ($ids -contains 'Everyone')      | Should Be $false
+        ($ids -contains 'BUILTIN\Users')             | Should Be $false
+        ($ids -contains 'Everyone')                  | Should Be $false
+        ($ids -contains 'NT AUTHORITY\Authenticated Users') | Should Be $false
 
         $me = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        @($ids | Where-Object { $_ -ne $me }).Count | Should Be 0
+        $allowed = @($me, 'NT AUTHORITY\SYSTEM', 'BUILTIN\Administrators')
+        (@($ids | Where-Object { $allowed -notcontains $_ }) -join ', ') | Should Be ''
     }
 
     # Cùng bẫy $LASTEXITCODE mà Update-PwshSecrets đã có test riêng. icacls hỏng
@@ -264,8 +271,15 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
             { Write-PwshSecretsFile -Pairs ([ordered]@{ MIKE = 'eleven' }) -Path $out } | Should Throw
         }
         finally {
-            Remove-Item -LiteralPath 'function:global:icacls' -Force -ErrorAction SilentlyContinue
+            # `Function:\icacls`, KHÔNG phải `function:global:icacls`: `global:` là
+            # scope modifier chứ không phải thành phần đường dẫn của provider, nên
+            # dạng kia không xoá được gì. Bản đầu tiên của test này viết sai như
+            # vậy và stub sống sót, làm mọi test gọi icacls sau đó đỏ theo.
+            if (Test-Path 'Function:\icacls') { Remove-Item 'Function:\icacls' -Force }
         }
+
+        # Dọn dẹp phải được chứng minh, không phải tin tưởng.
+        (Get-Command icacls).CommandType | Should Be 'Application'
 
         $LASTEXITCODE | Should Be 0
         Test-Path -LiteralPath $out | Should Be $false
