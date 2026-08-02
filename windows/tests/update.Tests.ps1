@@ -42,7 +42,12 @@ Describe 'update: the Windows half of the shared `update` command' {
         # `ssh a14-win update` arrives through `pwsh -c`, which the profile classifies as
         # non-interactive. alias.ps1 has to be dot-sourced above that return, or the command
         # exists only in a human's terminal and every remote invocation fails.
-        $dotSource = $ProfileText.IndexOf("'env.ps1', 'alias.ps1'")
+        #
+        # Matches on 'alias.ps1' alone, not the exact neighbor list: the always-on foreach
+        # gained 'apikey.ps1' ahead of it (windows secrets wiring), and pinning to
+        # "'env.ps1', 'alias.ps1'" would break every time the list order changes without the
+        # thing this test actually cares about -- alias.ps1 vs. the early return -- moving.
+        $dotSource = $ProfileText.IndexOf("'alias.ps1'")
         $earlyExit = $ProfileText.IndexOf('if (-not $Interactive) { return }')
         ($dotSource -ge 0 -and $earlyExit -ge 0 -and $dotSource -lt $earlyExit) | Should Be $true
     }
