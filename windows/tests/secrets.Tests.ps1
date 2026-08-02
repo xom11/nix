@@ -214,6 +214,18 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
         (Get-Content -LiteralPath $out -Raw) | Should Be $before
     }
 
+    It 'resets $LASTEXITCODE after a failed decrypt instead of leaking it to the caller' {
+        # $LASTEXITCODE la bien toan cuc cua ca tien trinh PowerShell, khong
+        # phai cuc bo ham. GitHub Actions' `shell: powershell` tu them
+        # `exit $LASTEXITCODE` sau khi script chay xong -- mot lan decrypt
+        # hong ma ham nay xu ly dung (return $null, khong throw) van co the
+        # lam ca job CI bao fail neu $LASTEXITCODE con sot lai khac 0.
+        $global:LASTEXITCODE = 0
+        $out = Join-Path $WorkDir 'out-exitcode.ps1'
+        Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeFail | Out-Null
+        $LASTEXITCODE | Should Be 0
+    }
+
     It 'never throws, whatever is missing' {
         { Update-PwshSecrets -RepoRoot 'C:\nope' -Identity 'C:\nope' `
             -OutFile (Join-Path $WorkDir 'x.ps1') -AgeCommand 'C:\nope.exe' } | Should Not Throw

@@ -142,8 +142,16 @@ function Update-PwshSecrets {
 
     $global:LASTEXITCODE = 0
     $text = & $age.Source -d -i $Identity $ageFile 2>$null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Fail "age -d failed with exit code $LASTEXITCODE"
+    # Đọc rồi reset ngay: $LASTEXITCODE là biến toàn cục của cả tiến trình
+    # PowerShell, không phải cục bộ hàm. Nếu để nguyên giá trị khác 0 ở đây,
+    # nó sống sót qua phần còn lại của tiến trình -- kể cả runner Actions
+    # (`shell: powershell`) tự `exit $LASTEXITCODE` sau khi script chạy xong,
+    # nên một lần giải mã hỏng được xử lý đúng bên trong hàm này vẫn có thể
+    # làm cả job CI báo fail dù Pester báo 0 test fail.
+    $exitCode = $LASTEXITCODE
+    $global:LASTEXITCODE = 0
+    if ($exitCode -ne 0) {
+        Write-Fail "age -d failed with exit code $exitCode"
         return $null
     }
 
