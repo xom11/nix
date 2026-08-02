@@ -4,38 +4,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## This repo is public
 
-`xom11/nix` on GitHub, visibility **PUBLIC**. Everything committed here is
-world-readable, and git history is permanent — deleting a file in a later commit
-does not unpublish it. Treat every write to this tree as a publish.
+`xom11/nix` on GitHub, visibility **PUBLIC**. Git history is permanent — deleting
+something in a later commit does not unpublish it. Every write here is a publish,
+and that includes commit messages, code comments, docs, and PR/issue text.
 
-**Safe to commit:** `.age` files (ciphertext — that is the whole point),
-`home-manager/programs/ssh/authorized_keys` (public keys only), and the
-non-secret half of any config.
+Never commit:
 
-**Never commit:** decrypted secrets, private keys, tokens, internal hostnames or
-Tailscale addresses, or anything that only exists because a secret was decrypted.
-The same rule covers commit messages, code comments, and PR/issue text — those
-are published too.
+- **Credentials** — keys, tokens, passwords, session cookies. `.age` files are
+  ciphertext and belong here; whatever they decrypt to does not.
+- **Private identifiers** — internal hostnames, LAN/Tailscale addresses, serial
+  numbers, personal email or phone, paths that expose who or where someone is.
+- **Real values in examples.** Commands, comments and docs use placeholders
+  (`$TOKEN`, `user@host`), never a working credential — not even an expired one.
+- **Unredacted machine output** — logs, `env` dumps, error traces, screenshots.
+  Capture is not review; read it before pasting it in.
 
-Repo-specific traps worth knowing:
+Secrets in this repo decrypt to paths *outside* the tree (`~/.ssh/age.d/`,
+`~/.config/zsh/apikey.zsh`). Keep it that way — never write plaintext under `~/.nix`.
 
-- Secrets decrypt to paths **outside** this tree (`~/.ssh/age.d/`,
-  `~/.config/zsh/apikey.zsh`). That is deliberate. Never redirect `agenix -d`
-  or `age -d` output anywhere under `~/.nix`.
-- `age.d/` directories hold `*.age` and nothing else. `secrets.nix` walks the
-  whole tree matching on the `.age` suffix, so a plaintext file named `.age`
-  would look legitimate to every tool here while being readable by anyone.
-- The nvim `age-edit` plugin disables swapfile and undofile so a decrypted
-  buffer never touches disk. Do not re-enable them for `.age` buffers.
-- `home-manager/programs/ssh/config` is the public half; the real hosts live in
-  `config.age`. Do not add a real host to the public file.
-
-Before committing, read `git diff --cached` rather than trusting a glob. If a
-secret does reach a commit, the fix is to **rotate the credential** — scrubbing
-history is not enough, since the push is already public.
-
-When reporting output back to the user, redact token values rather than pasting
-them; this transcript is not the repo, but the habit is what keeps them apart.
+Read `git diff --cached` before committing; a glob check is not enough. If a
+credential does land in a commit, **rotate it** — the push is already public, so
+rewriting history alone does not fix anything.
 
 ## Rebuild Commands
 
