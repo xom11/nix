@@ -5,6 +5,9 @@
 # Value được coi là chữ thuần: không nội suy `$`, backtick hay `$(...)`. Luật đó
 # ghi ở CLAUDE.md. Sinh ra chuỗi nháy đơn của PowerShell nên kể cả khi luật bị
 # vi phạm cũng không có gì được thực thi.
+
+Import-Module (Join-Path $PSScriptRoot 'Logging.psm1') -Force -DisableNameChecking
+
 function ConvertFrom-ShellEnv {
     [CmdletBinding()]
     param(
@@ -108,4 +111,51 @@ function Write-PwshSecretsFile {
     return $Pairs.Count
 }
 
-Export-ModuleMember -Function ConvertFrom-ShellEnv, Write-PwshSecretsFile
+# Mọi điều kiện thiếu đều `return $null` chứ không `throw`: hàm này chạy trong
+# vòng lặp module của apply.ps1, và một máy chưa có khoá không được làm hỏng cả
+# lượt apply. Cùng nguyên tắc với `agenix-reload` trên Unix.
+function Update-PwshSecrets {
+    [CmdletBinding()]
+    param(
+        [string]$RepoRoot   = (Join-Path $env:USERPROFILE '.nix'),
+        [string]$Identity   = (Join-Path $env:USERPROFILE '.ssh\id_ed25519'),
+        [string]$OutFile    = (Join-Path $env:LOCALAPPDATA 'pwsh-secrets\apikey.ps1'),
+        [string]$AgeCommand = 'age'
+    )
+
+    $age = Get-Command $AgeCommand -ErrorAction SilentlyContinue
+    if (-not $age) {
+        Write-Warn "age not found ($AgeCommand) -- install it with scoop"
+        return $null
+    }
+
+    if (-not (Test-Path -LiteralPath $Identity)) {
+        Write-Skip "no age identity at $Identity"
+        return $null
+    }
+
+    $ageFile = Join-Path $RepoRoot 'home-manager\programs\zsh\age.d\apikey.zsh.age'
+    if (-not (Test-Path -LiteralPath $ageFile)) {
+        Write-Warn "no secret file at $ageFile"
+        return $null
+    }
+
+    $global:LASTEXITCODE = 0
+    $text = & $age.Source -d -i $Identity $ageFile 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Fail "age -d failed with exit code $LASTEXITCODE"
+        return $null
+    }
+
+    $pairs = ConvertFrom-ShellEnv -Text ($text -join "`n")
+    if ($pairs.Count -eq 0) {
+        Write-Warn 'decrypted successfully but found no assignments'
+        return $null
+    }
+
+    Write-PwshSecretsFile -Pairs $pairs -Path $OutFile | Out-Null
+    Write-OK "$($pairs.Count) secrets -> $OutFile"
+    return $pairs.Count
+}
+
+Export-ModuleMember -Function ConvertFrom-ShellEnv, Write-PwshSecretsFile, Update-PwshSecrets
