@@ -35,6 +35,7 @@
       tools.enable = true;
     };
     programs = {
+      agenix.enable = true;
       btop.enable = true;
       git.enable = true;
       herdr.enable = true;
