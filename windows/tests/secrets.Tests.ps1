@@ -57,3 +57,67 @@ export ECHO="five"
         $got.Count | Should Be 2
     }
 }
+
+Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
+    BeforeAll {
+        $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+        Import-Module (Join-Path $RepoRoot 'windows\lib\Secrets.psm1') -Force
+        $WorkDir = Join-Path $env:TEMP ("secrets-test-" + [Guid]::NewGuid().ToString('N'))
+        New-Item -ItemType Directory -Path $WorkDir -Force | Out-Null
+    }
+    AfterAll {
+        if ($WorkDir -and (Test-Path $WorkDir)) { Remove-Item $WorkDir -Recurse -Force }
+    }
+
+    It 'writes one $env: assignment per pair and returns the count' {
+        $out = Join-Path $WorkDir 'a.ps1'
+        $n = Write-PwshSecretsFile -Pairs ([ordered]@{ ALPHA = 'one'; BRAVO = 'two' }) -Path $out
+        $n | Should Be 2
+        $text = Get-Content -LiteralPath $out -Raw
+        $text | Should Match '\$env:ALPHA = ''one'''
+        $text | Should Match '\$env:BRAVO = ''two'''
+    }
+
+    It 'produces a file that actually sets the variables when dot-sourced' {
+        $out = Join-Path $WorkDir 'b.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ TEST_CHARLIE = 'three' }) -Path $out | Out-Null
+        . $out
+        $env:TEST_CHARLIE | Should Be 'three'
+        Remove-Item Env:\TEST_CHARLIE -ErrorAction SilentlyContinue
+    }
+
+    It 'escapes a single quote so the literal survives' {
+        $out = Join-Path $WorkDir 'c.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ TEST_DELTA = "it's" }) -Path $out | Out-Null
+        . $out
+        $env:TEST_DELTA | Should Be "it's"
+        Remove-Item Env:\TEST_DELTA -ErrorAction SilentlyContinue
+    }
+
+    It 'does not interpolate a value that looks like PowerShell' {
+        $out = Join-Path $WorkDir 'd.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ TEST_ECHO = '$(Get-Date)' }) -Path $out | Out-Null
+        . $out
+        $env:TEST_ECHO | Should Be '$(Get-Date)'
+        Remove-Item Env:\TEST_ECHO -ErrorAction SilentlyContinue
+    }
+
+    It 'creates the parent directory when missing' {
+        $out = Join-Path $WorkDir 'nested\deeper\e.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ FOXTROT = 'six' }) -Path $out | Out-Null
+        Test-Path -LiteralPath $out | Should Be $true
+    }
+
+    It 'leaves no .tmp leftovers behind' {
+        $out = Join-Path $WorkDir 'f.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ GOLF = 'seven' }) -Path $out | Out-Null
+        @(Get-ChildItem -LiteralPath $WorkDir -Filter '.tmp.*' -Force).Count | Should Be 0
+    }
+
+    It 'overwrites an existing file in place' {
+        $out = Join-Path $WorkDir 'g.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ HOTEL = 'old' }) -Path $out | Out-Null
+        Write-PwshSecretsFile -Pairs ([ordered]@{ HOTEL = 'new' }) -Path $out | Out-Null
+        (Get-Content -LiteralPath $out -Raw) | Should Match '\$env:HOTEL = ''new'''
+    }
+}
