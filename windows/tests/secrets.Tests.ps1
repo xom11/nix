@@ -266,3 +266,46 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
             -OutFile (Join-Path $WorkDir 'x.ps1') -AgeCommand 'C:\nope.exe' } | Should Not Throw
     }
 }
+
+Describe 'windows programs.agenix module wiring' {
+    BeforeAll {
+        $RepoRoot   = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+        $ModulePath = Join-Path $RepoRoot 'windows\modules\programs\agenix\module.ps1'
+        $ApplyText  = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\apply.ps1')
+        $ScoopText  = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\modules\packages\scoop\module.ps1')
+    }
+
+    It 'has a module file with Description and Apply' {
+        Test-Path -LiteralPath $ModulePath | Should Be $true
+        $mod = & $ModulePath
+        $mod.Description | Should Not BeNullOrEmpty
+        $mod.Apply       | Should Not BeNullOrEmpty
+    }
+
+    It 'is listed in apply.ps1' {
+        $ApplyText | Should Match "'programs\.agenix'"
+    }
+
+    It 'runs after packages.scoop, which provides age' {
+        $scoopAt  = $ApplyText.IndexOf("'packages.scoop'")
+        $agenixAt = $ApplyText.IndexOf("'programs.agenix'")
+        ($scoopAt  -ge 0) | Should Be $true
+        ($agenixAt -ge 0) | Should Be $true
+        ($agenixAt -gt $scoopAt) | Should Be $true
+    }
+
+    It 'runs after dotfiles.pwsh, which links ps1.d' {
+        $pwshAt   = $ApplyText.IndexOf("'dotfiles.pwsh'")
+        $agenixAt = $ApplyText.IndexOf("'programs.agenix'")
+        ($agenixAt -gt $pwshAt) | Should Be $true
+    }
+
+    It 'installs age via scoop' {
+        $ScoopText | Should Match "(?m)^\s*'age'\s*$"
+    }
+
+    It 'leaves OutFile at its default, so nothing is written under the repo' {
+        $ModuleText = Get-Content -Raw -LiteralPath $ModulePath
+        $ModuleText | Should Not Match '-OutFile'
+    }
+}
