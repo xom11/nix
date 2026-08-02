@@ -18,6 +18,10 @@ Never commit:
   (`$TOKEN`, `user@host`), never a working credential — not even an expired one.
 - **Unredacted machine output** — logs, `env` dumps, error traces, screenshots.
   Capture is not review; read it before pasting it in.
+- **Shell expansion inside secret values.** `apikey.zsh.age` is read by zsh *and*
+  by a PowerShell parser on Windows. A value containing `$`, a backtick, or
+  `$(...)` expands on one side and stays literal on the other — silently. Values
+  are literal text only.
 
 Secrets in this repo decrypt to paths *outside* the tree (`~/.ssh/age.d/`,
 `~/.config/zsh/apikey.zsh`). Keep it that way — never write plaintext under `~/.nix`.
