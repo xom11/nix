@@ -175,6 +175,15 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
         # Stub age hỏng: mã thoát khác 0, không in gì.
         $AgeFail = Join-Path $WorkDir 'age-fail.cmd'
         Set-Content -LiteralPath $AgeFail -Value @('@echo off', 'exit /b 1')
+
+        # Stub age "thành công" nhưng giải mã ra nội dung không có assignment
+        # nào (chỉ comment) -- mô phỏng .age hỏng/không đúng định dạng mà vẫn
+        # giải mã được. Thoát mã 0 nên không có nguy cơ rò $LASTEXITCODE.
+        $AgeEmpty = Join-Path $WorkDir 'age-empty.cmd'
+        Set-Content -LiteralPath $AgeEmpty -Value @(
+            '@echo off'
+            'echo # chi la comment, khong co assignment nao o day'
+        )
     }
     AfterAll {
         if ($WorkDir -and (Test-Path $WorkDir)) { Remove-Item $WorkDir -Recurse -Force }
@@ -185,6 +194,14 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
         $n = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeOk
         $n | Should Be 2
         (Get-Content -LiteralPath $out -Raw) | Should Match '\$env:TEST_ALPHA = ''one'''
+    }
+
+    It 'returns null and does not throw when the age command itself cannot be found' {
+        $out = Join-Path $WorkDir 'out-noagecmd.ps1'
+        $missingAge = Join-Path $WorkDir 'no-such-age.exe'
+        $n = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $missingAge
+        $n | Should BeNullOrEmpty
+        Test-Path -LiteralPath $out | Should Be $false
     }
 
     It 'returns null and does not throw when the identity is missing' {
@@ -224,6 +241,24 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
         $out = Join-Path $WorkDir 'out-exitcode.ps1'
         Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeFail | Out-Null
         $LASTEXITCODE | Should Be 0
+    }
+
+    It 'returns null and does not overwrite an existing file when decryption succeeds but nothing parses as an assignment' {
+        $out = Join-Path $WorkDir 'out-empty.ps1'
+
+        # Chua co file dich: guard rong phai khong tao ra gi ca.
+        $n = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeEmpty
+        $n | Should BeNullOrEmpty
+        Test-Path -LiteralPath $out | Should Be $false
+
+        # Da co file dich tu truoc (populate that su): guard rong phai giu
+        # nguyen noi dung cu, khong duoc ghi de bang file chi co header.
+        Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeOk | Out-Null
+        $before = Get-Content -LiteralPath $out -Raw
+
+        $n2 = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeEmpty
+        $n2 | Should BeNullOrEmpty
+        (Get-Content -LiteralPath $out -Raw) | Should Be $before
     }
 
     It 'never throws, whatever is missing' {
