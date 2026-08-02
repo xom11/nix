@@ -6,7 +6,17 @@
 # ghi ở CLAUDE.md. Sinh ra chuỗi nháy đơn của PowerShell nên kể cả khi luật bị
 # vi phạm cũng không có gì được thực thi.
 
-Import-Module (Join-Path $PSScriptRoot 'Logging.psm1') -Force -DisableNameChecking
+# KHÔNG có `-Force` ở đây. `-Force` chạy `Remove-Module` trước khi import lại,
+# và khi lời gọi xuất phát từ *bên trong* một module thì bản import lại rơi vào
+# session state riêng của module đó -- global binding bị xoá chứ không được
+# thay. apply.ps1 import Logging.psm1 vào session toàn cục trước, nên chỉ cần
+# `Import-Module Secrets.psm1` một lần là `Write-Section` biến mất khỏi vòng
+# lặp module: `programs.agenix` in "OK" xong, vòng kế tiếp gọi Write-Section ở
+# ngoài try trong cùng, ném CommandNotFoundException lên try ngoài và thoát 1 --
+# 8 module còn lại (kể cả services.sshd, thứ giữ SSH vào máy) không bao giờ
+# chạy. Không `-Force` thì import này là no-op khi Logging đã có sẵn, và vẫn nạp
+# thật khi Secrets.psm1 được import độc lập (Update-Secrets, test).
+Import-Module (Join-Path $PSScriptRoot 'Logging.psm1') -DisableNameChecking
 
 function ConvertFrom-ShellEnv {
     [CmdletBinding()]
@@ -42,10 +52,39 @@ function ConvertFrom-ShellEnv {
     return $pairs
 }
 
+# Siết ACL về đúng một principal, không kế thừa. Đọc `$LASTEXITCODE` rồi reset
+# ngay: nó là biến toàn cục của cả tiến trình PowerShell chứ không cục bộ hàm,
+# nên một icacls hỏng (LOCALAPPDATA trỏ sang share, volume không mang ACL,
+# identity không phân giải được) sẽ để lại giá trị khác 0 sống sót qua phần còn
+# lại của tiến trình -- làm bẩn segment exit-status của prompt trong shell
+# tương tác, và làm đỏ job CI về sau vì runner Actions (`shell: powershell`) tự
+# `exit $LASTEXITCODE` dù Pester báo 0 test fail. Cùng bẫy mà Update-PwshSecrets
+# đã phải xử lý; hai nửa của cùng một module không được nghĩ khác nhau về nó.
+function Set-RestrictiveAcl {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Path,
+        [Parameter(Mandatory)][string]$Principal
+    )
+
+    & icacls $Path /inheritance:r /grant:r "${Principal}:(R,W)" | Out-Null
+    $rc = $LASTEXITCODE
+    $global:LASTEXITCODE = 0
+    if ($rc -ne 0) { throw "icacls failed on $Path (exit code $rc)" }
+}
+
 # Ghi qua temp rồi thay thế đích, giống hệt `agenix-reload` trên Unix và vì
 # cùng lý do: một lần ghi hỏng không được để lại file cụt, và không được xoá
-# mất bản cũ. ACL đặt trên temp *trước* khi thay thế, nên không có khoảnh
-# khắc nào file đích tồn tại với quyền kế thừa.
+# mất bản cũ.
+#
+# ACL được đặt HAI lần, và cả hai đều cần thiết. Lần trên `$tmp` đóng khoảng
+# thời gian file mới tồn tại với quyền kế thừa trước khi được cài, và là lần
+# duy nhất có tác dụng ở đường ghi đầu tiên (File.Move). Nhưng ở đường ghi đè,
+# `ReplaceFileW` của Win32 mang DACL của *file bị thay thế* sang file thay thế
+# -- ACL đặt trên `$tmp` bị vứt đi. Nên nếu file đích từng được tạo với quyền
+# kế thừa (khôi phục từ backup, copy từ máy khác, tạo tay lúc debug), mọi lần
+# apply sau đó sẽ giữ nguyên quyền rộng đó mà vẫn báo "OK". Vì thế phải đặt lại
+# ACL trên chính file đích sau khi cài xong, đường nào cũng vậy.
 #
 # KHÔNG dùng `Move-Item -Force`: khi đích đã tồn tại, PowerShell xoá đích rồi
 # mới move lại (không atomic), và nếu lần move lại đó thất bại -- AV hay
@@ -95,14 +134,16 @@ function Write-PwshSecretsFile {
         Set-Content -LiteralPath $tmp -Value $lines -Encoding UTF8 -Force -ErrorAction Stop
 
         $me = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        & icacls $tmp /inheritance:r /grant:r "${me}:(R,W)" | Out-Null
-        if ($LASTEXITCODE -ne 0) { throw "icacls failed on $tmp" }
+        Set-RestrictiveAcl -Path $tmp -Principal $me
 
         if (Test-Path -LiteralPath $Path) {
             [System.IO.File]::Replace($tmp, $Path, [NullString]::Value)
         } else {
             [System.IO.File]::Move($tmp, $Path)
         }
+
+        # Đường Replace vừa vứt mất ACL đặt trên $tmp -- đặt lại trên đích.
+        Set-RestrictiveAcl -Path $Path -Principal $me
     }
     finally {
         if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }
@@ -140,19 +181,39 @@ function Update-PwshSecrets {
         return $null
     }
 
-    $global:LASTEXITCODE = 0
-    $text = & $age.Source -d -i $Identity $ageFile 2>$null
-    # Đọc rồi reset ngay: $LASTEXITCODE là biến toàn cục của cả tiến trình
-    # PowerShell, không phải cục bộ hàm. Nếu để nguyên giá trị khác 0 ở đây,
-    # nó sống sót qua phần còn lại của tiến trình -- kể cả runner Actions
-    # (`shell: powershell`) tự `exit $LASTEXITCODE` sau khi script chạy xong,
-    # nên một lần giải mã hỏng được xử lý đúng bên trong hàm này vẫn có thể
-    # làm cả job CI báo fail dù Pester báo 0 test fail.
-    $exitCode = $LASTEXITCODE
-    $global:LASTEXITCODE = 0
-    if ($exitCode -ne 0) {
-        Write-Fail "age -d failed with exit code $exitCode"
-        return $null
+    # stderr của age đi vào file tạm chứ không vào $null: khi giải mã hỏng, mã
+    # thoát một mình không nói được gì (khoá sai, khoá có passphrase, file
+    # ciphertext hỏng đều là "exit 1"), mà cửa sổ tự nâng quyền của apply.ps1
+    # thì rất dễ bị bỏ qua. Ghi ra file thay vì `2>&1` vào pipeline: `2>&1`
+    # biến từng dòng stderr của native command thành ErrorRecord, và dưới
+    # `$ErrorActionPreference = 'Stop'` (apply.ps1 đặt) cái đó tự nó ném lỗi.
+    #
+    # stderr CHỈ được in ở nhánh thất bại. Đường thành công không log gì thêm --
+    # nội dung giải mã không bao giờ được đi ra console.
+    $errFile = Join-Path ([System.IO.Path]::GetTempPath()) ('.age-err.' + [System.IO.Path]::GetRandomFileName())
+    try {
+        $global:LASTEXITCODE = 0
+        $text = & $age.Source -d -i $Identity $ageFile 2>$errFile
+        # Đọc rồi reset ngay: $LASTEXITCODE là biến toàn cục của cả tiến trình
+        # PowerShell, không phải cục bộ hàm. Nếu để nguyên giá trị khác 0 ở đây,
+        # nó sống sót qua phần còn lại của tiến trình -- kể cả runner Actions
+        # (`shell: powershell`) tự `exit $LASTEXITCODE` sau khi script chạy xong,
+        # nên một lần giải mã hỏng được xử lý đúng bên trong hàm này vẫn có thể
+        # làm cả job CI báo fail dù Pester báo 0 test fail.
+        $exitCode = $LASTEXITCODE
+        $global:LASTEXITCODE = 0
+        if ($exitCode -ne 0) {
+            Write-Fail "age -d failed with exit code $exitCode"
+            if (Test-Path -LiteralPath $errFile) {
+                foreach ($line in @(Get-Content -LiteralPath $errFile -ErrorAction SilentlyContinue)) {
+                    if ($line.Trim() -ne '') { Write-Fail "  age: $line" }
+                }
+            }
+            return $null
+        }
+    }
+    finally {
+        if (Test-Path -LiteralPath $errFile) { Remove-Item -LiteralPath $errFile -Force -ErrorAction SilentlyContinue }
     }
 
     $pairs = ConvertFrom-ShellEnv -Text ($text -join "`n")

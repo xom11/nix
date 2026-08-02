@@ -1,3 +1,56 @@
+# apply.ps1 import Logging.psm1 vào session toàn cục rồi mới chạy vòng lặp module,
+# và `programs.agenix` import Secrets.psm1 từ bên trong vòng lặp đó. Nếu
+# Secrets.psm1 import Logging.psm1 kèm `-Force`, `-Force` chạy Remove-Module trước
+# -- binding toàn cục bị xoá, còn bản import lại rơi vào session state riêng của
+# Secrets. Hệ quả: `Write-Section` ở đầu vòng lặp kế tiếp (nằm NGOÀI try trong
+# cùng) ném CommandNotFoundException lên try ngoài, apply.ps1 in một dòng lỗi trần
+# rồi exit 1, và 8 module còn lại -- programs.ssh/nvim/yazi, services.kanata*,
+# services.ahk*, services.sshd -- không bao giờ chạy. services.sshd chính là thứ
+# giữ đường SSH vào máy đó.
+#
+# Describe này đứng đầu file có chủ đích: nó phải chạy trước các Describe khác,
+# vốn tự import Logging lại và vô tình vá hỏng hóc đi.
+Describe 'windows/lib/Secrets.psm1 import hygiene' {
+    BeforeAll {
+        $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+    }
+
+    It 'leaves the caller''s Logging bindings alive after Secrets.psm1 is imported' {
+        Import-Module (Join-Path $RepoRoot 'windows\lib\Logging.psm1') -Force -DisableNameChecking
+        (Get-Command Write-Section -ErrorAction SilentlyContinue) | Should Not BeNullOrEmpty
+
+        Import-Module (Join-Path $RepoRoot 'windows\lib\Secrets.psm1') -Force
+        (Get-Command Write-Section -ErrorAction SilentlyContinue) | Should Not BeNullOrEmpty
+
+        # Import lần hai: apply.ps1 + Update-Secrets trong cùng một tiến trình.
+        Import-Module (Join-Path $RepoRoot 'windows\lib\Secrets.psm1') -Force
+        (Get-Command Write-Section -ErrorAction SilentlyContinue) | Should Not BeNullOrEmpty
+        (Get-Command Write-Fail    -ErrorAction SilentlyContinue) | Should Not BeNullOrEmpty
+    }
+
+    # Mặt còn lại của cùng một ràng buộc: bỏ hẳn dòng Import-Module cũng sai, vì
+    # Update-Secrets và test import Secrets.psm1 độc lập, không có Logging sẵn.
+    # Chạy trong tiến trình con để session hiện tại (đã có Logging) không che mất.
+    It 'still resolves its own logging helpers when imported into a bare session' {
+        $lib    = Join-Path $RepoRoot 'windows\lib\Secrets.psm1'
+        $script = Join-Path $env:TEMP ("secrets-bare-" + [Guid]::NewGuid().ToString('N') + '.ps1')
+        Set-Content -LiteralPath $script -Value @(
+            "`$ErrorActionPreference = 'Stop'"
+            "Import-Module '$lib'"
+            "Update-PwshSecrets -RepoRoot 'C:\nope' -Identity 'C:\nope' -OutFile 'C:\nope\out.ps1' -AgeCommand 'C:\nope.exe' | Out-Null"
+            "'BARE-SESSION-OK'"
+        )
+        try {
+            $out = & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $script 2>&1
+            $global:LASTEXITCODE = 0
+            ($out -join "`n") | Should Match 'BARE-SESSION-OK'
+        }
+        finally {
+            Remove-Item -LiteralPath $script -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 Describe 'windows/lib/Secrets.psm1 ConvertFrom-ShellEnv' {
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -40,7 +93,16 @@ export ECHO="five"
         $got['FOXTROT'] | Should Be 'a$b`c'
     }
 
-    It 'preserves inner quotes and only strips the outer pair' {
+    # LƯU Ý: khẳng định dưới đây ghi lại một GIỚI HẠN đã biết, không phải một
+    # hành vi đúng. Parser này cố tình đơn giản -- bóc đúng một cặp nháy bọc
+    # ngoài, phần còn lại là dữ liệu. zsh thì ghép các từ nháy liền nhau, nên
+    # cùng dòng này zsh cho `say hi` còn ở đây cho `say ""hi""`. Tương tự,
+    # `export K='it'\''s'` zsh cho `it's` còn ở đây cho literal `it'\''s`.
+    # Làm parser tương thích hoàn toàn với shell là không đáng; thay vào đó
+    # CLAUDE.md cấm hẳn `'` và `"` bên trong value, nên không value hợp lệ nào
+    # đi qua nhánh này. Nếu ngày nào đó cần chứa nháy thật, phải sửa parser
+    # trước -- đừng nới luật rồi trông chờ test này bảo là ổn.
+    It 'documents the known divergence from zsh on inner quotes (limitation, not parity)' {
         $text = 'export GOLF="say ""hi"""'
         $got = ConvertFrom-ShellEnv -Text $text
         $got['GOLF'] | Should Be 'say ""hi""'
@@ -144,6 +206,71 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
         (Get-Content -LiteralPath $out -Raw) | Should Be $before
         @(Get-ChildItem -LiteralPath $WorkDir -Filter '.tmp.*' -Force).Count | Should Be 0
     }
+
+    It 'installs the file with a non-inherited ACL granting nobody but the current user' {
+        $out = Join-Path $WorkDir 'acl-first.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ KILO = 'nine' }) -Path $out | Out-Null
+
+        $acl = Get-Acl -LiteralPath $out
+        $acl.AreAccessRulesProtected | Should Be $true
+
+        $ids = @($acl.Access | ForEach-Object { $_.IdentityReference.Value })
+        ($ids -contains 'BUILTIN\Users') | Should Be $false
+        ($ids -contains 'Everyone')      | Should Be $false
+
+        # Không hardcode tên tài khoản: runner Actions dùng tên khác máy thật.
+        $me = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+        @($ids | Where-Object { $_ -ne $me }).Count | Should Be 0
+    }
+
+    # Đường ghi đè đi qua ReplaceFileW, và ReplaceFileW mang DACL của file BỊ THAY
+    # THẾ sang file thay thế -- ACL đặt trên temp bị vứt đi. Nên nếu file đích
+    # từng tồn tại với quyền kế thừa (khôi phục từ backup, copy từ máy khác, tạo
+    # tay lúc debug), mọi lần apply/Update-Secrets sau đó sẽ giữ nguyên quyền rộng
+    # đó mà vẫn báo "OK 14 secrets". Không có gì phát hiện ra.
+    It 'reapplies the restrictive ACL on the overwrite path, not just on first write' {
+        $out = Join-Path $WorkDir 'acl-overwrite.ps1'
+
+        # Tạo tay -> kế thừa quyền của thư mục cha. Đây là tiền đề của test.
+        Set-Content -LiteralPath $out -Value '# placeholder'
+        (Get-Acl -LiteralPath $out).AreAccessRulesProtected | Should Be $false
+
+        Write-PwshSecretsFile -Pairs ([ordered]@{ LIMA = 'ten' }) -Path $out | Out-Null
+
+        $acl = Get-Acl -LiteralPath $out
+        $acl.AreAccessRulesProtected | Should Be $true
+
+        $ids = @($acl.Access | ForEach-Object { $_.IdentityReference.Value })
+        ($ids -contains 'BUILTIN\Users') | Should Be $false
+        ($ids -contains 'Everyone')      | Should Be $false
+
+        $me = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+        @($ids | Where-Object { $_ -ne $me }).Count | Should Be 0
+    }
+
+    # Cùng bẫy $LASTEXITCODE mà Update-PwshSecrets đã có test riêng. icacls hỏng
+    # (LOCALAPPDATA trỏ sang share, volume không mang ACL, identity không phân
+    # giải được) làm hàm throw, nhưng nếu mã thoát khác 0 còn sót lại thì nó sống
+    # qua cả tiến trình -- bẩn segment exit-status của prompt, và làm đỏ job CI về
+    # sau vì `shell: powershell` tự `exit $LASTEXITCODE` dù Pester báo 0 fail.
+    #
+    # icacls được thay bằng một function ở global scope: lookup lệnh trần từ trong
+    # module rơi về global session state, nên module gọi đúng vào bản giả này.
+    It 'resets $LASTEXITCODE when icacls fails instead of leaking it to the caller' {
+        $out = Join-Path $WorkDir 'acl-fail.ps1'
+        $global:LASTEXITCODE = 0
+        function global:icacls { $global:LASTEXITCODE = 5 }
+        try {
+            { Write-PwshSecretsFile -Pairs ([ordered]@{ MIKE = 'eleven' }) -Path $out } | Should Throw
+        }
+        finally {
+            Remove-Item -LiteralPath 'function:global:icacls' -Force -ErrorAction SilentlyContinue
+        }
+
+        $LASTEXITCODE | Should Be 0
+        Test-Path -LiteralPath $out | Should Be $false
+        @(Get-ChildItem -LiteralPath $WorkDir -Filter '.tmp.*' -Force).Count | Should Be 0
+    }
 }
 
 Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
@@ -183,6 +310,16 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
         Set-Content -LiteralPath $AgeEmpty -Value @(
             '@echo off'
             'echo # chi la comment, khong co assignment nao o day'
+        )
+
+        # Stub age hỏng CÓ nói lý do trên stderr -- đúng hình dạng của age thật
+        # ("no identity matched any of the recipients", passphrase prompt, ...).
+        # Chuỗi dưới đây là bịa, không phải thông điệp thật của bất kỳ máy nào.
+        $AgeNoisy = Join-Path $WorkDir 'age-noisy.cmd'
+        Set-Content -LiteralPath $AgeNoisy -Value @(
+            '@echo off'
+            'echo age: STUB-DIAGNOSTIC-LINE 1>&2'
+            'exit /b 1'
         )
     }
     AfterAll {
@@ -261,6 +398,32 @@ Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
         (Get-Content -LiteralPath $out -Raw) | Should Be $before
     }
 
+    # Mã thoát một mình không phân biệt được khoá sai, khoá có passphrase và
+    # ciphertext hỏng -- cả ba đều là "exit 1". Cửa sổ tự nâng quyền của apply.ps1
+    # lại rất dễ bị bỏ qua, nên chẩn đoán của age phải hiện ra.
+    It 'surfaces age''s own stderr on the failure branch' {
+        $out = Join-Path $WorkDir 'out-noisy.ps1'
+        $log = & {
+            Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out `
+                -AgeCommand $AgeNoisy | Out-Null
+        } 6>&1
+        (($log | ForEach-Object { [string]$_ }) -join "`n") | Should Match 'STUB-DIAGNOSTIC-LINE'
+    }
+
+    # Mặt kia của cùng quyết định: đường THÀNH CÔNG không được log gì ngoài số
+    # lượng và đường dẫn. Nội dung giải mã không bao giờ ra console.
+    It 'never puts a decrypted value on the console on the success path' {
+        $out = Join-Path $WorkDir 'out-quiet.ps1'
+        $log = & {
+            Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out `
+                -AgeCommand $AgeOk | Out-Null
+        } 6>&1
+        $joined = ($log | ForEach-Object { [string]$_ }) -join "`n"
+        $joined | Should Match '2 secrets'
+        $joined | Should Not Match 'TEST_ALPHA'
+        $joined | Should Not Match 'TEST_BRAVO'
+    }
+
     It 'never throws, whatever is missing' {
         { Update-PwshSecrets -RepoRoot 'C:\nope' -Identity 'C:\nope' `
             -OutFile (Join-Path $WorkDir 'x.ps1') -AgeCommand 'C:\nope.exe' } | Should Not Throw
@@ -310,6 +473,64 @@ Describe 'windows programs.agenix module wiring' {
         $ModuleText = Get-Content -Raw -LiteralPath $ModulePath
         $ModuleText | Should Not Match '-OutFile'
     }
+
+    # Khẳng định "Apply không rỗng" là vacuous: xoá đúng dòng làm việc
+    # (`Update-PwshSecrets -RepoRoot $Ctx.RepoRoot`) mà vẫn còn Import-Module thì
+    # block vẫn khác rỗng và test vẫn xanh, trong khi secret âm thầm ngừng được
+    # sinh ra. Nên ở đây chạy Apply thật.
+    #
+    # Apply chỉ nhận $Ctx, mọi thứ khác là mặc định đọc từ môi trường -- nên cách
+    # duy nhất quan sát được nó có gọi thật hay không là trỏ $env:USERPROFILE,
+    # $env:LOCALAPPDATA và PATH vào một sandbox tạm rồi xem file có ra không.
+    It 'really decrypts when Apply runs -- not just a non-empty scriptblock' {
+        $Sandbox   = Join-Path $env:TEMP ("agenix-apply-" + [Guid]::NewGuid().ToString('N'))
+        $FakeHome  = Join-Path $Sandbox 'home'
+        $FakeLocal = Join-Path $Sandbox 'local'
+        $FakeRepo  = Join-Path $Sandbox 'repo'
+        $BinDir    = Join-Path $Sandbox 'bin'
+
+        New-Item -ItemType Directory -Path (Join-Path $FakeHome '.ssh') -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $FakeHome '.ssh\id_ed25519') -Value 'not-a-real-key'
+
+        $AgeDir = Join-Path $FakeRepo 'home-manager\programs\zsh\age.d'
+        New-Item -ItemType Directory -Path $AgeDir -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $AgeDir 'apikey.zsh.age') -Value 'not-real-ciphertext'
+
+        New-Item -ItemType Directory -Path $BinDir -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $BinDir 'age.cmd') -Value @(
+            '@echo off'
+            'echo export TEST_APPLY_ALPHA="applied"'
+        )
+
+        $oldHome = $env:USERPROFILE
+        $oldLocal = $env:LOCALAPPDATA
+        $oldPath = $env:PATH
+        try {
+            $env:USERPROFILE  = $FakeHome
+            $env:LOCALAPPDATA = $FakeLocal
+            $env:PATH         = "$BinDir;$env:PATH"
+
+            $ctx = @{
+                RepoRoot   = $FakeRepo
+                WindowsDir = (Join-Path $RepoRoot 'windows')
+            }
+            $mod = & $ModulePath
+            & $mod.Apply $ctx | Out-Null
+
+            $produced = Join-Path $FakeLocal 'pwsh-secrets\apikey.ps1'
+            Test-Path -LiteralPath $produced | Should Be $true
+            (Get-Content -LiteralPath $produced -Raw) | Should Match '\$env:TEST_APPLY_ALPHA = ''applied'''
+        }
+        finally {
+            $env:USERPROFILE  = $oldHome
+            $env:LOCALAPPDATA = $oldLocal
+            $env:PATH         = $oldPath
+            $global:LASTEXITCODE = 0
+            if (Test-Path -LiteralPath $Sandbox) {
+                Remove-Item -LiteralPath $Sandbox -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
 }
 
 Describe 'pwsh shell wiring for secrets' {
@@ -321,10 +542,42 @@ Describe 'pwsh shell wiring for secrets' {
         $FuncText    = Get-Content -Raw -LiteralPath (Join-Path $PwshDir 'ps1.d\functions.ps1')
     }
 
-    It 'ships a drop-in that loads the generated file' {
+    # Chỉ grep chuỗi 'pwsh-secrets' là vacuous: nó có mặt cả trong comment lẫn
+    # trong Join-Path, nên xoá đúng dòng `. $SecretsFile` mà test vẫn xanh. Nạp
+    # thật vào một $env:LOCALAPPDATA giả rồi kiểm biến có được đặt hay không.
+    It 'ships a drop-in that really dot-sources the generated file' {
         Test-Path -LiteralPath $DropInPath | Should Be $true
-        $text = Get-Content -Raw -LiteralPath $DropInPath
-        $text | Should Match 'pwsh-secrets'
+
+        $Sandbox = Join-Path $env:TEMP ("dropin-" + [Guid]::NewGuid().ToString('N'))
+        New-Item -ItemType Directory -Path (Join-Path $Sandbox 'pwsh-secrets') -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $Sandbox 'pwsh-secrets\apikey.ps1') `
+            -Value '$env:TEST_DROPIN_ALPHA = ''loaded'''
+
+        $old = $env:LOCALAPPDATA
+        try {
+            $env:LOCALAPPDATA = $Sandbox
+            . $DropInPath
+            $env:TEST_DROPIN_ALPHA | Should Be 'loaded'
+        }
+        finally {
+            $env:LOCALAPPDATA = $old
+            Remove-Item Env:\TEST_DROPIN_ALPHA -ErrorAction SilentlyContinue
+            if (Test-Path -LiteralPath $Sandbox) {
+                Remove-Item -LiteralPath $Sandbox -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    # Máy chưa chạy apply.ps1 lần nào không được vỡ shell.
+    It 'stays quiet when the generated file does not exist yet' {
+        $old = $env:LOCALAPPDATA
+        try {
+            $env:LOCALAPPDATA = Join-Path $env:TEMP ("dropin-missing-" + [Guid]::NewGuid().ToString('N'))
+            { . $DropInPath } | Should Not Throw
+        }
+        finally {
+            $env:LOCALAPPDATA = $old
+        }
     }
 
     It 'keeps the drop-in free of any value -- it only dot-sources' {
@@ -360,5 +613,65 @@ Describe 'pwsh shell wiring for secrets' {
 
     It 'imports the module inside the function body, not at shell start' {
         $FuncText | Should Match '(?s)function Update-Secrets \{[^}]*Import-Module'
+    }
+
+    # Hai test trên chỉ đọc chữ: xoá `$n = Update-PwshSecrets -RepoRoot $repo` thì
+    # `function Update-Secrets` và alias vẫn còn, test vẫn xanh, còn agenix-reload
+    # thành no-op nạp lại file cũ. Nên ở đây chạy thật, đầu-tới-đuôi: dựng một
+    # $env:USERPROFILE\.nix giả (có bản sao thật của Secrets.psm1 + Logging.psm1),
+    # một `age` stub trên PATH, rồi gọi hàm và kiểm biến có vào session hay không.
+    It 'Update-Secrets really regenerates and loads the file into the running session' {
+        $Sandbox   = Join-Path $env:TEMP ("reload-" + [Guid]::NewGuid().ToString('N'))
+        $FakeHome  = Join-Path $Sandbox 'home'
+        $FakeLocal = Join-Path $Sandbox 'local'
+        $FakeRepo  = Join-Path $FakeHome '.nix'      # Update-Secrets hardcode $USERPROFILE\.nix
+        $BinDir    = Join-Path $Sandbox 'bin'
+
+        New-Item -ItemType Directory -Path (Join-Path $FakeHome '.ssh') -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $FakeHome '.ssh\id_ed25519') -Value 'not-a-real-key'
+
+        $FakeLib = Join-Path $FakeRepo 'windows\lib'
+        New-Item -ItemType Directory -Path $FakeLib -Force | Out-Null
+        Copy-Item -LiteralPath (Join-Path $RepoRoot 'windows\lib\Secrets.psm1') -Destination $FakeLib
+        Copy-Item -LiteralPath (Join-Path $RepoRoot 'windows\lib\Logging.psm1') -Destination $FakeLib
+
+        $AgeDir = Join-Path $FakeRepo 'home-manager\programs\zsh\age.d'
+        New-Item -ItemType Directory -Path $AgeDir -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $AgeDir 'apikey.zsh.age') -Value 'not-real-ciphertext'
+
+        New-Item -ItemType Directory -Path $BinDir -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $BinDir 'age.cmd') -Value @(
+            '@echo off'
+            'echo export TEST_RELOAD_ALPHA="reloaded"'
+        )
+
+        $oldHome  = $env:USERPROFILE
+        $oldLocal = $env:LOCALAPPDATA
+        $oldPath  = $env:PATH
+        try {
+            $env:USERPROFILE  = $FakeHome
+            $env:LOCALAPPDATA = $FakeLocal
+            $env:PATH         = "$BinDir;$env:PATH"
+
+            . (Join-Path $PwshDir 'ps1.d\functions.ps1')
+
+            Update-Secrets
+            $env:TEST_RELOAD_ALPHA | Should Be 'reloaded'
+
+            # Alias phải dẫn tới đúng hàm đó, không chỉ tồn tại.
+            Remove-Item Env:\TEST_RELOAD_ALPHA -ErrorAction SilentlyContinue
+            agenix-reload
+            $env:TEST_RELOAD_ALPHA | Should Be 'reloaded'
+        }
+        finally {
+            $env:USERPROFILE  = $oldHome
+            $env:LOCALAPPDATA = $oldLocal
+            $env:PATH         = $oldPath
+            $global:LASTEXITCODE = 0
+            Remove-Item Env:\TEST_RELOAD_ALPHA -ErrorAction SilentlyContinue
+            if (Test-Path -LiteralPath $Sandbox) {
+                Remove-Item -LiteralPath $Sandbox -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
     }
 }
