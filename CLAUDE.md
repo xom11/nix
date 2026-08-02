@@ -2,6 +2,41 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## This repo is public
+
+`xom11/nix` on GitHub, visibility **PUBLIC**. Everything committed here is
+world-readable, and git history is permanent — deleting a file in a later commit
+does not unpublish it. Treat every write to this tree as a publish.
+
+**Safe to commit:** `.age` files (ciphertext — that is the whole point),
+`home-manager/programs/ssh/authorized_keys` (public keys only), and the
+non-secret half of any config.
+
+**Never commit:** decrypted secrets, private keys, tokens, internal hostnames or
+Tailscale addresses, or anything that only exists because a secret was decrypted.
+The same rule covers commit messages, code comments, and PR/issue text — those
+are published too.
+
+Repo-specific traps worth knowing:
+
+- Secrets decrypt to paths **outside** this tree (`~/.ssh/age.d/`,
+  `~/.config/zsh/apikey.zsh`). That is deliberate. Never redirect `agenix -d`
+  or `age -d` output anywhere under `~/.nix`.
+- `age.d/` directories hold `*.age` and nothing else. `secrets.nix` walks the
+  whole tree matching on the `.age` suffix, so a plaintext file named `.age`
+  would look legitimate to every tool here while being readable by anyone.
+- The nvim `age-edit` plugin disables swapfile and undofile so a decrypted
+  buffer never touches disk. Do not re-enable them for `.age` buffers.
+- `home-manager/programs/ssh/config` is the public half; the real hosts live in
+  `config.age`. Do not add a real host to the public file.
+
+Before committing, read `git diff --cached` rather than trusting a glob. If a
+secret does reach a commit, the fix is to **rotate the credential** — scrubbing
+history is not enough, since the push is already public.
+
+When reporting output back to the user, redact token values rather than pasting
+them; this transcript is not the repo, but the habit is what keeps them apart.
+
 ## Rebuild Commands
 
 `--impure` is required everywhere: `lib/mkConfigs.nix` reads `$USER`/`$SUDO_USER`
