@@ -311,3 +311,54 @@ Describe 'windows programs.agenix module wiring' {
         $ModuleText | Should Not Match '-OutFile'
     }
 }
+
+Describe 'pwsh shell wiring for secrets' {
+    BeforeAll {
+        $RepoRoot    = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+        $PwshDir     = Join-Path $RepoRoot 'home-manager\dotfiles\windows\pwsh'
+        $DropInPath  = Join-Path $PwshDir 'ps1.d\apikey.ps1'
+        $ProfileText = Get-Content -Raw -LiteralPath (Join-Path $PwshDir 'Microsoft.PowerShell_profile.ps1')
+        $FuncText    = Get-Content -Raw -LiteralPath (Join-Path $PwshDir 'ps1.d\functions.ps1')
+    }
+
+    It 'ships a drop-in that loads the generated file' {
+        Test-Path -LiteralPath $DropInPath | Should Be $true
+        $text = Get-Content -Raw -LiteralPath $DropInPath
+        $text | Should Match 'pwsh-secrets'
+    }
+
+    It 'keeps the drop-in free of any value -- it only dot-sources' {
+        $text = Get-Content -Raw -LiteralPath $DropInPath
+        $text | Should Not Match '\$env:[A-Z_]+\s*='
+    }
+
+    It 'is listed in the profile, which does not glob ps1.d' {
+        # Đơn giản có chủ đích: khẳng định tên file có mặt, còn việc nó nằm đúng
+        # khối nào để test kế tiếp lo. Regex bám vào cả dòng `foreach` sẽ gãy
+        # ngay lần đầu ai đó xuống dòng cho danh sách dài ra.
+        $ProfileText | Should Match "'apikey\.ps1'"
+    }
+
+    It 'loads in the always-on block so pwsh -c over SSH gets the keys too' {
+        $alwaysOn    = $ProfileText.IndexOf('always on: plain definitions')
+        $interactive = $ProfileText.IndexOf('if (-not $Interactive) { return }')
+        $apikeyAt    = $ProfileText.IndexOf("'apikey.ps1'")
+        # Guard hiện diện: nếu một trong hai mốc bị đổi tên/xoá, IndexOf trả -1
+        # và phép so sánh -gt/-lt phía dưới có thể pass giả (vacuous) thay vì
+        # fail vì lý do đúng. Cùng lớp lỗi đã bị review bắt ở Task 4
+        # ("runs after dotfiles.pwsh" thiếu guard này).
+        ($alwaysOn    -ge 0) | Should Be $true
+        ($interactive -ge 0) | Should Be $true
+        ($apikeyAt -gt $alwaysOn)    | Should Be $true
+        ($apikeyAt -lt $interactive) | Should Be $true
+    }
+
+    It 'defines Update-Secrets with an agenix-reload alias' {
+        $FuncText | Should Match 'function Update-Secrets'
+        $FuncText | Should Match "Set-Alias agenix-reload Update-Secrets"
+    }
+
+    It 'imports the module inside the function body, not at shell start' {
+        $FuncText | Should Match '(?s)function Update-Secrets \{[^}]*Import-Module'
+    }
+}
