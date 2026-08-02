@@ -121,6 +121,13 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
         (Get-Content -LiteralPath $out -Raw) | Should Match '\$env:HOTEL = ''new'''
     }
 
+    It 'leaves no backup of the previous secret values after a successful overwrite' {
+        $out = Join-Path $WorkDir 'g2.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ JULIET = 'old-secret' }) -Path $out | Out-Null
+        Write-PwshSecretsFile -Pairs ([ordered]@{ JULIET = 'new-secret' }) -Path $out | Out-Null
+        @(Get-ChildItem -LiteralPath $WorkDir -Filter '.tmp.*' -Force).Count | Should Be 0
+    }
+
     It 'leaves the previous file intact and reports failure loudly when the replace is blocked' {
         $out = Join-Path $WorkDir 'h.ps1'
         Write-PwshSecretsFile -Pairs ([ordered]@{ INDIA = 'old' }) -Path $out | Out-Null

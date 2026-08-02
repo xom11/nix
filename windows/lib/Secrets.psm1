@@ -60,12 +60,15 @@ function ConvertFrom-ShellEnv {
 # của caller) khi thất bại, nên `return` phía dưới không bao giờ chạy trên
 # đường thất bại.
 #
-# Tham số backup của Replace KHÔNG được truyền $null: trên Windows PowerShell
-# 5.1 (không có [NullString] như PowerShell Core), $null bị marshal thành
-# chuỗi rỗng cho tham số String này, và File.Replace ném "The path is not of
-# a legal form" vì "" không phải path hợp lệ. Truyền một path backup thật,
-# rồi xoá ngay trong finally -- Replace vẫn atomic, chỉ là có thêm một bước
-# dọn dẹp.
+# Tham số backup của Replace KHÔNG được truyền $null trần: một $null trần
+# marshal thành chuỗi rỗng khi bind vào tham số String của method .NET, và
+# File.Replace ném "The path is not of a legal form" vì "" không phải path
+# hợp lệ (không phải vì thiếu [NullString] -- kiểu đó có từ PowerShell 3.0,
+# kể cả trên Windows PowerShell 5.1). [NullString]::Value tồn tại đúng để
+# đi qua tình huống này: ép PowerShell truyền một null reference thật cho
+# tham số String thay vì "". Không tạo backup -> không có gì phải dọn, và
+# vì thế không có nguy cơ một file backup chứa secret cũ nằm lại vô thời
+# hạn nếu bước dọn tự nó thất bại (AV/indexer giữ khoá tạm thời).
 function Write-PwshSecretsFile {
     [CmdletBinding()]
     param(
@@ -93,13 +96,7 @@ function Write-PwshSecretsFile {
         if ($LASTEXITCODE -ne 0) { throw "icacls failed on $tmp" }
 
         if (Test-Path -LiteralPath $Path) {
-            $backup = Join-Path $dir ('.tmp.bak.' + [System.IO.Path]::GetRandomFileName())
-            try {
-                [System.IO.File]::Replace($tmp, $Path, $backup)
-            }
-            finally {
-                if (Test-Path -LiteralPath $backup) { Remove-Item -LiteralPath $backup -Force -ErrorAction SilentlyContinue }
-            }
+            [System.IO.File]::Replace($tmp, $Path, [NullString]::Value)
         } else {
             [System.IO.File]::Move($tmp, $Path)
         }
