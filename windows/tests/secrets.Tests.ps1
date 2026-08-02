@@ -297,6 +297,8 @@ Describe 'windows programs.agenix module wiring' {
     It 'runs after dotfiles.pwsh, which links ps1.d' {
         $pwshAt   = $ApplyText.IndexOf("'dotfiles.pwsh'")
         $agenixAt = $ApplyText.IndexOf("'programs.agenix'")
+        ($pwshAt   -ge 0) | Should Be $true
+        ($agenixAt -ge 0) | Should Be $true
         ($agenixAt -gt $pwshAt) | Should Be $true
     }
 
