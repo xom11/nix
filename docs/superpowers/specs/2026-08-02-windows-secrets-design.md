@@ -54,9 +54,14 @@ Chữ `export` là nhãn an toàn gắn liền vào từng dòng. Bỏ nó đi l
 nhiệm sang người đọc file.
 
 **Ràng buộc đi kèm:** value chỉ được là chữ thuần — không `$`, không backtick,
-không `$(...)`. zsh sẽ nội suy còn PowerShell lấy nguyên chuỗi, lệch âm thầm.
-Đã đo: cả 14 value hiện tại tuân thủ, tập ký tự là `_-:."/#=`. Ghi luật này vào
-`CLAUDE.md` là để giữ nguyên trạng, không phải sửa gì.
+không `$(...)`, và không nháy `'` hay `"` bên trong. zsh nội suy, và còn ghép
+các từ nháy liền nhau; parser PowerShell lấy nguyên chuỗi và chỉ bóc đúng cặp
+nháy bọc ngoài. Lệch âm thầm cả hai chiều.
+
+Đã kiểm cả 14 value hiện tại: không value nào chứa bất kỳ ký tự nào trong nhóm
+đó, nên luật ghi vào `CLAUDE.md` là để giữ nguyên trạng chứ không phải sửa gì.
+(Không liệt kê tập ký tự thực tế ở đây — repo này public, và đó vẫn là metadata
+về nội dung secret thật.)
 
 ### 3. Giải mã sẵn lúc `apply.ps1`, không giải mã mỗi lần mở shell
 
