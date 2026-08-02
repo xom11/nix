@@ -39,9 +39,26 @@ function ConvertFrom-ShellEnv {
     return $pairs
 }
 
-# Ghi qua temp rồi move, giống hệt `agenix-reload` trên Unix và vì cùng lý do:
-# một lần ghi hỏng không được để lại file cụt. ACL đặt trên temp *trước* khi
-# move, nên không có khoảnh khắc nào file đích tồn tại với quyền kế thừa.
+# Ghi qua temp rồi thay thế đích, giống hệt `agenix-reload` trên Unix và vì
+# cùng lý do: một lần ghi hỏng không được để lại file cụt, và không được xoá
+# mất bản cũ. ACL đặt trên temp *trước* khi thay thế, nên không có khoảnh
+# khắc nào file đích tồn tại với quyền kế thừa.
+#
+# KHÔNG dùng `Move-Item -Force`: khi đích đã tồn tại, PowerShell xoá đích rồi
+# mới move lại (không atomic), và nếu lần move lại đó thất bại -- AV hay
+# search indexer giữ khoá tạm thời, chuyện thường trên Windows -- lỗi chỉ là
+# non-terminating (WriteError). Hệ quả: file cũ đã mất, file mới chưa tới,
+# không gì throw, và hàm vẫn trả về như đã ghi xong. Đó chính xác là điều
+# thiết kế temp+move tồn tại để ngăn.
+#
+# Dùng [System.IO.File]::Replace khi đích đã có: atomic thật (ReplaceFile
+# của Win32), sẵn trên .NET Framework 4.x -- khác overload 3 tham số của
+# File.Move, cái đó chỉ có từ .NET Core 3.0, không chạy được trên Windows
+# PowerShell 5.1. Lần ghi đầu tiên (đích chưa tồn tại) dùng File.Move hai
+# tham số: không có gì để thay thế, nhưng cũng không có gì để mất. Cả hai
+# ném exception .NET thật (terminating, không phụ thuộc $ErrorActionPreference
+# của caller) khi thất bại, nên `return` phía dưới không bao giờ chạy trên
+# đường thất bại.
 function Write-PwshSecretsFile {
     [CmdletBinding()]
     param(
@@ -62,16 +79,20 @@ function Write-PwshSecretsFile {
 
     $tmp = Join-Path $dir ('.tmp.' + [System.IO.Path]::GetRandomFileName())
     try {
-        Set-Content -LiteralPath $tmp -Value $lines -Encoding UTF8 -Force
+        Set-Content -LiteralPath $tmp -Value $lines -Encoding UTF8 -Force -ErrorAction Stop
 
         $me = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         & icacls $tmp /inheritance:r /grant:r "${me}:(R,W)" | Out-Null
         if ($LASTEXITCODE -ne 0) { throw "icacls failed on $tmp" }
 
-        Move-Item -LiteralPath $tmp -Destination $Path -Force
+        if (Test-Path -LiteralPath $Path) {
+            [System.IO.File]::Replace($tmp, $Path, $null)
+        } else {
+            [System.IO.File]::Move($tmp, $Path)
+        }
     }
     finally {
-        if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Force }
+        if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }
     }
 
     return $Pairs.Count

@@ -120,4 +120,21 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
         Write-PwshSecretsFile -Pairs ([ordered]@{ HOTEL = 'new' }) -Path $out | Out-Null
         (Get-Content -LiteralPath $out -Raw) | Should Match '\$env:HOTEL = ''new'''
     }
+
+    It 'leaves the previous file intact and reports failure loudly when the replace is blocked' {
+        $out = Join-Path $WorkDir 'h.ps1'
+        Write-PwshSecretsFile -Pairs ([ordered]@{ INDIA = 'old' }) -Path $out | Out-Null
+        $before = Get-Content -LiteralPath $out -Raw
+
+        $handle = [System.IO.File]::Open($out, 'Open', 'ReadWrite', 'None')
+        try {
+            { Write-PwshSecretsFile -Pairs ([ordered]@{ INDIA = 'new' }) -Path $out } | Should Throw
+        }
+        finally {
+            $handle.Close()
+        }
+
+        (Get-Content -LiteralPath $out -Raw) | Should Be $before
+        @(Get-ChildItem -LiteralPath $WorkDir -Filter '.tmp.*' -Force).Count | Should Be 0
+    }
 }
