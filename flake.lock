@@ -85,26 +85,6 @@
         "type": "github"
       }
     },
-    "dotbrowser": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780722150,
-        "narHash": "sha256-c+4bEaS0N+l+kEl9RvsRBG0z4inRJ8r7w5gmSaxiAPI=",
-        "owner": "xom11",
-        "repo": "dotbrowser",
-        "rev": "d581999d48db0c3d1b9d6d3cf4c9fe6449bf88ec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "xom11",
-        "repo": "dotbrowser",
-        "type": "github"
-      }
-    },
     "fcitx5-lotus": {
       "inputs": {
         "nixpkgs": [
@@ -565,7 +545,6 @@
         "beckon": "beckon",
         "brew-src": "brew-src",
         "disko": "disko",
-        "dotbrowser": "dotbrowser",
         "fcitx5-lotus": "fcitx5-lotus",
         "hammerspoon-spoons": "hammerspoon-spoons",
         "home-manager": "home-manager",

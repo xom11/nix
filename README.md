@@ -137,7 +137,7 @@ modules.home-manager = {
 | `nix-flatpak` | Declarative Flatpak |
 | `nixgl` | OpenGL wrapper for non-NixOS |
 | `nix-apt` | Declarative apt packages on Debian/Ubuntu |
-| `beckon`, `dotbrowser` | Custom tools, shipped as overlays |
+| `beckon` | Custom tools, shipped as overlays |
 
 ## Documentation
 
