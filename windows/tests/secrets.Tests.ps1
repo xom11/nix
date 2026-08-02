@@ -145,3 +145,77 @@ Describe 'windows/lib/Secrets.psm1 Write-PwshSecretsFile' {
         @(Get-ChildItem -LiteralPath $WorkDir -Filter '.tmp.*' -Force).Count | Should Be 0
     }
 }
+
+Describe 'windows/lib/Secrets.psm1 Update-PwshSecrets' {
+    BeforeAll {
+        $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+        Import-Module (Join-Path $RepoRoot 'windows\lib\Secrets.psm1') -Force
+
+        $WorkDir = Join-Path $env:TEMP ("update-test-" + [Guid]::NewGuid().ToString('N'))
+        New-Item -ItemType Directory -Path $WorkDir -Force | Out-Null
+
+        # Cây repo giả: chỉ cần đúng đường dẫn tới file .age, nội dung không cần
+        # là ciphertext thật vì `age` ở đây là stub.
+        $FakeRepo = Join-Path $WorkDir 'repo'
+        $AgeDir   = Join-Path $FakeRepo 'home-manager\programs\zsh\age.d'
+        New-Item -ItemType Directory -Path $AgeDir -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $AgeDir 'apikey.zsh.age') -Value 'not-real-ciphertext'
+
+        $FakeKey = Join-Path $WorkDir 'id_ed25519'
+        Set-Content -LiteralPath $FakeKey -Value 'not-a-real-key'
+
+        # Stub age thành công: in ra hai dòng bịa.
+        $AgeOk = Join-Path $WorkDir 'age-ok.cmd'
+        Set-Content -LiteralPath $AgeOk -Value @(
+            '@echo off'
+            'echo export TEST_ALPHA="one"'
+            'echo export TEST_BRAVO="two"'
+        )
+
+        # Stub age hỏng: mã thoát khác 0, không in gì.
+        $AgeFail = Join-Path $WorkDir 'age-fail.cmd'
+        Set-Content -LiteralPath $AgeFail -Value @('@echo off', 'exit /b 1')
+    }
+    AfterAll {
+        if ($WorkDir -and (Test-Path $WorkDir)) { Remove-Item $WorkDir -Recurse -Force }
+    }
+
+    It 'writes the secrets file and returns the count on success' {
+        $out = Join-Path $WorkDir 'out-ok.ps1'
+        $n = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeOk
+        $n | Should Be 2
+        (Get-Content -LiteralPath $out -Raw) | Should Match '\$env:TEST_ALPHA = ''one'''
+    }
+
+    It 'returns null and does not throw when the identity is missing' {
+        $out = Join-Path $WorkDir 'out-nokey.ps1'
+        $missing = Join-Path $WorkDir 'no-such-key'
+        $n = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $missing -OutFile $out -AgeCommand $AgeOk
+        $n | Should BeNullOrEmpty
+        Test-Path -LiteralPath $out | Should Be $false
+    }
+
+    It 'returns null and does not throw when the .age file is missing' {
+        $out = Join-Path $WorkDir 'out-noage.ps1'
+        $emptyRepo = Join-Path $WorkDir 'empty-repo'
+        New-Item -ItemType Directory -Path $emptyRepo -Force | Out-Null
+        $n = Update-PwshSecrets -RepoRoot $emptyRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeOk
+        $n | Should BeNullOrEmpty
+        Test-Path -LiteralPath $out | Should Be $false
+    }
+
+    It 'leaves the previous file untouched when decryption fails' {
+        $out = Join-Path $WorkDir 'out-keep.ps1'
+        Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeOk | Out-Null
+        $before = Get-Content -LiteralPath $out -Raw
+
+        $n = Update-PwshSecrets -RepoRoot $FakeRepo -Identity $FakeKey -OutFile $out -AgeCommand $AgeFail
+        $n | Should BeNullOrEmpty
+        (Get-Content -LiteralPath $out -Raw) | Should Be $before
+    }
+
+    It 'never throws, whatever is missing' {
+        { Update-PwshSecrets -RepoRoot 'C:\nope' -Identity 'C:\nope' `
+            -OutFile (Join-Path $WorkDir 'x.ps1') -AgeCommand 'C:\nope.exe' } | Should Not Throw
+    }
+}
