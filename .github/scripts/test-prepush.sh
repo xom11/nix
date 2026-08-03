@@ -197,6 +197,45 @@ out=$(push origin main)
 if [ $? -ne 0 ]; then ok 'vẫn bắt được key nằm cạnh UTF-8'; else bad 'UTF-8 làm bộ quét mù' "$out"; fi
 
 # --------------------------------------------------------------------------
+echo '# 9  chỉ dọn dẹp (giá trị chỉ xuất hiện ở dòng bị XOÁ) thì đi qua'
+# Giá trị đã được push từ trước, tức là đã public. Chặn commit gỡ nó đi không
+# bảo vệ thêm gì, chỉ chặn đúng cái commit đang dọn. Hook từng làm thế thật.
+mkrepo secrets
+printf 'k = "%s"\n' "$VAL_A" >"$R/leak.txt"
+commit 'commit goc da co key'
+out=$(push --no-verify origin main) # giả lập "đã lỡ public từ trước"
+rm -f "$R/leak.txt"
+commit 'don dep: go leak.txt'
+out=$(push origin main)
+if [ $? -eq 0 ]; then ok 'commit dọn dẹp được phép'; else bad 'commit dọn dẹp bị chặn' "$out"; fi
+
+# --------------------------------------------------------------------------
+echo '# 10  allow-vars miễn trừ đúng biến được liệt kê, và chỉ biến đó'
+mkrepo secrets
+echo 'x' >"$R/a.txt"
+commit 'commit goc'
+out=$(push origin main)
+# allow-vars của repo thật không chứa biến bịa, nên dựng một .githooks riêng
+CLONE="$WORK/hooks$n"
+cp -R "$HOOKS" "$CLONE"
+printf '# bia\nFAKE_ALPHA_TOKEN\n' >"$CLONE/allow-vars"
+git -C "$R" config core.hooksPath "$CLONE"
+printf 'a = "%s"\n' "$VAL_A" >"$R/leak.txt"
+commit 'them bien duoc mien tru'
+out=$(push origin main)
+if [ $? -eq 0 ]; then ok 'biến trong allow-vars được bỏ qua'; else bad 'allow-vars không có tác dụng' "$out"; fi
+# ...và biến KHÔNG được liệt kê vẫn phải bị chặn, nếu không thì cơ chế này chỉ là
+# một công tắc tắt hàng rào.
+printf 'b = "%s"\n' "$VAL_B" >"$R/leak2.txt"
+commit 'them bien khong duoc mien tru'
+out=$(push origin main)
+if [ $? -ne 0 ]; then ok 'biến ngoài allow-vars vẫn bị chặn'; else bad 'allow-vars làm mù cả biến khác' "$out"; fi
+case "$out" in
+*FAKE_BETA_KEY*) ok 'chặn đúng biến còn lại' ;;
+*) bad 'không nêu đúng biến' "$out" ;;
+esac
+
+# --------------------------------------------------------------------------
 printf '\n%s\n' "-----------------------------------------"
 printf 'pass=%s fail=%s\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

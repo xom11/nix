@@ -19,6 +19,13 @@ BEGIN {
     nval    = 0
     sha     = "?"
     path    = ""
+    indiff  = 0
+
+    # Tên biến được miễn trừ, đọc từ .githooks/allow-vars. Chỉ là TÊN nên truyền
+    # qua -v thoải mái; giá trị thì không bao giờ đi lối này.
+    na = split(allow, a, /[ \t,]+/)
+    for (ia = 1; ia <= na; ia++)
+        if (a[ia] != "") skip[a[ia]] = 1
 }
 
 # apikey.ps1 được ghi trên Windows nên là CRLF; git log thì không. Cắt ở đây một
@@ -48,6 +55,7 @@ loading {
 
     sub(/[ \t]+$/, "", name)
     if (name !~ /^[A-Za-z_][A-Za-z0-9_]*$/) next
+    if (name in skip) next
 
     sub(/^[ \t]+/, "", v)
     sub(/[ \t]+$/, "", v)
@@ -75,18 +83,33 @@ loading {
     # --no-decorate` được ép ở phía gọi, nên dòng tiêu đề luôn đúng hình dạng này
     # bất kể máy có đặt `format.pretty` hay `log.decorate` gì.
     if ($0 ~ /^commit [0-9a-fA-F]+$/) {
-        sha  = substr($0, 8)
-        path = ""
+        sha    = substr($0, 8)
+        path   = ""
+        indiff = 0
     } else if ($0 ~ /^diff --cc /) {
-        path = substr($0, 11)
+        path   = substr($0, 11)
+        indiff = 1
     } else if ($0 ~ /^diff --git /) {
-        path = ""
+        path   = ""
+        indiff = 1
     } else if ($0 ~ /^\+\+\+ /) {
         p = substr($0, 5)
         sub(/\t.*$/, "", p)
         if (p ~ /^b\//) p = substr(p, 3)
         if (p != "/dev/null") path = p
     }
+
+    # Trong phần diff chỉ soi dòng THÊM. Một dòng `-` nghĩa là giá trị đó đã nằm ở
+    # một commit trước:
+    #   - commit đó nằm TRONG range  -> dòng `+` của nó đã bị bắt rồi
+    #   - commit đó nằm NGOÀI range  -> nó đã được push, tức là đã public
+    # Cả hai trường hợp, chặn ở dòng xoá không bảo vệ thêm được gì -- nó chỉ chặn
+    # đúng cái commit đang dọn dẹp. Hook này đã tự chặn commit sửa
+    # 9router-tools.ts vì lý do đó.
+    #
+    # Phần commit message (indiff == 0) thì soi hết: CLAUDE.md coi commit message
+    # là một lần publish.
+    if (indiff && $0 !~ /^\+/) next
 
     for (k in val) {
         if (index($0, val[k]) > 0) {

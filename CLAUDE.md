@@ -65,6 +65,13 @@ and reads `git log -p --cc` per commit, never `git diff`: adding then deleting
 before a push leaves a clean overall diff and a permanent commit. It prints only
 variable **names**. Bypass one push with `git push --no-verify`.
 
+Inside a diff it reads **added lines only**. A `-` line means the value is in an
+earlier commit — either inside the range, where its `+` was already caught, or
+outside it, where it is already pushed. Blocking there would only block the
+cleanup commit. `.githooks/allow-vars` exempts variables whose value is
+deliberately public (`ROUTER_ENDPOINT` is a Tailscale address). Prefer adding a
+name there over reaching for `--no-verify`, which drops the whole fence.
+
 It gets its values from `~/.config/zsh/apikey.zsh`, the Windows `apikey.ps1`, and
 by decrypting `age.d/apikey.zsh.age` in memory. If it finds none, it blocks only
 when this machine's key is in `programs/ssh/authorized_keys` — a machine that is

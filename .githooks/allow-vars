@@ -1,0 +1,18 @@
+# Tên biến trong apikey.zsh mà .githooks/pre-push KHÔNG đối chiếu.
+#
+# Chỉ dành cho giá trị đã được cân nhắc và chấp nhận là public. Không phải chỗ để
+# làm im một cảnh báo phiền -- một biến vào đây là một biến hết được canh, vĩnh
+# viễn, ở mọi máy.
+#
+# Vì sao cần danh sách này thay vì cứ để hook chặn: lối thoát duy nhất còn lại là
+# `git push --no-verify`, mà cái đó hạ TOÀN BỘ hàng rào cho lần push đó. Một cảnh
+# báo lặp đi lặp lại trên một giá trị người ta biết là vô hại sẽ dạy người ta gõ
+# --no-verify theo phản xạ. Miễn trừ từng biến giữ phần còn lại đứng nguyên.
+#
+# Một tên mỗi dòng. `#` là chú thích.
+
+# Địa chỉ Tailscale của 9router. Đã viết thẳng trong repo từ trước
+# (dotfiles/ai/pi.d/extensions/9router-tools.ts) và chỉ tới được từ trong tailnet
+# -- cùng lý do 7 host trong programs/ssh/config để IP Tailscale công khai.
+# Không có dòng này thì mọi lần sửa file đó đều bị chặn.
+ROUTER_ENDPOINT
