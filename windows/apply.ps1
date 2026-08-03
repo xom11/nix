@@ -38,6 +38,7 @@ $modules = @(
     'programs.ssh'
     'programs.nvim'
     'programs.yazi'
+    'programs.beckon'             # Start Menu shortcut names beckon resolves by exact name
 
     # ---- services ----
     'services.kanata'
