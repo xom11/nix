@@ -182,7 +182,12 @@ Vị trí này là cố ý: khối đó có comment *"always on: plain definitio
 enough to matter to scripts too"* — nó chạy **cả khi không interactive**. Nghĩa
 là `pwsh -c` qua SSH cũng có token, đúng điều cần cho script chạy từ xa.
 
-Chi phí: một `Test-Path` + dot-source ~14 phép gán. Dưới 1 ms.
+Chi phí: một `Test-Path` + dot-source ~14 phép gán.
+
+*Đo thật trên a14 ngày 03/08/2026: **~7.75 ms** (min 5.52), không phải "dưới 1 ms"
+như bản đầu của spec này viết. Nhiều khả năng do Defender quét file mỗi lần mở.
+Vẫn rẻ hơn 4–8 lần so với phương án gọi `age.exe` mỗi shell (30–60 ms), và chiếm
+~2.7% của ~286 ms tổng thời gian mở shell — nên quyết định không đổi.*
 
 ### 5. `ps1.d/functions.ps1` — thêm hàm reload
 

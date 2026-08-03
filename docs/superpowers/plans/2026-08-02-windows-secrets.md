@@ -772,13 +772,49 @@ Kết quả mong đợi: PASS, 30 test.
 
 ---
 
-### Task 6: Kiểm chứng trên `a14`
+### Task 6: Kiểm chứng trên `a14` — ĐÃ XONG 03/08/2026
 
-Không tự động hoá được. Chạy tay khi máy Windows lên mạng. **Hai điều kiện tiên quyết chưa từng được kiểm** — dừng lại và báo nếu một trong hai sai.
+Chạy qua SSH từ macmini. Máy: `ZENBOOK-A14`, Windows ARM64, pwsh 7.6.4, user `kln`.
+Repo ở `2d7631b8`. **Cả 10 bước đạt.** Kết quả từng bước:
 
-**Files:** không sửa file nào; chỉ ghi kết quả vào `docs/superpowers/plans/2026-08-02-windows-secrets.md` mục này.
+| Bước | Kết quả |
+|---|---|
+| 1. `age` trên ARM64 | **ĐẠT.** `age v1.3.1` từ bucket `extras` (không cần đóng gói riêng). Vòng mã hoá→giải mã thật bằng chính khoá SSH: khớp. |
+| 2. Passphrase | **ĐẠT.** `ssh-keygen -y -P ""` thoát 0 → không passphrase. Comment pubkey là `windows`, đúng 1 trong 4 recipient. |
+| 3. `apply.ps1` | **ĐẠT.** `22 ok, 0 failed`. `OK 14 secrets -> ...\pwsh-secrets\apikey.ps1`. |
+| 4. Shell mới thấy biến | **ĐẠT.** Đủ 14 biến, độ dài khớp mac từng cái. |
+| 5. Không-interactive | **ĐẠT.** Profile coi `-EncodedCommand` là không interactive (regex dòng 13), mà vẫn có đủ biến → khối always-on đúng chỗ. |
+| 6. ACL | **ĐẠT.** `AreAccessRulesProtected = True`, ACE duy nhất là `ZENBOOK-A14\kln : Write, Read, Synchronize`. Không SYSTEM, không Administrators, không Users. |
+| 7. Chi phí mở shell | **KHÔNG ĐẠT ngưỡng đã đặt** — xem dưới. |
+| 8. Reload không cần apply | **ĐẠT.** Xoá file sinh ra + xoá biến khỏi tiến trình, `agenix-reload` dựng lại cả hai **trong chính shell đang chạy**. |
+| 9. Không rò vào repo | **ĐẠT.** `git status` sạch, không file lạ nào trong cây repo. |
 
-- [ ] **Step 1: Kiểm tiên quyết 1 — `age` chạy được trên ARM64**
+**Bằng chứng C1 (quan trọng nhất).** Log `apply.ps1` cho thấy đủ 8 module *sau*
+`programs.agenix` đều chạy: `programs.ssh`, `programs.nvim`, `programs.yazi`,
+`services.kanata`, `services.kanata-watchdog`, `services.ahk`,
+`services.ahk-watchdog`, `services.sshd`. Trước khi sửa C1, run sẽ chết ngay sau
+`programs.agenix` và bỏ hết 8 module này.
+
+**Toàn vẹn dữ liệu.** So từng biến giữa mac và Windows bằng **độ dài giá trị**
+(không lộ giá trị): 14/14 khớp cả tên lẫn độ dài. Ciphertext thật, `age` thật,
+khoá thật — không còn khâu nào chạy bằng stub.
+
+**Bước 7 sai so với dự đoán, ghi lại cho trung thực.** Riêng drop-in
+`apikey.ps1` tốn **~7.75 ms** trung bình (min 5.52, max 37.67 khi lạnh), đo 20
+lần. Spec mục 4 viết "dưới 1 ms" và bước này đặt ngưỡng "dưới 5 ms" — **cả hai
+đều sai**. Nguyên nhân nhiều khả năng là Defender quét file mỗi lần mở, chứ
+không phải 14 phép gán.
+
+Không đổi quyết định thiết kế: tổng thời gian mở shell là ~286 ms, nên drop-in
+chiếm ~2.7%; và phương án bị loại (gọi `age.exe` mỗi shell) tốn 30–60 ms, vẫn
+đắt hơn 4–8 lần. Nhưng ngưỡng "dưới 5 ms" là con số tôi bịa mà không đo, và nó
+sai.
+
+---
+
+Runbook gốc giữ lại bên dưới để chạy lại trên máy Windows khác.
+
+- [x] **Step 1: Kiểm tiên quyết 1 — `age` chạy được trên ARM64**
 
 ```powershell
 scoop install age
