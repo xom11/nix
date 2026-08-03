@@ -20,8 +20,8 @@ Describe 'windows programs.beckon Start Menu shortcut names' {
     }
 
     It 'covers both per-user and system-wide Start Menu roots' {
-        $script:ModuleText | Should Match 'APPDATA\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs'
-        $script:ModuleText | Should Match 'ProgramData\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs'
+        $script:ModuleText | Should Match 'APPDATA\\Microsoft\\Windows\\Start Menu\\Programs'
+        $script:ModuleText | Should Match 'ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
     }
 
     It 'never deletes a shortcut' {
