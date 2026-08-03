@@ -1,0 +1,24 @@
+name: Repo hygiene
+
+# Chạy trên MỌI push và pull request, không lọc theo `paths:` như windows-tests.yml.
+#
+# Đó là chủ ý. Thứ kiểm này bắt được là loại lỗi im lặng — một dòng .gitignore gõ
+# sai chính tả, hoặc một thư mục trạng thái công cụ lỡ bị `git add`. Cả hai đều có
+# thể tới từ một commit chẳng đụng gì tới `.gitignore` hay `.github/`, nên lọc
+# theo paths sẽ tạo ra đúng cái khoảng mù mà kiểm này sinh ra để bịt.
+#
+# Nó không cần nix, không build gì, chạy dưới mười giây.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tool-state:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trang thai cong cu AI/dev khong duoc vao repo
+        run: ./.github/scripts/check-tool-state.sh

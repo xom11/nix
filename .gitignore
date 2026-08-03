@@ -1,12 +1,23 @@
 .DS_Store
 **/.env
 .env
-.claude/
-.anitigravitycli/
-.gemini/
 result
 .worktrees/
+
+# Trạng thái cục bộ của các công cụ AI/dev. Không bao giờ được vào repo public:
+# chúng chứa log phiên làm việc, chỉ mục mã nguồn, và spec/plan do AI sinh ra —
+# tức là bất cứ thứ gì công cụ nhìn thấy lúc chạy, kể cả giá trị secret thật.
+#
+# Danh sách này được `.github/scripts/check-tool-state.sh` kiểm lại trong CI, vì
+# một dòng gõ sai chính tả ở đây không khớp gì cả và cũng KHÔNG báo lỗi. Đúng
+# kiểu đó đã xảy ra: dòng cũ viết `.anitigravitycli/` (thừa chữ `i`), nên
+# `.antigravitycli/` bị commit lên public suốt mà không ai biết.
+.claude/
+.antigravitycli/
+.codegraph/
+.gemini/
 .gstack/
+.superpowers/
 
 # Spec/plan do AI sinh ra. KHÔNG commit: chúng ghi lại số đo lấy từ secret thật
 # (số biến, độ dài giá trị, tập ký tự) và mkdocs không có `nav:` nên mọi .md
