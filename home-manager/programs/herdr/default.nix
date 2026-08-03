@@ -14,11 +14,18 @@ in
     # installer; this module only owns the config. Revisit once nixpkgs ships a
     # darwin build (numtide/llm-agents.nix works around it with release binaries).
     #
-    # Symlink the single file, not ~/.config/herdr: that directory is also where
+    # Symlink individual files, not ~/.config/herdr: that directory is also where
     # the running server keeps herdr.sock, session.json and its logs.
     home.file = {
       ".config/herdr/config.toml" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/herdr.d/config.toml";
+      };
+
+      # Local detection-manifest override; see the header of the file itself.
+      # A local override always wins over the bundled and remote manifests, so
+      # this one pins Claude Code detection until it is re-synced by hand.
+      ".config/herdr/agent-detection/claude.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/herdr.d/agent-detection/claude.toml";
       };
     };
   }
