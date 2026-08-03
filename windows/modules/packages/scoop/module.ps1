@@ -14,6 +14,16 @@
             'fzf'
             'fastfetch'
             'neovim'
+
+            # nvim's treesitter config asks for 31 parsers and calls install() on every start
+            # for whatever is missing. Building one needs the tree-sitter CLI, which the nix
+            # hosts get from home.packages in home-manager/programs/nvim -- and Windows never
+            # runs home-manager, it only symlinks lua/. Without this, every single launch
+            # downloaded 31 tarballs and printed 31 build failures.
+            # The C compiler comes from the Visual Studio Build Tools already on the machine;
+            # tree-sitter finds them without vcvars, so there is nothing else to install.
+            'tree-sitter'
+
             'lazygit'
             'lazydocker'
             'yazi'

@@ -188,6 +188,25 @@ Describe 'windows/lib/Package.psm1 scoop architecture' {
     }
 }
 
+Describe 'windows scoop list covers what nvim needs on Windows' {
+    BeforeAll {
+        $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+        $ScoopModuleText = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\modules\packages\scoop\module.ps1')
+        $TreesitterLua   = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'home-manager\programs\nvim\lua\plugins\treesitter.lua')
+    }
+
+    It 'installs the tree-sitter CLI, because the nvim config builds parsers on startup' {
+        # treesitter.lua calls install() for every parser missing from its ensure list, on
+        # every launch. Building one shells out to `tree-sitter`. The nix hosts get that CLI
+        # from home.packages in home-manager/programs/nvim; Windows runs no home-manager, it
+        # only symlinks lua/ -- so a14 spent every launch downloading 31 parser tarballs and
+        # printing 31 'ENOENT ... tree-sitter' failures.
+        $TreesitterLua   | Should Match 'nvim-treesitter'
+        $TreesitterLua   | Should Match 'install\(missing\)'
+        $ScoopModuleText | Should Match "(?m)^\s*'tree-sitter'\s*$"
+    }
+}
+
 Describe 'windows/lib/Package.psm1 PowerShell module installs' {
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path

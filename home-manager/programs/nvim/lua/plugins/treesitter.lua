@@ -51,6 +51,19 @@ local ensure = {
 	"yaml",
 }
 
+-- gitcommit is dropped on Windows. Its generated parser sends MSVC into a pathological
+-- compile: one core pinned, still running after ten minutes, never producing a .so. The
+-- other thirty here build in seconds on the same toolchain. Because install() re-runs for
+-- whatever is still missing, every single nvim launch left another doomed cl.exe grinding
+-- in the background -- the failure was not the error line, it was the CPU.
+-- clang builds it fine on macOS and Linux, so this stays platform-specific rather than a
+-- deletion from the list.
+if vim.fn.has("win32") == 1 then
+	ensure = vim.tbl_filter(function(lang)
+		return lang ~= "gitcommit"
+	end, ensure)
+end
+
 local installed = require("nvim-treesitter.config").get_installed("parsers")
 local missing = vim.tbl_filter(function(lang)
 	return not vim.list_contains(installed, lang)
