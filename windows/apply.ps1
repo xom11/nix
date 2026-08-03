@@ -33,6 +33,7 @@ $modules = @(
     'dotfiles.ai.gemini'
     'dotfiles.ai.aichat'
     'dotfiles.ai.opencode'
+    'dotfiles.ai.pi'              # config only; the binary self-updates, see links.ps1
 
     # ---- programs (shared with home-manager) ----
     'programs.agenix'             # needs age from packages.scoop and ps1.d from dotfiles.pwsh

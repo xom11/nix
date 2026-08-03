@@ -80,6 +80,30 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:USERPROFILE\.config\opencode\plugin" }
     )
 
+    # Config only -- the pi binary is NOT installed by apply.ps1, on purpose.
+    #
+    # pi ships `pi update --self` and keeps itself current from its own releases, the same
+    # arrangement claude (%USERPROFILE%\.local\bin) and agy (%LOCALAPPDATA%\agy) already have
+    # on this machine. Putting it under scoop instead would mean two updaters writing the
+    # same binary, with scoop's install.json quietly going stale every time pi won.
+    #
+    # So it lives at %LOCALAPPDATA%\pi, unpacked from the GitHub release, with that directory
+    # on the user PATH. On a machine that has never had it: grab pi-windows-<arch>.zip from
+    # github.com/earendil-works/pi/releases, unpack it there, add the directory to PATH.
+    #
+    # Verified working on a14 (arm64 native, PE machine 0xAA64) -- unlike opencode, whose TUI
+    # cannot start on Windows-on-ARM at all.
+    'dotfiles.ai.pi' = @(
+        @{ Source = "$Hm\dotfiles\ai\pi.d\settings.json"
+           Target = "$env:USERPROFILE\.pi\agent\settings.json" }
+        @{ Source = "$Hm\dotfiles\ai\pi.d\models.json"
+           Target = "$env:USERPROFILE\.pi\agent\models.json" }
+        @{ Source = "$Hm\dotfiles\ai\pi.d\AGENTS.md"
+           Target = "$env:USERPROFILE\.pi\agent\AGENTS.md" }
+        @{ Source = "$Hm\dotfiles\ai\pi.d\extensions"
+           Target = "$env:USERPROFILE\.pi\agent\extensions" }
+    )
+
     'programs.ssh' = @(
         @{ Source = "$Hm\programs\ssh\config"
            Target = "$env:USERPROFILE\.ssh\config" }
