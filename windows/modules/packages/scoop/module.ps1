@@ -28,22 +28,10 @@
             'lazydocker'
             'yazi'
             'zellij'
-            'aichat'
-
-            # Stays on the native arm64 build even though its TUI cannot open there: OpenTUI
-            # loads its renderer through `bun:ffi` dlopen(), and Bun's Windows arm64 build
-            # disables TinyCC, so the TUI dies with "Failed to initialize OpenTUI render
-            # library". That error names the architecture, which makes swapping to x64 look
-            # like the obvious fix. It is not -- measured on a14:
-            #
-            #   arm64        --version, debug *, models, serve all fine; only the TUI fails,
-            #                and it fails loudly with the message above
-            #   x64 (Prism)  TUI, serve and models all die with 0xC0000005 ACCESS_VIOLATION,
-            #                silently, and debug startup takes ~2x as long
-            #
-            # So x64 trades one clear failure for several silent ones. The TUI is broken on
-            # Windows-on-ARM either way; `opencode serve` (verified listening) plus `attach`
-            # from another machine, or `opencode web`, is the way to use it here.
+            # Native arm64, plain. Its TUI cannot open on Windows-on-ARM -- that is an
+            # upstream problem, not an architecture to pin around, and x64 under Prism is
+            # worse (serve and models die with 0xC0000005 there, silently). Use
+            # `opencode serve` + `attach`, or `opencode web`.
             'opencode'
 
             'shfmt'
