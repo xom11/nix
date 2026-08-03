@@ -3,7 +3,59 @@
   username,
   device,
   ...
-}: {
+}: let
+  # `hw.model` của từng máy darwin trong repo.
+  #
+  # Bảng này tồn tại vì ba dòng `networking` bên dưới đặt tên máy theo `device` --
+  # tức là theo cái tên bạn gõ sau `#`. Gõ nhầm host thì máy vừa bị đổi tên vừa
+  # nhận cấu hình của máy khác, và không có gì báo.
+  #
+  # Tệ hơn: alias `update` (home-manager/base/macos) cũng sinh ra từ `device`, nên
+  # một lần nhầm sẽ viết lại alias thành host sai, và mọi `update` sau đó giữ
+  # nguyên cái sai. Nó không bao giờ tự khỏi.
+  #
+  # Đã xảy ra thật: macmini từng chạy `#airm3` và mang tên `airm3` cho tới khi bị
+  # phát hiện, vì `hostname` là thứ duy nhất người ta nhìn để biết mình đang ở máy nào.
+  #
+  # Máy chưa có trong bảng thì bỏ qua kiểm -- thêm một dòng khi biết `hw.model`
+  # của nó (`sysctl -n hw.model`).
+  expectedModels = {
+    macmini = "Mac16,10";
+    airm3 = "Mac15,13";
+  };
+  expected = expectedModels.${device} or null;
+
+  # Tra ngược để báo lỗi nói được luôn lệnh đúng, thay vì chỉ nói là sai.
+  reverseCase =
+    lib.concatStringsSep "\n"
+    (lib.mapAttrsToList (host: model: "      ${model}) right=${host} ;;") expectedModels);
+in {
+  # Chạy trong system.checks, tức là trước MỌI thứ khác trong activate (đặt tên
+  # máy mãi tận cuối). Trượt ở đây thì chưa có gì bị đụng tới.
+  system.checks.text = lib.optionalString (expected != null) ''
+    actualModel=$(sysctl -n hw.model)
+    if [ "$actualModel" != "${expected}" ]; then
+      right=
+      case "$actualModel" in
+    ${reverseCase}
+      esac
+      printf >&2 '\e[1;31merror: dang ap cau hinh cua host `%s` len mot may khac\e[0m\n' '${device}'
+      printf >&2 '\n'
+      printf >&2 '  host `%s` mong doi hw.model = %s\n' '${device}' '${expected}'
+      printf >&2 '  may nay la                   %s\n' "$actualModel"
+      printf >&2 '\n'
+      if [ -n "$right" ]; then
+        printf >&2 '  Lenh dung cho may nay:\n'
+        printf >&2 '    sudo darwin-rebuild switch --impure --flake ~/.nix#%s\n' "$right"
+      else
+        printf >&2 '  May nay chua co trong expectedModels o nix-darwin/setting/default.nix.\n'
+      fi
+      printf >&2 '\n'
+      printf >&2 '  Neu van muon chay, sua bang tay -- dung `--flake` khac di.\n'
+      exit 2
+    fi
+  '';
+
   networking = {
     computerName = lib.mkDefault device;
     hostName = lib.mkDefault device;
