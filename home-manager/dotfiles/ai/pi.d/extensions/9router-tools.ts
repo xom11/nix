@@ -9,7 +9,11 @@ import {
 } from "@earendil-works/pi-coding-agent";
 
 const BASE_URL = process.env.ROUTER_ENDPOINT ?? "http://100.127.63.100:20128/v1";
-const AUTH_TOKEN = "Bearer sk-d54741feb1e6e4f9-daczsm-92470a30";
+
+// Never inline the token. This repo is public and git history is permanent, so a
+// literal here is published the moment it is committed -- deleting it later does
+// not unpublish it. ROUTER_KEY is the same name pi.d/models.json already expands.
+const AUTH_TOKEN = `Bearer ${process.env.ROUTER_KEY ?? ""}`;
 
 export default function (pi: ExtensionAPI) {
   // Register provider so baseUrl responds to ROUTER_ENDPOINT env var dynamically

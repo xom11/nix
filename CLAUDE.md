@@ -48,6 +48,37 @@ Read `git diff --cached` before committing; a glob check is not enough. If a
 credential does land in a commit, **rotate it** — the push is already public, so
 rewriting history alone does not fix anything.
 
+### The guards, and what each one cannot see
+
+Four layers, deliberately non-overlapping. Knowing the gap in each is the point —
+a guard you trust past its range is worse than none.
+
+| Guard | Where | Sees | Blind to |
+|---|---|---|---|
+| `.githooks/pre-push` | your machine, at push | values that **are** in `apikey.zsh`, in **every commit** of the range | a key not in `apikey.zsh` yet |
+| `.github/scripts/check-placeholders.sh` | CI | credential fields under `home-manager/dotfiles/` that hold a literal | anything outside that tree; deleted-before-push |
+| `gitleaks` + `.gitleaks.toml` | CI | known patterns in the pushed range | whatever no pattern describes — it missed the real key here |
+| GitHub push protection | GitHub | partner patterns | self-issued keys; a public repo gets no `non_provider_patterns` |
+
+The hook compares **exactly** against decrypted secrets — no entropy guessing —
+and reads `git log -p --cc` per commit, never `git diff`: adding then deleting
+before a push leaves a clean overall diff and a permanent commit. It prints only
+variable **names**. Bypass one push with `git push --no-verify`.
+
+It gets its values from `~/.config/zsh/apikey.zsh`, the Windows `apikey.ps1`, and
+by decrypting `age.d/apikey.zsh.age` in memory. If it finds none, it blocks only
+when this machine's key is in `programs/ssh/authorized_keys` — a machine that is
+supposed to decrypt and cannot is a broken fence, not a clean repo. On the other
+eight hosts it says so and steps aside.
+
+`core.hooksPath` is set by `home.activation` (nix) and
+`windows/modules/programs/githooks` (Windows), so a rebuild installs it. It must
+stay **absolute**: git resolves a relative `core.hooksPath` against the current
+directory, so `git push` from a subdirectory would silently run no hook.
+
+Run any of them by hand: `./.githooks/…` via `.github/scripts/test-prepush.sh`,
+`./.github/scripts/check-placeholders.sh [--self-test]`.
+
 ## Rebuild Commands
 
 `--impure` is required everywhere: `lib/mkConfigs.nix` reads `$USER`/`$SUDO_USER`

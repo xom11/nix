@@ -1,0 +1,45 @@
+# Lop phu, khong phai lop chinh.
+#
+# gitleaks da quet toan bo lich su repo nay va BO SOT dung key that: luat
+# `generic-api-key` mac dinh bat gia tri bang mot chuoi lien mach, con gia tri o
+# day nam sau chu `Bearer ` co dau cach. Do la ly do lop chinh
+# (.githooks/pre-push) doi chieu chinh xac voi secret that thay vi doan hinh dang.
+#
+# File nay chi va dung cai lo do, va nhac lai rang may quet theo mau la thu bat
+# duoc HINH DANG CHUA BIET -- viec ma doi chieu chinh xac khong lam duoc.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "bearer-token-literal"
+description = "Authorization header mang bearer token viet thang"
+# Dau cach giua `Bearer` va gia tri la toan bo ly do luat nay ton tai.
+regex = '''(?i)bearer[ \t]+[A-Za-z0-9._~+/-]{16,}={0,2}'''
+keywords = ["bearer"]
+
+[[rules.allowlists]]
+# Placeholder khong phai secret. `$` va `{` von da nam ngoai lop ky tu o tren nen
+# phan lon truong hop khong khop ngay tu dau; day la lop chan thu hai.
+regexTarget = "line"
+regexes = [
+  '''\$\{?[A-Za-z_]''',
+  '''\{env:''',
+  '''process\.env\.''',
+  '''\$env:''',
+]
+
+# Ngoai le duy nhat, va co pham vi hep nhat co the.
+#
+# Trong keybindings.json cua VS Code, truong ten la `key` va gia tri la mot to
+# hop phim -- `generic-api-key` bat dung cai ten do. Day la bao gia da ton tai
+# rat lau: ban quet lich su thay no o ca ba duong dan cu cua chinh file nay
+# (dotfiles/, GUI/dotfiles/, modules/tools/) qua cac lan doi ten.
+#
+# Han o dung mot luat va dung mot ten file. .githooks/pre-push van doi chieu
+# chinh xac tren file nay nhu moi file khac, nen ngoai le o day khong mo ra
+# duong nao cho mot key that.
+[[allowlists]]
+description = "VS Code keybindings: truong ten that su la `key`"
+targetRules = ["generic-api-key"]
+paths = ['''keybindings\.json$''']

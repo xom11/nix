@@ -22,3 +22,102 @@ jobs:
 
       - name: Trang thai cong cu AI/dev khong duoc vao repo
         run: ./.github/scripts/check-tool-state.sh
+
+  placeholders:
+    # Lớp bù cho .githooks/pre-push. Hook đối chiếu CHÍNH XÁC với secret thật nên
+    # nó mù với một key chưa có trong apikey.zsh -- mà cả hai vụ rò rỉ ở repo này
+    # đều đi đường đó: một key mới, viết thẳng vào một file dưới dotfiles/, thư mục
+    # mà công cụ AI ghi vào.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Luat placeholder tu kiem tren du lieu bia
+        run: ./.github/scripts/check-placeholders.sh --self-test
+
+      - name: Truong credential trong dotfiles phai la placeholder
+        run: ./.github/scripts/check-placeholders.sh
+
+  prepush-hook:
+    # Windows là nửa quan trọng của ma trận này. Git for Windows chạy hook bằng
+    # `sh` của MSYS2 chứ không phải bash trong PATH, nên một bashism lọt vào hook
+    # sẽ không bao giờ lộ ra ở macOS hay Linux -- nó chỉ lặng lẽ không chặn gì.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Smoke test hook pre-push (gia tri bia)
+        run: ./.github/scripts/test-prepush.sh
+
+  gitleaks:
+    # Lớp phụ, không phải lớp chính. Quét ĐÚNG RANGE của lần push chứ không quét
+    # toàn lịch sử: hai key đã lộ còn nằm vĩnh viễn trong lịch sử, nên quét toàn
+    # bộ sẽ đỏ mãi mãi, mà né bằng .gitleaksignore thì lại thành tấm biển chỉ
+    # đường tới chúng.
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cai gitleaks (pin version + checksum)
+        run: |
+          set -euo pipefail
+          tar="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${tar}"
+          curl -sSfL -o "$tar" "$url"
+          # Binary tai ve la thu se quyet dinh push nay sach hay khong. Xac minh
+          # truoc khi chay, thay vi tin vao TLS mot minh.
+          echo "${GITLEAKS_SHA256}  ${tar}" | sha256sum -c -
+          tar -xzf "$tar" gitleaks
+          sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Config phai co mat
+        run: |
+          # Luat `bearer-token-literal` trong file nay la thu duy nhat bat duoc
+          # key 9router; bo luat mac dinh bo sot no. Config bien mat = quay ve
+          # dung vung mu cu, va gitleaks se khong noi gi.
+          test -r .gitleaks.toml
+          grep -q 'bearer-token-literal' .gitleaks.toml
+
+      - name: Quet range cua lan push
+        run: |
+          set -uo pipefail
+          range=''
+          if [ "${{ github.event_name }}" = 'pull_request' ]; then
+            base='${{ github.event.pull_request.base.sha }}'
+            head='${{ github.event.pull_request.head.sha }}'
+            if git cat-file -e "${base}^{commit}" 2>/dev/null; then range="${base}..${head}"; fi
+          else
+            before='${{ github.event.before }}'
+            case "$before" in
+              *[!0]*)
+                # Force push co the da bo commit kia lai phia sau; dung sha khong
+                # con ton tai thi git log im lang khong ra gi.
+                if git cat-file -e "${before}^{commit}" 2>/dev/null; then
+                  range="${before}..${{ github.sha }}"
+                fi
+                ;;
+            esac
+          fi
+
+          if [ -n "$range" ]; then
+            echo "range: $range"
+            gitleaks git -c .gitleaks.toml --redact --no-banner --log-opts="$range" .
+          else
+            # Branch moi, lan push dau, hoac force push: khong co range dung nghia.
+            # Quet noi dung hien tai -- hep hon, nhung noi ro chu khong im lang bo qua.
+            echo 'khong co range dung nghia -- quet noi dung working tree thay the'
+            gitleaks dir -c .gitleaks.toml --redact --no-banner .
+          fi
