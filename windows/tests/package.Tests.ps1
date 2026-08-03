@@ -86,6 +86,108 @@ Describe 'windows/lib/Package.psm1 winget install detection' {
     }
 }
 
+Describe 'windows/lib/Package.psm1 scoop architecture' {
+    BeforeAll {
+        $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+        $LibPath  = Join-Path $RepoRoot 'windows\lib\Package.psm1'
+        Import-Module $LibPath -Force
+        $LibText  = Get-Content -LiteralPath $LibPath -Raw
+        $ScoopModuleText = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\modules\packages\scoop\module.ps1')
+    }
+
+    It 'reads the machine architecture, not the architecture of the process asking' {
+        # a14 shipped a whole toolchain built for the wrong CPU because scoop was left at its
+        # 64bit default on an ARM64 laptop. PROCESSOR_ARCHITECTURE describes the *process*, so
+        # an emulated PowerShell would answer AMD64 and quietly reproduce that mistake --
+        # PROCESSOR_ARCHITEW6432 is the only variable that carries the real machine.
+        Get-ScoopNativeArchitecture -ProcessArch 'ARM64' -NativeArch ''      | Should Be 'arm64'
+        Get-ScoopNativeArchitecture -ProcessArch 'AMD64' -NativeArch 'ARM64' | Should Be 'arm64'
+        Get-ScoopNativeArchitecture -ProcessArch 'x86'   -NativeArch 'ARM64' | Should Be 'arm64'
+        Get-ScoopNativeArchitecture -ProcessArch 'AMD64' -NativeArch ''      | Should Be '64bit'
+        Get-ScoopNativeArchitecture -ProcessArch 'x86'   -NativeArch ''      | Should Be '32bit'
+    }
+
+    It 'falls back to 64bit rather than guessing on an architecture it does not know' {
+        Get-ScoopNativeArchitecture -ProcessArch 'SOMETHING_NEW' -NativeArch '' | Should Be '64bit'
+        Get-ScoopNativeArchitecture -ProcessArch '' -NativeArch ''              | Should Be '64bit'
+    }
+
+    It 'flags an app installed for the wrong architecture when the manifest offers the right one' {
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch '64bit' -ManifestArchs @('64bit','arm64') | Should Be $true
+    }
+
+    It 'leaves an app alone when the manifest has no build for this machine' {
+        # stylua/age/shfmt ship x64 only. Reinstalling them changes nothing and costs a
+        # download, and an uninstall that is not followed by a working install loses the tool.
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch '64bit' -ManifestArchs @('64bit')        | Should Be $false
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch '64bit' -ManifestArchs @('64bit','32bit') | Should Be $false
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch '64bit' -ManifestArchs @()               | Should Be $false
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch '64bit' -ManifestArchs $null             | Should Be $false
+    }
+
+    It 'says nothing to do when the app is already on this architecture' {
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch 'arm64' -ManifestArchs @('64bit','arm64') | Should Be $false
+        Test-ScoopArchDrift -NativeArch '64bit' -InstalledArch '64bit' -ManifestArchs @('64bit','arm64') | Should Be $false
+    }
+
+    It 'does not churn an install whose architecture was never recorded' {
+        # Apps installed by an older scoop have no install.json. "Unknown" must not read as
+        # "wrong", or every apply would uninstall and refetch them.
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch ''    -ManifestArchs @('64bit','arm64') | Should Be $false
+        Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch $null -ManifestArchs @('64bit','arm64') | Should Be $false
+        Test-ScoopArchDrift -NativeArch ''      -InstalledArch '64bit' -ManifestArchs @('arm64')       | Should Be $false
+    }
+
+    It 'reinstalls in place of the plain skip, because scoop cannot change architecture in place' {
+        # The old code skipped anything already present, so setting default_architecture would
+        # only ever have fixed a machine nobody had installed on yet.
+        $LibText | Should Match 'Test-ScoopArchDrift'
+        $LibText | Should Match 'scoop uninstall'
+    }
+
+    It 'checks the app came back after an uninstall+install' {
+        # This is not hypothetical: reinstalling rustup on a14 uninstalled it and then failed
+        # to install, and the silence left the machine with no rustup at all.
+        $LibText | Should Match 'Test-ScoopAppPresent'
+        $LibText | Should Match 'Write-Fail'
+    }
+
+    It 'pins the three packages an architecture swap would break' {
+        # kanata: launch-kanata.ahk and its watchdog resolve one exact filename,
+        #   kanata_windows_tty_winIOv2_x64.exe, which the arm64 build does not carry -- the
+        #   swap takes the keyboard down and the watchdog launches quiet, so nothing says why.
+        # rustup: the scoop package is only the bootstrapper, and its post_install stays
+        #   resident holding a lock on the file the next install must write.
+        # python: 32-bit, with native wheels built against it.
+        # Read the -KeepArchitecture block on its own. All three names also appear in the
+        # install list above it, so matching the whole file would still pass with the pin
+        # deleted -- which is the only thing this test exists to catch.
+        $keepAt = $ScoopModuleText.IndexOf('-KeepArchitecture')
+        ($keepAt -ge 0) | Should Be $true
+        $keepBlock = $ScoopModuleText.Substring($keepAt)
+
+        $keepBlock | Should Match "(?m)^\s*'kanata'\s*$"
+        $keepBlock | Should Match "(?m)^\s*'rustup'\s*$"
+        $keepBlock | Should Match "(?m)^\s*'python'\s*$"
+        $LibText   | Should Match '\$KeepArchitecture'
+    }
+
+    It 'refuses to uninstall an app whose own processes are alive' {
+        # scoop declines anyway, but declining mid-sweep after the uninstall has already run
+        # is the state that loses the tool.
+        $LibText | Should Match 'Get-ScoopAppProcess'
+        $checkAt     = $LibText.IndexOf('$running = @(Get-ScoopAppProcess')
+        $uninstallAt = $LibText.IndexOf('scoop uninstall $name')
+        ($checkAt -ge 0 -and $uninstallAt -gt $checkAt) | Should Be $true
+    }
+
+    It 'sets the scoop default before installing anything' {
+        $setAt     = $LibText.IndexOf('Set-ScoopArchitectureDefault')
+        $installAt = $LibText.IndexOf('Write-Info "scoop install $pkg"')
+        ($setAt -ge 0 -and $installAt -gt $setAt) | Should Be $true
+    }
+}
+
 Describe 'windows/lib/Package.psm1 PowerShell module installs' {
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path

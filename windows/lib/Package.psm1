@@ -106,6 +106,117 @@ function Install-WingetPackages {
     }
 }
 
+function Get-ScoopNativeArchitecture {
+    # The architecture scoop should be installing for, named the way its manifests name it.
+    #
+    # PROCESSOR_ARCHITECTURE describes the *calling process*, not the machine: an x64
+    # PowerShell running emulated on an ARM64 laptop answers AMD64. Believing it is how a14
+    # ended up with its whole toolchain built for the wrong CPU -- neovim alone paid an extra
+    # ~410ms of Prism translation on every launch, and nothing anywhere said why.
+    # PROCESSOR_ARCHITEW6432 exists only while emulated, and carries the real machine.
+    [CmdletBinding()]
+    param(
+        [string]$ProcessArch = $env:PROCESSOR_ARCHITECTURE,
+        [string]$NativeArch  = $env:PROCESSOR_ARCHITEW6432
+    )
+
+    $arch = if ($NativeArch) { $NativeArch } else { $ProcessArch }
+    switch ($arch) {
+        'ARM64' { 'arm64' }
+        'AMD64' { '64bit' }
+        'IA64'  { '64bit' }
+        'x86'   { '32bit' }
+        default { '64bit' }
+    }
+}
+
+function Test-ScoopArchDrift {
+    # Is this already-installed app built for the wrong architecture, and can that be fixed?
+    #
+    # Deliberately says no unless it is sure. Kept free of any filesystem or scoop call so the
+    # decision can be tested against fabricated inputs.
+    [CmdletBinding()]
+    param(
+        [string]$NativeArch,
+        [string]$InstalledArch,
+        [string[]]$ManifestArchs
+    )
+
+    if (-not $NativeArch)               { return $false }
+    # An app installed by an older scoop has no install.json. "Unknown" must not read as
+    # "wrong", or every apply would uninstall and refetch it.
+    if (-not $InstalledArch)            { return $false }
+    if ($InstalledArch -eq $NativeArch) { return $false }
+    if (-not $ManifestArchs)            { return $false }
+
+    # Only worth a download when the manifest actually ships a build for this machine. age,
+    # shfmt and stylua are x64-only; reinstalling them changes nothing and risks the gap
+    # described in Install-ScoopPackages for no gain at all.
+    return ([bool]($ManifestArchs -contains $NativeArch))
+}
+
+function Get-ScoopAppRoot {
+    param([Parameter(Mandatory)][string]$App)
+    $root = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+    Join-Path (Join-Path $root 'apps') $App
+}
+
+function Test-ScoopAppPresent {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$App)
+    Test-Path (Join-Path (Get-ScoopAppRoot $App) 'current')
+}
+
+function Get-ScoopInstalledArchitecture {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$App)
+
+    $file = Join-Path (Get-ScoopAppRoot $App) 'current\install.json'
+    if (-not (Test-Path $file)) { return '' }
+    try { return [string](Get-Content $file -Raw | ConvertFrom-Json).architecture } catch { return '' }
+}
+
+function Get-ScoopManifestArchitectures {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$App)
+
+    $file = Join-Path (Get-ScoopAppRoot $App) 'current\manifest.json'
+    if (-not (Test-Path $file)) { return ,@() }
+    try {
+        $manifest = Get-Content $file -Raw | ConvertFrom-Json
+        if ($manifest.architecture) { return ,@($manifest.architecture.PSObject.Properties.Name) }
+    } catch { }
+    return ,@()
+}
+
+function Get-ScoopAppProcess {
+    # Names of the app's own executables that are running right now. scoop refuses to
+    # uninstall over a live process, and a half-finished swap is the worst outcome here.
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$App)
+
+    $current = Join-Path (Get-ScoopAppRoot $App) 'current'
+    if (-not (Test-Path $current)) { return ,@() }
+
+    $names = Get-ChildItem $current -Recurse -File -Filter *.exe -ErrorAction SilentlyContinue |
+             Select-Object -ExpandProperty BaseName -Unique
+    $live = foreach ($n in $names) {
+        if (Get-Process -Name $n -ErrorAction SilentlyContinue) { $n }
+    }
+    return ,@($live)
+}
+
+function Set-ScoopArchitectureDefault {
+    # Without this, a fresh install on an ARM64 machine silently takes the 64bit branch of
+    # every manifest -- scoop's default_architecture is '64bit' until told otherwise.
+    $native  = Get-ScoopNativeArchitecture
+    $current = (scoop config default_architecture 2>$null | Out-String).Trim()
+    if ($current -eq $native) { return }
+
+    Write-Info "scoop config default_architecture $native"
+    scoop config default_architecture $native | Out-Null
+}
+
 function Install-Scoop {
     if (Get-Command scoop -ErrorAction SilentlyContinue) { return $true }
 
@@ -130,10 +241,17 @@ function Install-ScoopPackages {
     [CmdletBinding()]
     param(
         [string[]]$Packages,
-        [string[]]$Buckets
+        [string[]]$Buckets,
+
+        # Apps that keep whatever architecture they are already on. Every entry leaves an
+        # emulated binary on an ARM64 machine, so each one needs a reason at the call site.
+        [string[]]$KeepArchitecture
     )
 
     if (-not (Install-Scoop)) { return }
+
+    Set-ScoopArchitectureDefault
+    $native = Get-ScoopNativeArchitecture
 
     if ($Buckets) {
         $current = @(scoop bucket list 2>$null | ForEach-Object { $_.Name })
@@ -158,11 +276,49 @@ function Install-ScoopPackages {
     foreach ($pkg in $Packages) {
         # Strip 'bucket/' prefix when checking installed (scoop list shows bare names)
         $name = ($pkg -split '/', 2)[-1]
-        if ($installed -contains $name) {
-            Write-Skip "scoop:$pkg"
-        } else {
+
+        if ($installed -notcontains $name) {
             Write-Info "scoop install $pkg"
             scoop install $pkg
+            continue
+        }
+
+        if ($KeepArchitecture -contains $name) {
+            Write-Skip "scoop:$pkg (architecture pinned)"
+            continue
+        }
+
+        # Presence used to be the whole test, which meant setting default_architecture could
+        # only ever help a machine nobody had installed on yet -- a14 sat on 17 emulated
+        # packages that no number of applies would have corrected.
+        $installedArch = Get-ScoopInstalledArchitecture -App $name
+        $drift = Test-ScoopArchDrift -NativeArch $native -InstalledArch $installedArch `
+                                     -ManifestArchs (Get-ScoopManifestArchitectures -App $name)
+        if (-not $drift) {
+            Write-Skip "scoop:$pkg"
+            continue
+        }
+
+        # scoop cannot change an installed app's architecture in place, so this is an
+        # uninstall followed by an install, and the gap between them is the dangerous part.
+        # Reinstalling rustup on a14 uninstalled it and then failed every retry: the
+        # post_install rustup-init.exe from the previous attempt was still resident and held
+        # a lock on the exact file the new install had to write. The machine was left with no
+        # rustup and nothing on screen explaining it. So: never start over a live process,
+        # and always check the app came back.
+        $running = @(Get-ScoopAppProcess -App $name)
+        if ($running.Count) {
+            Write-Warn "scoop:$pkg is $installedArch, wanted $native -- left alone, still running ($($running -join ', '))"
+            continue
+        }
+
+        Write-Info "scoop reinstall $pkg ($installedArch -> $native)"
+        scoop uninstall $name
+        scoop install $pkg
+        if (Test-ScoopAppPresent -App $name) {
+            Write-OK "scoop:$pkg now $(Get-ScoopInstalledArchitecture -App $name)"
+        } else {
+            Write-Fail "scoop:$pkg was uninstalled and did not come back -- install it by hand before relying on it"
         }
     }
 }
@@ -225,4 +381,4 @@ function Install-PSModules {
     }
 }
 
-Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Install-ScoopPackages, Test-WingetPackageInstalled, ConvertFrom-WingetList, Get-WingetInstalledIds, Install-WingetPackages, Install-NpmPackages, Install-PSModules
+Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Install-ScoopPackages, Get-ScoopNativeArchitecture, Test-ScoopArchDrift, Test-ScoopAppPresent, Get-ScoopInstalledArchitecture, Get-ScoopManifestArchitectures, Get-ScoopAppProcess, Set-ScoopArchitectureDefault, Test-WingetPackageInstalled, ConvertFrom-WingetList, Get-WingetInstalledIds, Install-WingetPackages, Install-NpmPackages, Install-PSModules
