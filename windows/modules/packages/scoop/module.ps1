@@ -59,6 +59,27 @@
             # interpreter's architecture breaks every one of them, and that is a decision to
             # make deliberately rather than during a package sweep.
             'python'
+
+            # The TUI is OpenTUI, which loads its native render library through
+            # `bun:ffi` dlopen(). Bun's Windows arm64 build ships with TinyCC disabled, so
+            # dlopen() does not exist there and every launch dies immediately with
+            # "Failed to initialize OpenTUI render library". Upstream build limitation --
+            # nothing in this repo can work around it.
+            #
+            # What makes it worth a comment is how selective the breakage looks: `opencode
+            # run`, `serve`, and every `debug` subcommand work fine on the arm64 build,
+            # because none of them touch the renderer. Measured on a14 -- `opencode debug
+            # startup` returned in 560ms on the same install that could not open the TUI at
+            # all. So the obvious first suspects are config and symlinks, and both are
+            # innocent.
+            #
+            # Runs under Prism emulation instead. opencode spends its time waiting on the
+            # network, so the emulation cost is not worth chasing.
+            #
+            # '=64bit' rather than a bare pin: a bare pin only holds an existing install
+            # still, so a freshly built arm64 machine would install the arm64 build and then
+            # be pinned to the one that cannot open.
+            'opencode=64bit'
         )
     }
 }

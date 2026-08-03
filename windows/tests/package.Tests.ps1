@@ -152,7 +152,22 @@ Describe 'windows/lib/Package.psm1 scoop architecture' {
         $LibText | Should Match 'Write-Fail'
     }
 
-    It 'pins the three packages an architecture swap would break' {
+    It 'installs a forced architecture on a machine that never had the app' {
+        # A bare pin only ever held an EXISTING install still. First install fell through to
+        # the plain `scoop install`, took the machine's native architecture, and was pinned to
+        # it from then on -- so on a freshly built arm64 box the pin guaranteed exactly the
+        # build it existed to avoid, and reported success doing it. opencode is the case that
+        # exposed this: its arm64 build cannot open at all.
+        $LibText | Should Match 'scoop install \$pkg --arch \$pinArch'
+
+        # The forced install must sit in the not-installed branch, i.e. before the skip that
+        # handles bare pins -- that ordering is the whole fix.
+        $forcedAt = $LibText.IndexOf('scoop install $pkg --arch $pinArch')
+        $skipAt   = $LibText.IndexOf('(architecture pinned)')
+        ($forcedAt -ge 0 -and $skipAt -gt $forcedAt) | Should Be $true
+    }
+
+    It 'pins the packages an architecture swap would break' {
         # kanata: launch-kanata.ahk and its watchdog resolve one exact filename,
         #   kanata_windows_tty_winIOv2_x64.exe, which the arm64 build does not carry -- the
         #   swap takes the keyboard down and the watchdog launches quiet, so nothing says why.
@@ -166,9 +181,14 @@ Describe 'windows/lib/Package.psm1 scoop architecture' {
         ($keepAt -ge 0) | Should Be $true
         $keepBlock = $ScoopModuleText.Substring($keepAt)
 
+        # opencode: the arm64 build's TUI cannot start -- OpenTUI loads its render library
+        #   through bun:ffi dlopen(), and Bun's Windows arm64 build disables TinyCC, so
+        #   dlopen() is absent. Forced to 64bit rather than merely held still, because a
+        #   fresh arm64 machine would otherwise install the broken build and pin itself to it.
         $keepBlock | Should Match "(?m)^\s*'kanata'\s*$"
         $keepBlock | Should Match "(?m)^\s*'rustup'\s*$"
         $keepBlock | Should Match "(?m)^\s*'python'\s*$"
+        $keepBlock | Should Match "(?m)^\s*'opencode=64bit'\s*$"
         $LibText   | Should Match '\$KeepArchitecture'
     }
 

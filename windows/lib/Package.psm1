@@ -277,13 +277,41 @@ function Install-ScoopPackages {
         # Strip 'bucket/' prefix when checking installed (scoop list shows bare names)
         $name = ($pkg -split '/', 2)[-1]
 
+        # -KeepArchitecture takes two forms, same 'name=value' convention the bucket list
+        # above uses:
+        #
+        #   'kanata'         leave whatever is installed alone, whatever it is
+        #   'opencode=64bit' this app only works on that architecture -- install it that way
+        #                    on a fresh machine, and correct it if it is on another
+        #
+        # The second form exists because the bare form only ever ran for apps that were
+        # ALREADY installed. A fresh arm64 machine fell through to the plain install below,
+        # got the native build, and was then pinned to it forever -- so the pin read as
+        # protection while guaranteeing the broken architecture. Nothing reported that,
+        # because from the sweep's point of view everything went fine.
+        $pinArch = $null
+        $pinned  = $false
+        foreach ($k in $KeepArchitecture) {
+            $kp = $k -split '=', 2
+            if ($kp[0] -eq $name) {
+                $pinned = $true
+                if ($kp.Count -eq 2) { $pinArch = $kp[1] }
+                break
+            }
+        }
+
         if ($installed -notcontains $name) {
-            Write-Info "scoop install $pkg"
-            scoop install $pkg
+            if ($pinArch) {
+                Write-Info "scoop install $pkg (architecture forced to $pinArch)"
+                scoop install $pkg --arch $pinArch
+            } else {
+                Write-Info "scoop install $pkg"
+                scoop install $pkg
+            }
             continue
         }
 
-        if ($KeepArchitecture -contains $name) {
+        if ($pinned -and -not $pinArch) {
             Write-Skip "scoop:$pkg (architecture pinned)"
             continue
         }
@@ -292,8 +320,17 @@ function Install-ScoopPackages {
         # only ever help a machine nobody had installed on yet -- a14 sat on 17 emulated
         # packages that no number of applies would have corrected.
         $installedArch = Get-ScoopInstalledArchitecture -App $name
-        $drift = Test-ScoopArchDrift -NativeArch $native -InstalledArch $installedArch `
-                                     -ManifestArchs (Get-ScoopManifestArchitectures -App $name)
+        if ($pinArch) {
+            # A forced architecture answers the question outright: the manifest-aware drift
+            # test would refuse the swap here, because it is deliberately going *against*
+            # what this machine natively wants.
+            $want  = $pinArch
+            $drift = [bool]($installedArch -and $installedArch -ne $pinArch)
+        } else {
+            $want  = $native
+            $drift = Test-ScoopArchDrift -NativeArch $native -InstalledArch $installedArch `
+                                         -ManifestArchs (Get-ScoopManifestArchitectures -App $name)
+        }
         if (-not $drift) {
             Write-Skip "scoop:$pkg"
             continue
@@ -312,9 +349,9 @@ function Install-ScoopPackages {
             continue
         }
 
-        Write-Info "scoop reinstall $pkg ($installedArch -> $native)"
+        Write-Info "scoop reinstall $pkg ($installedArch -> $want)"
         scoop uninstall $name
-        scoop install $pkg
+        if ($pinArch) { scoop install $pkg --arch $pinArch } else { scoop install $pkg }
         if (Test-ScoopAppPresent -App $name) {
             Write-OK "scoop:$pkg now $(Get-ScoopInstalledArchitecture -App $name)"
         } else {
