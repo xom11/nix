@@ -58,6 +58,28 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:APPDATA\aichat\roles" }
     )
 
+    # opencode keeps the same XDG-shaped layout on Windows as it does on the nix hosts --
+    # `opencode debug paths` reports config at %USERPROFILE%\.config\opencode -- so these targets
+    # mirror home-manager/dotfiles/ai/opencode.d/default.nix one for one.
+    #
+    # plugin\ is linked as a whole directory because opencode.json refers to the plugin by the
+    # relative path "./plugin/router-models.mjs", which resolves against the config directory.
+    #
+    # mcp\router-search is deliberately NOT linked: opencode.json starts that server by running
+    # `router-search-mcp`, a wrapper that only exists where nix builds it (writeShellScriptBin in
+    # opencode.d/default.nix). Windows has no such command, so opencode logs one failed MCP at
+    # startup and carries on. The other servers, the 9router provider and the model all work.
+    'dotfiles.ai.opencode' = @(
+        @{ Source = "$Hm\dotfiles\ai\opencode.d\opencode.json"
+           Target = "$env:USERPROFILE\.config\opencode\opencode.json" }
+        @{ Source = "$Hm\dotfiles\ai\opencode.d\tui.json"
+           Target = "$env:USERPROFILE\.config\opencode\tui.json" }
+        @{ Source = "$Hm\dotfiles\ai\opencode.d\OPENCODE.md"
+           Target = "$env:USERPROFILE\.config\opencode\OPENCODE.md" }
+        @{ Source = "$Hm\dotfiles\ai\opencode.d\plugin"
+           Target = "$env:USERPROFILE\.config\opencode\plugin" }
+    )
+
     'programs.ssh' = @(
         @{ Source = "$Hm\programs\ssh\config"
            Target = "$env:USERPROFILE\.ssh\config" }

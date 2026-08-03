@@ -17,6 +17,7 @@ Describe 'windows/apply.ps1 shared entry point' {
             'dotfiles.ai.codex'
             'dotfiles.ai.gemini'
             'dotfiles.ai.aichat'
+            'dotfiles.ai.opencode'
             'programs.ssh'
             'programs.nvim'
             'programs.yazi'

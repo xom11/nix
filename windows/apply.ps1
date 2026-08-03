@@ -32,6 +32,7 @@ $modules = @(
     'dotfiles.ai.codex'
     'dotfiles.ai.gemini'
     'dotfiles.ai.aichat'
+    'dotfiles.ai.opencode'
 
     # ---- programs (shared with home-manager) ----
     'programs.agenix'             # needs age from packages.scoop and ps1.d from dotfiles.pwsh

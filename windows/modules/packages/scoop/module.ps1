@@ -29,6 +29,7 @@
             'yazi'
             'zellij'
             'aichat'
+            'opencode'
             'shfmt'
             'yamlfmt'
             'stylua'
