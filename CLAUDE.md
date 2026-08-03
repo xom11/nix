@@ -27,6 +27,20 @@ Never commit:
   gets the real value and the other a corrupted one, with nothing to warn you.
   Values are literal text containing none of `$`, backtick, `$(...)`, `'`, `"`.
 
+- **Measurements taken from live secrets.** Counts, value lengths, character
+  inventories, "all 14 comply" — these describe real secret material and are as
+  publishable as the values themselves. Verify against live data all you like;
+  write only the verdict, never the numbers. This rule exists because a design
+  doc here once published the character set of every real API key.
+
+**`docs/` is a public website, not just files.** `.github/workflows/docs.yml`
+runs `mkdocs build` on every push to `main`, and `mkdocs.yml` has no `nav:` — so
+**every** `.md` under `docs/` is deployed to `xom11.github.io/nix` and indexed
+for search, whether or not anything links to it. A file being "just notes" is not
+a defence. `docs/superpowers/` is gitignored for exactly this reason: AI-written
+specs and plans quote whatever was measured while verifying, and that is usually
+live data.
+
 Secrets in this repo decrypt to paths *outside* the tree (`~/.ssh/age.d/`,
 `~/.config/zsh/apikey.zsh`). Keep it that way — never write plaintext under `~/.nix`.
 

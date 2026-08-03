@@ -7,3 +7,8 @@
 result
 .worktrees/
 .gstack/
+
+# Spec/plan do AI sinh ra. KHÔNG commit: chúng ghi lại số đo lấy từ secret thật
+# (số biến, độ dài giá trị, tập ký tự) và mkdocs không có `nav:` nên mọi .md
+# dưới docs/ đều lên thẳng GitHub Pages, có index tìm kiếm. Giữ ở máy thôi.
+docs/superpowers/
