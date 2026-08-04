@@ -21,6 +21,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # lib/mkConfigs.nix derives repoPath as $HOME/.nix, and every real
+      # host keeps a real working tree there (CLAUDE.md is explicit about
+      # this). actions/checkout puts the repo at $GITHUB_WORKSPACE instead,
+      # so a module that builtins.readFile's something under repoPath at
+      # eval time (services.dotbrave on macmini today; any host could add
+      # one next) dies on CI with "path ... does not exist" even though the
+      # same eval works on every real machine. Symlinking closes that gap
+      # instead of special-casing around it -- delete this and the trap is
+      # back, silently, for the first Linux host that grows a module like it.
+      - name: Point $HOME/.nix at the checkout
+        run: ln -sfn "$GITHUB_WORKSPACE" "$HOME/.nix"
+
       - uses: DeterminateSystems/nix-installer-action@main
 
       - name: homeConfigurations
@@ -52,6 +65,14 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Same invariant as the linux job above: repoPath is $HOME/.nix, and
+      # services.dotbrave here (hosts/macmini) reads brave.toml through it
+      # at eval time. Without this the darwin job is the one that actually
+      # dies today -- keep it, do not "simplify" it back out.
+      - name: Point $HOME/.nix at the checkout
+        run: ln -sfn "$GITHUB_WORKSPACE" "$HOME/.nix"
+
       - uses: DeterminateSystems/nix-installer-action@main
 
       - name: darwinConfigurations
