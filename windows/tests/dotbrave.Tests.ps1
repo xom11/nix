@@ -15,6 +15,14 @@ Describe 'windows/modules/programs/dotbrave' {
         # operator `&` is, in this file, the invocation and only the
         # invocation.
         $InvokeLine = ($ModText -split "`r?`n" | Where-Object { $_ -match '^\s*&' }) -join "`n"
+
+        # Same idea for the source: anchor on the assignment, not on the URL
+        # wherever it happens to appear. The comment above the assignment is
+        # several lines about why the pin exists, and the next person to
+        # touch it may well quote the URL there -- at which point a
+        # whole-file match would go on passing even if the real assignment
+        # had lost its tag. Anchoring now costs nothing and does not rot.
+        $SrcLine = ($ModText -split "`r?`n" | Where-Object { $_ -match '^\s*\$src\s*=' }) -join "`n"
     }
 
     It 'ships a module file' {
@@ -35,9 +43,26 @@ Describe 'windows/modules/programs/dotbrave' {
         $ModText | Should Match 'dotfiles\\browser\\dotbrave\\brave\.toml'
     }
 
-    It 'runs dotbrave from git, not from PyPI' {
-        # PyPI is still on 0.2.5, which predates --unattended and --skip.
-        $ModText | Should Match 'git\+https://github\.com/xom11/dotbrave'
+    It 'runs dotbrave from git pinned to a release tag, not the default branch' {
+        # PyPI is still on 0.2.5, which predates --unattended and --skip, so
+        # the source has to be git. But an UNPINNED git URL re-resolves
+        # dotbrave's default branch on every single run: every future commit
+        # upstream would reach a script running as Administrator that writes
+        # HKLM policy, unreviewed and unrecorded. The tag is what flake.lock
+        # is for the Nix hosts.
+        #
+        # Asserting only 'points at git' is what this test used to do, and it
+        # passes just as happily on an unpinned URL -- i.e. it protected
+        # nothing. The '@vX.Y.Z' is the whole point of the assertion.
+        $SrcLine | Should Not BeNullOrEmpty
+        $SrcLine | Should Match 'git\+https://github\.com/xom11/dotbrave@v\d+\.\d+\.\d+'
+    }
+
+    It 'actually invokes the pinned source' {
+        # A pin defined and then not used is a pin that does nothing. The
+        # call must go through $src, not a second URL written inline.
+        $InvokeLine | Should Not BeNullOrEmpty
+        $InvokeLine | Should Match '--from\s+\$src'
     }
 
     It 'invokes dotbrave through uvx, not some other launcher' {

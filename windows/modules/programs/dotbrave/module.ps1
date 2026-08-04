@@ -17,11 +17,35 @@
         # Chay tu git chu khong phai PyPI: PyPI moi co 0.2.5, chua co
         # --unattended lan --skip. `uvx dotbrave` se lay nham ban do va
         # chet ngay o dong lenh.
-        $src = 'git+https://github.com/xom11/dotbrave'
+        #
+        # Ghim theo TAG, khong de tro nhanh mac dinh. Day dung la vai tro
+        # flake.lock dang giu cho may Nix, chi la o phia Windows: URL git
+        # khong ghim se resolve lai nhanh mac dinh moi lan chay, nen moi
+        # commit moi cua thuong nguon deu chay thang vao mot script dang co
+        # quyen Administrator va ghi HKLM policy -- khong ai duyet, khong
+        # dau vet lai. Nang so nay la viec co y, lam khi dotbrave ra ban moi.
+        $src = 'git+https://github.com/xom11/dotbrave@v0.3.2'
 
-        # KHONG co --skip pwa o day, khac han may Nix. Ben do mot module Nix
-        # so huu managed policy nen CLI phai tranh ra. O day khong co Nix, va
-        # apply.ps1 von da chay quyen Administrator, nen CLI lam ca ba bang.
+        # KHONG co --skip pwa o day, khac han may Nix: ben do co mot module
+        # Nix so huu managed policy nen CLI phai tranh ra, con o day khong co
+        # Nix va apply.ps1 von chay quyen Administrator, nen CLI duoc phep
+        # ghi HKLM.
+        #
+        # "Duoc phep" khong dong nghia "lam duoc ca ba". --unattended khong
+        # bao gio dong Brave, nen bang nao thuc su duoc ap la tuy trang thai
+        # Brave luc chay:
+        #   Brave dang dong -> ca ba bang (backup, ghi Preferences, verify).
+        #   Brave dang mo va co DevTools endpoint -> [pwa] ghi thang vao
+        #     HKLM; [shortcuts]/[settings] ap live qua endpoint do.
+        #   Brave dang mo, khong co endpoint -- trang thai binh thuong o may
+        #     nay, vi khong co gi khoi dong Brave kem --remote-debugging-port
+        #     -> chi [pwa] duoc ghi. Hai bang kia bi bo lai, CLI in ra stderr
+        #     dang "[pwa] applied; [shortcuts] not applied", va van exit 0.
+        #
+        # Nen dong Write-OK cuoi khoi nay chi noi "lenh khong loi", khong noi
+        # "ca ba bang da vao". Muon ca ba thi dong Brave roi chay lai update.
+        # Truoc dotbrave v0.3.2 con te hon: mot [shortcuts] ban lam [pwa] bi
+        # bo luon, im lang va exit 0 -- do la ly do cua cai ghim tag o tren.
         Write-Info "dotbrave -> apply $toml"
 
         # 'Continue' trong pham vi khoi nay: uvx dung nguon git se resolve va
@@ -44,6 +68,6 @@
         if ($rc -ne 0) {
             throw "dotbrave apply exited $rc"
         }
-        Write-OK 'dotbrave -> applied'
+        Write-OK 'dotbrave -> apply ran (stderr names any table left unapplied)'
     }
 }
