@@ -24,7 +24,7 @@
         # commit moi cua thuong nguon deu chay thang vao mot script dang co
         # quyen Administrator va ghi HKLM policy -- khong ai duyet, khong
         # dau vet lai. Nang so nay la viec co y, lam khi dotbrave ra ban moi.
-        $src = 'git+https://github.com/xom11/dotbrave@v0.3.2'
+        $src = 'git+https://github.com/xom11/dotbrave@v0.3.3'
 
         # KHONG co --skip pwa o day, khac han may Nix: ben do co mot module
         # Nix so huu managed policy nen CLI phai tranh ra, con o day khong co
