@@ -282,40 +282,59 @@ The symlink target is a plain string, so it is **not** a reference of the
 home-manager generation. It must point into the `~/.nix` working tree — never into
 the store, or the dotfiles are read-only and get collected on the next GC.
 
-### dotbrave: mot file, hai nguoi doc, hai thoi diem khac nhau
+### dotbrave: one file, two readers, two different times
 
-`home-manager/dotfiles/browser/dotbrave/brave.toml` co ba bang
-(`[shortcuts]`, `[settings]`, `[pwa]`), nhung khong chi mot noi doc no — va
-hai noi do doc o hai THOI DIEM khac nhau, dieu nay khong hien ra tu cai nhin
-dau tien va se de bi phat hien theo kieu kho:
+`home-manager/dotfiles/browser/dotbrave/brave.toml` carries three tables
+(`[shortcuts]`, `[settings]`, `[pwa]`), but nothing reads all three — and the
+two things that do read it read at **different times**. That asymmetry is
+invisible at a glance and tends to be discovered the hard way:
 
-- `[shortcuts]` va `[settings]` do CLI `dotbrave` doc luc **activation**
-  (`programs.dotbrave` o `home-manager/dotfiles/browser/dotbrave/default.nix`,
-  bat cho macmini). Sua hai bang nay an ngay o lan activation ke tiep, khong
-  can rebuild — dung pattern "edit without rebuilding" nhu moi dotfile khac
-  trong repo.
-- `[pwa]` do Nix doc bang `builtins.fromTOML` luc **evaluation**
-  (`services.dotbrave` trong `hosts/macmini/configuration.nix`, module den
-  tu `dotbrave.darwinModules.default`). Sua danh sach PWA la sua *input* cua
-  eval, nen **can rebuild** moi ap dung — khong tu an duoc.
+- `[shortcuts]` and `[settings]` are read by the `dotbrave` CLI at
+  **activation** (`programs.dotbrave` in
+  `home-manager/dotfiles/browser/dotbrave/default.nix`, enabled on macmini).
+  Editing them takes effect on the next activation with no rebuild — the same
+  "edit without rebuilding" pattern as every other dotfile here.
+- `[pwa]` is read by Nix itself, via `builtins.fromTOML`, at **evaluation**
+  (`services.dotbrave` in `hosts/macmini/configuration.nix`; the module comes
+  from `dotbrave.darwinModules.default`). Editing the PWA list edits an *input
+  to eval*, so it **needs a rebuild** — it can never take effect on its own.
 
-An dung cho de nho: no giong het agenix o muc "Secrets (agenix)" ngay ben
-duoi — sua NOI DUNG cua mot secret khong can switch, nhung THEM mot secret
-moi thi can. O day cung vay: sua NOI DUNG cua `[shortcuts]`/`[settings]`
-khong can rebuild, nhung `[pwa]` luon can, du chi doi mot dong.
+The analogy that makes this stick is agenix, one section below: changing the
+*contents* of a secret needs no switch, but *adding* one does. Same shape here
+— changing the contents of `[shortcuts]`/`[settings]` needs no rebuild, while
+`[pwa]` always does, even for a one-line change.
 
-Vi sao `[pwa]` co tinh cach rieng: module home-manager khai bao
-`skip = [ "pwa" ]`, nen CLI dotbrave khong dung toi bang do — chinh vi CLI
-chay o quyen user (home-manager activation), con force-install PWA vao file
-managed-policy can quyen root. Doi sang Nix (`darwin-rebuild` von da chay
-bang root) tranh duoc mot lan sudo tuong tac giua chung activation, dung
-tinh than "khong bao gio hoi sudo giua rebuild" ma module nay theo duoi.
+Why `[pwa]` is the odd one out: the home-manager module declares
+`skip = [ "pwa" ]`, so the CLI never builds a plan for that table. The CLI runs
+as you (home-manager activation), but force-installing a PWA means writing a
+managed-policy file, which needs root. Handing that one table to Nix
+(`darwin-rebuild` already runs as root) avoids an interactive sudo prompt in
+the middle of an activation — the "never ask for sudo mid-rebuild" rule this
+repo follows everywhere else.
 
-Mot diem nua de gay bat ngo: CLI **bo qua** `[shortcuts]`/`[settings]` neu
-Brave dang chay, thay vi dong no lai — day la hanh vi co chu y duoi
-`--unattended` (khong lam gian doan phien lam viec dang mo), khong phai loi.
-Ket qua la hai bang nay chi thuc su ap dung khi Brave dang dong; mot
-activation "thanh cong" khong dong nghia voi chinh sach da duoc ap.
+**A manual run must repeat the skip**:
+
+```bash
+dotbrave apply --skip pwa home-manager/dotfiles/browser/dotbrave/brave.toml
+```
+
+A bare `dotbrave apply` also builds a `[pwa]` plan, and that namespace belongs
+to the system module. The CLI would write the same managed policy as a second
+owner, from your user account, prompting for sudo. It is harmless today only
+because both writers happen to emit byte-identical output; the moment they
+diverge, whichever ran last wins and the next rebuild silently reverts it.
+
+**The other surprise:** the CLI skips `[shortcuts]`/`[settings]` when it finds
+**no live DevTools endpoint** for a running Brave — not merely "because Brave
+is running". With an endpoint it live-applies to the running browser and skips
+nothing. Under `--unattended` (how activation invokes it) a missing endpoint
+means skip rather than close Brave, deliberately: an activation must not
+interrupt an open session. A second, narrower skip exists for settings Brave
+cannot change live. In practice Brave runs here without an endpoint, so those
+two tables only really land while Brave is closed — a "successful" activation
+does **not** mean the shortcut policy was applied. The activation entry also
+swallows failures (`|| echo "dotbrave: apply failed, continuing activation"`),
+so read its output rather than trusting the switch's exit status.
 
 ### Secrets (agenix)
 
