@@ -1,11 +1,22 @@
 {
   lib,
   config,
+  dotbrave,
+  homeDir,
   ...
 }: {
   imports = [
     ../../nix-darwin
+    dotbrave.darwinModules.default
   ];
+  # [pwa] o tang he thong: darwin-rebuild von chay bang root nen viet duoc
+  # policy tai /Library/Managed Preferences ma khong can prompt sudo giua
+  # activation. Tro toi dung brave.toml ma module home-manager (Task 6)
+  # dung -- ca hai phai doc chung mot file.
+  services.dotbrave = {
+    enable = true;
+    config = "${homeDir}/.nix/home-manager/dotfiles/browser/dotbrave/brave.toml";
+  };
   modules.nix-darwin = {
     brew.enable = true;
     launchd = {
@@ -33,7 +44,7 @@
       "ollama"
       # "livekit"
       "ffmpeg@6"
-      "mkcert" 
+      "mkcert"
       "caddy"
     ];
     casks = [
