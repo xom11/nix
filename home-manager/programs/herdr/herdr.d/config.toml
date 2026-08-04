@@ -20,11 +20,20 @@ onboarding = false
 
 # Override individual color tokens on top of the base theme.
 # Accepts: hex (#rrggbb), named colors, rgb(r,g,b), or panel_bg = "reset"
-# [theme.custom]
+
+[theme.custom]
 # panel_bg = "reset"
 # accent = "#f5c2e7"
 # red = "#ff6188"
 # green = "#a6e3a1"
+
+# surface_dim is the background herdr paints behind the focused row in both the
+# spaces and the agents panel. Catppuccin ships it as #1e1e2e against a #181825
+# panel — a 6/6/9 delta, so the highlight is invisible and the only cue left is
+# text vs subtext0 on the name. surface0 restores a background you can actually
+# see. Same token also draws the panel separators and scrollbar troughs, which
+# were equally washed out; #45475a (surface1) if this is still too subtle.
+surface_dim = "#313244"
 
 [terminal]
 # Executable used for new interactive panes.
@@ -77,17 +86,22 @@ onboarding = false
 # rename_workspace = "prefix+shift+w"
 # close_workspace = "prefix+shift+d"
 # Direct bindings (no prefix), mirroring tmux's `bind -n S-Left/S-Right`.
-# shift+arrow: left/right walks tabs, up/down walks spaces (workspaces).
-previous_workspace = "shift+up"
-next_workspace = "shift+down"
-# previous_agent = ""     # optional, unset by default
-# next_agent = ""         # optional, unset by default
+# shift+arrow: left/right walks tabs, up/down walks agents. Spaces are the
+# coarsest jump and the rarest, so they pay the prefix.
+# Note prefix mode dispatches nothing but explicit `prefix+…` bindings and
+# silently exits on anything else, so an unbound prefix+arrow looks broken
+# rather than unbound. The arrows `prefix+?` lists under "navigation" are not
+# prefix chords at all -- they only live inside navigate mode (prefix+w).
+previous_workspace = "prefix+up"
+next_workspace = "prefix+down"
+previous_agent = "shift+up"
+next_agent = "shift+down"
 # focus_agent = ""        # optional indexed binding, e.g. "prefix+alt+1..9"
 # remote_image_paste = "ctrl+v" # only active in herdr --remote; empty disables raw-key image paste
 # new_tab = "prefix+c"
 # rename_tab = "prefix+shift+t"
-previous_tab = "shift+left"
-next_tab = "shift+right"
+previous_tab = ["shift+left", "prefix+left"]
+next_tab = ["shift+right", "prefix+right"]
 # switch_tab = "prefix+1..9"
 # switch_workspace = ""   # optional indexed binding, e.g. "prefix+shift+1..9"
 # close_tab = "prefix+shift+x"
