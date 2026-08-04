@@ -6,11 +6,15 @@ Describe 'windows/modules/programs/dotbrave' {
         $ModText   = if (Test-Path $ModPath) { Get-Content -LiteralPath $ModPath -Raw } else { '' }
         $ApplyText = Get-Content -LiteralPath $ApplyPath -Raw
 
-        # The whole file legitimately contains the string '--skip pwa' -- inside
-        # a comment explaining why this module does NOT pass it. Matching the
-        # comment would be a false FAIL, so isolate the actual invocation line
-        # and check only that.
-        $InvokeLine = ($ModText -split "`r?`n" | Where-Object { $_ -match 'dotbrave apply' }) -join "`n"
+        # Anchor on the call operator, not on a phrase the module also uses in
+        # prose. The module's comments legitimately contain "uvx", "--skip"
+        # and "--unattended" (they explain, in prose, why the invocation looks
+        # the way it does), and the throw message below the call repeats the
+        # phrase "dotbrave apply" too -- filtering on any of those substrings
+        # would catch commentary, not code. A line that starts with the call
+        # operator `&` is, in this file, the invocation and only the
+        # invocation.
+        $InvokeLine = ($ModText -split "`r?`n" | Where-Object { $_ -match '^\s*&' }) -join "`n"
     }
 
     It 'ships a module file' {
@@ -36,8 +40,24 @@ Describe 'windows/modules/programs/dotbrave' {
         $ModText | Should Match 'git\+https://github\.com/xom11/dotbrave'
     }
 
+    It 'invokes dotbrave through uvx, not some other launcher' {
+        # Guards the anchor itself: if the invocation line were ever deleted
+        # while the $rc / throw scaffolding below it survived, $InvokeLine
+        # would go empty and every assertion below would report PASS on a
+        # module that no longer calls dotbrave at all. Fail loudly here first.
+        $InvokeLine | Should Not BeNullOrEmpty
+        $InvokeLine | Should Match 'uvx'
+    }
+
     It 'passes --unattended so a failure cannot abort the run' {
-        $ModText | Should Match '--unattended'
+        # Checked against the invocation line, not the whole file: the module
+        # also carries a comment that explains, in prose, why PyPI is not
+        # used, and that comment legitimately contains the substring
+        # '--unattended'. Asserting against the full file text would keep
+        # passing even if the flag were dropped from the real call, as long
+        # as the comment survived.
+        $InvokeLine | Should Not BeNullOrEmpty
+        $InvokeLine | Should Match '--unattended'
     }
 
     It 'does NOT pass --skip pwa -- on Windows the CLI owns every table' {
