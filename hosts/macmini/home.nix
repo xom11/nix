@@ -54,6 +54,7 @@ in {
       browser = {
         # qutebrowser.enable = true;
         # firefox.enable = true;
+        dotbrave.enable = true;
       };
       macos = {
         hammerspoon.enable = true;
