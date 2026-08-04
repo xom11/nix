@@ -42,6 +42,7 @@ $modules = @(
     'programs.nvim'
     'programs.yazi'
     'programs.beckon'             # Start Menu shortcut names beckon resolves by exact name
+    'programs.dotbrave'           # brave.toml: shortcuts, settings, PWA policy (needs uv)
 
     # ---- services ----
     'services.kanata'
