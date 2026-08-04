@@ -31,8 +31,22 @@ jobs:
       # same eval works on every real machine. Symlinking closes that gap
       # instead of special-casing around it -- delete this and the trap is
       # back, silently, for the first Linux host that grows a module like it.
+      #
+      # `rm -rf` first: `ln -sfn` does NOT replace a pre-existing REAL
+      # directory at the target -- it drops the new symlink *inside* it
+      # instead (named after $GITHUB_WORKSPACE's basename), leaving a stale
+      # $HOME/.nix in place and the eval failure just as unexplained.
+      # Runners are ephemeral, so removing $HOME/.nix here is safe -- the
+      # GITHUB_ACTIONS check exists so this cannot be copy-pasted onto a
+      # real machine and rm -rf a real working tree.
       - name: Point $HOME/.nix at the checkout
-        run: ln -sfn "$GITHUB_WORKSPACE" "$HOME/.nix"
+        run: |
+          if [ "$GITHUB_ACTIONS" != "true" ]; then
+            echo "refusing: this removes \$HOME/.nix and must only run on an ephemeral CI runner" >&2
+            exit 1
+          fi
+          rm -rf "$HOME/.nix"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/.nix"
 
       - uses: DeterminateSystems/nix-installer-action@main
 
@@ -69,9 +83,17 @@ jobs:
       # Same invariant as the linux job above: repoPath is $HOME/.nix, and
       # services.dotbrave here (hosts/macmini) reads brave.toml through it
       # at eval time. Without this the darwin job is the one that actually
-      # dies today -- keep it, do not "simplify" it back out.
+      # dies today -- keep it, do not "simplify" it back out. The rm -rf +
+      # GITHUB_ACTIONS guard is explained in the linux job above; kept
+      # identical here on purpose.
       - name: Point $HOME/.nix at the checkout
-        run: ln -sfn "$GITHUB_WORKSPACE" "$HOME/.nix"
+        run: |
+          if [ "$GITHUB_ACTIONS" != "true" ]; then
+            echo "refusing: this removes \$HOME/.nix and must only run on an ephemeral CI runner" >&2
+            exit 1
+          fi
+          rm -rf "$HOME/.nix"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/.nix"
 
       - uses: DeterminateSystems/nix-installer-action@main
 
