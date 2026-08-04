@@ -51,18 +51,21 @@
         # Nen dong Write-OK cuoi khoi nay chi noi "lenh khong loi", khong noi
         # "ca ba bang da vao". Muon ca ba thi dong Brave roi chay lai update.
         # Truoc dotbrave v0.3.2 con te hon: mot [shortcuts] ban lam [pwa] bi
-        # bo luon, im lang va exit 0 -- do la ly do cua cai ghim tag o tren.
+        # bo luon, im lang va exit 0 -- do la ly do cua cai ghim phien ban
+        # o tren.
         Write-Info "dotbrave -> apply $toml"
 
-        # 'Continue' trong pham vi khoi nay: uvx dung nguon git se resolve va
-        # build ngay tren dia, thu viec gan chac chan in tien do ra stderr. Duoi
-        # $ErrorActionPreference = 'Stop' (apply.ps1 dat o pham vi script), moi
-        # dong stderr cua native command deu thanh ErrorRecord roi thanh
-        # terminating exception trong Windows PowerShell 5.1 -- cuop mat nhanh
-        # doc $LASTEXITCODE ngay ben duoi du dotbrave chay thanh cong, va lam
-        # LASTEXITCODE ro sang module ke tiep, dung dieu comment o duoi noi no
-        # ngan. Secrets.psm1:74-76 va githooks/module.ps1:28,36 da phai xu ly
-        # dung bay nay cho cac lenh it kha nang ghi stderr hon uvx nhieu.
+        # 'Continue' trong pham vi khoi nay: ngay ca cai tu wheel dung san
+        # tren PyPI, uv van in tien do resolve/tai ve ra stderr -- do thuc te
+        # tren a14 cho thay dong stderr khong rong ngay ca o lan chay dau.
+        # Duoi $ErrorActionPreference = 'Stop' (apply.ps1 dat o pham vi
+        # script), moi dong stderr cua native command deu thanh ErrorRecord
+        # roi thanh terminating exception trong Windows PowerShell 5.1 --
+        # cuop mat nhanh doc $LASTEXITCODE ngay ben duoi du dotbrave chay
+        # thanh cong, va lam LASTEXITCODE ro sang module ke tiep, dung dieu
+        # comment o duoi noi no ngan. Secrets.psm1:74-76 va
+        # githooks/module.ps1:28,36 da phai xu ly dung bay nay cho cac lenh
+        # it kha nang ghi stderr hon uvx nhieu.
         $ErrorActionPreference = 'Continue'
         & uvx --from $src dotbrave apply --unattended $toml
 
