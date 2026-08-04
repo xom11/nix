@@ -43,19 +43,21 @@ Describe 'windows/modules/programs/dotbrave' {
         $ModText | Should Match 'dotfiles\\browser\\dotbrave\\brave\.toml'
     }
 
-    It 'runs dotbrave from git pinned to a release tag, not the default branch' {
-        # PyPI is still on 0.2.5, which predates --unattended and --skip, so
-        # the source has to be git. But an UNPINNED git URL re-resolves
-        # dotbrave's default branch on every single run: every future commit
-        # upstream would reach a script running as Administrator that writes
-        # HKLM policy, unreviewed and unrecorded. The tag is what flake.lock
-        # is for the Nix hosts.
+    It 'runs dotbrave from a pinned PyPI version, not git' {
+        # PyPI now ships prebuilt wheels for dotbrave (the upstream "Publish
+        # to PyPI" workflow fires on every push to main), so there is no more
+        # reason to build from git source on every run. But an UNPINNED
+        # PyPI spec re-resolves to whatever is newest on every single run:
+        # every future release upstream would reach a script running as
+        # Administrator that writes HKLM policy, unreviewed and unrecorded.
+        # The pin is what flake.lock is for the Nix hosts.
         #
-        # Asserting only 'points at git' is what this test used to do, and it
-        # passes just as happily on an unpinned URL -- i.e. it protected
-        # nothing. The '@vX.Y.Z' is the whole point of the assertion.
+        # Asserting only 'points at PyPI, not git' would pass just as happily
+        # on an unpinned 'dotbrave' -- i.e. it would protect nothing. The
+        # '==X.Y.Z' exact-version match is the whole point of the assertion.
         $SrcLine | Should Not BeNullOrEmpty
-        $SrcLine | Should Match 'git\+https://github\.com/xom11/dotbrave@v\d+\.\d+\.\d+'
+        $SrcLine | Should Not Match 'git\+'
+        $SrcLine | Should Match '^\s*\$src\s*=\s*''dotbrave==\d+\.\d+\.\d+''\s*$'
     }
 
     It 'actually invokes the pinned source' {
@@ -76,8 +78,8 @@ Describe 'windows/modules/programs/dotbrave' {
 
     It 'passes --unattended so a failure cannot abort the run' {
         # Checked against the invocation line, not the whole file: the module
-        # also carries a comment that explains, in prose, why PyPI is not
-        # used, and that comment legitimately contains the substring
+        # also carries a comment that explains, in prose, why PyPI (and not
+        # git) is used, and that comment legitimately contains the substring
         # '--unattended'. Asserting against the full file text would keep
         # passing even if the flag were dropped from the real call, as long
         # as the comment survived.

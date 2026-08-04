@@ -14,17 +14,23 @@
             return
         }
 
-        # Chay tu git chu khong phai PyPI: PyPI moi co 0.2.5, chua co
-        # --unattended lan --skip. `uvx dotbrave` se lay nham ban do va
-        # chet ngay o dong lenh.
+        # PyPI gio da co dotbrave >= 0.3.3, kem --unattended va --skip: repo
+        # thuong nguon co workflow "Publish to PyPI" chay tren moi push vao
+        # main nen da bat kip ban tag moi nhat (kiem lai bang
+        # `pip index versions dotbrave` truoc khi doi qua day, dung tin theo
+        # tri nho). Chuyen tu git sang PyPI vi PyPI phat hanh wheel dung san:
+        # uvx chi tai wheel va giai nen, khong resolve+build tu source tren
+        # dia moi lan chay nhu duong git truoc do -- do chinh la phan cham
+        # nhat cua buoc nay, va da do thuc te tren a14 qua SSH: lan chay dau
+        # va lan chay sau deu nhanh hon ro ret so voi duong git.
         #
-        # Ghim theo TAG, khong de tro nhanh mac dinh. Day dung la vai tro
-        # flake.lock dang giu cho may Nix, chi la o phia Windows: URL git
-        # khong ghim se resolve lai nhanh mac dinh moi lan chay, nen moi
-        # commit moi cua thuong nguon deu chay thang vao mot script dang co
-        # quyen Administrator va ghi HKLM policy -- khong ai duyet, khong
-        # dau vet lai. Nang so nay la viec co y, lam khi dotbrave ra ban moi.
-        $src = 'git+https://github.com/xom11/dotbrave@v0.3.3'
+        # Van ghim dung phien ban, khong de `uvx dotbrave` tu lay ban moi
+        # nhat. Day dung la vai tro flake.lock dang giu cho may Nix, chi la o
+        # phia Windows: khong ghim thi moi ban phat hanh moi cua thuong nguon
+        # deu chay thang vao mot script dang co quyen Administrator va ghi
+        # HKLM policy -- khong ai duyet, khong dau vet lai. Nang so nay la
+        # viec co y, lam khi dotbrave ra ban moi.
+        $src = 'dotbrave==0.3.3'
 
         # KHONG co --skip pwa o day, khac han may Nix: ben do co mot module
         # Nix so huu managed policy nen CLI phai tranh ra, con o day khong co
