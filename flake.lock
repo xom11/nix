@@ -35,11 +35,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783474656,
-        "narHash": "sha256-0ARZkJQrYw32anMoEjQTm1abylBYeKYYf49ywZlbJlc=",
+        "lastModified": 1785736697,
+        "narHash": "sha256-uIZpjvXIcqLChyEQaUncBf4rvlOhHuR6o6n6sxcBHH8=",
         "owner": "xom11",
         "repo": "beckon",
-        "rev": "aafa2c4cb0c86e3fe0c2190b1f03015320ac71ac",
+        "rev": "b20277e33b0ed7e805cfb9c0d12a1f5a8b936d79",
         "type": "github"
       },
       "original": {
@@ -82,6 +82,27 @@
       "original": {
         "owner": "nix-community",
         "repo": "disko",
+        "type": "github"
+      }
+    },
+    "dotbrave": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785814851,
+        "narHash": "sha256-Atfvy5TTh0499qCtJHAqt2mlvGttuTRXlRk9COdgfsE=",
+        "owner": "xom11",
+        "repo": "dotbrave",
+        "rev": "a70bda7002a367b63174026606b775d69eca61e3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xom11",
+        "ref": "nix-modules",
+        "repo": "dotbrave",
         "type": "github"
       }
     },
@@ -545,6 +566,7 @@
         "beckon": "beckon",
         "brew-src": "brew-src",
         "disko": "disko",
+        "dotbrave": "dotbrave",
         "fcitx5-lotus": "fcitx5-lotus",
         "hammerspoon-spoons": "hammerspoon-spoons",
         "home-manager": "home-manager",

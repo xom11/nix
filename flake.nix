@@ -63,6 +63,9 @@
     beckon.url = "github:xom11/beckon";
     beckon.inputs.nixpkgs.follows = "nixpkgs";
 
+    dotbrave.url = "github:xom11/dotbrave/nix-modules";
+    dotbrave.inputs.nixpkgs.follows = "nixpkgs";
+
     # Chỉ có package trên darwin — overlay của nó tự vắng mặt trên Linux, nên
     # để chung trong flakeOverlays không làm hỏng host Linux nào.
     tongue.url = "github:xom11/tongue";
@@ -96,6 +99,7 @@
       # `inputs.<tool>.overlays.default` to this list.
       flakeOverlays = [
         inputs.beckon.overlays.default
+        inputs.dotbrave.overlays.default
         inputs.tongue.overlays.default
         inputs."fcitx5-lotus".overlays.default
       ];
