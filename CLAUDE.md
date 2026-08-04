@@ -236,8 +236,11 @@ home-manager/
   base/              # username, homeDir, stateVersion, sessionVariables
                      #   + macos/, ubuntu/, nixos/ — each carries that platform's `update` alias
   programs/          # btop, git, herdr, nvim, ssh, tmux, yazi, zsh
-                     #   herdr: config only -- the binary is installed out-of-band,
-                     #   pkgs.herdr does not build on darwin (zig/DarwinSdkNotFound)
+                     #   herdr: pkgs.herdr now builds on darwin too, so the module
+                     #   owns the binary as well as the config. Cost: `herdr update`
+                     #   and `herdr channel` no longer work (read-only store) --
+                     #   upgrades come from a nixpkgs bump. A leftover out-of-band
+                     #   ~/.local/bin/herdr shadows it, that dir precedes nix in PATH
   dotfiles/          # ai/{aichat.d,claude.d,codex.d,gemini.d,opencode.d}
                      #   claude.d: MCP user-scope lives in ~/.claude.json, which Claude
                      #   Code rewrites -- not symlinkable, and settings.json takes no
