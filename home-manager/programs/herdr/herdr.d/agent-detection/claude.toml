@@ -52,22 +52,31 @@ line_regex = [
 ]
 
 # LOCAL ADDITION — not upstream.
-# Sits above live_prompt_box (950) so a finished turn with a live background
-# shell reads as working, and below btw_overlay_working (975) so nothing that
-# already claims the pane loses. The `not` list mirrors live_prompt_box's so an
-# approval prompt still wins as `blocked` even while a shell runs in the
-# background.
+# Sits above live_prompt_box (950) so a finished turn with live background work
+# reads as working, and below btw_overlay_working (975) so nothing that already
+# claims the pane loses. The `not` list mirrors live_prompt_box's so an approval
+# prompt still wins as `blocked` even while background work runs.
 #
-# Trade-off: any surviving background shell counts, including one deliberately
-# parked there (a dev server, a tail -f). Such a pane reads working until that
-# shell exits. The screen carries no way to tell the two apart.
+# Claude reports every kind of background work through one footer slot, in one
+# shape: `· 1 shell ·`, `· 2 monitors ·`. Match the kinds, not a bare count --
+# that slot sits on the same line as `⏵⏵ bypass permissions on` and `← for
+# agents`, and a loose `·\s*\d+` would fire on whatever lands there next.
+# A Monitor waiting on CI is what motivated widening this: the turn has ended
+# and the spinner is gone, yet the agent is nowhere near done. Only shell and
+# monitor are covered because those are the two observed live; `bashes` is not
+# a form Claude ships (the 2.1.221 bundle has no such string, while both
+# `shells` and `monitors` are in it).
+#
+# Trade-off: any surviving background work counts, including something parked
+# on purpose (a dev server, a tail -f). Such a pane reads working until it
+# exits. The screen carries no way to tell the two apart.
 [[rules]]
-id = "background_shell_working"
+id = "background_task_working"
 state = "working"
 priority = 960
 region = "after_last_horizontal_rule"
 visible_working = true
-regex = ['·\s*\d+\s+shells?\b']
+regex = ['·\s*\d+\s+(?:shells?|monitors?)\b']
 not = [
   { contains = ["enter to select"] },
   { contains = ["esc to cancel"] },
