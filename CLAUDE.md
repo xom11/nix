@@ -292,17 +292,35 @@ invisible at a glance and tends to be discovered the hard way:
 - `[shortcuts]` and `[settings]` are read by the `dotbrave` CLI at
   **activation** (`programs.dotbrave` in
   `home-manager/dotfiles/browser/dotbrave/default.nix`, enabled on macmini).
-  Editing them takes effect on the next activation with no rebuild — the same
-  "edit without rebuilding" pattern as every other dotfile here.
+  The activation script embeds the *path* to `brave.toml`, not its contents,
+  so editing those tables changes no derivation — a switch applies them
+  without rebuilding anything.
 - `[pwa]` is read by Nix itself, via `builtins.fromTOML`, at **evaluation**
   (`services.dotbrave` in `hosts/macmini/configuration.nix`; the module comes
   from `dotbrave.darwinModules.default`). Editing the PWA list edits an *input
-  to eval*, so it **needs a rebuild** — it can never take effect on its own.
+  to eval*, so the switch rebuilds the plist. A malformed entry fails
+  evaluation, taking the whole switch down before anything is applied.
 
-The analogy that makes this stick is agenix, one section below: changing the
-*contents* of a secret needs no switch, but *adding* one does. Same shape here
-— changing the contents of `[shortcuts]`/`[settings]` needs no rebuild, while
-`[pwa]` always does, even for a one-line change.
+**This is not the "edit without rebuilding" pattern** the section above
+describes, and conflating the two is the easy mistake. A symlinked dotfile
+like `zsh.d` needs no switch at all — the program reads the file directly.
+Both dotbrave tables need *something to run the CLI*, and the CLI only runs at
+activation. So:
+
+| | Needs a switch? | Rebuilds anything? | Appliable outside Nix? |
+|---|---|---|---|
+| symlinked dotfile | no | no | yes, the program reads it |
+| `[shortcuts]`, `[settings]` | **yes** | no | yes, `dotbrave apply --skip pwa` |
+| `[pwa]` | **yes** | yes, a new plist | no, Nix owns it |
+
+The agenix analogy one section below still holds for the *eval-vs-runtime*
+half: changing a secret's contents needs no switch, but adding one does.
+Do not stretch it further than that — agenix decrypts from a launchd agent,
+so its contents really do apply without a switch. Nothing here does.
+
+In practice on macmini there is a third gate: Brave is usually open, and the
+CLI skips `[shortcuts]`/`[settings]` rather than closing it. Those tables
+therefore only land when Brave is closed *and* something runs the CLI.
 
 Why `[pwa]` is the odd one out: the home-manager module declares
 `skip = [ "pwa" ]`, so the CLI never builds a plan for that table. The CLI runs
