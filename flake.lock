@@ -92,16 +92,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1785814851,
-        "narHash": "sha256-Atfvy5TTh0499qCtJHAqt2mlvGttuTRXlRk9COdgfsE=",
+        "lastModified": 1785819599,
+        "narHash": "sha256-dud3yC1gg+IeQDRwPw2RDeqJAN3eMCV2FRj6UKHwrtM=",
         "owner": "xom11",
         "repo": "dotbrave",
-        "rev": "a70bda7002a367b63174026606b775d69eca61e3",
+        "rev": "330d945c1107d11bfb9ae31d61c05548219fa061",
         "type": "github"
       },
       "original": {
         "owner": "xom11",
-        "ref": "nix-modules",
         "repo": "dotbrave",
         "type": "github"
       }

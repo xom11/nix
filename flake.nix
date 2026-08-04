@@ -63,11 +63,7 @@
     beckon.url = "github:xom11/beckon";
     beckon.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Tro vao nhanh feature nix-modules, khong phai default: ba module Nix ben
-    # repo dotbrave (home-manager + nixos + darwin) hien chi nam o day, chua
-    # merge vao main vi chua thu tren may that. Doi lai default branch mot khi
-    # da merge upstream.
-    dotbrave.url = "github:xom11/dotbrave/nix-modules";
+    dotbrave.url = "github:xom11/dotbrave";
     dotbrave.inputs.nixpkgs.follows = "nixpkgs";
 
     # Chỉ có package trên darwin — overlay của nó tự vắng mặt trên Linux, nên

@@ -282,6 +282,41 @@ The symlink target is a plain string, so it is **not** a reference of the
 home-manager generation. It must point into the `~/.nix` working tree — never into
 the store, or the dotfiles are read-only and get collected on the next GC.
 
+### dotbrave: mot file, hai nguoi doc, hai thoi diem khac nhau
+
+`home-manager/dotfiles/browser/dotbrave/brave.toml` co ba bang
+(`[shortcuts]`, `[settings]`, `[pwa]`), nhung khong chi mot noi doc no — va
+hai noi do doc o hai THOI DIEM khac nhau, dieu nay khong hien ra tu cai nhin
+dau tien va se de bi phat hien theo kieu kho:
+
+- `[shortcuts]` va `[settings]` do CLI `dotbrave` doc luc **activation**
+  (`programs.dotbrave` o `home-manager/dotfiles/browser/dotbrave/default.nix`,
+  bat cho macmini). Sua hai bang nay an ngay o lan activation ke tiep, khong
+  can rebuild — dung pattern "edit without rebuilding" nhu moi dotfile khac
+  trong repo.
+- `[pwa]` do Nix doc bang `builtins.fromTOML` luc **evaluation**
+  (`services.dotbrave` trong `hosts/macmini/configuration.nix`, module den
+  tu `dotbrave.darwinModules.default`). Sua danh sach PWA la sua *input* cua
+  eval, nen **can rebuild** moi ap dung — khong tu an duoc.
+
+An dung cho de nho: no giong het agenix o muc "Secrets (agenix)" ngay ben
+duoi — sua NOI DUNG cua mot secret khong can switch, nhung THEM mot secret
+moi thi can. O day cung vay: sua NOI DUNG cua `[shortcuts]`/`[settings]`
+khong can rebuild, nhung `[pwa]` luon can, du chi doi mot dong.
+
+Vi sao `[pwa]` co tinh cach rieng: module home-manager khai bao
+`skip = [ "pwa" ]`, nen CLI dotbrave khong dung toi bang do — chinh vi CLI
+chay o quyen user (home-manager activation), con force-install PWA vao file
+managed-policy can quyen root. Doi sang Nix (`darwin-rebuild` von da chay
+bang root) tranh duoc mot lan sudo tuong tac giua chung activation, dung
+tinh than "khong bao gio hoi sudo giua rebuild" ma module nay theo duoi.
+
+Mot diem nua de gay bat ngo: CLI **bo qua** `[shortcuts]`/`[settings]` neu
+Brave dang chay, thay vi dong no lai — day la hanh vi co chu y duoi
+`--unattended` (khong lam gian doan phien lam viec dang mo), khong phai loi.
+Ket qua la hai bang nay chi thuc su ap dung khi Brave dang dong; mot
+activation "thanh cong" khong dong nghia voi chinh sach da duoc ap.
+
 ### Secrets (agenix)
 
 Secrets get the same "edit without rebuilding" property, but by a different
