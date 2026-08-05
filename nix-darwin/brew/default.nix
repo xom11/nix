@@ -33,7 +33,7 @@ mkModule config ./. {
 
     taps = [
       # "homebrew-zathura/zathura" # zathura
-      # "kunkka19xx/tap"
+      "kunkka19xx/tap" # look
     ];
 
     brews = [
@@ -55,7 +55,10 @@ mkModule config ./. {
 
     casks = [
       "claude"
-      # "look"
+      # Launcher. Only macOS gets it from brew: upstream ships a signed and
+      # notarized .app here, and its Nix flake (apps/linows) declares
+      # meta.platforms = linux -- there is no darwin derivation to use instead.
+      "look"
       "obsidian"
       "gonhanh"
       "monitorcontrol"
