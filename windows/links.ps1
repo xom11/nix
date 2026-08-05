@@ -120,4 +120,42 @@ $Hm = $Ctx.HomeManagerDir
         @{ Source = "$Hm\programs\yazi\yazi.d"
            Target = "$env:APPDATA\yazi\config" }
     )
+
+    # Config only -- the herdr binary is NOT installed by apply.ps1, for the same reason
+    # dotfiles.ai.pi is config-only: herdr ships `herdr update` and `herdr channel` and keeps
+    # itself current from its own release feed. A second installer writing the same path would
+    # be two updaters racing, and whichever ran last would win.
+    #
+    # That is the opposite of the nix hosts, where home-manager/programs/herdr owns the binary
+    # via pkgs.herdr and therefore gives `herdr update` up -- a read-only store path cannot be
+    # replaced. Windows has no such constraint, so the self-updater is kept.
+    #
+    # One-time install on a machine that has never had it -- note Windows is PREVIEW-ONLY, the
+    # installer errors out on `-Channel stable`:
+    #   $env:HERDR_CHANNEL='preview'; irm https://herdr.dev/install.ps1 | iex
+    # It lands in %LOCALAPPDATA%\Programs\Herdr\bin and puts that directory first on the user
+    # PATH via HKCU\Environment. No admin needed.
+    #
+    # `herdr --remote macmini` only works when both ends speak the same wire protocol, and the
+    # protocol number moves with the release: 0.7.3 is protocol 16, 0.8.0-preview is 19. Since
+    # Windows is preview-only, the two machines cannot meet on stable -- pinning the mac side to
+    # nixpkgs (which tracks stable, and lags it) makes remote attach impossible by construction.
+    # So both ends have to ride the same self-updating preview build. Check with
+    # `herdr status client` on one and `herdr status server` on the other before debugging
+    # anything else; a protocol mismatch is the first thing to rule out.
+    #
+    # Upstream publishes no ARM64 Windows build: install.ps1 maps Arm64 to windows-x86_64 and
+    # says so out loud ("installing the x86_64 build under Windows emulation"). On a14 herdr
+    # therefore runs under Prism -- verified by PE header (machine 0x8664), deliberate, and the
+    # same accepted trade-off as kanata and rustup. The bundled ConPTY does ship an arm64
+    # OpenConsole.exe, so the pty layer itself is native.
+    #
+    # Individual FILES, never the %APPDATA%\herdr directory: the running server keeps
+    # herdr.sock, session.json and herdr*.log in there. Same rule as the nix module.
+    'programs.herdr' = @(
+        @{ Source = "$Hm\programs\herdr\herdr.d\config.toml"
+           Target = "$env:APPDATA\herdr\config.toml" }
+        @{ Source = "$Hm\programs\herdr\herdr.d\agent-detection\claude.toml"
+           Target = "$env:APPDATA\herdr\agent-detection\claude.toml" }
+    )
 }
