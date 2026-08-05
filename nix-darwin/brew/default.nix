@@ -14,12 +14,13 @@ mkModule config ./. {
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      # Homebrew 6.0 deprecated `brew bundle --cleanup` ("no replacement"), and
-      # passing it makes activation print a deprecation warning and prompt
-      # "Do you want to proceed with the cleanup? [y/n]" on every `update`.
-      # Keep it off; prune undeclared/old packages manually when needed with
-      # `brew bundle cleanup --force` or `brew cleanup`.
-      cleanup = "none";
+      # Prunes anything installed but not declared above. Was off for a while:
+      # Homebrew 6.0 deprecated `brew bundle --cleanup`, so activation printed a
+      # warning and prompted "proceed with the cleanup? [y/n]" on every `update`.
+      # nix-darwin now emits `--zap --force-cleanup` instead (modules/homebrew.nix),
+      # and `--force-cleanup` is documented as cleaning up *without asking* — so
+      # the prompt can no longer stall a switch.
+      cleanup = "zap";
       # Homebrew >= 6.0 requires non-official taps to be trusted via `brew trust`
       # before `brew bundle` will load their formulae/casks. Disable that check
       # so activation doesn't fail on our third-party taps below.
