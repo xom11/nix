@@ -86,7 +86,9 @@ mkModule config ./. {
       "notion"
       # "orbstack"
       # "qutebrowser"
-      "raycast"
+      # Dropped for look, which wants the same Cmd+Space. Two launchers on one
+      # hotkey means whichever registered it last wins, silently.
+      # "raycast"
       # "rustdesk"
       # "scroll-reverser"
       # "slack"

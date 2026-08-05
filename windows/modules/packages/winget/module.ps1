@@ -12,7 +12,7 @@
             'Tailscale.Tailscale'
             'Vivaldi.Vivaldi'
             # 'VNGCorp.Zalo'              # winget download fails (0x80072f05); install manually
-            '9PFXXSHC64H3'                # Raycast (Microsoft Store)
+            # '9PFXXSHC64H3'              # Raycast (Store); dropped for look, same Alt+Space
             'Warp.Warp'
 
             # ---- Terminals / shells ----
