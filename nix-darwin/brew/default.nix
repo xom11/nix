@@ -14,13 +14,22 @@ mkModule config ./. {
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      # Prunes anything installed but not declared above. Was off for a while:
-      # Homebrew 6.0 deprecated `brew bundle --cleanup`, so activation printed a
-      # warning and prompted "proceed with the cleanup? [y/n]" on every `update`.
-      # nix-darwin now emits `--zap --force-cleanup` instead (modules/homebrew.nix),
-      # and `--force-cleanup` is documented as cleaning up *without asking* — so
-      # the prompt can no longer stall a switch.
-      cleanup = "zap";
+      # `"zap"` is usable again, and the old reason for avoiding it is gone:
+      # Homebrew 6.0 deprecated `brew bundle --cleanup`, which made activation
+      # prompt "proceed with the cleanup? [y/n]" on every `update`. nix-darwin
+      # now emits `--zap --force-cleanup` instead, and `--force-cleanup` cleans
+      # up *without asking*, so it can no longer stall a switch.
+      #
+      # Still kept off on purpose. AI coding agents install brew packages
+      # mid-task to get their work done; those are undeclared by definition, so
+      # a cleanup on the next `update` would delete exactly what an agent is
+      # relying on. That is a worse failure than some drift.
+      #
+      # Prune by hand instead. Without `--force` it only lists:
+      #   bf=$(grep -o "/nix/store/[^']*-Brewfile" /run/current-system/activate)
+      #   HOMEBREW_NO_REQUIRE_TAP_TRUST=1 brew bundle cleanup --file="$bf"
+      # The env var matters: without it the third-party taps below fail to load.
+      cleanup = "none";
       # Homebrew >= 6.0 requires non-official taps to be trusted via `brew trust`
       # before `brew bundle` will load their formulae/casks. Disable that check
       # so activation doesn't fail on our third-party taps below.
