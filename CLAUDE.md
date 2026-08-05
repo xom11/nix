@@ -12,8 +12,22 @@ Never commit:
 
 - **Credentials** — keys, tokens, passwords, session cookies. `.age` files are
   ciphertext and belong here; whatever they decrypt to does not.
-- **Private identifiers** — internal hostnames, LAN/Tailscale addresses, serial
-  numbers, personal email or phone, paths that expose who or where someone is.
+- **Private identifiers** — serial numbers, personal email or phone, LAN
+  addresses (`192.168.*`, `10.*`), paths that expose who or where someone is.
+
+  **Tailscale addresses are the deliberate exception.** `100.64.0.0/10` is
+  CGNAT space: an address there routes only inside this tailnet, and reaching
+  it needs a device the owner admitted plus a key they issued. Publishing one
+  gives a reader a name, not a way in. So `home-manager/programs/ssh/config`
+  carries every host's real `HostName` and `User` in plaintext **on purpose**,
+  and `.githooks/allow-vars` exempts `ROUTER_ENDPOINT` for the same reason.
+  Do not "fix" either one, and do not re-raise it as a finding — this was
+  decided knowingly. What it does publish is the machine inventory: how many
+  hosts exist, their names, and which user runs them. That is accepted.
+
+  The exception is exactly this and nothing wider. A **public** address, a
+  port-forward, or a tailnet address written next to a credential or an
+  `authorized_keys` entry is still a leak.
 - **Real values in examples.** Commands, comments and docs use placeholders
   (`$TOKEN`, `user@host`), never a working credential — not even an expired one.
 - **Unredacted machine output** — logs, `env` dumps, error traces, screenshots.
