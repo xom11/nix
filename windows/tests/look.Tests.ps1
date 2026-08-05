@@ -6,13 +6,6 @@ Describe 'windows/modules/programs/look' {
         $ModText   = if (Test-Path $ModPath) { Get-Content -LiteralPath $ModPath -Raw } else { '' }
         $ApplyText = Get-Content -LiteralPath $ApplyPath -Raw
 
-        # Anchor on the assignment, not on the string wherever it appears. The
-        # comment above the pin names the release page, and the next person to
-        # touch it may well paste a version number into that prose -- at which
-        # point a whole-file match would keep passing even after the real
-        # assignment had drifted to something unpinned.
-        $VersionLine = ($ModText -split "`r?`n" | Where-Object { $_ -match '^\s*\$Version\s*=' }) -join "`n"
-
         # The single line that actually runs the downloaded .exe.
         $StartLine = ($ModText -split "`r?`n" | Where-Object { $_ -match 'Start-Process' }) -join "`n"
     }
@@ -31,23 +24,20 @@ Describe 'windows/modules/programs/look' {
         $mod.Apply | Should Not BeNullOrEmpty
     }
 
-    It 'pins an exact release version' {
-        # This module downloads an .exe from GitHub and executes it, from a
-        # script already running as Administrator. Unpinned, every future
-        # upstream release would reach that position unreviewed, with nothing
-        # recording which build landed. The exact-version match is the whole
-        # point of the assertion: 'points at a GitHub release' would pass just
-        # as happily on a source that tracks whatever is newest.
-        # Single-quoted: in a double-quoted string PowerShell expands `$Version`
-        # to the empty string before Pester ever sees the pattern, and the
-        # assertion then matches almost anything.
-        $VersionLine | Should Match '^\s*\$Version\s*=\s*''\d+\.\d+\.\d+''\s*$'
+    It 'resolves the release from the GitHub API' {
+        # look ships no winget manifest and no scoop bucket, so there is no
+        # package manager to delegate this to -- the release feed is the only
+        # Windows channel that exists.
+        $ModText | Should Match 'releases/latest'
     }
 
-    It 'never resolves the latest release at runtime' {
-        # The companion to the pin. Keeping the assignment while adding a
-        # `releases/latest` lookup elsewhere would defeat it silently.
-        $ModText | Should Not Match 'releases/latest'
+    It 'refuses to install when the release has no checksums file' {
+        # Tracking latest removes the review step that a version pin gave, so
+        # the hash check is the only thing standing between an elevated
+        # installer run and whatever upstream published minutes ago. A release
+        # without checksums has to stop, not fall through to an unverified
+        # install.
+        $ModText | Should Match 'publishes no windows-checksums'
     }
 
     It 'verifies SHA256 before running the installer' {
@@ -59,6 +49,13 @@ Describe 'windows/modules/programs/look' {
         $hashAt | Should Not Be -1
         $startAt | Should Not Be -1
         ($hashAt -lt $startAt) | Should Be $true
+    }
+
+    It 'survives an unreachable release feed' {
+        # Offline or rate-limited must not fail the whole apply run when look is
+        # already installed -- same contract as packages/pwsh, which downloads
+        # from a GitHub release the same way.
+        $ModText | Should Match 'release check failed'
     }
 
     It 'passes /D= as the last installer argument, unquoted' {

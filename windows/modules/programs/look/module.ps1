@@ -1,30 +1,27 @@
 @{
-    Description = 'Look launcher: pinned NSIS release, per-user install under %LOCALAPPDATA%'
+    Description = 'Look launcher: latest GitHub release, per-user NSIS install under %LOCALAPPDATA%'
     Apply = {
         param($Ctx)
 
-        # Pinned, not "latest". This downloads an .exe from GitHub and runs it,
-        # and apply.ps1 runs elevated -- so an unpinned source would hand every
-        # future upstream release a run as Administrator, unreviewed and with no
-        # record of which build was installed. Same reasoning as the
-        # `dotbrave==0.3.3` pin next door; this is what flake.lock does for the
-        # Nix hosts. Bump by hand from the release list:
-        #   https://github.com/kunkka19xx/look/releases
-        $Version = '0.6.9'
-        $Repo    = 'kunkka19xx/look'
+        # The GitHub release is the only Windows channel there is. Upstream
+        # publishes an AUR package, a .deb, an AppImage, a Homebrew tap and this
+        # NSIS installer -- there is no winget manifest (no manifests/k/kunkka19xx
+        # in microsoft/winget-pkgs) and no scoop bucket, so Install-WingetPackages
+        # and Install-ScoopPackages have nothing to point at.
+        $Repo = 'kunkka19xx/look'
 
-        # Tauri's NSIS bundle sets installMode = currentUser, so this lands in
-        # the user profile and needs no admin. apply.ps1 being elevated does not
-        # redirect it: SSH here logs in as a local admin *user*, so
-        # %LOCALAPPDATA% is still that user's -- the same reason the scoop
-        # comment in apply.ps1 gives for scoop's per-user layout.
+        # Tracks latest rather than pinning, by request. The SHA256 check below
+        # still proves the download matches what upstream published -- but that
+        # is transport integrity, not review: a new release reaches this elevated
+        # script the moment it ships. The installer itself is currentUser mode
+        # and needs no admin, so if that ever matters, de-elevating this one call
+        # through gsudo would cost the privilege without costing the update.
         $installDir = Join-Path $env:LOCALAPPDATA 'Programs\Look'
         $exe        = Join-Path $installDir 'lookapp.exe'
 
         # Upstream publishes x86_64 only ("native ARM builds aren't published",
         # README). On a14 that means the launcher runs under Prism emulation --
-        # deliberate, not drift, so it is a warning rather than a skip. If an
-        # arm64 asset ever appears, $setupName below is the only line to change.
+        # deliberate, not drift, so it is a warning rather than a skip.
         switch ($env:PROCESSOR_ARCHITECTURE) {
             'ARM64' { Write-Warn 'look -> x64 build only; runs under Prism emulation on ARM64' }
             'AMD64' { }
@@ -43,53 +40,84 @@
             if ($raw -match '^\d+(\.\d+){1,3}') { $installed = [version]$Matches[0] }
         }
 
-        # -ge, not -eq: the pin is a floor, not an exact match. A newer build
-        # installed by hand is not upstream code that just auto-ran through
-        # here, so there is nothing to protect against by downgrading it.
-        if ($installed -and $installed -ge [version]$Version) {
-            Write-Skip "look -> $installed already installed"
+        try {
+            $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" `
+                -Headers @{ 'User-Agent' = 'nix-windows-apply' } -TimeoutSec 30
+        } catch {
+            # Offline or rate-limited. An existing install is still fine; a
+            # missing one is not. Either way this must not fail the whole apply.
+            if ($installed) {
+                Write-Skip "look -> $installed (release check failed)"
+            } else {
+                Write-Warn "look -> cannot reach the release feed and it is not installed: $_"
+            }
             return
         }
 
-        $setupName = "Look_${Version}_x64-setup.exe"
-        $base      = "https://github.com/$Repo/releases/download/v$Version"
+        $version = $release.tag_name -replace '^v', ''
+        if ($version -notmatch '^\d+(\.\d+){1,3}$') {
+            Write-Warn "look -> unexpected tag '$($release.tag_name)' - skipping"
+            return
+        }
+        $latest = [version]$version
 
-        $tmp = Join-Path $env:TEMP "look-$Version"
+        if ($installed -and $installed -ge $latest) {
+            Write-Skip "look -> $installed is current"
+            return
+        }
+
+        # Take the URLs off the release itself instead of rebuilding them from a
+        # naming convention: tauri-cli's NSIS name is
+        # `<ProductName>_<version>_x64-setup.exe` today, and a guessed URL that
+        # stops matching turns into a 404 at download time rather than a clear
+        # "this release has no Windows asset".
+        $setup = $release.assets | Where-Object { $_.name -like 'Look_*_x64-setup.exe' } | Select-Object -First 1
+        $sums  = $release.assets | Where-Object { $_.name -like '*windows-checksums.txt' } | Select-Object -First 1
+        if (-not $setup) {
+            Write-Warn "look -> release $version has no x64 setup asset - skipping"
+            return
+        }
+
+        $tmp = Join-Path $env:TEMP "look-$version"
         New-Item -ItemType Directory -Path $tmp -Force | Out-Null
         try {
-            $setupPath = Join-Path $tmp $setupName
-            $sumsPath  = Join-Path $tmp 'checksums.txt'
+            $setupPath = Join-Path $tmp $setup.name
+            Write-Info "look -> downloading $($setup.name)"
+            Invoke-WebRequest -Uri $setup.browser_download_url -OutFile $setupPath -UseBasicParsing
 
-            Write-Info "look -> downloading $setupName"
-            Invoke-WebRequest -Uri "$base/$setupName" -OutFile $setupPath -UseBasicParsing
-            Invoke-WebRequest -Uri "$base/Look-$Version-windows-checksums.txt" -OutFile $sumsPath -UseBasicParsing
+            # Never install an unverified binary. A release that ships no
+            # checksums file is a stop, not a shrug: this runs elevated.
+            if (-not $sums) { throw "release $version publishes no windows-checksums.txt" }
+
+            $sumsPath = Join-Path $tmp $sums.name
+            Invoke-WebRequest -Uri $sums.browser_download_url -OutFile $sumsPath -UseBasicParsing
 
             # Lines read '<sha256>  <filename>'. Anchor on the filename at end of
-            # line so a future multi-asset checksums file cannot match the wrong
-            # row -- and escape it, because the version dots are regex wildcards.
-            $escaped = [regex]::Escape($setupName)
+            # line so a multi-asset checksums file cannot match the wrong row --
+            # and escape it, because the version dots are regex wildcards.
+            $escaped = [regex]::Escape($setup.name)
             $line = Get-Content -LiteralPath $sumsPath |
                 Where-Object { $_ -match "\s$escaped\s*$" } |
                 Select-Object -First 1
-            if (-not $line) { throw "checksums file has no entry for $setupName" }
+            if (-not $line) { throw "checksums file has no entry for $($setup.name)" }
 
             $expected = ($line -split '\s+')[0].ToLower()
             $actual   = (Get-FileHash -LiteralPath $setupPath -Algorithm SHA256).Hash.ToLower()
             if ($actual -ne $expected) {
-                throw "SHA256 mismatch for ${setupName}: expected=$expected actual=$actual"
+                throw "SHA256 mismatch for $($setup.name): expected=$expected actual=$actual"
             }
             Write-OK 'look -> SHA256 verified'
 
             # NSIS cannot overwrite a locked binary. Only reached when an install
             # is actually about to happen -- the Write-Skip above already
             # returned for an up-to-date build, so a running instance at the
-            # pinned version is never killed out from under the user.
+            # current version is never killed out from under the user.
             Get-Process -Name 'lookapp' -ErrorAction SilentlyContinue |
                 Stop-Process -Force -ErrorAction SilentlyContinue
 
             # /S = silent. /D= must be the LAST argument and must NOT be quoted,
             # even when the path contains spaces -- NSIS convention, not a typo.
-            Write-Info ("look -> {0} {1}" -f $(if ($installed) { "upgrading from $installed to" } else { 'installing' }), $Version)
+            Write-Info ("look -> {0} {1}" -f $(if ($installed) { "upgrading from $installed to" } else { 'installing' }), $latest)
             $proc = Start-Process -FilePath $setupPath -ArgumentList @('/S', "/D=$installDir") -Wait -PassThru
             if ($proc.ExitCode -ne 0) { throw "installer exited with $($proc.ExitCode)" }
             if (-not (Test-Path -LiteralPath $exe)) {
@@ -101,7 +129,7 @@
             # invisible process holding the Alt+Space hotkey. The app registers
             # its own autostart on first run (sync_autostart in src/main.rs), so
             # opening it once at the machine is all that is left to do.
-            Write-OK "look -> $Version installed to $installDir (open it once at the machine to arm autostart)"
+            Write-OK "look -> $latest installed to $installDir"
         } finally {
             Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
         }
