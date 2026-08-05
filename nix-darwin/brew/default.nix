@@ -79,6 +79,11 @@ mkModule config ./. {
       "karabiner-elements"
       "kitty"
       # "localsend"
+      # Clipboard manager. nixpkgs has it, but every GUI .app here comes from
+      # brew for the same reason kanata does: TCC grants are keyed to the bundle
+      # path, so a store path that changes on each bump silently drops the
+      # Accessibility permission Maccy needs in order to paste.
+      "maccy"
       "microsoft-edge"
       # "miniconda"
       # "nikitabobko/tap/aerospace"
