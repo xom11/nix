@@ -22,11 +22,18 @@
         # Upstream publishes x86_64 only ("native ARM builds aren't published",
         # README). On a14 that means the launcher runs under Prism emulation --
         # deliberate, not drift, so it is a warning rather than a skip.
-        switch ($env:PROCESSOR_ARCHITECTURE) {
+        #
+        # Get-NativeArchitecture rather than the PROCESSOR_ARCHITECTURE variable, which describes
+        # the process: an apply run from an emulated x64 shell would answer AMD64 and drop the
+        # warning below on a machine that is emulating. Only the message differs here -- both
+        # branches install the same x64 build -- but the warning is the only thing that says
+        # this binary is not native, so losing it silently is the whole cost.
+        $native = Get-NativeArchitecture
+        switch ($native) {
             'ARM64' { Write-Warn 'look -> x64 build only; runs under Prism emulation on ARM64' }
             'AMD64' { }
             default {
-                Write-Warn "look -> no release for '$env:PROCESSOR_ARCHITECTURE' - skipping"
+                Write-Warn "look -> no release for '$native' - skipping"
                 return
             }
         }

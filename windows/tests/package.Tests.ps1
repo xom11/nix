@@ -112,6 +112,34 @@ Describe 'windows/lib/Package.psm1 scoop architecture' {
         Get-ScoopNativeArchitecture -ProcessArch '' -NativeArch ''              | Should Be '64bit'
     }
 
+    It 'answers the machine architecture in Windows vocabulary, for callers that are not scoop' {
+        # Get-NativeArchitecture is the single place the environment is read; scoop, the
+        # PowerShell MSI and look each translate its answer into their own naming. It returns
+        # Windows' own names rather than scoop's, so a caller cannot pick up '64bit' by accident
+        # and hand it to a release-asset URL.
+        Get-NativeArchitecture -ProcessArch 'ARM64' -NativeArch ''      | Should Be 'ARM64'
+        Get-NativeArchitecture -ProcessArch 'AMD64' -NativeArch ''      | Should Be 'AMD64'
+        # The case that matters: emulated x64 shell on an ARM64 machine.
+        Get-NativeArchitecture -ProcessArch 'AMD64' -NativeArch 'ARM64' | Should Be 'ARM64'
+        Get-NativeArchitecture -ProcessArch 'x86'   -NativeArch 'ARM64' | Should Be 'ARM64'
+    }
+
+    It 'leaves no module reading PROCESSOR_ARCHITECTURE behind the helper''s back' {
+        # packages.pwsh and programs.look both used to read it directly. For look that only cost
+        # a warning, but packages.pwsh picks the MSI: an apply from an emulated shell would have
+        # installed an emulated machine-wide pwsh 7 -- the shell every later apply then runs on,
+        # making the mistake self-sustaining.
+        foreach ($rel in @(
+            'windows\modules\packages\pwsh\module.ps1'
+            'windows\modules\programs\look\module.ps1'
+        )) {
+            $text = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot $rel)
+            # Matched with the $env: prefix so the comments explaining the trap still may name it.
+            $text | Should Not Match '\$env:PROCESSOR_ARCHITECTURE'
+            $text | Should Match 'Get-NativeArchitecture'
+        }
+    }
+
     It 'flags an app installed for the wrong architecture when the manifest offers the right one' {
         Test-ScoopArchDrift -NativeArch 'arm64' -InstalledArch '64bit' -ManifestArchs @('64bit','arm64') | Should Be $true
     }

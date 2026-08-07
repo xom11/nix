@@ -38,14 +38,20 @@
 
         $installed = Get-InstalledPwshVersion -Path $target
 
-        $arch = switch ($env:PROCESSOR_ARCHITECTURE) {
+        # Get-NativeArchitecture, not the PROCESSOR_ARCHITECTURE variable: that one describes the
+        # process, so an apply run from an emulated x64 shell would answer AMD64 and install an
+        # emulated PowerShell 7 as the machine-wide pwsh -- the one every SSH session and every
+        # later apply then runs on, which would make the mistake self-sustaining. This is the
+        # same trap that left a14 with 17 emulated scoop packages; see the function's comment.
+        $native = Get-NativeArchitecture
+        $arch = switch ($native) {
             'ARM64' { 'arm64' }
             'AMD64' { 'x64' }
             'x86'   { 'x86' }
             default { $null }
         }
         if (-not $arch) {
-            Write-Warn "unsupported architecture '$env:PROCESSOR_ARCHITECTURE' - skipping pwsh"
+            Write-Warn "unsupported architecture '$native' - skipping pwsh"
             return
         }
 

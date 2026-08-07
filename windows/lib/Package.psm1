@@ -106,22 +106,38 @@ function Install-WingetPackages {
     }
 }
 
-function Get-ScoopNativeArchitecture {
-    # The architecture scoop should be installing for, named the way its manifests name it.
+function Get-NativeArchitecture {
+    # The architecture of the MACHINE, in Windows' own vocabulary (ARM64 / AMD64 / x86).
     #
     # PROCESSOR_ARCHITECTURE describes the *calling process*, not the machine: an x64
     # PowerShell running emulated on an ARM64 laptop answers AMD64. Believing it is how a14
     # ended up with its whole toolchain built for the wrong CPU -- neovim alone paid an extra
     # ~410ms of Prism translation on every launch, and nothing anywhere said why.
     # PROCESSOR_ARCHITEW6432 exists only while emulated, and carries the real machine.
+    #
+    # Every module that has to pick a build calls this and then maps the answer into whatever
+    # vocabulary its own source uses -- scoop says 'arm64/64bit/32bit' (below), the PowerShell
+    # release assets say 'arm64/x64/x86'. Three translations are fine; three readings of the
+    # environment were not, because only one of them got the emulation case right.
     [CmdletBinding()]
     param(
         [string]$ProcessArch = $env:PROCESSOR_ARCHITECTURE,
         [string]$NativeArch  = $env:PROCESSOR_ARCHITEW6432
     )
 
-    $arch = if ($NativeArch) { $NativeArch } else { $ProcessArch }
-    switch ($arch) {
+    if ($NativeArch) { return $NativeArch }
+    return $ProcessArch
+}
+
+function Get-ScoopNativeArchitecture {
+    # The architecture scoop should be installing for, named the way its manifests name it.
+    [CmdletBinding()]
+    param(
+        [string]$ProcessArch = $env:PROCESSOR_ARCHITECTURE,
+        [string]$NativeArch  = $env:PROCESSOR_ARCHITEW6432
+    )
+
+    switch (Get-NativeArchitecture -ProcessArch $ProcessArch -NativeArch $NativeArch) {
         'ARM64' { 'arm64' }
         'AMD64' { '64bit' }
         'IA64'  { '64bit' }
@@ -364,6 +380,12 @@ function Install-NpmPackages {
     [CmdletBinding()]
     param([string[]]$Packages)
 
+    # Nothing to do, and `npm ls -g` is not free: measured on a14 at 2077-2332 ms warm across
+    # three consecutive runs (much worse cold). The caller's list has been empty for a while,
+    # so that was two seconds of every apply spent listing packages in order to compare them
+    # against nothing.
+    if (-not $Packages) { return }
+
     if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
         Write-Warn "npm not installed - skipping (install nodejs via scoop first)"
         return
@@ -418,4 +440,4 @@ function Install-PSModules {
     }
 }
 
-Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Install-ScoopPackages, Get-ScoopNativeArchitecture, Test-ScoopArchDrift, Test-ScoopAppPresent, Get-ScoopInstalledArchitecture, Get-ScoopManifestArchitectures, Get-ScoopAppProcess, Set-ScoopArchitectureDefault, Test-WingetPackageInstalled, ConvertFrom-WingetList, Get-WingetInstalledIds, Install-WingetPackages, Install-NpmPackages, Install-PSModules
+Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Install-ScoopPackages, Get-NativeArchitecture, Get-ScoopNativeArchitecture, Test-ScoopArchDrift, Test-ScoopAppPresent, Get-ScoopInstalledArchitecture, Get-ScoopManifestArchitectures, Get-ScoopAppProcess, Set-ScoopArchitectureDefault, Test-WingetPackageInstalled, ConvertFrom-WingetList, Get-WingetInstalledIds, Install-WingetPackages, Install-NpmPackages, Install-PSModules
