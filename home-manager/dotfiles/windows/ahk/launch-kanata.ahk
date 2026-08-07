@@ -15,8 +15,46 @@
 
 userDir := EnvGet("USERPROFILE")
 
-global KanataExe := userDir . "\scoop\apps\kanata\current\kanata_windows_tty_winIOv2_x64.exe"
+; kanata's build name carries the CPU architecture, and the two release zips share NO file:
+; windows-binaries-x64.zip ships kanata_windows_tty_winIOv2_x64.exe, windows-binaries-arm64.zip
+; ships kanata_windows_tty_winIOv2_arm64.exe. Hardcoding one name here is what forced
+; 'kanata=64bit' into scoop's -KeepArchitecture list -- an architecture swap left this launcher
+; pointing at a file that no longer existed, on the machine whose keyboard you would need in
+; order to fix it. Resolve the name instead of assuming it and the swap stops being dangerous.
+;
+; arm64 is tried first because a14 is a Snapdragon X; x64 stays as the fallback for any future
+; Intel/AMD Windows box sharing this repo. Order only decides which wins if both are somehow
+; present, which scoop never does.
+global KanataExeNames := ["kanata_windows_tty_winIOv2_arm64.exe", "kanata_windows_tty_winIOv2_x64.exe"]
+global KanataDir := userDir . "\scoop\apps\kanata\current\"
+global KanataExe := ResolveKanataExe()
 global KanataConfig := userDir . "\.nix\configs\kanata\kanata_windows.kbd"
+
+; No build present at all. Historically this path was the quiet one that hurt: the watchdog runs
+; every five minutes unattended, so a missing binary produced no window, no log and no keyboard.
+; Exit non-zero so Task Scheduler records it -- `Get-ScheduledTaskInfo Kanata` then shows a
+; LastTaskResult other than 0, which is the only breadcrumb an unattended run can leave.
+if (KanataExe = "") {
+    if (!(A_Args.Length >= 1 && A_Args[1] = "--if-missing"))
+        MsgBox "Error: no kanata build found in`n" . KanataDir . "`n`nTried:`n- " . ArrayJoin(KanataExeNames, "`n- ")
+    ExitApp(2)
+}
+
+ResolveKanataExe() {
+    global KanataExeNames, KanataDir
+    for name in KanataExeNames {
+        if FileExist(KanataDir . name)
+            return KanataDir . name
+    }
+    return ""
+}
+
+ArrayJoin(arr, sep) {
+    out := ""
+    for i, v in arr
+        out .= (i = 1 ? "" : sep) . v
+    return out
+}
 
 ; --nodelay: kanata otherwise sleeps 2s at startup so that keys held down at launch are released
 ; before it starts tracking state. Measured on a14 2026-08-07, spawn -> "Starting kanata proper":

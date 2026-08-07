@@ -105,8 +105,23 @@ Describe 'windows AutoHotkey privilege model' {
     It 'keeps the Kanata launcher hidden and independent of PATH' {
         # The launcher resolves the binary itself rather than going through the scoop shim, so
         # ProcessExist/ProcessClose can target the real process name before restarting it.
-        $script:LaunchKanata | Should Match 'scoop\\apps\\kanata\\current\\kanata_windows_tty_winIOv2_x64\.exe'
+        $script:LaunchKanata | Should Match 'scoop\\apps\\kanata\\current'
         $script:LaunchKanata | Should Not Match 'scoop\\shims\\kanata\.exe'
         $script:LaunchKanata | Should Match 'Run\(KanataExe .+ "Hide"\)'
+    }
+
+    It 'picks the kanata build by probing, not by assuming an architecture' {
+        # The exe name carries the CPU arch and the two release zips share no file. Hardcoding
+        # one name is what forced 'kanata=64bit' into scoop's -KeepArchitecture list; see the
+        # matching test in package.Tests.ps1, which asserts the pin stays gone. Both halves
+        # have to move together or the old trap comes back.
+        $script:LaunchKanata | Should Match 'kanata_windows_tty_winIOv2_arm64\.exe'
+        $script:LaunchKanata | Should Match 'kanata_windows_tty_winIOv2_x64\.exe'
+        $script:LaunchKanata | Should Match 'FileExist'
+
+        # A missing build used to be the silent failure: the watchdog runs unattended every
+        # five minutes, so there was no window and no log, just no keyboard. Exiting non-zero
+        # is what puts it in the task's LastTaskResult.
+        $script:LaunchKanata | Should Match 'ExitApp\(2\)'
     }
 }

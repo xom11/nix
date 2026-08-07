@@ -169,28 +169,39 @@ Describe 'windows/lib/Package.psm1 scoop architecture' {
     }
 
     It 'pins the packages an architecture swap would break' {
-        # kanata: launch-kanata.ahk and its watchdog resolve one exact filename,
-        #   kanata_windows_tty_winIOv2_x64.exe, which the arm64 build does not carry -- the
-        #   swap takes the keyboard down and the watchdog launches quiet, so nothing says why.
         # rustup: the scoop package is only the bootstrapper, and its post_install stays
         #   resident holding a lock on the file the next install must write.
         # python: 32-bit, with native wheels built against it.
-        # Read the -KeepArchitecture block on its own. All three names also appear in the
-        # install list above it, so matching the whole file would still pass with the pin
-        # deleted -- which is the only thing this test exists to catch.
+        # Read the -KeepArchitecture block on its own. Both names also appear in the install
+        # list above it, so matching the whole file would still pass with the pin deleted --
+        # which is the only thing this test exists to catch.
         $keepAt = $ScoopModuleText.IndexOf('-KeepArchitecture')
         ($keepAt -ge 0) | Should Be $true
         $keepBlock = $ScoopModuleText.Substring($keepAt)
 
-        # kanata carries '=64bit' rather than a bare name, and that is load-bearing: its
-        # manifest does offer arm64, so on a freshly built arm64 machine the bare form fell
-        # through to the plain install and fetched the build that has no
-        # kanata_windows_tty_winIOv2_x64.exe -- no keyboard, on first boot, with the pin
-        # sitting right there reading as though it had handled it.
-        $keepBlock | Should Match "(?m)^\s*'kanata=64bit'\s*$"
         $keepBlock | Should Match "(?m)^\s*'rustup'\s*$"
         $keepBlock | Should Match "(?m)^\s*'python'\s*$"
         $LibText   | Should Match '\$KeepArchitecture'
+    }
+
+    It 'leaves kanata unpinned, and only because the launcher no longer hardcodes a filename' {
+        # kanata carried 'kanata=64bit' until 2026-08-07. The reason was never that x64 was
+        # better -- it was that launch-kanata.ahk resolved one exact filename that the arm64
+        # build does not carry, so an architecture swap took the keyboard down on the machine
+        # you would need the keyboard to fix, quietly.
+        #
+        # These two assertions are one fact split across two files, and they have to move
+        # together. Re-hardcoding a single exe name in the launcher without restoring the pin
+        # puts the original trap back; restoring the pin without the hardcoded name just
+        # freezes a14 on an emulated build for no reason.
+        $keepAt    = $ScoopModuleText.IndexOf('-KeepArchitecture')
+        $keepBlock = $ScoopModuleText.Substring($keepAt)
+        $keepBlock | Should Not Match "(?m)^\s*'kanata(=[^']*)?'\s*$"
+
+        $launcher = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'home-manager\dotfiles\windows\ahk\launch-kanata.ahk')
+        $launcher | Should Match 'KanataExeNames'
+        $launcher | Should Match 'kanata_windows_tty_winIOv2_arm64\.exe'
+        $launcher | Should Match 'kanata_windows_tty_winIOv2_x64\.exe'
     }
 
     It 'refuses to uninstall an app whose own processes are alive' {

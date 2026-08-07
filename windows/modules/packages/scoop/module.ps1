@@ -46,17 +46,24 @@
             'uv'
             'age'
         ) -KeepArchitecture @(
-            # launch-kanata.ahk and its watchdog run one exact filename,
-            # kanata_windows_tty_winIOv2_x64.exe, which the arm64 build does not carry. An
-            # architecture swap here takes the keyboard down on the machine you would need
-            # the keyboard to fix, and the watchdog launches quiet so nothing says why.
+            # kanata is deliberately absent, and that is a change from 2026-08-03. It used to
+            # carry 'kanata=64bit' because launch-kanata.ahk resolved one exact filename,
+            # kanata_windows_tty_winIOv2_x64.exe, which the arm64 build does not carry -- an
+            # architecture swap took the keyboard down on the machine you would need the
+            # keyboard to fix, and the watchdog launches quiet so nothing said why.
             #
-            # '=64bit', not a bare pin. The manifest offers arm64, so on a freshly built
-            # arm64 machine the bare form fell straight through to the plain `scoop install`
-            # and fetched the arm64 build -- no keyboard, on first boot, with the pin sitting
-            # right there looking like it had handled it. The forced form is what actually
-            # decides the architecture at first install.
-            'kanata=64bit'
+            # launch-kanata.ahk now resolves the binary from a candidate list (arm64 first,
+            # x64 second) instead of hardcoding one, so neither build can leave it pointing at
+            # a file that is not there, and a missing build exits non-zero so Task Scheduler
+            # records it. With the filename no longer architecture-bound there is nothing left
+            # to pin around: the plain install gives each machine its native build, which is
+            # arm64 on a14 and x64 on anything Intel. Do not re-add the pin without also
+            # re-hardcoding the filename -- the two only ever made sense together.
+            #
+            # Note the sweep will not migrate an already-installed kanata while the process is
+            # live: the Get-ScoopAppProcess guard in Install-ScoopPackages warns and skips
+            # rather than uninstalling something that is running. Stopping kanata first is what
+            # lets the reinstall happen.
 
             # The scoop package is only rustup-init.exe; the toolchain lives in ~/.rustup and
             # rustup picks its own host triple (already aarch64 on a14). Swapping the

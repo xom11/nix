@@ -41,7 +41,9 @@ function glog {
 function kr { schtasks /run /tn "Kanata" | Out-Null }
 function ks {
     # `Stop-Process -Name kanata` only ever hit the scoop shim; the binary the shim launches
-    # is named after the build (kanata_windows_tty_winIOv2_x64) and kept the keyboard hooked.
+    # is named after the build (kanata_windows_tty_winIOv2_<arch>) and kept the keyboard
+    # hooked. The wildcard is deliberate -- the name ends in the CPU architecture, so a
+    # literal would go stale the moment the machine changes build.
     $running = Get-Process -Name 'kanata*' -ErrorAction SilentlyContinue
     if (-not $running) {
         Write-Host "kanata is not running."
