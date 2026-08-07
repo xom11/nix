@@ -36,13 +36,16 @@
         # No trigger delay. There used to be a flat PT5S here to let VKey register its
         # WH_KEYBOARD_LL hook first, since kanata has to be the newer hook (evkey-monitor.ahk
         # explains why). Measuring the a14 boot of 2026-08-06 showed that guess was nearly a
-        # coin flip: VKey's process did not start until explorer + 4643 ms, being entry 6 of 7
-        # in HKCU\...\Run behind OneDrive, Discord, the Brave updater, Warp and Lark.
+        # coin flip: VKey's own process did not start until explorer + 4643 ms, so the two were
+        # a few hundred milliseconds apart.
         #
         # launch-kanata.ahk now waits on VKey itself (WaitForInputIdle) instead, so the ordering
         # is causal rather than hoped for, and it no longer costs five seconds of raw keyboard
         # at every logon. Do not reintroduce a delay here to "be safe" -- it would only delay
         # the launcher that is already doing the waiting.
+        #
+        # See services.vkey for the other half: VKey is started by its own scheduled task, which
+        # carried the same kind of PT5S guess and is why VKey was late to begin with.
         $trigger     = New-ScheduledTaskTrigger -AtLogOn -User $userId
         $principal   = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Highest
         $settings    = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -StartWhenAvailable

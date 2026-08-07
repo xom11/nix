@@ -47,6 +47,7 @@ $modules = @(
     'programs.look'               # pinned NSIS release; macOS gets the same app from brew
 
     # ---- services ----
+    'services.vkey'               # must precede services.kanata; kanata's hook has to land after VKey's
     'services.kanata'
     'services.kanata-watchdog'    # must follow services.kanata; revives it between logons
     'services.ahk'

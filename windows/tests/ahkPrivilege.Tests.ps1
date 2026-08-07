@@ -95,6 +95,26 @@ Describe 'windows AutoHotkey privilege model' {
         ($body.IndexOf('ProcessClose(') -gt $body.IndexOf('WaitForVKey(')) | Should Be $true
     }
 
+    It 'repairs CapsLock after kanata takes the key, not only before' {
+        # The bug is not "caps gets toggled", it is "caps gets toggled and can never be untoggled",
+        # because once kanata owns the key there is no real CapsLock left to press. Clearing only
+        # before the launch cannot help: the toggle happens after that point, in the window while
+        # kanata is down. Three rounds of tuning took logon-to-hook-live from 7970 to 4119 ms and
+        # the remainder is VKey's own init, so the window never closes -- the repair is what
+        # actually fixes it. Verified on a14 that kanata passes a synthetic VK_CAPITAL through,
+        # which is the whole premise.
+        $body = [regex]::Match($script:LaunchKanata, 'StartKanata\(quiet[\s\S]*').Value
+        $runAt   = $body.IndexOf('Run(KanataExe')
+        $clearAt = $body.IndexOf('ClearCapsLockOnceKanataOwnsIt')
+        ($clearAt -gt $runAt) | Should Be $true
+
+        # ProcessWait alone returns before the hook is installed, so a settle has to follow it.
+        $script:LaunchKanata | Should Match 'ClearCapsLockOnceKanataOwnsIt\(\)\s*\{'
+        $script:LaunchKanata | Should Match 'ProcessWait\(KanataProc'
+        $script:LaunchKanata | Should Match 'KanataHookSettleMs'
+        $script:LaunchKanata | Should Match 'SetCapsLockState "Off"'
+    }
+
     It 'starts kanata with --nodelay so the startup gap is not 2.8 seconds' {
         # Measured on a14 2026-08-07: spawn -> "Starting kanata proper" is 2837 ms by default
         # and 102 ms with --nodelay. That gap is when the physical CapsLock is a real CapsLock,

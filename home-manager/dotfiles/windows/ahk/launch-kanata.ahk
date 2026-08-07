@@ -78,6 +78,10 @@ global VKeyAppearTimeoutMs := 30000
 global VKeyIdleTimeoutMs := 10000
 global VKeyMarginMs := 250
 
+; See ClearCapsLockOnceKanataOwnsIt. Measured spawn -> hook live is 111 ms for the arm64 build
+; with --nodelay; this is deliberately well past that.
+global KanataHookSettleMs := 600
+
 SplitPath(KanataExe, &KanataProc)  ; process name = exe filename, e.g. kanata_..._cmd_allowed_x64.exe
 
 IfMissingOnly := (A_Args.Length >= 1 && A_Args[1] = "--if-missing")
@@ -101,10 +105,15 @@ ExitApp(0)
 ; WH_KEYBOARD_LL is a LIFO chain, so kanata has to register last -- evkey-monitor.ahk documents
 ; what breaks when it does not. The Kanata task used to buy that ordering with a flat PT5S
 ; trigger delay, and a measurement on a14 (boot of 2026-08-06) showed how thin a guess that was:
-; VKey's process did not start until explorer + 4643 ms, because it is entry 6 of 7 in
-; HKCU\...\Run and Explorer launches those one at a time, behind OneDrive, Discord, the Brave
-; updater, Warp and Lark. Five seconds was not a safety margin so much as a near miss -- and
-; shortening kanata's own startup with --nodelay would have eaten what little was left of it.
+; VKey's process did not start until explorer + 4643 ms, so the two were within a few hundred
+; milliseconds of each other.
+;
+; That 4643 ms has an unobvious cause, and an earlier version of this comment got it wrong: it is
+; NOT Explorer working through the HKCU\...\Run queue. VKey does have a Run entry, but that entry
+; is not what starts it -- the running VKey's parent is svchost.exe (Task Scheduler), and there is
+; a separate `\VKey` scheduled task carrying its own PT5S logon delay. Same class of guess, in a
+; task this repo did not write. Checked by parent PID plus TaskScheduler/Operational id=129, not
+; by inference; the Run-key ordering merely happened to produce a similar-looking number.
 ;
 ; So wait for the thing itself rather than for the clock. A process cannot service a low-level
 ; keyboard hook without a message loop, and WaitForInputIdle returns exactly when that loop is up
@@ -158,10 +167,8 @@ StartKanata(quiet := false) {
         ProcessWaitClose(KanataProc, 2)
     }
 
-    if GetKeyState("CapsLock", "T") {
-        SetCapsLockState "AlwaysOff"
+    if GetKeyState("CapsLock", "T")
         SetCapsLockState "Off"
-    }
 
     try {
         Run(KanataExe ' -c "' . KanataConfig . '" ' . KanataArgs, , "Hide")
@@ -170,5 +177,41 @@ StartKanata(quiet := false) {
         ; dialog on the desktop each time.
         if (!quiet)
             MsgBox "Error: Kanata config not found!`n`nExe: " . KanataExe . "`nConfig: " . KanataConfig
+        return
     }
+
+    ClearCapsLockOnceKanataOwnsIt()
+}
+
+; The actual fix for the stuck-CapsLock bug, as opposed to everything above it, which only makes
+; the window smaller.
+;
+; While kanata is down the caps key is a real CapsLock, so caps+space (the shortcut for a
+; terminal) toggles caps ON. Then kanata comes up, takes ownership of the key, and there is no
+; longer any way to press a real CapsLock to turn it back off. The state is stuck until reboot.
+;
+; Shrinking the window never closes it. Measured on a14: logon-to-hook-live went 7970 -> 5813 ->
+; 4119 ms across three rounds of tuning, and the remainder is VKey's own init under logon
+; contention, which is not ours to shorten. Four seconds is still trivially long enough to hit.
+;
+; So stop racing and repair instead: once kanata owns the key, put CapsLock back to off. Verified
+; on a14 that this works -- kanata does NOT swallow a synthetic VK_CAPITAL, so SetCapsLockState
+; still reaches the OS with kanata's hook installed (probed: forced caps on, then cleared it, with
+; kanata running). Had it swallowed the injected event this whole approach would have been dead
+; and only a driver-level Scancode Map would have been left.
+;
+; Guarded by GetKeyState so the normal case sends no keystroke at all.
+ClearCapsLockOnceKanataOwnsIt() {
+    global KanataProc, KanataHookSettleMs
+
+    ; ProcessWait returns as soon as the process exists, which is BEFORE its hook is installed --
+    ; hence the settle on top. 111 ms is the measured spawn -> "Starting kanata proper" for this
+    ; arm64 build with --nodelay; the value below is deliberately several times that, because
+    ; being late here costs nothing and being early means clearing caps while the key is still
+    ; raw, letting the very next keypress set it again.
+    if (!ProcessWait(KanataProc, 10))
+        return
+    Sleep(KanataHookSettleMs)
+    if GetKeyState("CapsLock", "T")
+        SetCapsLockState "Off"
 }
