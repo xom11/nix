@@ -84,6 +84,5 @@
   "showMessageTimestamps": true,
   "terminalProgressBarEnabled": true,
   "defaultView": "chat",
-  "allowDangerouslySkipPermissions": true,
-  "model": "opus[1m]"
+  "allowDangerouslySkipPermissions": true
 }
