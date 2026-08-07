@@ -50,9 +50,9 @@ powercfg /setdcvalueindex SCHEME_CURRENT SUB_BUTTONS 5ca83367-6e45-459f-a27b-476
 powercfg /setactive SCHEME_CURRENT
 
 # Darkmode:
-$Path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Value 0
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "SystemUsesLightTheme" -Value 0
+$Personalize = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+Set-ItemProperty -Path $Personalize -Name "AppsUseLightTheme" -Value 0
+Set-ItemProperty -Path $Personalize -Name "SystemUsesLightTheme" -Value 0
 
 
 ###############################################################################

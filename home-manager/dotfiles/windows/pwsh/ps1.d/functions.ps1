@@ -97,11 +97,10 @@ function Set-Environment([string]$variable, [string]$value) {
     Set-Item -Path Env:\$variable -Value $value
 }
 
-# Prepend really prepends now; both directions used to append.
-function Prepend-EnvPath([string]$path) { $env:PATH = "$path;$env:PATH" }
-function Append-EnvPath([string]$path)  { $env:PATH = "$env:PATH;$path" }
-function Prepend-EnvPathIfExists([string]$path) { if (Test-Path $path) { Prepend-EnvPath $path } }
-function Append-EnvPathIfExists([string]$path)  { if (Test-Path $path) { Append-EnvPath $path } }
+# Prepend-EnvPath / Append-EnvPath and their *IfExists pairs used to sit here. Nothing in the
+# repo called them and they are not names anyone types at a prompt -- leftovers from when this
+# profile built PATH itself. PATH now comes from the registry (Refresh-Environment above, or
+# `$env:PATH = "...;$env:PATH"` inline, which is shorter than the helper was).
 
 # ----------------------------
 # Secrets
