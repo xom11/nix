@@ -33,14 +33,21 @@ Describe 'windows AutoHotkey script invariants' {
         $body | Should Match 'lastMode := ""'
     }
 
-    It 'keeps the SetInputLang fallback able to switch layout without tongue or VKey' {
-        # Nobody calls this any more; it is kept so that a broken or missing tongue can be
-        # worked around by pointing AutoSwitchLanguage and tab-key.ahk back at it. That is only
-        # true while it still resolves a layout and targets the hwnd it was handed.
-        $script:SwitchLanguage | Should Match 'LoadKeyboardLayout'
-        $script:SwitchLanguage | Should Match 'ActivateKeyboardLayout'
-        $script:SwitchLanguage | Should Match 'Format\("\{:08X\}", langID\)'
-        $script:SwitchLanguage | Should Match 'PostMessage\(0x0050, 0, hkl, , "ahk_id " hwnd\)'
+    It 'keeps tongue as the only path, with no layout-only fallback beside it' {
+        # This test used to assert the opposite: that a SetInputLang fallback stayed intact at
+        # the bottom of the file, kept in case tongue broke. It was removed on 2026-08-07 and
+        # the assertion inverted with it, because the fallback was never the safety net it
+        # looked like. A "mode" is two switches -- the system layout and the VKey engine -- and
+        # that code could only ever reach the first. Falling back to it would have quietly
+        # restored the exact desync tongue was introduced to fix, while reading as a recovery.
+        #
+        # Matched on call shapes, not bare names: the comments left in switch-language.ahk say
+        # why the fallback went, and naming it there must not fail this test.
+        $script:SwitchLanguage | Should Not Match 'SetInputLang\('
+        $script:SwitchLanguage | Should Not Match 'DllCall\("ActivateKeyboardLayout"'
+        $script:SwitchLanguage | Should Not Match 'DllCall\("LoadKeyboardLayout"'
+        $script:SwitchLanguage | Should Not Match 'DllCall\("GetKeyboardLayoutList"'
+        $script:SwitchLanguage | Should Not Match 'PostMessage\(0x0050'
     }
 
     It 'keeps window snapping errors from surfacing as AutoHotkey dialogs' {
