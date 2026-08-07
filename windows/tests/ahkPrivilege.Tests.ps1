@@ -61,7 +61,11 @@ Describe 'windows AutoHotkey privilege model' {
     It 'runs Kanata through the hidden AutoHotkey launcher' {
         $kanataTaskModule = Get-Content -Raw $script:KanataTaskModulePath
 
-        $kanataTaskModule | Should Match 'AutoHotkey64'
+        # Get-AutoHotkeyExe, not the literal 'AutoHotkey64' this used to assert: the interpreter
+        # lookup moved into windows\lib\ScheduledTask.psm1 so four modules stop carrying four
+        # copies of it. What matters is unchanged -- the task executes an AutoHotkey interpreter
+        # against the launcher script, never a kanata binary directly.
+        $kanataTaskModule | Should Match 'Get-AutoHotkeyExe'
         $kanataTaskModule | Should Match 'launch-kanata\.ahk'
         $kanataTaskModule | Should Not Match 'kanata_windows_tty_winIOv2_x64\.exe'
         $kanataTaskModule | Should Not Match 'kanata_windows_gui_winIOv2_x64\.exe'

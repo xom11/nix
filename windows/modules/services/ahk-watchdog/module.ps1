@@ -17,26 +17,13 @@
         # #SingleInstance Force killed the freshly reloaded one. Here the launcher decides from
         # the desktop whether main.ahk is alive, which no longer depends on who started it.
 
-        $ahkExe = $null
-        foreach ($name in 'AutoHotkey64','AutoHotkey','AutoHotkey32') {
-            $cmd = Get-Command $name -ErrorAction SilentlyContinue
-            if ($cmd) { $ahkExe = $cmd.Source; break }
-        }
-        if (-not $ahkExe) {
-            $candidates = @(
-                "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-                "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey.exe"
-                "$env:ProgramFiles\AutoHotkey\AutoHotkey.exe"
-                "${env:ProgramFiles(x86)}\AutoHotkey\AutoHotkey.exe"
-            )
-            $ahkExe = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
-        }
-
-        $launcher = Join-Path $Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-ahk.ahk'
+        $ahkExe = Get-AutoHotkeyExe
         if (-not $ahkExe) {
             Write-Warn "AutoHotkey not found (install via winget: AutoHotkey.AutoHotkey)"
             return
         }
+
+        $launcher = Join-Path $Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-ahk.ahk'
         if (-not (Test-Path $launcher)) {
             Write-Warn "ahk launcher missing: $launcher"
             return
@@ -51,34 +38,16 @@
         # was already correct.
         $trigger     = New-ScheduledTaskTrigger -Once -At '2020-01-01T00:00:00' `
             -RepetitionInterval (New-TimeSpan -Minutes 5)
-        # Limited, unlike KanataWatchdog: main.ahk has to stay an unelevated process (it would
-        # otherwise be unable to talk to unelevated windows), and the script the launcher starts
-        # inherits the launcher's level.
+        # Limited, unlike the kanata watchdog: main.ahk has to stay an unelevated process (it
+        # would otherwise be unable to talk to unelevated windows), and the script the launcher
+        # starts inherits the launcher's level.
         $principal   = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
         $settings    = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
             -StartWhenAvailable -ExecutionTimeLimit 0
 
         $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-        # StartBoundary is deliberately not compared: it is given without a timezone and read
-        # back with one, so comparing it would never match.
-        $taskMatches = $existingTask -and
-            @($existingTask.Actions).Count -eq 1 -and
-            $existingTask.Actions[0].Execute -eq $action.Execute -and
-            $existingTask.Actions[0].Arguments -eq $action.Arguments -and
-            @($existingTask.Triggers).Count -eq 1 -and
-            $existingTask.Triggers[0].CimClass.CimClassName -eq $trigger.CimClass.CimClassName -and
-            [string]$existingTask.Triggers[0].Repetition.Interval -eq [string]$trigger.Repetition.Interval -and
-            [string]$existingTask.Triggers[0].Repetition.Duration -eq [string]$trigger.Repetition.Duration -and
-            (Test-TaskUserMatch $existingTask.Principal.UserId $principal.UserId) -and
-            $existingTask.Principal.LogonType -eq $principal.LogonType -and
-            $existingTask.Principal.RunLevel -eq $principal.RunLevel -and
-            $existingTask.Settings.Enabled -eq $settings.Enabled -and
-            $existingTask.Settings.DisallowStartIfOnBatteries -eq $settings.DisallowStartIfOnBatteries -and
-            $existingTask.Settings.StopIfGoingOnBatteries -eq $settings.StopIfGoingOnBatteries -and
-            $existingTask.Settings.ExecutionTimeLimit -eq $settings.ExecutionTimeLimit -and
-            $existingTask.Settings.StartWhenAvailable -eq $settings.StartWhenAvailable -and
-            $existingTask.Description -eq $description
-        if ($taskMatches) {
+        if (Test-ScheduledTaskMatch -Existing $existingTask -Action $action -Trigger $trigger `
+                -Principal $principal -Settings $settings -Description $description) {
             Write-Skip "scheduled task: $taskName ($ahkExe)"
             return
         }

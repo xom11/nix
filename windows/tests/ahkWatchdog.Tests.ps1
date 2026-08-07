@@ -86,7 +86,8 @@ Describe 'windows services.ahk-watchdog module' {
             $script:Launcher = Join-Path $script:Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-ahk.ahk'
             $script:UserId   = [Security.Principal.WindowsIdentity]::GetCurrent().Name
 
-            Mock Get-Command { [pscustomobject]@{ Source = $script:AhkExe } }
+            # Mocked on the shared helper, not on Get-Command: see kanataWatchdog.Tests.ps1.
+            Mock Get-AutoHotkeyExe { $script:AhkExe }
             Mock Test-Path { $true }
             Mock Register-ScheduledTask { }
             Mock Write-OK { }

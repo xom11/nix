@@ -51,7 +51,11 @@ Describe 'windows services.kanata-watchdog module' {
             $script:Launcher = Join-Path $script:Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-kanata.ahk'
             $script:UserId = [Security.Principal.WindowsIdentity]::GetCurrent().Name
 
-            Mock Get-Command { [pscustomobject]@{ Source = $script:AhkExe } }
+            # The four AutoHotkey service modules resolve the interpreter through this one shared
+            # helper (windows\lib\ScheduledTask.psm1), so the mock is on the helper rather than
+            # on the Get-Command it happens to call. It also has to be: the helper lives inside a
+            # module, and a plain Pester mock does not reach into a module's own scope.
+            Mock Get-AutoHotkeyExe { $script:AhkExe }
             Mock Test-Path { $true }
             Mock Register-ScheduledTask { }
             Mock Write-OK { }

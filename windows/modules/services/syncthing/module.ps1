@@ -24,24 +24,8 @@
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
 
         $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-        $taskMatches = $existingTask -and
-            @($existingTask.Actions).Count -eq 1 -and
-            $existingTask.Actions[0].Execute -eq $action.Execute -and
-            $existingTask.Actions[0].Arguments -eq $action.Arguments -and
-            @($existingTask.Triggers).Count -eq 1 -and
-            $existingTask.Triggers[0].CimClass.CimClassName -eq $trigger.CimClass.CimClassName -and
-            (Test-TaskUserMatch $existingTask.Triggers[0].UserId $trigger.UserId) -and
-            (Test-TaskUserMatch $existingTask.Principal.UserId $principal.UserId) -and
-            $existingTask.Principal.LogonType -eq $principal.LogonType -and
-            $existingTask.Principal.RunLevel -eq $principal.RunLevel -and
-            $existingTask.Settings.Enabled -eq $settings.Enabled -and
-            $existingTask.Settings.DisallowStartIfOnBatteries -eq $settings.DisallowStartIfOnBatteries -and
-            $existingTask.Settings.StopIfGoingOnBatteries -eq $settings.StopIfGoingOnBatteries -and
-            $existingTask.Settings.ExecutionTimeLimit -eq $settings.ExecutionTimeLimit -and
-            $existingTask.Settings.RestartCount -eq $settings.RestartCount -and
-            $existingTask.Settings.RestartInterval -eq $settings.RestartInterval -and
-            $existingTask.Description -eq $description
-        if ($taskMatches) {
+        if (Test-ScheduledTaskMatch -Existing $existingTask -Action $action -Trigger $trigger `
+                -Principal $principal -Settings $settings -Description $description) {
             Write-Skip "scheduled task: $taskName ($syncthingExe)"
             return
         }

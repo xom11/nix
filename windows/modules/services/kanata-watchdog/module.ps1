@@ -10,33 +10,22 @@
         #
         # This is a second task rather than another trigger on the Kanata task because the two
         # actions differ: Kanata force-restarts (that is what evkey-monitor.ahk needs after
-        # VKey comes back), while this one must leave a healthy kanata alone.
+        # VKey comes back), while this one must leave a healthy kanata alone. One task has one
+        # action, so the split is forced -- and evkey-monitor runs unelevated, so it cannot kill
+        # the elevated kanata itself and has to go through a task that can.
 
-        $ahkExe = $null
-        foreach ($name in 'AutoHotkey64','AutoHotkey','AutoHotkey32') {
-            $cmd = Get-Command $name -ErrorAction SilentlyContinue
-            if ($cmd) { $ahkExe = $cmd.Source; break }
-        }
-        if (-not $ahkExe) {
-            $candidates = @(
-                "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-                "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey.exe"
-                "$env:ProgramFiles\AutoHotkey\AutoHotkey.exe"
-                "${env:ProgramFiles(x86)}\AutoHotkey\AutoHotkey.exe"
-            )
-            $ahkExe = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
-        }
-
-        $kanataLauncher = Join-Path $Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-kanata.ahk'
-        $kanataLauncherDir = Split-Path $kanataLauncher -Parent
+        $ahkExe = Get-AutoHotkeyExe
         if (-not $ahkExe) {
             Write-Warn "AutoHotkey not found (install via winget: AutoHotkey.AutoHotkey)"
             return
         }
+
+        $kanataLauncher = Join-Path $Ctx.HomeManagerDir 'dotfiles\windows\ahk\launch-kanata.ahk'
         if (-not (Test-Path $kanataLauncher)) {
             Write-Warn "kanata launcher missing: $kanataLauncher"
             return
         }
+        $kanataLauncherDir = Split-Path $kanataLauncher -Parent
 
         $userId      = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $description = 'Start Kanata when it is not running; leaves a healthy instance alone'
@@ -54,27 +43,8 @@
             -StartWhenAvailable -ExecutionTimeLimit 0
 
         $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-        # StartBoundary is deliberately not compared: it is given without a timezone and read
-        # back with one, so comparing it would never match.
-        $taskMatches = $existingTask -and
-            @($existingTask.Actions).Count -eq 1 -and
-            $existingTask.Actions[0].Execute -eq $action.Execute -and
-            $existingTask.Actions[0].Arguments -eq $action.Arguments -and
-            $existingTask.Actions[0].WorkingDirectory -eq $action.WorkingDirectory -and
-            @($existingTask.Triggers).Count -eq 1 -and
-            $existingTask.Triggers[0].CimClass.CimClassName -eq $trigger.CimClass.CimClassName -and
-            [string]$existingTask.Triggers[0].Repetition.Interval -eq [string]$trigger.Repetition.Interval -and
-            [string]$existingTask.Triggers[0].Repetition.Duration -eq [string]$trigger.Repetition.Duration -and
-            (Test-TaskUserMatch $existingTask.Principal.UserId $principal.UserId) -and
-            $existingTask.Principal.LogonType -eq $principal.LogonType -and
-            $existingTask.Principal.RunLevel -eq $principal.RunLevel -and
-            $existingTask.Settings.Enabled -eq $settings.Enabled -and
-            $existingTask.Settings.DisallowStartIfOnBatteries -eq $settings.DisallowStartIfOnBatteries -and
-            $existingTask.Settings.StopIfGoingOnBatteries -eq $settings.StopIfGoingOnBatteries -and
-            $existingTask.Settings.ExecutionTimeLimit -eq $settings.ExecutionTimeLimit -and
-            $existingTask.Settings.StartWhenAvailable -eq $settings.StartWhenAvailable -and
-            $existingTask.Description -eq $description
-        if ($taskMatches) {
+        if (Test-ScheduledTaskMatch -Existing $existingTask -Action $action -Trigger $trigger `
+                -Principal $principal -Settings $settings -Description $description) {
             Write-Skip "scheduled task: $taskName ($ahkExe)"
             return
         }
