@@ -33,8 +33,17 @@
         $userId      = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $description = 'Run Kanata keyboard remapper with elevated privileges'
         $action      = New-ScheduledTaskAction -Execute $ahkExe -Argument "`"$kanataLauncher`"" -WorkingDirectory $kanataLauncherDir
+        # No trigger delay. There used to be a flat PT5S here to let VKey register its
+        # WH_KEYBOARD_LL hook first, since kanata has to be the newer hook (evkey-monitor.ahk
+        # explains why). Measuring the a14 boot of 2026-08-06 showed that guess was nearly a
+        # coin flip: VKey's process did not start until explorer + 4643 ms, being entry 6 of 7
+        # in HKCU\...\Run behind OneDrive, Discord, the Brave updater, Warp and Lark.
+        #
+        # launch-kanata.ahk now waits on VKey itself (WaitForInputIdle) instead, so the ordering
+        # is causal rather than hoped for, and it no longer costs five seconds of raw keyboard
+        # at every logon. Do not reintroduce a delay here to "be safe" -- it would only delay
+        # the launcher that is already doing the waiting.
         $trigger     = New-ScheduledTaskTrigger -AtLogOn -User $userId
-        $trigger.Delay = 'PT5S'
         $principal   = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Highest
         $settings    = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -StartWhenAvailable
 

@@ -58,16 +58,48 @@ Describe 'windows AutoHotkey privilege model' {
         $script:LaunchKanata | Should Match 'kanata_windows\.kbd'
     }
 
-    It 'runs Kanata through the hidden AutoHotkey launcher after the logon session settles' {
+    It 'runs Kanata through the hidden AutoHotkey launcher' {
         $kanataTaskModule = Get-Content -Raw $script:KanataTaskModulePath
 
         $kanataTaskModule | Should Match 'AutoHotkey64'
         $kanataTaskModule | Should Match 'launch-kanata\.ahk'
         $kanataTaskModule | Should Not Match 'kanata_windows_tty_winIOv2_x64\.exe'
         $kanataTaskModule | Should Not Match 'kanata_windows_gui_winIOv2_x64\.exe'
-        $kanataTaskModule | Should Match '\$trigger\.Delay\s*=\s*''PT5S'''
         $kanataTaskModule | Should Match 'WorkingDirectory'
         $kanataTaskModule | Should Not Match 'scoop\\shims\\kanata\.exe'
+    }
+
+    It 'orders kanata after VKey by waiting on VKey, not by a trigger delay' {
+        # A flat delay here was a guess at how long VKey takes to register its LL hook, and the
+        # measured a14 boot put VKey's process start at explorer + 4643 ms -- close enough to
+        # the old PT5S that the ordering was very nearly a coin flip. The launcher now waits on
+        # VKey itself, so the delay must stay gone: adding one back would only postpone the
+        # thing already doing the waiting, and would silently restore five seconds of raw
+        # keyboard at every logon.
+        $kanataTaskModule = Get-Content -Raw $script:KanataTaskModulePath
+        $kanataTaskModule | Should Not Match '\$trigger\.Delay\s*='
+
+        $script:LaunchKanata | Should Match 'WaitForVKey'
+        $script:LaunchKanata | Should Match 'WaitForInputIdle'
+        $script:LaunchKanata | Should Match 'VKey\.exe'
+    }
+
+    It 'waits for VKey before killing the running kanata, not after' {
+        # Everything between ProcessClose and the new hook going live is raw-keyboard time.
+        # Waiting on the far side of the teardown would add the whole VKey margin to it.
+        $body = [regex]::Match($script:LaunchKanata, 'StartKanata\(quiet[\s\S]*').Value
+        $body | Should Match 'WaitForVKey\('
+        $body | Should Match 'ProcessClose\('
+        # Not Should BeGreaterThan: Pester here is 3.4.0, where a bare negative literal after
+        # the operator parses as a switch parameter.
+        ($body.IndexOf('ProcessClose(') -gt $body.IndexOf('WaitForVKey(')) | Should Be $true
+    }
+
+    It 'starts kanata with --nodelay so the startup gap is not 2.8 seconds' {
+        # Measured on a14 2026-08-07: spawn -> "Starting kanata proper" is 2837 ms by default
+        # and 102 ms with --nodelay. That gap is when the physical CapsLock is a real CapsLock,
+        # on every logon and every wake.
+        $script:LaunchKanata | Should Match '--nodelay'
     }
 
     It 'keeps the Kanata launcher hidden and independent of PATH' {
