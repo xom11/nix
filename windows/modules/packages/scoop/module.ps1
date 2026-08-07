@@ -72,9 +72,15 @@
             # rustup for half an hour.
             'rustup'
 
-            # Installed 32-bit, with native wheels compiled against it. Changing the
-            # interpreter's architecture breaks every one of them, and that is a decision to
-            # make deliberately rather than during a package sweep.
+            # Installed x64 -- scoop's '64bit', which on a14 means emulated -- with native
+            # wheels compiled against it. Changing the interpreter's architecture breaks every
+            # one of them, and that is a decision to make deliberately rather than during a
+            # package sweep.
+            #
+            # This comment said "32-bit" until 2026-08-07; install.json on a14 reads
+            # architecture=64bit. The pin was right, the number was not, and it mattered:
+            # 32-bit would have meant the pin was holding back a machine that could not run
+            # anything better, when in fact it is holding back a native arm64 build.
             'python'
 
             # opencode is deliberately absent -- its broken TUI is not an architecture
