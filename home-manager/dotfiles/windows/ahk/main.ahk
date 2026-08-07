@@ -3,10 +3,15 @@
 
 ; Nhat ky vong doi cua script.
 ;
-; Task AHKrunning co mot trigger lap moi 5 phut lam watchdog, nen script chet la
-; duoc hoi sinh trong vong 5 phut -- va moi lan hoi sinh lai bung TrayTip
-; "Startup" ben duoi. Nghia la toast tu nhien hien ra giua chung khong phai loi
-; cua watchdog: no la dau hieu script vua chet.
+; Script chet thi duoc hoi sinh trong vong 5 phut -- va moi lan hoi sinh lai bung
+; TrayTip "Startup" ben duoi. Nghia la toast tu nhien hien ra giua chung khong
+; phai loi cua watchdog: no la dau hieu script vua chet.
+;
+; Viec hoi sinh do task AHKWatchdog lam (chay launch-ahk.ahk voi --if-missing moi
+; 5 phut), KHONG phai task AHKrunning -- AHKrunning chi con dung mot logon trigger.
+; Truoc 30/07/2026 nhip lap do nam trong AHKrunning that, nhung no ngung bao ve
+; duoc bat cu thu gi ngay khi Reload() thay the tien trinh ma Task Scheduler dang
+; theo doi; ly do day du nam trong windows\modules\services\ahk-watchdog.
 ;
 ; Task Scheduler chi ghi lai exit code, ma exit code 0 gop chung ca "bi instance
 ; khac thay the", "Reload()", "loi runtime" lan "thoat tu menu tray". Khong tach

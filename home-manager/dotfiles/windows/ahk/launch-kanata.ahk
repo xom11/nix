@@ -30,12 +30,16 @@ global KanataDir := userDir . "\scoop\apps\kanata\current\"
 global KanataExe := ResolveKanataExe()
 global KanataConfig := userDir . "\.nix\configs\kanata\kanata_windows.kbd"
 
+IfMissingOnly := (A_Args.Length >= 1 && A_Args[1] = "--if-missing")
+
 ; No build present at all. Historically this path was the quiet one that hurt: the watchdog runs
 ; every five minutes unattended, so a missing binary produced no window, no log and no keyboard.
 ; Exit non-zero so Task Scheduler records it -- `Get-ScheduledTaskInfo Kanata` then shows a
 ; LastTaskResult other than 0, which is the only breadcrumb an unattended run can leave.
 if (KanataExe = "") {
-    if (!(A_Args.Length >= 1 && A_Args[1] = "--if-missing"))
+    ; No MsgBox on the watchdog path: it fires every five minutes, so a dialog per run would
+    ; stack up on the desktop.
+    if (!IfMissingOnly)
         MsgBox "Error: no kanata build found in`n" . KanataDir . "`n`nTried:`n- " . ArrayJoin(KanataExeNames, "`n- ")
     ExitApp(2)
 }
@@ -83,8 +87,6 @@ global VKeyMarginMs := 250
 global KanataHookSettleMs := 600
 
 SplitPath(KanataExe, &KanataProc)  ; process name = exe filename, e.g. kanata_..._cmd_allowed_x64.exe
-
-IfMissingOnly := (A_Args.Length >= 1 && A_Args[1] = "--if-missing")
 
 if (IfMissingOnly) {
     if ProcessExist(KanataProc)

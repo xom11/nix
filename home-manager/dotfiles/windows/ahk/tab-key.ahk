@@ -30,7 +30,7 @@ ShowBattery(*) {
         charge := battery.EstimatedChargeRemaining "%"
         status := (battery.BatteryStatus = 2) ? "Charging" : "Discharging"
     }
-    ShowPopup("?? " charge, "Status: " status, "98c379")
+    ShowPopup("🔋 " charge, "Status: " status, "98c379")
 }
 
 #Include lib/ui.ahk
