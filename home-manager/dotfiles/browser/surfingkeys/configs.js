@@ -23,9 +23,31 @@ SECTION: SETTINGS
 // Scroll speed
 settings.scrollStepSize = 200;
 
-// Disable surfingkeys on specific URLs
-settings.blocklistPattern =
-  /https?:\/\/(www\.youtube\.com|localhost(:\d+)?|127\.0\.0\.1(:\d+)?|.*ninjaverse\.xyz).*/;
+// Tắt Surfingkeys ở các trang này. Mỗi dòng một host, tự kèm mọi subdomain và mọi
+// cổng — thêm thì viết thêm dòng, tắt tạm thì comment dòng đó lại. Không cần escape
+// gì, dấu chấm được escape sẵn ở dưới.
+// prettier-ignore
+const BLOCKLIST_HOSTS = [
+  "youtube.com",
+  // "localhost",
+  // "127.0.0.1",
+  // "ninjaverse.xyz",
+];
+
+// blocklistPattern phải là RegExp thật: content script gửi nó sang background qua
+// sendMessage, sống sót được là nhờ Surfingkeys vá RegExp.prototype.toJSON thành
+// {source, flags}, rồi background `new RegExp(source, flags)` và test với URL đầy đủ.
+//
+// Neo `^` ở đầu và lookahead ở cuối để một mốc chỉ khớp đúng phần host: nếu không,
+// "ninjaverse.xyz" ăn cả https://example.com/?q=ninjaverse.xyz lẫn
+// https://notninjaverse.xyz — đúng như regex cũ đang làm.
+const blocklistHostAlt = BLOCKLIST_HOSTS.map((h) =>
+  h.replace(/\./g, "\\."),
+).join("|");
+
+settings.blocklistPattern = new RegExp(
+  `^https?://([^/]+\\.)?(${blocklistHostAlt})(:\\d+)?(?=[/?#]|$)`,
+);
 
 // Default search engine
 settings.defaultSearchEngine = "gg";
@@ -148,11 +170,19 @@ function titleFromUrl(url) {
 }
 
 // [phím, url] — cột thứ ba là tên hiển thị, chỉ khai khi tên suy ra từ URL khó đọc
+//
+// Không phím nào được là tiền tố của phím khác: mapkey() thấy tiền tố đã có chủ
+// thì bỏ luôn phím dài (`return void` trước mappings.add), còn đăng ký ngược lại
+// thì phím ngắn xoá cả nhánh. Không có timeout để phân giải. Cảnh báo duy nhất là
+// mức `warn`, mà logLevels mặc định chỉ bật `error` — nên hỏng là hỏng im lặng.
+// Vì vậy mọi mốc github là "gh" + đúng một ký tự, trang chủ lấy dấu chấm. Dấu chấm
+// đi thẳng qua encodeKeystroke (hàm đó chỉ viết lại các nhóm <...>) nên nó là một
+// phím thường như mọi phím khác, chỉ khác là không chữ cái nào đụng vào được.
 // prettier-ignore
 const SITES = [
   ["9r", "http://100.127.63.100:20128/dashboard", "9router"],
   ["fb", "https://www.facebook.com/"                       ],
-  ["gh", "https://github.com/"],
+  ["gh.", "https://github.com/"                             ],
   ["ghh", "https://github.com/Hoctotbachkhoa/hoctotbachkhoa"],
   ["ghn", "https://github.com/ninjaverse-xyz/ninjaverse"    ],
   ["ghs", "https://github.com/stars"                        ],
