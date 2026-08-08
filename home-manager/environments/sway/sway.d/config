@@ -9,8 +9,7 @@ font pango:monospace 14
 
 include conf.d/*.conf
 
-# Binding launcher sinh ra tu configs/shortcuts/apps.toml. Phai nam SAU
-# conf.d/*.conf vi no dung $focus, dinh nghia o conf.d/launch-app.conf.
+# Binding launcher sinh ra tu configs/shortcuts/apps.sway.toml.
 include $HOME/.config/sway-nix/launch-app.conf
 
 for_window [app_id=".*"] border pixel 0

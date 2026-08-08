@@ -1,44 +1,33 @@
-# Sinh phan binding launcher cho sway tu configs/shortcuts/apps.toml.
-#
-# swayconfig khong co vong lap nen day la file duy nhat trong bo nay bat buoc
-# phai sinh ra. No KHONG nam trong sway.d/: ~/.config/sway la mot symlink
-# out-of-store tro vao ca thu muc do, nen home-manager khong dat them file vao
-# ben trong duoc. Vi vay no di ra ~/.config/sway-nix/ va sway.d/config
-# `include` no.
-#
-# $cap va $focus phai duoc dinh nghia TRUOC: $cap o sway.d/config dong 4,
-# $focus o sway.d/conf.d/launch-app.conf -- nen dong include phai nam sau
-# `include conf.d/*.conf`.
+# Sinh binding launcher cho sway tu configs/shortcuts/apps.sway.toml.
+# DOC LUC EVAL — sua file do la phai switch + reload sway.
+# Chi la `exec beckon "<app>"` TRAN (chi dao 09/08/2026): khong
+# sway-beckon.sh, khong workspace-per-app — hanh vi workspace user tu config
+# rieng trong sway.d. File sinh ra o ~/.config/sway-nix/launch-app.conf vi
+# ~/.config/sway la symlink ca thu muc (xem default.nix).
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.sway.toml);
 
-  idFor = e:
-    if builtins.hasAttr "sway" e
-    then e.sway
-    else e.id;
+  modMap = {
+    ctrl = "Ctrl";
+    super = "Mod4";
+    alt = "Mod1";
+    shift = "Shift";
+  };
+  toCombo = combo: let
+    parts = lib.splitString "+" combo;
+    n = builtins.length parts;
+    mods = lib.sublist 0 (n - 1) parts;
+    key = builtins.elemAt parts (n - 1);
+  in
+    lib.concatStringsSep "+" (map (m: modMap.${m}) mods ++ [key]);
 
-  rows =
-    map (e: {
-      inherit (e) key;
-      id = idFor e;
-      mods = "$cap";
-    })
-    (data.app or [])
-    ++ map (e: {
-      inherit (e) key;
-      id = idFor e;
-      mods = "$cap+Shift";
-    })
-    (data.shift or []);
-
-  bound = builtins.filter (r: r.id != "") rows;
-
-  line = r: ''bindsym ${r.mods}+${r.key} $focus "${r.id}"'';
-in ''
-  # vim: ft=swayconfig
-  #
-  # SINH RA TU configs/shortcuts/apps.toml -- DUNG SUA TAY.
-  # Sua o apps.toml roi `home-manager switch`.
-
-  ${lib.concatMapStringsSep "\n" line bound}
-''
+  lines =
+    map (combo: ''bindsym ${toCombo combo} exec beckon "${data.${combo}}"'')
+    (builtins.attrNames data);
+in
+  ''
+    # vim: ft=swayconfig
+    # SINH TU configs/shortcuts/apps.sway.toml — dung sua tay file nay.
+  ''
+  + lib.concatStringsSep "\n" lines
+  + "\n"
