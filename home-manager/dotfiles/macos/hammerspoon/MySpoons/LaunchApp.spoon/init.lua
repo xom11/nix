@@ -131,16 +131,29 @@ function obj:init()
 		return
 	end
 
+	-- hs.hotkey.bind co the loi neu s.key khong phai ten phim Hammerspoon nhan
+	-- duoc (vd "comma" -- keysym xkb hop le va token dconf hop le nhung
+	-- Hammerspoon doi ","). Khong gi trong CI kiem dieu do (xem
+	-- configs/shortcuts/apps.toml header). ~/.hammerspoon/init.lua ghi ro: loi
+	-- KHONG bat trong :init() cua mot spoon chan MOI hs.loadSpoon con lai sau
+	-- no trong danh sach -- boc pcall rieng tung binding de mot key hong chi
+	-- mat mot phim, khong lam sap ca cac spoon phia sau LaunchApp.
 	for _, s in ipairs(b.app) do
-		hs.hotkey.bind(hyper, s.key, function()
+		local ok, err = pcall(hs.hotkey.bind, hyper, s.key, function()
 			beckon(s.id)
 		end)
+		if not ok then
+			hs.alert.show("LaunchApp: bind phim " .. tostring(s.key) .. " (app) loi: " .. tostring(err), 5)
+		end
 	end
 
 	for _, s in ipairs(b.shift) do
-		hs.hotkey.bind(hyperShift, s.key, function()
+		local ok, err = pcall(hs.hotkey.bind, hyperShift, s.key, function()
 			beckon(s.id)
 		end)
+		if not ok then
+			hs.alert.show("LaunchApp: bind phim " .. tostring(s.key) .. " (shift) loi: " .. tostring(err), 5)
+		end
 	end
 end
 

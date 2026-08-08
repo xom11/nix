@@ -33,6 +33,12 @@ Describe 'configs/shortcuts parse.ahk' {
             $psi.Arguments = "`"$($script:ParsePath)`" --dump $t"
             $psi.RedirectStandardOutput = $true
             $psi.RedirectStandardError = $true
+            # parse.ahk ghi stdout bang UTF-8-RAW chinh xac de bytes khong phu
+            # thuoc locale cua may chay. Neu khong khai StandardOutputEncoding
+            # o day, ReadToEnd() se giai ma theo console codepage -- id ASCII
+            # thi khong lo, nhung app name khong-ASCII dau tien se ra mojibake
+            # va do loi nham cho parser thay vi harness nay.
+            $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
             $psi.UseShellExecute = $false
             $p = [System.Diagnostics.Process]::Start($psi)
             $stdout = $p.StandardOutput.ReadToEnd()
@@ -45,8 +51,11 @@ Describe 'configs/shortcuts parse.ahk' {
             [IO.File]::AppendAllText($out, $stdout)
         }
 
-        $got = (Get-Content -Raw $out) -replace "`r`n", "`n"
-        $want = (Get-Content -Raw $script:GoldenPath) -replace "`r`n", "`n"
+        # Windows PowerShell 5.1's Get-Content mac dinh doan encoding tu BOM,
+        # khong co BOM thi roi ve ANSI cua he thong -- khai UTF8 tay o ca hai
+        # dong de khop voi UTF-8-RAW ma parse.ahk ghi va voi golden trong repo.
+        $got = (Get-Content -Raw -Encoding UTF8 $out) -replace "`r`n", "`n"
+        $want = (Get-Content -Raw -Encoding UTF8 $script:GoldenPath) -replace "`r`n", "`n"
         $got | Should Be $want
     }
 }

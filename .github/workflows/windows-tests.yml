@@ -37,12 +37,11 @@ jobs:
       #
       # Ghim version + checksum, giong cach repo-hygiene.yml ghim gitleaks.
       #
-      # windows/tests/shortcutsParse.Tests.ps1 chua ton tai -- no thuoc Task 5,
-      # con cho phan cung that de kiem. Cai AutoHotkey truoc ca file tieu thu no
-      # la co y: pin download + checksum nay duoc chung minh chay dung tren CI
-      # truoc khi Task 5 ha canh, thay vi ca hai cung lam moi mot luc. Pester
-      # glob *.Tests.ps1 nen mot file con thieu don gian la khong chay, khong
-      # phai loi.
+      # windows/tests/shortcutsParse.Tests.ps1 (tu commit 2acaad8c) doc bien
+      # AHK_EXE duoc set o cuoi buoc nay, goi that parse.ahk --dump cho ca bon
+      # target roi so voi apps.expected.tsv. Pester glob *.Tests.ps1 nen file
+      # do tu duoc nhat vao vong Invoke-Pester ben duoi, khong can khai rieng
+      # o day.
       - name: Cai AutoHotkey v2 (pin version + checksum)
         shell: powershell
         run: |
@@ -72,9 +71,9 @@ jobs:
 
           # ahkRuntimeSafety is the one file that launches AutoHotkey for real -- proving
           # switch-language.ahk survives a missing target window, and that launch-ahk.ahk
-          # parses. AutoHotkey IS on the runner now (see the install step above), but that
-          # step drops it at $env:RUNNER_TEMP\ahk\AutoHotkey64.exe for the future
-          # shortcuts-parser tests, while this file hardcodes
+          # parses. AutoHotkey IS on the runner now (see the install step above), and that
+          # step drops it at $env:RUNNER_TEMP\ahk\AutoHotkey64.exe -- shortcutsParse.Tests.ps1
+          # reads exactly that via $env:AHK_EXE and uses it. This file, though, hardcodes
           # 'C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe' and does not read $env:AHK_EXE.
           # So it still finds nothing and stays a local check -- exclude it here for that
           # reason, not because the binary is absent.

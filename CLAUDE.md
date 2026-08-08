@@ -371,11 +371,17 @@ does **not** mean the shortcut policy was applied. The activation entry also
 swallows failures (`|| echo "dotbrave: apply failed, continuing activation"`),
 so read its output rather than trusting the switch's exit status.
 
-### apps.toml: một file, bốn người đọc, hai thời điểm
+### apps.toml: một file, bốn nền tảng, hai thời điểm
 
 `configs/shortcuts/apps.toml` là bảng phím tắt focus-or-launch dùng chung cho
 macOS (Hammerspoon), Windows (AHK), GNOME (dconf) và sway. Engine là `beckon` ở
 cả bốn nơi; file này chỉ là dữ liệu.
+
+Bốn nền tảng đọc file này, nhưng **năm chỗ tự cài lại luật resolve**
+(`idFor`/`ShortcutsIdFor`: có override riêng target thì lấy override, không
+thì lấy `id`) — đừng nhầm hai con số: `parse.lua`, `parse.ahk`, `dump.nix`
+(chỉ CI dùng, không nền tảng nào chạy nó trực tiếp), `gnome/launch-app.nix` và
+`sway/launch-app.nix`.
 
 Cái bẫy giống dotbrave nhưng rộng hơn — **cùng một file, hai thời điểm đọc**:
 
@@ -390,28 +396,29 @@ Sửa file rồi chỉ reload thì mac đổi còn GNOME/sway không, và không
 `sway.d/conf.d/launch-app.conf` không còn chứa binding app nào — chúng sinh ra
 vào `~/.config/sway-nix/launch-app.conf`.
 
-Chỉ `parse.lua` — parser tay viết bằng Lua thuần — thực sự enforce một
-**subset TOML** hạn chế: dòng trống, dòng `#`, header `[[app]]`/`[[shift]]`,
-và `khoá = "giá trị"` với giá trị trong ngoặc kép, không escape, **không
-comment cuối dòng**. Gặp thứ ngoài subset đó là nó báo lỗi và dừng luôn CẢ
-FILE, không bind được hotkey nào — cố ý, không bỏ qua âm thầm một dòng lỗi.
+`parse.lua` và `parse.ahk` — hai parser tay viết thuần (Lua và AHK, không dùng
+thư viện TOML nào) — đều thực sự enforce cùng một **subset TOML** hạn chế:
+dòng trống, dòng `#`, header `[[app]]`/`[[shift]]`, và `khoá = "giá trị"` với
+giá trị trong ngoặc kép, không escape, **không comment cuối dòng**. Gặp thứ
+ngoài subset đó là cả hai báo lỗi (Error bên AHK, `nil, err` bên Lua) và dừng
+luôn CẢ FILE, không bind được hotkey nào — cố ý, không bỏ qua âm thầm một
+dòng lỗi.
 
 `dump.nix` và hai module tiêu thụ Nix (`gnome/launch-app.nix`,
 `sway/launch-app.nix`) đọc bằng `builtins.fromTOML`, một parser TOML thật —
 nó **không** enforce subset này. Kiểm bằng `nix eval`:
 `id = "Claude"  # ghi chú` (comment cuối dòng) và `id = 'Claude'` (nháy đơn)
 đều được `fromTOML` chấp nhận bình thường, không báo lỗi. Hậu quả không đối
-xứng: một dòng như vậy lọt vào `apps.toml` làm macOS im re — `parse.lua` báo
-lỗi, `LaunchApp.spoon` alert rồi bind **không** hotkey nào — trong khi
-GNOME/sway vẫn ăn được giá trị đó và tiếp tục chạy đúng từ generation đã
-switch gần nhất. `parse.ahk` (Task 5) sẽ phải tự enforce lại subset này giống
-`parse.lua`, vì `fromTOML` không làm hộ việc đó.
+xứng: một dòng như vậy lọt vào `apps.toml` làm macOS/Windows im re — `parse.lua`
+báo lỗi rồi `LaunchApp.spoon` alert, `parse.ahk` báo lỗi rồi qua
+`LaunchAppFail` — cả hai bind **không** hotkey nào — trong khi GNOME/sway vẫn
+ăn được giá trị đó và tiếp tục chạy đúng từ generation đã switch gần nhất.
 
-`apps.expected.tsv` là golden file: `parse.lua` và `dump.nix` đều so với nó
-trong CI, `check-consumers.sh` so cả hai module tiêu thụ Nix (gnome, sway) qua
-đó nữa — `parse.ahk` sẽ nối vào cùng vai trò trọng tài này khi Task 5 xong. Sửa
-`apps.toml` là phải chạy `configs/shortcuts/sync.sh`; CI chạy lại rồi
-`git diff --exit-code`.
+`apps.expected.tsv` là golden file: `parse.lua`, `parse.ahk` và `dump.nix` đều
+so với nó trong CI — `parse.ahk` qua `windows/tests/shortcutsParse.Tests.ps1`,
+chạy bởi `.github/workflows/windows-tests.yml` — và `check-consumers.sh` so cả
+hai module tiêu thụ Nix (gnome, sway) qua đó nữa. Sửa `apps.toml` là phải chạy
+`configs/shortcuts/sync.sh`; CI chạy lại rồi `git diff --exit-code`.
 
 Tên app phải khớp **chính xác** với `beckon -L` trên target đó. Khớp chính xác
 ~57 ms; rơi xuống quét toàn catalog ~400 ms mỗi lần bấm phím.

@@ -16,6 +16,22 @@
 # Subset TOML cho phep: dong trong, dong #, header [[app]]/[[shift]], va
 #   khoa = "gia tri"  voi gia tri trong ngoac kep, khong escape, khong comment
 # cuoi dong. parse.lua va parse.ahk chi hieu chung nay va bao loi voi thu khac.
+#
+# ^#! + "," / "." / "/" (lop Cap+phim, KHONG phai Cap+Shift) da bi
+# home-manager/dotfiles/windows/ahk/window-manager.ahk chiem giu tinh (snap
+# trai/phai/full man hinh). Dat key = "," | "." | "/" trong [[app]] ma khong
+# dat windows = "" se khien AHK am tham GHI DE mat binding snap do luc
+# runtime -- khong loi, khong CI nao bat duoc.
+#
+# Them target thu nam phai sua tay ca SAU noi, khong co danh sach trung tam:
+#   1. configs/shortcuts/parse.lua              M.TARGETS
+#   2. configs/shortcuts/parse.lua              FIELD
+#   3. configs/shortcuts/parse.ahk              FIELD (static Map trong ShortcutsParse)
+#   4. configs/shortcuts/sync.sh                vong lap "for t in ..."
+#   5. .github/workflows/eval.yml               vong lap doi golden
+#   6. windows/tests/shortcutsParse.Tests.ps1   mang @('gnome','macos','sway','windows')
+# Quen noi (6) khong CI nao bao: parse.ahk chi don gian khong dump target moi,
+# nen AHK reader khong duoc kiem cho target do trong khi moi job van xanh.
 
 # ── Lop 1: Cap + <key> ────────────────────────────────────────────────
 
