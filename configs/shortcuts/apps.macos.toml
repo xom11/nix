@@ -9,8 +9,7 @@
 #
 # Ten phai khop CHINH XAC `beckon -L`: exact match ~57 ms; truot xuong quet
 # catalog ~400 ms moi lan bam. Validate: `beckon --check <file nay>` (CI cung chay).
-# Cac target khac: apps.windows/gnome/sway.toml CHUA ton tai (plan 3/4) —
-# Windows/GNOME/sway van doc apps.toml cu cho den luc do.
+# Cac target khac: apps.windows.toml (da co); apps.gnome/sway.toml chua ton tai (plan 4) — gnome/sway van doc apps.toml cu.
 
 # ── Cap + phim ──────────────────────────────────────────────────────────
 "ctrl+super+alt+space" = "kitty"   # DUNG doi thanh "Terminal": tren mac no exact-match NHAM Terminal.app cua Apple (do 08/08/2026)

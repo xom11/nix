@@ -27,6 +27,8 @@ Describe 'windows/apply.ps1 shared entry point' {
             'services.kanata-watchdog'
             'services.ahk'
             'services.ahk-watchdog'
+            'services.beckon-serve'
+            'services.beckon-serve-watchdog'
             'services.sshd'
         )
         # Kept in the file as commented-out entries so the reason survives; they must not be
