@@ -1,11 +1,13 @@
 Describe 'windows AutoHotkey runtime safety' {
     # Everything here actually launches AutoHotkey via the hardcoded path below. That is why
-    # windows-tests.yml skips this one file: the runner does now have AutoHotkey (installed for
-    # the shortcuts-parser tests), but at $env:RUNNER_TEMP\ahk\AutoHotkey64.exe, not at
-    # 'C:\Program Files\AutoHotkey\v2\...' -- this file does not read $env:AHK_EXE, so it still
-    # finds nothing there. Keep it excluded until it's parameterized; assertions that only read
-    # the .ahk files as text belong in switchLanguage.Tests.ps1, where CI does run them. An
-    # assertion parked here once drifted for months precisely because nothing ran it.
+    # windows-tests.yml skips this one file: AutoHotkey is NOT installed on the runner (the
+    # install step and $env:AHK_EXE were removed 09/08/2026 once shortcutsParse.Tests.ps1, the
+    # only reader of that variable, was deleted), and this file still hardcodes
+    # 'C:\Program Files\AutoHotkey\v2\...' rather than reading an env var, so it finds nothing.
+    # Re-enabling it needs BOTH a new install step AND parameterizing the path -- neither exists
+    # today. Assertions that only read the .ahk files as text belong in switchLanguage.Tests.ps1,
+    # where CI does run them. An assertion parked here once drifted for months precisely because
+    # nothing ran it.
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
         $script:AhkExe = 'C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe'

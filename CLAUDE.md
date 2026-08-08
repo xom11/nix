@@ -370,57 +370,70 @@ does **not** mean the shortcut policy was applied. The activation entry also
 swallows failures (`|| echo "dotbrave: apply failed, continuing activation"`),
 so read its output rather than trusting the switch's exit status.
 
-### apps.toml: một file, bốn nền tảng, hai thời điểm
+### Phím tắt focus-or-launch: beckon serve + TOML per-target
 
-`configs/shortcuts/apps.toml` là bảng phím tắt focus-or-launch dùng chung cho
-macOS (Hammerspoon), Windows (AHK), GNOME (dconf) và sway. Engine là `beckon` ở
-cả bốn nơi; file này chỉ là dữ liệu.
+`configs/shortcuts/apps.{macos,windows,gnome,sway}.toml` — bốn file, mỗi
+target một file riêng (thay `apps.toml` dùng chung cũ, XOÁ 09/08/2026, xem
+dưới). Format phẳng: mỗi dòng là một shortcut trọn vẹn,
+`"tổ_hợp_phím" = "tên app"` — không còn lớp override/resolve nào len vào
+giữa như hệ cũ. `Cap` giữ = `ctrl+super+alt` (macOS: super=Cmd; Windows/Linux:
+super=phím Win), do kanata sinh ra — bản thân bốn file này không biết `Cap`
+là gì.
 
-Bốn nền tảng đọc file này, nhưng **năm chỗ tự cài lại luật resolve**
-(`idFor`/`ShortcutsIdFor`: có override riêng target thì lấy override, không
-thì lấy `id`) — đừng nhầm hai con số: `parse.lua`, `parse.ahk`, `dump.nix`
-(chỉ CI dùng, không nền tảng nào chạy nó trực tiếp), `gnome/launch-app.nix` và
-`sway/launch-app.nix`.
+Tên app phải khớp **CHÍNH XÁC** chuỗi `beckon -L` in ra trên đúng target đó:
+khớp chính xác ~57 ms; trượt xuống quét toàn catalog ~400 ms mỗi lần bấm
+phím. Bốn file KHÔNG đồng bộ tên với nhau — mac dùng `"kitty"` chạy thẳng,
+Windows phải là `"Terminal"` (`"kitty"` không resolve trên Windows); mac dùng
+`"Telegram"` (app native, exact match), gnome/sway dùng `"Telegram Web"`
+(PWA — Cap+t từng hỏng âm thầm trên Windows vì lẫn hai tên này). Copy nguyên
+một dòng từ file target này sang file target khác là cách chắc chắn hỏng.
 
-Cái bẫy giống dotbrave nhưng rộng hơn — **cùng một file, hai thời điểm đọc**:
+Engine là `beckon` ở cả bốn nơi, nhưng file được ĐỌC ở hai thời điểm khác
+nhau tuỳ cặp target — cùng bẫy dotbrave ở mục trên, rộng hơn vì chia theo cặp
+target chứ không phải hai bảng trong một file:
 
-| Nền tảng | Đọc bằng | Sửa apps.toml rồi áp dụng bằng |
-|---|---|---|
-| macOS | `parse.lua` lúc chạy | reload Hammerspoon |
-| Windows | `parse.ahk` lúc chạy | reload AHK |
-| GNOME | `builtins.fromTOML` lúc eval | **`home-manager switch`** |
-| sway | `builtins.fromTOML` lúc eval | **switch** + reload sway |
+| Nền tảng | Đọc bằng | Sửa file rồi áp dụng bằng | Agent/task | Log |
+|---|---|---|---|---|
+| macOS | `beckon --serve` LÚC CHẠY, tự watch file | không gì cả — watcher ăn trong ~1-2 s | launchd `com.xom11.beckon-serve` (`home-manager/programs/beckon-serve`) | `~/Library/Logs/beckon/serve.log` |
+| Windows | `beckon --serve` LÚC CHẠY, tự watch file | không gì cả — ăn trong ~1-2 s | task `\BeckonServe` + `\BeckonServeWatchdog` (`windows/modules/services/beckon-serve{,-watchdog}`) | `%LOCALAPPDATA%\beckon\serve.log` |
+| GNOME | `builtins.fromTOML` LÚC EVAL | **`home-manager switch`** | dconf `custom-keybindings`, sinh lúc eval (`home-manager/environments/gnome/launch-app.nix`) | — |
+| sway | `builtins.fromTOML` LÚC EVAL | **switch** + tự reload sway tay (`Tab+r`) | binding sinh vào `~/.config/sway-nix/launch-app.conf` (`home-manager/environments/sway/launch-app.nix`) | — |
 
-Sửa file rồi chỉ reload thì mac đổi còn GNOME/sway không, và không có gì báo.
-`sway.d/conf.d/launch-app.conf` không còn chứa binding app nào — chúng sinh ra
-vào `~/.config/sway-nix/launch-app.conf`.
+mac/Windows: sửa file là đủ, watcher tự đọc lại, không switch không rebuild gì
+cả — file hỏng thì beckon giữ nguyên bảng cũ và báo qua notification/toast,
+sửa xong tự ăn lại. GNOME/sway thì ngược hẳn: đây là NIX đọc file lúc eval,
+không phải chương trình chạy nền đọc trực tiếp, nên sửa file mà không switch
+là vô nghĩa — và sway còn cần thêm một bước reload tay riêng sau switch vì
+home-manager không tự gọi `swaymsg reload`. Binding sway chỉ là
+`exec beckon "<app>"` TRẦN — không `sway-beckon.sh`, không
+workspace-per-app (quyết định 09/08/2026); workspace logic là việc riêng của
+sway config, beckon không biết gì về workspace.
 
-`parse.lua` và `parse.ahk` — hai parser tay viết thuần (Lua và AHK, không dùng
-thư viện TOML nào) — đều thực sự enforce cùng một **subset TOML** hạn chế:
-dòng trống, dòng `#`, header `[[app]]`/`[[shift]]`, và `khoá = "giá trị"` với
-giá trị trong ngoặc kép, không escape, **không comment cuối dòng**. Gặp thứ
-ngoài subset đó là cả hai báo lỗi (Error bên AHK, `nil, err` bên Lua) và dừng
-luôn CẢ FILE, không bind được hotkey nào — cố ý, không bỏ qua âm thầm một
-dòng lỗi.
+CI: job `shortcuts` trong `.github/workflows/eval.yml` chạy `beckon --check`
+trên cả bốn file, nhưng bằng ĐÚNG rev `beckon` đã ghim trong `flake.lock`
+(đọc qua `nix eval --raw --impure` ngay trong step) — CI kiểm cùng một binary
+mà các host sẽ deploy, không phải bản mới nhất thượng nguồn của beckon.
 
-`dump.nix` và hai module tiêu thụ Nix (`gnome/launch-app.nix`,
-`sway/launch-app.nix`) đọc bằng `builtins.fromTOML`, một parser TOML thật —
-nó **không** enforce subset này. Kiểm bằng `nix eval`:
-`id = "Claude"  # ghi chú` (comment cuối dòng) và `id = 'Claude'` (nháy đơn)
-đều được `fromTOML` chấp nhận bình thường, không báo lỗi. Hậu quả không đối
-xứng: một dòng như vậy lọt vào `apps.toml` làm macOS/Windows im re — `parse.lua`
-báo lỗi rồi `LaunchApp.spoon` alert, `parse.ahk` báo lỗi rồi qua
-`LaunchAppFail` — cả hai bind **không** hotkey nào — trong khi GNOME/sway vẫn
-ăn được giá trị đó và tiếp tục chạy đúng từ generation đã switch gần nhất.
+Ba bẫy kế thừa từ đợt dọn 09/08/2026, đáng nhớ vì không có gì tự báo khi vi
+phạm:
 
-`apps.expected.tsv` là golden file: `parse.lua`, `parse.ahk` và `dump.nix` đều
-so với nó trong CI — `parse.ahk` qua `windows/tests/shortcutsParse.Tests.ps1`,
-chạy bởi `.github/workflows/windows-tests.yml` — và `check-consumers.sh` so cả
-hai module tiêu thụ Nix (gnome, sway) qua đó nữa. Sửa `apps.toml` là phải chạy
-`configs/shortcuts/sync.sh`; CI chạy lại rồi `git diff --exit-code`.
+- `,` `.` `/` đã thuộc về `window-manager.ahk` (snap trái/phải/max, CÙNG tổ
+  hợp `Cap`) — đừng thêm ba phím này vào `apps.windows.toml`.
+- Toast/log "N shortcuts registered" hiện đếm SỐ DÒNG PARSE ĐƯỢC chứ không
+  phải số hotkey đăng ký thành công — đọc con số này LUÔN kèm dòng lỗi ngay
+  phía trên, đừng tin một mình con số, cho tới khi beckon v0.4.1 sửa cách đếm.
+- Xác nhận AHK/Hammerspoon đã reload thật bằng CreationDate của tiến trình
+  (process mới có mốc khởi động mới), đừng tin cảm giác "vừa bấm phím
+  reload" — bài học 09/08/2026.
 
-Tên app phải khớp **chính xác** với `beckon -L` trên target đó. Khớp chính xác
-~57 ms; rơi xuống quét toàn catalog ~400 ms mỗi lần bấm phím.
+Máy móc cũ của hệ `apps.toml` dùng chung — `parse.lua`, `parse.ahk`,
+`dump.nix`, `sync.sh`, `check-consumers.sh`, `apps.expected.tsv` (golden
+file), `LaunchApp.spoon`, `launch-app.ahk`,
+`windows/tests/shortcutsParse.Tests.ps1` — đã XOÁ HOÀN TOÀN ngày 09/08/2026
+(`shortcuts: xoa apps.toml cu + hai parser tay + golden + spoon/ahk
+launch-app`). Plan và spec của đợt migration nằm trong
+`docs/superpowers/plans/` và `docs/superpowers/specs/` (cả hai đã gitignore,
+không lên web public).
 
 ### Secrets (agenix)
 

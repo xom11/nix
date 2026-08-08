@@ -2,6 +2,7 @@
 
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
 - Engine la `beckon` o ca bon nen tang.
+- Sua apps.*.toml thi sua ca bang nay — khong con sync.sh kiem tra.
 
 ## `Cap` + phim
 
