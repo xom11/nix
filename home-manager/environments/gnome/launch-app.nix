@@ -1,50 +1,38 @@
-# Bang phim song o configs/shortcuts/apps.toml, dung chung voi macOS, Windows
-# va sway. File nay chi con viec doi no thanh dconf custom-keybindings.
-#
-# Doc luc EVAL, khac han macOS/Windows (doc luc chay): sua apps.toml roi phai
-# `home-manager switch`, reload khong du. Xem muc "mot file, bon nguoi doc, hai
-# thoi diem" trong CLAUDE.md.
-#
-# Path literal la co y o day: ta MUON no vao store luc eval, vi dconf von la
-# san pham cua eval. Day khong phai truong hop agenix (chuoi tuyet doi).
+# Sinh dconf custom-keybindings tu configs/shortcuts/apps.gnome.toml.
+# DOC LUC EVAL (fromTOML): sua file la phai `home-manager switch` — khac han
+# mac/windows (beckon --serve doc luc chay). Path literal o day la CO Y:
+# dconf von la san pham cua eval.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.gnome.toml);
 
-  idFor = e:
-    if builtins.hasAttr "gnome" e
-    then e.gnome
-    else e.id;
-
-  # <Ctrl><Super><Alt> = Cap, them <Shift> la lop 2. Truoc day GNOME khong co
-  # lop 2 vi dconf khong lam duoc chord hai tang; modifier don thi lam duoc.
-  rows =
-    map (e: {
-      inherit (e) key;
-      id = idFor e;
-      mods = "<Ctrl><Super><Alt>";
-    })
-    (data.app or [])
-    ++ map (e: {
-      inherit (e) key;
-      id = idFor e;
-      mods = "<Ctrl><Super><Alt><Shift>";
-    })
-    (data.shift or []);
-
-  bound = builtins.filter (r: r.id != "") rows;
+  modMap = {
+    ctrl = "<Ctrl>";
+    super = "<Super>";
+    alt = "<Alt>";
+    shift = "<Shift>";
+  };
+  # "ctrl+super+alt+b" -> "<Ctrl><Super><Alt>b". Modifier la moi token truoc
+  # token cuoi; token cuoi giu nguyen (dconf nhan keysym: b, space, ...).
+  toBinding = combo: let
+    parts = lib.splitString "+" combo;
+    n = builtins.length parts;
+    mods = lib.sublist 0 (n - 1) parts;
+    key = builtins.elemAt parts (n - 1);
+  in
+    lib.concatStrings (map (m: modMap.${m}) mods) + key;
 
   base = "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings";
 
   entries =
-    lib.imap0 (i: r: {
+    lib.imap0 (i: combo: {
       name = "${base}/custom${toString i}";
       value = {
-        name = "Beckon ${r.id}";
-        binding = "${r.mods}${r.key}";
-        command = ''beckon "${r.id}"'';
+        name = "Beckon ${data.${combo}}";
+        binding = toBinding combo;
+        command = ''beckon "${data.${combo}}"'';
       };
     })
-    bound;
+    (builtins.attrNames data);
 in
   {
     "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings =
