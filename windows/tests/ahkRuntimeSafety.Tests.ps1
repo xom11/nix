@@ -1,6 +1,9 @@
 Describe 'windows AutoHotkey runtime safety' {
-    # Everything here actually launches AutoHotkey, which is why windows-tests.yml skips this
-    # one file: the CI runner has no AutoHotkey. Keep it that way -- assertions that only read
+    # Everything here actually launches AutoHotkey via the hardcoded path below. That is why
+    # windows-tests.yml skips this one file: the runner does now have AutoHotkey (installed for
+    # the shortcuts-parser tests), but at $env:RUNNER_TEMP\ahk\AutoHotkey64.exe, not at
+    # 'C:\Program Files\AutoHotkey\v2\...' -- this file does not read $env:AHK_EXE, so it still
+    # finds nothing there. Keep it excluded until it's parameterized; assertions that only read
     # the .ahk files as text belong in switchLanguage.Tests.ps1, where CI does run them. An
     # assertion parked here once drifted for months precisely because nothing ran it.
     BeforeAll {

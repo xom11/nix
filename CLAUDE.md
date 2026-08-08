@@ -382,22 +382,39 @@ Cái bẫy giống dotbrave nhưng rộng hơn — **cùng một file, hai thờ
 | Nền tảng | Đọc bằng | Sửa apps.toml rồi áp dụng bằng |
 |---|---|---|
 | macOS | `parse.lua` lúc chạy | reload Hammerspoon |
-| Windows | `parse.ahk` lúc chạy | reload AHK |
+| Windows | **CHƯA NỐI** — xem ghi chú dưới | — |
 | GNOME | `builtins.fromTOML` lúc eval | **`home-manager switch`** |
 | sway | `builtins.fromTOML` lúc eval | **switch** + reload sway |
 
-Sửa file rồi chỉ reload thì mac và Windows đổi còn GNOME/sway không, và không
-có gì báo. `sway.d/conf.d/launch-app.conf` không còn chứa binding app nào —
-chúng sinh ra vào `~/.config/sway-nix/launch-app.conf`.
+Sửa file rồi chỉ reload thì mac đổi còn GNOME/sway không, và không có gì báo.
+`sway.d/conf.d/launch-app.conf` không còn chứa binding app nào — chúng sinh ra
+vào `~/.config/sway-nix/launch-app.conf`.
 
-Ba parser tay (Lua, AHK, Nix) chỉ hiểu một **subset TOML** hạn chế: dòng trống,
+**Windows chưa đọc `apps.toml`.** `home-manager/dotfiles/windows/ahk/launch-app.ahk`
+vẫn giữ bảng phím tắt hardcode riêng của nó (`^#!c:: Beckon("Claude")` và tương
+tự) — không có tham chiếu nào tới `apps.toml`. `parse.ahk` chưa tồn tại. Sửa
+`apps.toml` rồi reload AHK **không có tác dụng gì trên Windows** cho tới khi
+Task 5 (viết `parse.ahk`) và Task 7 (nối `launch-app.ahk` vào nó) hạ cánh — cả
+hai đang chờ phần cứng để kiểm. Cái đã có sẵn: job `pester` trong
+`windows-tests.yml` đã cài AutoHotkey v2 (ghim version + checksum) trên runner
+Windows và sẽ chạy `windows/tests/shortcutsParse.Tests.ps1` ngay khi file đó
+xuất hiện — Pester glob `*.Tests.ps1` nên không cần sửa CI thêm gì khi Task 5
+xong. Khi Task 5/7 hạ cánh, xoá đoạn ghi chú này, đổi dòng Windows trong bảng
+trên lại thành `parse.ahk lúc chạy` / `reload AHK`, và sửa "hai parser tay" bên
+dưới thành "ba".
+
+Hai parser tay (Lua, Nix) chỉ hiểu một **subset TOML** hạn chế: dòng trống,
 dòng `#`, header `[[app]]`/`[[shift]]`, và `khoá = "giá trị"` với giá trị trong
 ngoặc kép, không escape, **không comment cuối dòng**. Viết TOML hợp lệ nhưng
 ngoài subset là parser báo lỗi và dừng — cố ý, vì bỏ qua âm thầm sẽ khiến Nix
-đọc đủ còn Lua/AHK đọc thiếu.
+đọc đủ còn Lua đọc thiếu. `parse.ahk` (Task 5) sẽ phải theo đúng subset này khi
+viết.
 
-`apps.expected.tsv` là golden file, trọng tài của cả ba. Sửa `apps.toml` là phải
-chạy `configs/shortcuts/sync.sh`; CI chạy lại rồi `git diff --exit-code`.
+`apps.expected.tsv` là golden file: `parse.lua` và `dump.nix` đều so với nó
+trong CI, `check-consumers.sh` so cả hai module tiêu thụ Nix (gnome, sway) qua
+đó nữa — `parse.ahk` sẽ nối vào cùng vai trò trọng tài này khi Task 5 xong. Sửa
+`apps.toml` là phải chạy `configs/shortcuts/sync.sh`; CI chạy lại rồi
+`git diff --exit-code`.
 
 Tên app phải khớp **chính xác** với `beckon -L` trên target đó. Khớp chính xác
 ~57 ms; rơi xuống quét toàn catalog ~400 ms mỗi lần bấm phím.
