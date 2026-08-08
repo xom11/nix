@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   getPath,
   mkModule,
@@ -12,6 +13,10 @@ in
       ".config/sway" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sway.d";
       };
+      # File duy nhat trong bo sway duoc SINH RA. No khong the nam trong
+      # ~/.config/sway vi cho do la symlink vao ca thu muc sway.d cua repo.
+      ".config/sway-nix/launch-app.conf".text =
+        import ./launch-app.nix {inherit lib;};
       ".config/kanshi/config" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/kanshi.d/kanshi.conf";
       };
