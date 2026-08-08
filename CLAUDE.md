@@ -403,12 +403,22 @@ xong. Khi Task 5/7 hạ cánh, xoá đoạn ghi chú này, đổi dòng Windows 
 trên lại thành `parse.ahk lúc chạy` / `reload AHK`, và sửa "hai parser tay" bên
 dưới thành "ba".
 
-Hai parser tay (Lua, Nix) chỉ hiểu một **subset TOML** hạn chế: dòng trống,
-dòng `#`, header `[[app]]`/`[[shift]]`, và `khoá = "giá trị"` với giá trị trong
-ngoặc kép, không escape, **không comment cuối dòng**. Viết TOML hợp lệ nhưng
-ngoài subset là parser báo lỗi và dừng — cố ý, vì bỏ qua âm thầm sẽ khiến Nix
-đọc đủ còn Lua đọc thiếu. `parse.ahk` (Task 5) sẽ phải theo đúng subset này khi
-viết.
+Chỉ `parse.lua` — parser tay viết bằng Lua thuần — thực sự enforce một
+**subset TOML** hạn chế: dòng trống, dòng `#`, header `[[app]]`/`[[shift]]`,
+và `khoá = "giá trị"` với giá trị trong ngoặc kép, không escape, **không
+comment cuối dòng**. Gặp thứ ngoài subset đó là nó báo lỗi và dừng luôn CẢ
+FILE, không bind được hotkey nào — cố ý, không bỏ qua âm thầm một dòng lỗi.
+
+`dump.nix` và hai module tiêu thụ Nix (`gnome/launch-app.nix`,
+`sway/launch-app.nix`) đọc bằng `builtins.fromTOML`, một parser TOML thật —
+nó **không** enforce subset này. Kiểm bằng `nix eval`:
+`id = "Claude"  # ghi chú` (comment cuối dòng) và `id = 'Claude'` (nháy đơn)
+đều được `fromTOML` chấp nhận bình thường, không báo lỗi. Hậu quả không đối
+xứng: một dòng như vậy lọt vào `apps.toml` làm macOS im re — `parse.lua` báo
+lỗi, `LaunchApp.spoon` alert rồi bind **không** hotkey nào — trong khi
+GNOME/sway vẫn ăn được giá trị đó và tiếp tục chạy đúng từ generation đã
+switch gần nhất. `parse.ahk` (Task 5) sẽ phải tự enforce lại subset này giống
+`parse.lua`, vì `fromTOML` không làm hộ việc đó.
 
 `apps.expected.tsv` là golden file: `parse.lua` và `dump.nix` đều so với nó
 trong CI, `check-consumers.sh` so cả hai module tiêu thụ Nix (gnome, sway) qua

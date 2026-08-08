@@ -23,13 +23,13 @@
       id = idFor e;
       mods = "$cap";
     })
-    data.app
+    (data.app or [])
     ++ map (e: {
       inherit (e) key;
       id = idFor e;
       mods = "$cap+Shift";
     })
-    data.shift;
+    (data.shift or []);
 
   bound = builtins.filter (r: r.id != "") rows;
 

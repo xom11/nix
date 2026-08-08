@@ -9,6 +9,10 @@
 #   macos / windows / gnome / sway  override rieng target do
 #                                   "" (rong) = target do KHONG bind phim nay
 #
+# `windows` HIEN CHUA CO TAC DUNG: parse.ahk chua ton tai, launch-app.ahk van
+# dung bang phim hardcode rieng cua no chu khong doc file nay. Gia tri windows
+# duoi day la trang thai DU DINH cho luc parse.ahk noi vao, khong phai thuc te.
+#
 # Ten phai khop CHINH XAC voi `beckon -L` tren target do. Dua vao tang khop mo
 # cua beckon la bay hieu nang: khop chinh xac ~57 ms, roi xuong quet toan
 # catalog ~400 ms MOI LAN bam phim. Xem windows/modules/programs/beckon.

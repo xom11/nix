@@ -27,9 +27,11 @@ package.path = package.path .. ";" .. hs.configdir .. "/LibSpoons/?.spoon/init.l
 -- Trước đây chỗ này chạy SpoonInstall: nó gọi updateRepo("default") tải index 1,2 MB bằng
 -- hs.http.get — đồng bộ, chặn main thread — ở mọi lần khởi động và mọi lần tab+r reload, kể
 -- cả khi spoon đã nằm sẵn trên đĩa. Tệ hơn: Spoons/ bị .gitignore che, nên trên máy clone
--- mới mà mạng hỏng thì RecursiveBinder không tải được, rb.singleKey thành nil, LaunchApp
--- chết ngay dòng dưới và MỌI hotkey sau đó không được bind. Ghim qua Nix cắt cả hai vấn đề:
--- không lời gọi mạng nào lúc khởi động, và spoon luôn có mặt sau lần build đầu.
+-- mới mà mạng hỏng thì RecursiveBinder không tải được: spoon nào gọi
+-- hs.loadSpoon("RecursiveBinder") lúc load nhận về nil, và hotkey của chính spoon đó không
+-- bind được (xem default.nix cạnh file này để biết spoon nào đang thật sự dùng — đổi theo
+-- thời gian, đừng chép tên cụ thể vào đây). Ghim qua Nix cắt cả hai vấn đề: không lời gọi
+-- mạng nào lúc khởi động, và spoon luôn có mặt sau lần build đầu.
 hs.loadSpoon("RecursiveBinder")
 
 -- Reverse scroll direction for trackpads

@@ -25,7 +25,7 @@
       else "${target}\t${layer}\t${e.key}\t${id}")
     entries);
 
-  rows = rowsOf data.app "app" ++ rowsOf data.shift "shift";
+  rows = rowsOf (data.app or []) "app" ++ rowsOf (data.shift or []) "shift";
 in
   # Target khong con binding nao thi phai ra CHUOI RONG, khong phai "\n".
   # parse.lua lam dung the (`if d ~= "" then print(d) end`) va parse.ahk cung

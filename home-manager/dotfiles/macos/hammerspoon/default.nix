@@ -15,11 +15,16 @@
   # generation nên có GC root đàng hoàng. Đổi lại là read-only, đúng ý: đây không phải dotfile
   # để sửa tay như MySpoons.
   #
-  # Chỉ hai spoon này thực sự được dùng: RecursiveBinder (LaunchTerminal.spoon:15
-  # gọi lúc load, thiếu là rb.singleKey thành nil) và AClock (tab+t).
-  # LaunchApp.spoon TỪNG dùng RecursiveBinder cho lớp Cap+a; từ khi lớp 2 chuyển
-  # sang Cap+Shift thì không còn. AllBrightness từng được nạp nhưng không bao
-  # giờ start(), InputSourceSwitch chỉ phục vụ LanguageSwitcher (spoon đó nay đã xoá) — bỏ cả hai.
+  # Chỉ AClock thực sự đang có consumer (Tab.spoon, tab+t). RecursiveBinder thì
+  # KHÔNG: LaunchApp.spoon TỪNG dùng nó cho lớp Cap+a, nhưng từ khi lớp 2
+  # chuyển sang Cap+Shift (nhánh apps.toml này) thì hết; consumer còn lại,
+  # LaunchTerminal.spoon:15 (`hs.loadSpoon("RecursiveBinder")` chạy ngay lúc
+  # load, thiếu là rb.singleKey thành nil), đang bị comment ra ở init.lua
+  # (`-- hs.loadSpoon("LaunchTerminal")`) nên cũng không chạy. Giữ input này là
+  # có chủ đích, không phải vì đang cần: bật lại LaunchTerminal sẽ cần nó ngay,
+  # và gỡ đi bây giờ thì phải nhớ thêm lại sau. AllBrightness từng được nạp
+  # nhưng không bao giờ start(), InputSourceSwitch chỉ phục vụ LanguageSwitcher
+  # (spoon đó nay đã xoá) — bỏ cả hai.
   thirdPartySpoons = ["RecursiveBinder" "AClock"];
 in
   mkModule config ./. {

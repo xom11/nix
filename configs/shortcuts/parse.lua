@@ -105,6 +105,8 @@ function M.readme(layers)
     "",
     "- `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)",
     "- Engine la `beckon` o ca bon nen tang.",
+    "- Cot **Windows** duoi day la trang thai DU DINH, CHUA chay that: `parse.ahk`",
+    "  chua ton tai nen `launch-app.ahk` van dung bang phim hardcode rieng cua no.",
     "",
   }
   local title = { app = "## `Cap` + phim", shift = "## `Cap` + `Shift` + phim" }
@@ -130,6 +132,27 @@ function M.readme(layers)
     end
     table.insert(out, "")
   end
+
+  table.insert(out, "## Cac lop phim khac (khong sinh tu apps.toml)")
+  table.insert(out, "")
+  table.insert(out, "Hai nhom nay khong di qua apps.toml/beckon nen khong nam trong bang")
+  table.insert(out, "tren. Doc truc tiep o nguon thay vi chep lai o day, de tranh bang tay")
+  table.insert(out, "bi lech nhu file README cu:")
+  table.insert(out, "")
+  table.insert(out, "- Lop Tab (`Tab` giu lam modifier): macOS o")
+  table.insert(out, "  `home-manager/dotfiles/macos/hammerspoon/MySpoons/Tab.spoon/init.lua`,")
+  table.insert(out, "  sway o `home-manager/environments/sway/sway.d/conf.d/tab.conf`, Windows o")
+  table.insert(out, "  `home-manager/dotfiles/windows/ahk/tab-key.ahk`.")
+  table.insert(out, "- Phim quan ly nguon (khoa man/ngu/tat may/khoi dong lai/dang xuat):")
+  table.insert(out, "  macOS o")
+  table.insert(out, "  `home-manager/dotfiles/macos/hammerspoon/MySpoons/PowerManager.spoon/init.lua`,")
+  table.insert(out, "  sway o `home-manager/environments/sway/sway.d/conf.d/system.conf` (muc")
+  table.insert(out, "  \"Power Keybindings\"), Windows o")
+  table.insert(out, "  `home-manager/dotfiles/windows/ahk/power-manager.ahk`, GNOME dung")
+  table.insert(out, "  keybinding co san cua desktop, khai o")
+  table.insert(out, "  `home-manager/environments/gnome/shortcuts.nix`.")
+  table.insert(out, "")
+
   return table.concat(out, "\n")
 end
 

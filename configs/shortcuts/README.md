@@ -4,6 +4,8 @@
 
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
 - Engine la `beckon` o ca bon nen tang.
+- Cot **Windows** duoi day la trang thai DU DINH, CHUA chay that: `parse.ahk`
+  chua ton tai nen `launch-app.ahk` van dung bang phim hardcode rieng cua no.
 
 ## `Cap` + phim
 
@@ -36,4 +38,23 @@
 | `f` | Firefox | Firefox | Firefox | Firefox |
 | `m` | Gmail | Gmail | Gmail | Gmail |
 | `v` | VMware Fusion | -- | -- | -- |
+
+## Cac lop phim khac (khong sinh tu apps.toml)
+
+Hai nhom nay khong di qua apps.toml/beckon nen khong nam trong bang
+tren. Doc truc tiep o nguon thay vi chep lai o day, de tranh bang tay
+bi lech nhu file README cu:
+
+- Lop Tab (`Tab` giu lam modifier): macOS o
+  `home-manager/dotfiles/macos/hammerspoon/MySpoons/Tab.spoon/init.lua`,
+  sway o `home-manager/environments/sway/sway.d/conf.d/tab.conf`, Windows o
+  `home-manager/dotfiles/windows/ahk/tab-key.ahk`.
+- Phim quan ly nguon (khoa man/ngu/tat may/khoi dong lai/dang xuat):
+  macOS o
+  `home-manager/dotfiles/macos/hammerspoon/MySpoons/PowerManager.spoon/init.lua`,
+  sway o `home-manager/environments/sway/sway.d/conf.d/system.conf` (muc
+  "Power Keybindings"), Windows o
+  `home-manager/dotfiles/windows/ahk/power-manager.ahk`, GNOME dung
+  keybinding co san cua desktop, khai o
+  `home-manager/environments/gnome/shortcuts.nix`.
 
