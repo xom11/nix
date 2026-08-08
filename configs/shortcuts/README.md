@@ -9,7 +9,7 @@
 
 | Phim | macOS | Windows | GNOME | sway |
 |---|---|---|---|---|
-| `b` | Brave Browser | Brave | Brave | brave |
+| `b` | Brave | Brave | Brave | brave |
 | `c` | Claude | Claude | Claude | Claude |
 | `d` | Discord | Discord | Discord | Discord |
 | `f` | Finder | File Explorer | -- | -- |
@@ -19,9 +19,9 @@
 | `k` | Google Keep | Google Keep | Google Keep | Google Keep |
 | `m` | Messenger | Messenger | Messenger | Messenger |
 | `n` | Notion | Notion | Notion | Notion |
-| `s` | System Settings | Settings | Settings | -- |
+| `s` | Settings | Settings | Settings | -- |
 | `space` | kitty | Terminal | kitty | kitty |
-| `t` | Telegram | Telegram Web | Telegram Web | Telegram Web |
+| `t` | Telegram | Telegram | Telegram Web | Telegram Web |
 | `y` | YouTube | YouTube | YouTube | YouTube |
 | `z` | -- | Zalo | Zalo | -- |
 
@@ -30,9 +30,9 @@
 | Phim | macOS | Windows | GNOME | sway |
 |---|---|---|---|---|
 | `a` | Apps | -- | -- | -- |
-| `b` | Brave Browser | Brave | Brave | brave |
+| `b` | Brave | Brave | Brave | brave |
 | `c` | Google Chrome | Google Chrome | Google Chrome | Google Chrome |
-| `d` | DeepSeek - Into the Unknown | DeepSeek | DeepSeek | DeepSeek |
+| `d` | DeepSeek | DeepSeek | DeepSeek | DeepSeek |
 | `f` | Firefox | Firefox | Firefox | Firefox |
 | `m` | Gmail | Gmail | Gmail | Gmail |
 | `v` | VMware Fusion | -- | -- | -- |

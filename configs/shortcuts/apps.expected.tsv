@@ -17,7 +17,7 @@ gnome	shift	c	Google Chrome
 gnome	shift	d	DeepSeek
 gnome	shift	f	Firefox
 gnome	shift	m	Gmail
-macos	app	b	Brave Browser
+macos	app	b	Brave
 macos	app	c	Claude
 macos	app	d	Discord
 macos	app	f	Finder
@@ -27,14 +27,14 @@ macos	app	j	Tao Monitor
 macos	app	k	Google Keep
 macos	app	m	Messenger
 macos	app	n	Notion
-macos	app	s	System Settings
+macos	app	s	Settings
 macos	app	space	kitty
 macos	app	t	Telegram
 macos	app	y	YouTube
 macos	shift	a	Apps
-macos	shift	b	Brave Browser
+macos	shift	b	Brave
 macos	shift	c	Google Chrome
-macos	shift	d	DeepSeek - Into the Unknown
+macos	shift	d	DeepSeek
 macos	shift	f	Firefox
 macos	shift	m	Gmail
 macos	shift	v	VMware Fusion
@@ -67,7 +67,7 @@ windows	app	m	Messenger
 windows	app	n	Notion
 windows	app	s	Settings
 windows	app	space	Terminal
-windows	app	t	Telegram Web
+windows	app	t	Telegram
 windows	app	y	YouTube
 windows	app	z	Zalo
 windows	shift	b	Brave

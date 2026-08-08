@@ -42,8 +42,9 @@ windows = "Terminal"
 
 [[app]]
 key = "b"
+# Khong can override macos: da do 08/08/2026, "Brave" khop "Brave Browser"
+# bang tang substring tren mac va khop exact tren Windows.
 id  = "Brave"
-macos = "Brave Browser"
 # sway dung chu thuong vi sway-beckon.sh lay id lam TEN WORKSPACE.
 sway = "brave"
 
@@ -89,16 +90,23 @@ id  = "Notion"
 
 [[app]]
 key = "s"
+# "Settings" khop "System Settings" bang substring tren mac, exact tren Windows.
+# Chieu nguoc lai khong dung: "System Settings" KHONG resolve tren Windows.
 id  = "Settings"
-macos = "System Settings"
 sway  = ""
 
 [[app]]
 key = "t"
-# PWA tren Windows/GNOME/sway. Tren Linux app native cung co nhung CO Y khong
-# dung: hai thu trung ten "Telegram" thi beckon khong phan biet duoc.
-id  = "Telegram Web"
-macos = "Telegram"
+# SUA 08/08/2026: id cu la "Telegram Web", va no KHONG resolve tren Windows --
+# tuc Cap+t tren Windows da hong am tham. "Telegram" khop exact tren ca mac lan
+# Windows nen no thanh id chung.
+#
+# Linux van dung PWA: o do app native CUNG duoc cai, hai thu trung ten
+# "Telegram" thi beckon khong phan biet duoc, nen chon PWA la co y. Vi vay
+# override khong bien mat ma DOI BEN -- tu macos sang gnome/sway.
+id  = "Telegram"
+gnome = "Telegram Web"
+sway  = "Telegram Web"
 
 [[app]]
 key = "y"
@@ -122,7 +130,6 @@ sway    = ""
 [[shift]]
 key = "b"
 id  = "Brave"
-macos = "Brave Browser"
 sway  = "brave"
 
 [[shift]]
@@ -131,8 +138,8 @@ id  = "Google Chrome"
 
 [[shift]]
 key = "d"
+# "DeepSeek" khop "DeepSeek - Into the Unknown" bang substring tren mac.
 id  = "DeepSeek"
-macos = "DeepSeek - Into the Unknown"
 
 [[shift]]
 key = "f"
