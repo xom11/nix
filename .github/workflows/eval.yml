@@ -104,3 +104,41 @@ jobs:
             nix eval --impure ".#darwinConfigurations.$h.system.drvPath"
             echo "::endgroup::"
           done
+
+  shortcuts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # nix_path: cac job linux/darwin o tren chi dung flake output
+      # (.#homeConfigurations...) nen khong bao gio can <nixpkgs>. Job nay thi
+      # co -- check-consumers.sh va cau lenh duoi day deu `import <nixpkgs>`.
+      # DeterminateSystems/nix-installer-action (dung o hai job tren) khong tu
+      # dang ky channel nao, va cachix/install-nix-action cung vay neu bo qua
+      # nix_path -- ca hai deu de <nixpkgs> khong resolve tren runner sach.
+      # Ghim theo dung ref cua flake.lock (nixpkgs-unstable) de mot lan nix
+      # eval khong lech ban voi flake output cua chinh repo nay.
+      - uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixpkgs-unstable
+
+      # Golden file la trong tai: ca ba parser deu so voi no, khong ai so
+      # truc tiep voi ai. Nho vay job Windows kiem duoc ban AHK ma khong can
+      # noi chuyen voi job nay.
+      - name: sync.sh phai da duoc chay
+        run: |
+          nix shell nixpkgs#lua -c ./configs/shortcuts/sync.sh
+          git diff --exit-code configs/shortcuts/
+
+      - name: Test parser Lua
+        run: LC_ALL=C nix shell nixpkgs#lua -c lua configs/shortcuts/parse_test.lua
+
+      - name: Duong Nix phai khop golden
+        run: |
+          for t in gnome macos sway windows; do
+            nix eval --impure --raw --expr \
+              "import ./configs/shortcuts/dump.nix { target = \"$t\"; }"
+          done | diff - configs/shortcuts/apps.expected.tsv
+
+      - name: Hai module tieu thu phai khop golden
+        run: nix shell nixpkgs#jq -c ./configs/shortcuts/check-consumers.sh

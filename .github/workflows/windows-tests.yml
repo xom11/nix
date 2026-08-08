@@ -14,11 +14,13 @@ on:
     paths:
       - "windows/**"
       - "home-manager/dotfiles/windows/**"
+      - "configs/shortcuts/**"
       - ".github/workflows/windows-tests.yml"
   pull_request:
     paths:
       - "windows/**"
       - "home-manager/dotfiles/windows/**"
+      - "configs/shortcuts/**"
       - ".github/workflows/windows-tests.yml"
   workflow_dispatch:
 
@@ -27,6 +29,33 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
+      # AutoHotkey khong co san tren runner. Truoc day dieu do khien
+      # ahkRuntimeSafety.Tests.ps1 phai loai khoi CI. Ban parser thi khac: neu
+      # no khong chay tren CI thi ca thiet ke "ba parser khong the lech nhau"
+      # mat mot chan.
+      #
+      # Ghim version + checksum, giong cach repo-hygiene.yml ghim gitleaks.
+      #
+      # windows/tests/shortcutsParse.Tests.ps1 chua ton tai -- no thuoc Task 5,
+      # con cho phan cung that de kiem. Cai AutoHotkey truoc ca file tieu thu no
+      # la co y: pin download + checksum nay duoc chung minh chay dung tren CI
+      # truoc khi Task 5 ha canh, thay vi ca hai cung lam moi mot luc. Pester
+      # glob *.Tests.ps1 nen mot file con thieu don gian la khong chay, khong
+      # phai loi.
+      - name: Cai AutoHotkey v2 (pin version + checksum)
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ver = '2.0.19'
+          $sha = '4e0d0e65655066a646a210951320feaef0729a3597177131adaec4066bef5869'
+          $url = "https://github.com/AutoHotkey/AutoHotkey/releases/download/v$ver/AutoHotkey_$ver.zip"
+          Invoke-WebRequest -Uri $url -OutFile ahk.zip
+          $got = (Get-FileHash ahk.zip -Algorithm SHA256).Hash.ToLower()
+          if ($got -ne $sha) { throw "checksum lech: $got" }
+          Expand-Archive ahk.zip -DestinationPath "$env:RUNNER_TEMP\ahk"
+          "AHK_EXE=$env:RUNNER_TEMP\ahk\AutoHotkey64.exe" |
+            Out-File -Append -Encoding utf8 $env:GITHUB_ENV
 
       - name: Run Pester
         shell: powershell
@@ -43,7 +72,12 @@ jobs:
 
           # ahkRuntimeSafety is the one file that launches AutoHotkey for real -- proving
           # switch-language.ahk survives a missing target window, and that launch-ahk.ahk
-          # parses. AutoHotkey is not on the runner, so it stays a local check.
+          # parses. AutoHotkey IS on the runner now (see the install step above), but that
+          # step drops it at $env:RUNNER_TEMP\ahk\AutoHotkey64.exe for the future
+          # shortcuts-parser tests, while this file hardcodes
+          # 'C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe' and does not read $env:AHK_EXE.
+          # So it still finds nothing and stays a local check -- exclude it here for that
+          # reason, not because the binary is absent.
           #
           # It is the ONLY excluded file, so nothing else may hide there: assertions that just
           # read the .ahk files as text belong in switchLanguage.Tests.ps1. One that did sit

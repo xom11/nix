@@ -371,6 +371,37 @@ does **not** mean the shortcut policy was applied. The activation entry also
 swallows failures (`|| echo "dotbrave: apply failed, continuing activation"`),
 so read its output rather than trusting the switch's exit status.
 
+### apps.toml: một file, bốn người đọc, hai thời điểm
+
+`configs/shortcuts/apps.toml` là bảng phím tắt focus-or-launch dùng chung cho
+macOS (Hammerspoon), Windows (AHK), GNOME (dconf) và sway. Engine là `beckon` ở
+cả bốn nơi; file này chỉ là dữ liệu.
+
+Cái bẫy giống dotbrave nhưng rộng hơn — **cùng một file, hai thời điểm đọc**:
+
+| Nền tảng | Đọc bằng | Sửa apps.toml rồi áp dụng bằng |
+|---|---|---|
+| macOS | `parse.lua` lúc chạy | reload Hammerspoon |
+| Windows | `parse.ahk` lúc chạy | reload AHK |
+| GNOME | `builtins.fromTOML` lúc eval | **`home-manager switch`** |
+| sway | `builtins.fromTOML` lúc eval | **switch** + reload sway |
+
+Sửa file rồi chỉ reload thì mac và Windows đổi còn GNOME/sway không, và không
+có gì báo. `sway.d/conf.d/launch-app.conf` không còn chứa binding app nào —
+chúng sinh ra vào `~/.config/sway-nix/launch-app.conf`.
+
+Ba parser tay (Lua, AHK, Nix) chỉ hiểu một **subset TOML** hạn chế: dòng trống,
+dòng `#`, header `[[app]]`/`[[shift]]`, và `khoá = "giá trị"` với giá trị trong
+ngoặc kép, không escape, **không comment cuối dòng**. Viết TOML hợp lệ nhưng
+ngoài subset là parser báo lỗi và dừng — cố ý, vì bỏ qua âm thầm sẽ khiến Nix
+đọc đủ còn Lua/AHK đọc thiếu.
+
+`apps.expected.tsv` là golden file, trọng tài của cả ba. Sửa `apps.toml` là phải
+chạy `configs/shortcuts/sync.sh`; CI chạy lại rồi `git diff --exit-code`.
+
+Tên app phải khớp **chính xác** với `beckon -L` trên target đó. Khớp chính xác
+~57 ms; rơi xuống quét toàn catalog ~400 ms mỗi lần bấm phím.
+
 ### Secrets (agenix)
 
 Secrets get the same "edit without rebuilding" property, but by a different
