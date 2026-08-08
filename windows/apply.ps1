@@ -52,6 +52,8 @@ $modules = @(
     'services.kanata-watchdog'    # must follow services.kanata; revives it between logons
     'services.ahk'
     'services.ahk-watchdog'       # must follow services.ahk; revives main.ahk between logons
+    'services.beckon-serve'       # hotkey host (replaces launch-app.ahk); no ordering constraint vs vkey/kanata -- RegisterHotKey, not a hook
+    'services.beckon-serve-watchdog' # revives beckon --serve between logons; the single-instance lock makes it a no-op while healthy
     'services.sshd'
 )
 
