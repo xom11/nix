@@ -1,0 +1,77 @@
+gnome	app	b	Brave
+gnome	app	c	Claude
+gnome	app	d	Discord
+gnome	app	g	Google Gemini
+gnome	app	h	Facebook
+gnome	app	j	Tao Monitor
+gnome	app	k	Google Keep
+gnome	app	m	Messenger
+gnome	app	n	Notion
+gnome	app	s	Settings
+gnome	app	space	kitty
+gnome	app	t	Telegram Web
+gnome	app	y	YouTube
+gnome	app	z	Zalo
+gnome	shift	b	Brave
+gnome	shift	c	Google Chrome
+gnome	shift	d	DeepSeek
+gnome	shift	f	Firefox
+gnome	shift	m	Gmail
+macos	app	b	Brave Browser
+macos	app	c	Claude
+macos	app	d	Discord
+macos	app	f	Finder
+macos	app	g	Google Gemini
+macos	app	h	Facebook
+macos	app	j	Tao Monitor
+macos	app	k	Google Keep
+macos	app	m	Messenger
+macos	app	n	Notion
+macos	app	s	System Settings
+macos	app	space	kitty
+macos	app	t	Telegram
+macos	app	y	YouTube
+macos	shift	a	Apps
+macos	shift	b	Brave Browser
+macos	shift	c	Google Chrome
+macos	shift	d	DeepSeek - Into the Unknown
+macos	shift	f	Firefox
+macos	shift	m	Gmail
+macos	shift	v	VMware Fusion
+sway	app	b	brave
+sway	app	c	Claude
+sway	app	d	Discord
+sway	app	g	Gemini
+sway	app	h	Facebook
+sway	app	j	Tao Monitor
+sway	app	k	Google Keep
+sway	app	m	Messenger
+sway	app	n	Notion
+sway	app	space	kitty
+sway	app	t	Telegram Web
+sway	app	y	YouTube
+sway	shift	b	brave
+sway	shift	c	Google Chrome
+sway	shift	d	DeepSeek
+sway	shift	f	Firefox
+sway	shift	m	Gmail
+windows	app	b	Brave
+windows	app	c	Claude
+windows	app	d	Discord
+windows	app	f	File Explorer
+windows	app	g	Google Gemini
+windows	app	h	Facebook
+windows	app	j	Tao Monitor
+windows	app	k	Google Keep
+windows	app	m	Messenger
+windows	app	n	Notion
+windows	app	s	Settings
+windows	app	space	Terminal
+windows	app	t	Telegram Web
+windows	app	y	YouTube
+windows	app	z	Zalo
+windows	shift	b	Brave
+windows	shift	c	Google Chrome
+windows	shift	d	DeepSeek
+windows	shift	f	Firefox
+windows	shift	m	Gmail

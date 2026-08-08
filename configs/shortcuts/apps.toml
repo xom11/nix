@@ -1,0 +1,134 @@
+# Nguon chan ly cho phim tat focus-or-launch tren ca bon nen tang.
+# Engine la `beckon` o moi noi; file nay chi la du lieu.
+#
+#   Cap = cmd+ctrl+alt (macOS) / super+ctrl+alt (Windows, Linux)
+#
+# Khoa:
+#   key                             phim trong lop
+#   id                              ten beckon cho moi target khong co override
+#   macos / windows / gnome / sway  override rieng target do
+#                                   "" (rong) = target do KHONG bind phim nay
+#
+# Ten phai khop CHINH XAC voi `beckon -L` tren target do. Dua vao tang khop mo
+# cua beckon la bay hieu nang: khop chinh xac ~57 ms, roi xuong quet toan
+# catalog ~400 ms MOI LAN bam phim. Xem windows/modules/programs/beckon.
+#
+# Subset TOML cho phep: dong trong, dong #, header [[app]]/[[shift]], va
+#   khoa = "gia tri"  voi gia tri trong ngoac kep, khong escape, khong comment
+# cuoi dong. parse.lua va parse.ahk chi hieu chung nay va bao loi voi thu khac.
+
+# ── Lop 1: Cap + <key> ────────────────────────────────────────────────
+
+[[app]]
+key = "space"
+id  = "kitty"
+windows = "Terminal"
+
+[[app]]
+key = "b"
+id  = "Brave"
+macos = "Brave Browser"
+# sway dung chu thuong vi sway-beckon.sh lay id lam TEN WORKSPACE.
+sway = "brave"
+
+[[app]]
+key = "c"
+id  = "Claude"
+
+[[app]]
+key = "d"
+id  = "Discord"
+
+[[app]]
+key = "f"
+id  = "File Explorer"
+macos = "Finder"
+gnome = ""
+sway  = ""
+
+[[app]]
+key = "g"
+id  = "Google Gemini"
+sway = "Gemini"
+
+[[app]]
+key = "h"
+id  = "Facebook"
+
+[[app]]
+key = "j"
+id  = "Tao Monitor"
+
+[[app]]
+key = "k"
+id  = "Google Keep"
+
+[[app]]
+key = "m"
+id  = "Messenger"
+
+[[app]]
+key = "n"
+id  = "Notion"
+
+[[app]]
+key = "s"
+id  = "Settings"
+macos = "System Settings"
+sway  = ""
+
+[[app]]
+key = "t"
+# PWA tren Windows/GNOME/sway. Tren Linux app native cung co nhung CO Y khong
+# dung: hai thu trung ten "Telegram" thi beckon khong phan biet duoc.
+id  = "Telegram Web"
+macos = "Telegram"
+
+[[app]]
+key = "y"
+id  = "YouTube"
+
+[[app]]
+key = "z"
+id  = "Zalo"
+macos = ""
+sway  = ""
+
+# ── Lop 2: Cap + Shift + <key> ────────────────────────────────────────
+
+[[shift]]
+key = "a"
+id  = "Apps"
+windows = ""
+gnome   = ""
+sway    = ""
+
+[[shift]]
+key = "b"
+id  = "Brave"
+macos = "Brave Browser"
+sway  = "brave"
+
+[[shift]]
+key = "c"
+id  = "Google Chrome"
+
+[[shift]]
+key = "d"
+id  = "DeepSeek"
+macos = "DeepSeek - Into the Unknown"
+
+[[shift]]
+key = "f"
+id  = "Firefox"
+
+[[shift]]
+key = "m"
+id  = "Gmail"
+
+[[shift]]
+key = "v"
+id  = "VMware Fusion"
+windows = ""
+gnome   = ""
+sway    = ""

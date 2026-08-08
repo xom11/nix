@@ -1,66 +1,39 @@
-# Shortcuts
+# Phim tat focus-or-launch
 
+<!-- SINH RA TU apps.toml BOI sync.sh -- DUNG SUA TAY -->
 
-- **Cap** = `cmd + ctrl + alt` (macOS) / `super + ctrl + alt` (Linux/Win)
-- **Tab**   = `cmd + ctrl + shift` (macOS) / `super + ctrl + shift` (Linux/Win)
+- `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
+- Engine la `beckon` o ca bon nen tang.
 
----
+## `Cap` + phim
 
-## Focus or launch app
+| Phim | macOS | Windows | GNOME | sway |
+|---|---|---|---|---|
+| `b` | Brave Browser | Brave | Brave | brave |
+| `c` | Claude | Claude | Claude | Claude |
+| `d` | Discord | Discord | Discord | Discord |
+| `f` | Finder | File Explorer | -- | -- |
+| `g` | Google Gemini | Google Gemini | Google Gemini | Gemini |
+| `h` | Facebook | Facebook | Facebook | Facebook |
+| `j` | Tao Monitor | Tao Monitor | Tao Monitor | Tao Monitor |
+| `k` | Google Keep | Google Keep | Google Keep | Google Keep |
+| `m` | Messenger | Messenger | Messenger | Messenger |
+| `n` | Notion | Notion | Notion | Notion |
+| `s` | System Settings | Settings | Settings | -- |
+| `space` | kitty | Terminal | kitty | kitty |
+| `t` | Telegram | Telegram Web | Telegram Web | Telegram Web |
+| `y` | YouTube | YouTube | YouTube | YouTube |
+| `z` | -- | Zalo | Zalo | -- |
 
-| Key       | App                  |
-|-----------|----------------------|
-| `b`       | Vivaldi              |
-| `c`       | Claude               |
-| `d`       | Discord              |
-| `f`       | Files management     |
-| `h`       | Gemini               |
-| `g`       | Google Gemini        |
-| `k`       | Google Keep          |
-| `m`       | Messenger            |
-| `n`       | Notion               |
-| `o`       | Obsidian             |
-| `q`       | Qutebrowser          |
-| `s`       | System Settings      |
-| `space`   | kitty (terminal)     |
-| `t`       | Telegram             |
-| `y`       | Youtube              |
-| `z`       | Zalo                 |
+## `Cap` + `Shift` + phim
 
-### Cap + `a` → chord (extended apps)
-
-| Then key | App                |
-|----------|--------------------|
-| `a`      | Apps               |
-| `b`      | Brave Browser      |
-| `c`      | Google Chrome      |
-| `d`      | DeepSeek           |
-| `f`      | Firefox            |
-| `m`      | Gmail              |
-
----
-
-## Tab — Utilities (Tab.spoon)
-
-| Key       | Action                                                  |
-|-----------|---------------------------------------------------------|
-| `r`       | Reload config                                           |
-| `t`       | Toggle Clock                                            |
-| `p`       | Toggle Battery                                          |
-| `s`       | Screenshot                                              |
-
-
----
-
-## Power management
-
-| Combo                  | Action          |
-|------------------------|-----------------|
-| `cmd + alt + L`        | Lock screen     |
-| `cmd + alt + S`        | Sleep           |
-| `cmd + alt + shift + S`| Shutdown (xác nhận) |
-| `cmd + alt + shift + R`| Restart (xác nhận)  |
-| `cmd + alt + shift + L`| Logout          |
-
----
+| Phim | macOS | Windows | GNOME | sway |
+|---|---|---|---|---|
+| `a` | Apps | -- | -- | -- |
+| `b` | Brave Browser | Brave | Brave | brave |
+| `c` | Google Chrome | Google Chrome | Google Chrome | Google Chrome |
+| `d` | DeepSeek - Into the Unknown | DeepSeek | DeepSeek | DeepSeek |
+| `f` | Firefox | Firefox | Firefox | Firefox |
+| `m` | Gmail | Gmail | Gmail | Gmail |
+| `v` | VMware Fusion | -- | -- | -- |
 
