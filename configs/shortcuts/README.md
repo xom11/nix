@@ -4,8 +4,6 @@
 
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
 - Engine la `beckon` o ca bon nen tang.
-- Cot **Windows** duoi day la trang thai DU DINH, CHUA chay that: `parse.ahk`
-  chua ton tai nen `launch-app.ahk` van dung bang phim hardcode rieng cua no.
 
 ## `Cap` + phim
 
