@@ -1,0 +1,22 @@
+-- Ép tiếng Anh ở Normal mode, khôi phục bộ gõ ở Insert mode.
+--
+-- Trước đây là extras/language-nvim.lua trong repo này. Tách ra thành plugin
+-- công bố được vì nó giải một bài toán không repo cấu hình nào nên giữ riêng:
+-- với bộ gõ tiếng Việt NGOÀI (GoNhanh/GoTiengViet/EVKey/OpenKey), `vi` và `en`
+-- là CÙNG một input source `com.apple.keylayout.ABC` — thứ phân biệt là tiến
+-- trình bộ gõ bật hay tắt, mà macOS không phơi ra thành input source. Sáu
+-- plugin cùng mảng trên GitHub đều làm việc trên input-source ID nên không xử
+-- lý được; `tongue` thì có.
+--
+-- Bản tách ra sửa bốn lỗi mà bản trong repo này vẫn còn, cả bốn đều đã tái hiện
+-- được bằng thực nghiệm — xem README của plugin. Đáng nhớ nhất: `<C-c>` KHÔNG
+-- bắn InsertLeave (`:help i_CTRL-C`), nên bản cũ để người dùng kẹt tiếng Việt ở
+-- Normal mode vô thời hạn. Bản mới nghe ModeChanged.
+--
+-- Không cần guard theo OS: `nvim-pack-lock.json` cài plugin bất kể có gọi
+-- vim.pack.add hay không (đã kiểm), nên guard chỉ tạo cảm giác an toàn giả.
+-- Trên host không có `tongue` lẫn `fcitx5-remote`, và trong phiên SSH, plugin
+-- tự resolve ra nil rồi nằm im — đúng thiết kế. `:checkhealth tongue` nói rõ
+-- nó đang ở trạng thái nào và vì sao.
+vim.pack.add({ { src = "https://github.com/xom11/tongue.nvim" } }, { load = true, confirm = false })
+require("tongue").setup()

@@ -173,6 +173,10 @@
       "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
       "src": "https://github.com/akinsho/toggleterm.nvim"
     },
+    "tongue.nvim": {
+      "rev": "6271c53301af1b9a988ab8d56aef1cf981a4a2a5",
+      "src": "https://github.com/xom11/tongue.nvim"
+    },
     "transparent.nvim": {
       "rev": "8ac59883de84e9cd1850ea25cf087031c5ba7d54",
       "src": "https://github.com/xiyaowong/transparent.nvim"
