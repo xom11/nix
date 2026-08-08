@@ -22,10 +22,12 @@
         # do, chay tay `beckon --serve` tren file that cung vo hai -- lock chan.)
         $logDir = Join-Path $env:LOCALAPPDATA 'beckon'
         if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
-        $log = Join-Path $logDir 'serve.log'
+        $log = Join-Path $logDir 'serve-watchdog.log'
         # Bọc cmd /c để bắt stderr: sự cố 09/08 mù hoàn toàn vì task không có
         # log — "N shortcuts registered" khi đó là toast đếm parse, không phải
         # bằng chứng. > (ghi đè, không >>): mỗi lần start là một đời serve.
+        # Watchdog probe nào serve dang song thi file nay chi chua dong tu-choi-lock
+        # — do la dau hieu KHOE; serve.log la cua task chinh, watchdog khong duoc dung.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute 'cmd.exe' `
             -Argument "/c `"`"$($beckonExe.Source)`" --serve `"$config`" 2> `"$log`"`""
