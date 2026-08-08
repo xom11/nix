@@ -1,30 +1,52 @@
 #Requires AutoHotkey v2.0
 
-Beckon(name) {
-    try RunWait('beckon.exe "' name '"', , "Hide")
+; Bang phim song o configs/shortcuts/apps.toml, dung chung voi macOS, GNOME va
+; sway. File nay chi con viec bind phim va goi beckon.
+;
+; Lop 1 = Cap + <key>          (^#!)
+; Lop 2 = Cap + Shift + <key>  (^#!+)
+;
+; Truoc day lop 2 la chord Cap+a roi phim, qua lib/which-key.ahk. Chuyen sang
+; modifier don giup GNOME co lop 2 lan dau (dconf khong lam duoc chord) va xoa
+; ba ban trien khai chord rieng cua ba nen tang.
+
+#Include %A_ScriptDir%\..\..\..\..\configs\shortcuts\parse.ahk
+
+LaunchAppFail(msg) {
+    TrayTip(msg, "LaunchApp", 3)
+    ; LogLine() dinh nghia trong main.ahk, ghi vao %LOCALAPPDATA%\ahk-main.log.
+    ; try de file nay chay doc lap duoc khi go loi.
+    try LogLine("launch-app  " msg)
 }
 
-; ── Apps ──
-^#!b:: Beckon("Brave")
-^#!c:: Beckon("Claude")
-^#!d:: Beckon("Discord")
-^#!g:: Beckon("Google Gemini")
-^#!k:: Beckon("Google Keep")
-^#!m:: Beckon("Messenger")
-^#!n:: Beckon("Notion")
-^#!t:: Beckon("Telegram Web")
-^#!y:: Beckon("YouTube")
-^#!z:: Beckon("Zalo")
-^#!Space:: Beckon("Terminal")
-^#!f:: Beckon("File Explorer")
-^#!s:: Beckon("Settings") 
-; ── WhichKey submenu ──
-#Include lib/which-key.ahk
-menuApps := Map(
-    "d", { Desc: "DeepSeek", Action: (*) => Beckon("DeepSeek") },
-    "b", { Desc: "Brave", Action: (*) => Beckon("Brave") },
-    "m", { Desc: "Gmail", Action: (*) => Beckon("Gmail") },
-    "c", { Desc: "Chrome", Action: (*) => Beckon("Google Chrome") },
-    "f", { Desc: "Facebook", Action: (*) => Beckon("Facebook") },
-)
-^#!a:: WhichKey("🚀 Quick Apps", menuApps)
+Beckon(name) {
+    try {
+        code := RunWait('beckon.exe "' name '"', , "Hide")
+    } catch as e {
+        LaunchAppFail("khong chay duoc beckon.exe: " e.Message)
+        return
+    }
+    if (code != 0)
+        LaunchAppFail("beckon " name ": exit " code)
+}
+
+BeckonHandler(id) => (*) => Beckon(id)
+
+LaunchAppInit() {
+    try {
+        layers := ShortcutsParse(ShortcutsDir() "apps.toml")
+    } catch as e {
+        ; KHONG fallback bang cung: tha khong co phim nao con hon chay bang cu
+        ; roi tuong da ap dung.
+        LaunchAppFail("apps.toml: " e.Message)
+        return
+    }
+
+    for b in ShortcutsBindings(layers, "app", "windows")
+        Hotkey("^#!" b["key"], BeckonHandler(b["id"]))
+
+    for b in ShortcutsBindings(layers, "shift", "windows")
+        Hotkey("^#!+" b["key"], BeckonHandler(b["id"]))
+}
+
+LaunchAppInit()
