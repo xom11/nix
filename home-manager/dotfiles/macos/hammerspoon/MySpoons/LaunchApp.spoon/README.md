@@ -7,7 +7,11 @@ Hyper key (cmd+ctrl+alt) app launcher with toggle behavior.
 | Key | Action |
 |---|---|
 | `hyper + key` | Launch or focus app. If already focused, switch to another app. |
-| `hyper + a + key` | Same, for extended app list (via RecursiveBinder menu). |
+| `hyper + shift + key` | Same, for the extended app list. |
+
+The actual key → app table is not here — it is generated from
+`configs/shortcuts/apps.toml`, the single source shared with Windows, GNOME
+and sway. See `configs/shortcuts/README.md` for the current table.
 
 ## Two types of shortcuts
 

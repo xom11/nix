@@ -15,8 +15,10 @@
   # generation nên có GC root đàng hoàng. Đổi lại là read-only, đúng ý: đây không phải dotfile
   # để sửa tay như MySpoons.
   #
-  # Chỉ hai spoon này thực sự được dùng: RecursiveBinder (LaunchApp.spoon:51 gọi lúc load,
-  # thiếu là cả init.lua chết) và AClock (tab+t). AllBrightness từng được nạp nhưng không bao
+  # Chỉ hai spoon này thực sự được dùng: RecursiveBinder (LaunchTerminal.spoon:15
+  # gọi lúc load, thiếu là rb.singleKey thành nil) và AClock (tab+t).
+  # LaunchApp.spoon TỪNG dùng RecursiveBinder cho lớp Cap+a; từ khi lớp 2 chuyển
+  # sang Cap+Shift thì không còn. AllBrightness từng được nạp nhưng không bao
   # giờ start(), InputSourceSwitch chỉ phục vụ LanguageSwitcher (spoon đó nay đã xoá) — bỏ cả hai.
   thirdPartySpoons = ["RecursiveBinder" "AClock"];
 in

@@ -11,6 +11,9 @@
 --- algorithm — including step 5a (cycle within an app's windows) which the
 --- old Lua version skipped.
 ---
+--- Bang phim (danh sach nao bam phim nao) khong con nam trong file nay --
+--- xem configs/shortcuts/apps.toml.
+---
 --- See https://github.com/xom11/beckon
 
 local obj = {}
@@ -18,37 +21,42 @@ obj.__index = obj
 
 local hyper = { "cmd", "ctrl", "alt" }
 
-local defaultShortcuts = {
-	{ "b", "Brave Browser" },
-	{ "c", "Claude" },
-	-- { "c", "ChatGPT" },
-	{ "d", "Discord" },
-	{ "f", "Finder" },
-	{ "h", "Gemini" },
-	{ "g", "Google Gemini" },
-	{ "k", "Google Keep" },
-	{ "m", "Messenger" },
-	{ "n", "Notion" },
-	{ "s", "System Settings" },
-	{ "space", "kitty" },
-	{ "t", "Telegram" },
-	{ "o", "Obsidian" },
-	{ "y", "Youtube" },
-	{ "z", "Zalo" },
-	{ "q", "Qutebrowser" },
-	{ "j", "Tao Monitor" },
-}
-local extendShortcuts = {
-	{ "a", "Apps" },
-	{ "b", "Brave Browser" },
-	{ "c", "Google Chrome" },
-	{ "d", "DeepSeek - Into the Unknown" },
-	{ "m", "Gmail" },
-	{ "v", "VMware Fusion" },
-	{ "f", "Firefox" },
-}
+-- Bang phim song o configs/shortcuts/apps.toml, dung chung voi Windows, GNOME
+-- va sway. Spoon nay chi con viec bind phim va goi beckon.
+--
+-- KHONG dung duong dan tuong doi: ~/.hammerspoon/MySpoons di qua hai lop
+-- symlink (~/.hammerspoon/MySpoons -> store -> repo), nen cho file nay nam
+-- khong noi len cho repo nam. repoPath luon la $HOME/.nix (lib/mkConfigs.nix).
+-- NIX_SHORTCUTS_DIR de test tro sang cho khac.
+local shortcutsDir = os.getenv("NIX_SHORTCUTS_DIR")
+	or ((os.getenv("HOME") or "") .. "/.nix/configs/shortcuts")
 
-local rb = hs.loadSpoon("RecursiveBinder")
+local hyperShift = { "cmd", "ctrl", "alt", "shift" }
+
+--- @return table|nil bindings, string|nil err
+local function loadBindings()
+	local ok, parser = pcall(dofile, shortcutsDir .. "/parse.lua")
+	if not ok then
+		return nil, "khong nap duoc parse.lua: " .. tostring(parser)
+	end
+
+	local f = io.open(shortcutsDir .. "/apps.toml", "r")
+	if not f then
+		return nil, "khong mo duoc apps.toml o " .. shortcutsDir
+	end
+	local text = f:read("*a")
+	f:close()
+
+	local layers, err = parser.parse(text)
+	if not layers then
+		return nil, "apps.toml: " .. err
+	end
+
+	return {
+		app = parser.bindings(layers, "app", "macos"),
+		shift = parser.bindings(layers, "shift", "macos"),
+	}
+end
 
 -- Path to the beckon binary. We DON'T use `hs.execute(cmd, true)` because
 -- the second arg sources the user's login shell (~/.zshrc) before each
@@ -112,24 +120,28 @@ end
 function obj:init()
 	beckonBin = resolveBeckon()
 	if not beckonBin then
-		hs.alert.show("LaunchApp: không tìm thấy beckon — 18 phím hyper sẽ không có tác dụng", 5)
+		hs.alert.show("LaunchApp: khong tim thay beckon -- phim hyper se khong co tac dung", 5)
 	end
 
-	for _, shortcut in ipairs(defaultShortcuts) do
-		hs.hotkey.bind(hyper, shortcut[1], function()
-			beckon(shortcut[2])
+	local b, err = loadBindings()
+	if not b then
+		-- KHONG fallback bang cung. Fallback im lang nghia la sua apps.toml,
+		-- reload, thay phim cu van chay, va tuong da ap dung.
+		hs.alert.show("LaunchApp: " .. err, 8)
+		return
+	end
+
+	for _, s in ipairs(b.app) do
+		hs.hotkey.bind(hyper, s.key, function()
+			beckon(s.id)
 		end)
 	end
 
-	-- hyper + a + <key> → launch from extendShortcuts
-	local keymap = {}
-	for _, shortcut in ipairs(extendShortcuts) do
-		keymap[rb.singleKey(shortcut[1], shortcut[2])] = function()
-			beckon(shortcut[2])
-		end
+	for _, s in ipairs(b.shift) do
+		hs.hotkey.bind(hyperShift, s.key, function()
+			beckon(s.id)
+		end)
 	end
-	local starter = rb.recursiveBind(keymap)
-	hs.hotkey.bind(hyper, "a", starter)
 end
 
 return obj
