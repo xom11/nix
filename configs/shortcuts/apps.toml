@@ -37,6 +37,11 @@
 
 [[app]]
 key = "space"
+# KHONG gop hai ten nay lam mot. Da thu 08/08/2026:
+#   - "kitty" KHONG resolve tren Windows.
+#   - "Terminal" tren mac resolve EXACT vao Terminal.app cua Apple, tuc mac se
+#     im lang mo NHAM terminal, va vi la exact match nen khong co dau hieu gi.
+# Day la mot trong hai cho override la BAT BUOC, khong phai du thua.
 id  = "kitty"
 windows = "Terminal"
 
@@ -58,6 +63,9 @@ id  = "Discord"
 
 [[app]]
 key = "f"
+# Cho thu hai override la BAT BUOC: hai app khac nhau that, khong ben nao nhan
+# ten ben kia. Da thu 08/08/2026: "Finder" khong resolve tren Windows va
+# "File Explorer" khong resolve tren mac.
 id  = "File Explorer"
 macos = "Finder"
 gnome = ""
