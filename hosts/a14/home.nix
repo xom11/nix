@@ -30,6 +30,7 @@
       tools.enable = true;
     };
     programs = {
+      agenix.enable = true;
       btop.enable = true;
       git.enable = true;
       herdr.enable = true;
@@ -38,12 +39,6 @@
       tmux.enable = true;
       yazi.enable = true;
       zsh.enable = true;
-    };
-    services = {
-      # syncthing.enable = true;
-    };
-    programs = {
-      agenix.enable = true;
     };
   };
   home.packages = [

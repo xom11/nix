@@ -34,7 +34,6 @@ Describe 'windows/apply.ps1 shared entry point' {
         # these get their own check.
         $DisabledModules = @(
             'dotfiles.powertoys'
-            'services.syncthing'
         )
     }
 

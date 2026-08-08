@@ -249,7 +249,7 @@ system-manager/      # system-level config on non-NixOS Linux (a14, desktop):
 home-manager/
   base/              # username, homeDir, stateVersion, sessionVariables
                      #   + macos/, ubuntu/, nixos/ — each carries that platform's `update` alias
-  programs/          # btop, git, herdr, nvim, ssh, tmux, yazi, zsh
+  programs/          # agenix, btop, git, herdr, nvim, ssh, tmux, yazi, zsh
                      #   herdr: pkgs.herdr now builds on darwin too, so the module
                      #   owns the binary as well as the config. Cost: `herdr update`
                      #   and `herdr channel` no longer work (read-only store) --
@@ -268,7 +268,6 @@ home-manager/
                      # conda, rofi, run-or-raise, vscode
   environments/      # fonts, gnome, i18n, i3wm, sway, wayland
   pkgs/              # dev, lang, nixos, tools, ubuntu
-  services/          # agenix, syncthing
 overlays/            # local packages: fcitx5-macos, neofetch2, raiseorlaunch
 hosts/{device}/      # per-device configuration.nix and/or home.nix
 configs/             # non-Nix: ansible playbooks, kanata layouts

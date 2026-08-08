@@ -50,11 +50,10 @@ nix-darwin/              # macOS system modules
 └── setting/             #   Dock, Finder, trackpad, keyboard, dark mode
 home-manager/            # User-level modules (cross-platform)
 ├── base/                #   User, home dir, env variables (+ macos/, ubuntu/)
-├── programs/            #   btop, git, herdr, nvim, ssh, tmux, yazi, zsh
+├── programs/            #   agenix, btop, git, herdr, nvim, ssh, tmux, yazi, zsh
 ├── dotfiles/            #   Symlinked configs (ai/, browser/, terminal/, macos/, vscode, ...)
 ├── environments/        #   fonts, gnome, i18n (Vietnamese), i3wm, sway, wayland
-├── pkgs/                #   Package groups: dev, lang, tools, nixos, ubuntu
-└── services/            #   agenix, syncthing
+└── pkgs/                #   Package groups: dev, lang, tools, nixos, ubuntu
 nixos/                   # NixOS system modules
 ├── base/                #   Boot, network, locale, users, bluetooth
 ├── programs/            #   nix-ld

@@ -30,9 +30,6 @@
             'AutoHotkey.AutoHotkey'
             'gerardog.gsudo'              # de-elevation in shell (sudo equivalent)
             'PhatMT97.VKey'               # Vietnamese IME; ahk/evkey-monitor.ahk watches it
-
-            # ---- Service ----
-            'Syncthing.Syncthing'         # installed on demand; the logon task is disabled in apply.ps1
         )
     }
 }

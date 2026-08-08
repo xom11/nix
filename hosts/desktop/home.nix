@@ -36,9 +36,6 @@
       yazi.enable = true;
       zsh.enable = true;
     };
-    services = {
-      # syncthing.enable = true;
-    };
   };
   home.packages = [
     pkgs.discordchatexporter-cli

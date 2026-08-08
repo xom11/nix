@@ -2,7 +2,6 @@ Describe 'windows scheduled service task modules' {
     BeforeAll {
         $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
         $AhkModulePath = Join-Path $RepoRoot 'windows\modules\services\ahk\module.ps1'
-        $SyncthingModulePath = Join-Path $RepoRoot 'windows\modules\services\syncthing\module.ps1'
 
         # The modules compare principals through Test-TaskUserMatch; apply.ps1 imports this lib
         # before running them, so the tests have to provide it too.
@@ -45,34 +44,6 @@ Describe 'windows scheduled service task modules' {
                 }
             }
         }
-
-        function New-SyncthingTask {
-            param([string]$Execute)
-            [pscustomobject]@{
-                Actions = @([pscustomobject]@{
-                    Execute   = $Execute
-                    Arguments = '--no-browser --no-console'
-                })
-                Triggers = @([pscustomobject]@{
-                    CimClass = [pscustomobject]@{ CimClassName = 'MSFT_TaskLogonTrigger' }
-                    UserId   = $script:UserId
-                })
-                Principal = [pscustomobject]@{
-                    UserId    = ($script:UserId -split '\\')[-1]
-                    LogonType = 'Interactive'
-                    RunLevel  = 'Limited'
-                }
-                Settings = [pscustomobject]@{
-                    Enabled                       = $true
-                    DisallowStartIfOnBatteries    = $false
-                    StopIfGoingOnBatteries        = $false
-                    ExecutionTimeLimit            = 'PT0S'
-                    RestartCount                  = 3
-                    RestartInterval               = 'PT1M'
-                }
-                Description = 'Run Syncthing continuously in background'
-            }
-        }
     }
 
     Context 'AutoHotkey task' {
@@ -109,41 +80,6 @@ Describe 'windows scheduled service task modules' {
 
             Assert-MockCalled -CommandName Register-ScheduledTask -Times 1 -Exactly -Scope It -ParameterFilter {
                 $TaskName -eq 'AHKrunning' -and $Force
-            }
-        }
-    }
-
-    Context 'Syncthing task' {
-        BeforeEach {
-            $script:Ctx = @{}
-            $script:SyncthingExe = 'C:\Program Files\Syncthing\syncthing.exe'
-            $script:UserId = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-
-            Mock Get-Command { [pscustomobject]@{ Source = $script:SyncthingExe } }
-            Mock Register-ScheduledTask { }
-            Mock Write-OK { }
-            Mock Write-Skip { }
-            Mock Write-Warn { }
-        }
-
-        It 'does not register an already matching Syncthing task' {
-            Mock Get-ScheduledTask { New-SyncthingTask -Execute $script:SyncthingExe }
-
-            $module = & $SyncthingModulePath
-            & $module.Apply $script:Ctx
-
-            Assert-MockCalled -CommandName Register-ScheduledTask -Times 0 -Exactly -Scope It
-            Assert-MockCalled -CommandName Write-Skip -Times 1 -Exactly -Scope It -ParameterFilter { $Msg -like 'scheduled task: Syncthing*' }
-        }
-
-        It 'repairs a Syncthing task whose action has drifted' {
-            Mock Get-ScheduledTask { New-SyncthingTask -Execute 'C:\stale\syncthing.exe' }
-
-            $module = & $SyncthingModulePath
-            & $module.Apply $script:Ctx
-
-            Assert-MockCalled -CommandName Register-ScheduledTask -Times 1 -Exactly -Scope It -ParameterFilter {
-                $TaskName -eq 'Syncthing' -and $Force
             }
         }
     }

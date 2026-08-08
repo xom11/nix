@@ -60,7 +60,6 @@ mkModule config ./. {
       "sleepwatcher"
       "tailscale"
       "duti"
-      "syncthing"
     ];
 
     casks = [
