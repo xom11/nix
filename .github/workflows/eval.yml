@@ -142,3 +142,14 @@ jobs:
 
       - name: Hai module tieu thu phai khop golden
         run: nix shell nixpkgs#jq -c ./configs/shortcuts/check-consumers.sh
+
+      # File per-target moi (plan beckon-serve). Chay --check bang DUNG rev
+      # beckon da pin trong flake.lock — CI kiem cung mot binary ma cac host
+      # se deploy, khong phai main moi nhat. `nix run` build beckon tu source
+      # tren runner (~vai phut, khong cache) — chap nhan duoc voi tan suat
+      # push cua repo nay.
+      - name: beckon --check apps.macos.toml
+        run: |
+          rev="$(nix eval --raw --impure --expr \
+            '(builtins.fromJSON (builtins.readFile ./flake.lock)).nodes.beckon.locked.rev')"
+          nix run "github:xom11/beckon/$rev" -- --check configs/shortcuts/apps.macos.toml
