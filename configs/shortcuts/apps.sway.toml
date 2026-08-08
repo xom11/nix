@@ -1,0 +1,26 @@
+# Phim tat focus-or-launch — TARGET: sway. Doc luc EVAL, nen sua file nay
+# la PHAI switch. sway chi `exec beckon` tran: khong reload, khong goi cac
+# subprocess khac; chi cap nhap bien tren sway config va activate binding moi.
+# Cap giu = ctrl+super+alt (kanata; super = phim Windows/Super).
+# Ten khop CHINH XAC `beckon -L`: exact ~57ms, truot = quet catalog ~400ms.
+
+# ── Cap + phim ──────────────────────────────────────────────────────────
+"ctrl+super+alt+space" = "kitty"
+"ctrl+super+alt+b" = "brave"
+"ctrl+super+alt+c" = "Claude"
+"ctrl+super+alt+d" = "Discord"
+"ctrl+super+alt+g" = "Gemini"
+"ctrl+super+alt+h" = "Facebook"
+"ctrl+super+alt+j" = "Tao Monitor"
+"ctrl+super+alt+k" = "Google Keep"
+"ctrl+super+alt+m" = "Messenger"
+"ctrl+super+alt+n" = "Notion"
+"ctrl+super+alt+t" = "Telegram Web"
+"ctrl+super+alt+y" = "YouTube"
+
+# ── Cap + Shift + phim ──────────────────────────────────────────────────
+"ctrl+super+alt+shift+b" = "brave"
+"ctrl+super+alt+shift+c" = "Google Chrome"
+"ctrl+super+alt+shift+d" = "DeepSeek"
+"ctrl+super+alt+shift+f" = "Firefox"
+"ctrl+super+alt+shift+m" = "Gmail"
