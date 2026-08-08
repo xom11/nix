@@ -37,11 +37,8 @@ hs.loadSpoon("RecursiveBinder")
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")
 
--- LaunchApp da rut: focus-or-launch gio do `beckon --serve` dam nhiem
--- (launchd agent com.xom11.beckon-serve, module home-manager/programs/beckon-serve,
--- du lieu configs/shortcuts/apps.macos.toml — sua la an ngay, khong can reload).
--- Spoon + parse.lua GIU LAI de rollback nhanh; xoa han o plan 4.
--- hs.loadSpoon("LaunchApp")
+-- Focus-or-launch: beckon --serve (launchd com.xom11.beckon-serve),
+-- du lieu configs/shortcuts/apps.macos.toml — sua la an ngay.
 -- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerManager")
 hs.loadSpoon("WindowManager")

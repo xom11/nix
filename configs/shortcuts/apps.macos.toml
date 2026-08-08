@@ -9,7 +9,7 @@
 #
 # Ten phai khop CHINH XAC `beckon -L`: exact match ~57 ms; truot xuong quet
 # catalog ~400 ms moi lan bam. Validate: `beckon --check <file nay>` (CI cung chay).
-# Cac target khac: apps.windows.toml (da co); apps.gnome/sway.toml chua ton tai (plan 4) — gnome/sway van doc apps.toml cu.
+# Cac target khac: apps.windows.toml, apps.gnome.toml, apps.sway.toml — moi target mot file rieng.
 
 # ── Cap + phim ──────────────────────────────────────────────────────────
 "ctrl+super+alt+space" = "kitty"   # DUNG doi thanh "Terminal": tren mac no exact-match NHAM Terminal.app cua Apple (do 08/08/2026)
@@ -26,7 +26,7 @@
 "ctrl+super+alt+s" = "Settings"    # khop "System Settings" bang substring
 "ctrl+super+alt+t" = "Telegram"    # exact tren mac; PWA "Telegram Web" chi con la chuyen cua gnome/sway
 "ctrl+super+alt+y" = "YouTube"
-# z: CHU Y khong bind tren mac (apps.toml cu: macos = "")
+# z: CHU Y khong bind tren mac
 
 # ── Cap + Shift + phim ──────────────────────────────────────────────────
 "ctrl+super+alt+shift+a" = "Apps"

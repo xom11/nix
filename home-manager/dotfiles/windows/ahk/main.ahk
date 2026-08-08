@@ -32,7 +32,7 @@ OnExit(OnExitLog)
 LogLine("startup  pid=" . DllCall("GetCurrentProcessId"))
 
 #Include lib/ui.ahk
-; launch-app.ahk da rut — focus-or-launch do beckon --serve (task \BeckonServe) dam nhiem; file giu lai de rollback, xoa o plan 4
+; Focus-or-launch: beckon --serve (task \BeckonServe), du lieu configs/shortcuts/apps.windows.toml — sua la an ngay.
 #Include evkey-monitor.ahk
 #Include power-manager.ahk
 #Include switch-language.ahk

@@ -1,7 +1,5 @@
 # Phim tat focus-or-launch
 
-<!-- SINH RA TU apps.toml BOI sync.sh -- DUNG SUA TAY -->
-
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
 - Engine la `beckon` o ca bon nen tang.
 
@@ -37,9 +35,9 @@
 | `m` | Gmail | Gmail | Gmail | Gmail |
 | `v` | VMware Fusion | -- | -- | -- |
 
-## Cac lop phim khac (khong sinh tu apps.toml)
+## Cac lop phim khac (khong sinh tu apps.*.toml)
 
-Hai nhom nay khong di qua apps.toml/beckon nen khong nam trong bang
+Hai nhom nay khong di qua apps.*.toml/beckon nen khong nam trong bang
 tren. Doc truc tiep o nguon thay vi chep lai o day, de tranh bang tay
 bi lech nhu file README cu:
 
