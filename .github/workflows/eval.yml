@@ -148,8 +148,11 @@ jobs:
       # se deploy, khong phai main moi nhat. `nix run` build beckon tu source
       # tren runner (~vai phut, khong cache) — chap nhan duoc voi tan suat
       # push cua repo nay.
-      - name: beckon --check apps.macos.toml
+      - name: beckon --check moi file apps.*.toml
         run: |
           rev="$(nix eval --raw --impure --expr \
             '(builtins.fromJSON (builtins.readFile ./flake.lock)).nodes.beckon.locked.rev')"
-          nix run "github:xom11/beckon/$rev" -- --check configs/shortcuts/apps.macos.toml
+          for f in configs/shortcuts/apps.*.toml; do
+            [ "$f" = "configs/shortcuts/apps.toml" ] && continue   # file CU (gnome/sway) — plan 4 xu ly
+            nix run "github:xom11/beckon/$rev" -- --check "$f"
+          done

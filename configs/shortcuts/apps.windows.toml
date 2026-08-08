@@ -1,0 +1,30 @@
+# Phim tat focus-or-launch — TARGET: Windows. Doc luc CHAY boi `beckon --serve`
+# (scheduled task \BeckonServe + \BeckonServeWatchdog): sua file la ap dung
+# trong ~1-2 s. File hong thi beckon GIU bang cu + toast.
+#   Cap giu = ctrl+super+alt (kanata; super = phim Win)
+# Ten khop CHINH XAC `beckon -L` (exact ~57ms, truot = quet catalog ~400ms).
+# `,` `.` `/` thuoc window-manager.ahk — KHONG them vao day.
+
+# ── Cap + phim ──────────────────────────────────────────────────────────
+"ctrl+super+alt+space" = "Terminal"   # "kitty" khong resolve tren Windows (do 08/08/2026)
+"ctrl+super+alt+b" = "Brave"
+"ctrl+super+alt+c" = "Claude"
+"ctrl+super+alt+d" = "Discord"
+"ctrl+super+alt+f" = "File Explorer"  # "Finder" khong resolve tren Windows
+"ctrl+super+alt+g" = "Google Gemini"
+"ctrl+super+alt+h" = "Facebook"
+"ctrl+super+alt+j" = "Tao Monitor"
+"ctrl+super+alt+k" = "Google Keep"
+"ctrl+super+alt+m" = "Messenger"
+"ctrl+super+alt+n" = "Notion"
+"ctrl+super+alt+s" = "Settings"
+"ctrl+super+alt+t" = "Telegram"       # exact tren Windows; "Telegram Web" KHONG resolve (Cap+t tung hong am tham vi the)
+"ctrl+super+alt+y" = "YouTube"
+"ctrl+super+alt+z" = "Zalo"
+
+# ── Cap + Shift + phim ──────────────────────────────────────────────────
+"ctrl+super+alt+shift+b" = "Brave"
+"ctrl+super+alt+shift+c" = "Google Chrome"
+"ctrl+super+alt+shift+d" = "DeepSeek"
+"ctrl+super+alt+shift+f" = "Firefox"
+"ctrl+super+alt+shift+m" = "Gmail"
