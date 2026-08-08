@@ -72,6 +72,7 @@ in {
     };
     programs = {
       agenix.enable = true;
+      beckon-serve.enable = true;
       btop.enable = true;
       git.enable = true;
       herdr.enable = true;
