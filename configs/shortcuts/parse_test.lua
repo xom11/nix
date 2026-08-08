@@ -74,12 +74,34 @@ parseFails("gan ngoai moi bang bi tu choi",
   'key = "c"\n', "nam ngoai")
 parseFails("thieu id bi tu choi",
   '[[app]]\nkey = "c"\n', "thieu")
+parseFails("thieu key bi tu choi",
+  '[[app]]\nid = "Claude"\n', "thieu")
 parseFails("trung phim trong mot lop bi tu choi",
   '[[app]]\nkey = "c"\nid = "A"\n[[app]]\nkey = "c"\nid = "B"\n', "hai lan")
 
 -- 7. Trung phim GIUA hai lop thi hop le
 l = parseOk('[[app]]\nkey = "b"\nid = "Brave"\n[[shift]]\nkey = "b"\nid = "Brave"\n')
 check("trung phim giua hai lop la hop le", #l.app == 1 and #l.shift == 1)
+
+-- 8. Readme generation voi override va empty id
+l = parseOk([=[
+[[app]]
+key = "c"
+id = "Claude"
+macos = ""
+[[app]]
+key = "b"
+id = "Brave"
+[[shift]]
+key = "m"
+id = "Gmail"
+gnome = ""
+]=])
+local readme = P.readme(l)
+check("readme co tieu de lop app", readme:find("## `Cap` + phim", 1, true) ~= nil)
+check("readme co tieu de lop shift", readme:find("## `Cap` + `Shift` + phim", 1, true) ~= nil)
+check("readme render id rong thanh --", readme:find("| `c` | -- |", 1, true) ~= nil)
+check("readme co bon cot target dung thu tu", readme:find("| macOS | Windows | GNOME | sway |", 1, true) ~= nil)
 
 print(failures == 0 and "\nTAT CA PASS" or ("\n" .. failures .. " FAIL"))
 os.exit(failures == 0 and 0 or 1)
