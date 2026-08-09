@@ -24,17 +24,17 @@
 (include "main.kbd")
 ;; fix bug hold cap + aaaa, detail in readme
 ;;
-;; fork: khi Shift dang giu, phat ctrl+alt+shift+<phim> KHONG co Win — vi
-;; Ctrl+Win+Alt+Shift la chord OFFICE KEY cua Windows (W=Word D=OneDrive...),
-;; Windows giu san RegisterHotKey cho bo chu do va moi trick registry de nha
-;; deu vo dung (do 09/08/2026 tren a14). Ne chord ngay tu ban phim la cach
-;; tat dinh duy nhat. apps.windows.toml lop shift vi the dung ctrl+alt+shift.
+;; cap-action co Y NGUYEN nhu Linux: (multi lmet lctl lalt $k). Ban 09/08/2026
+;; tung boc them mot `fork` de bo phim Win khi dang giu Shift — ne chord OFFICE
+;; KEY cua Windows (Ctrl+Win+Alt+Shift+<chu>). DA GO (09/08/2026): thay vi be
+;; ban phim cho khac ba nen tang kia, chi can TRANH 10 chu ma Windows giu san
+;; o lop Cap+Shift. Danh sach nam trong configs/shortcuts/apps.windows.toml.
+;;
+;; Van phai la LAYER chu khong phai `(multi lmet lctl lalt)` tran nhu Linux:
+;; day la workaround cho bug CHI CO tren Windows (xem README cung thu muc) --
+;; giu cap roi go lap mot phim thi tu lan thu hai tro di modifier bi rot.
 (deftemplate cap-action (k)
-  (fork
-    (multi lmet lctl lalt $k)
-    (multi lctl lalt lsft $k)
-    (lsft rsft)
-  )
+  (multi lmet lctl lalt $k)
 )
 (deflayermap (caplayer)
   ;; --- Alphabet ---

@@ -1,11 +1,28 @@
 # Phim tat focus-or-launch — TARGET: Windows. Doc luc CHAY boi `beckon --serve`
 # (scheduled task \BeckonServe + \BeckonServeWatchdog): sua file la ap dung
 # trong ~1-2 s. File hong thi beckon GIU bang cu + toast.
-#   Cap giu = ctrl+super+alt (kanata; super = phim Win). RIENG lop Cap+Shift
-#   tren Windows = ctrl+alt+shift KHONG Win (kanata fork ne chord Office key
-#   cua Windows — xem comment cap-action trong configs/kanata/kanata_windows.kbd).
+#   Cap giu = ctrl+super+alt (kanata; super = phim Win). Lop Cap+Shift dung
+#   ctrl+super+alt+shift, GIONG ba target kia.
 # Ten khop CHINH XAC `beckon -L` (exact ~57ms, truot = quet catalog ~400ms).
 # `,` `.` `/` thuoc window-manager.ahk — KHONG them vao day.
+#
+# ┌─ RANG BUOC RIENG WINDOWS: chord OFFICE KEY ─────────────────────────────┐
+# │ Windows giu san RegisterHotKey cho Ctrl+Win+Alt+Shift + 10 phim duoi     │
+# │ day. Dat binding vao do thi beckon serve KHONG dang ky duoc              │
+# │ ("Hot key is already registered") va Windows tu mo app/web cua no.       │
+# │                                                                          │
+# │   D OneDrive   L LinkedIn   N OneNote   O Outlook   P PowerPoint         │
+# │   T Teams      W Word       X Excel     Y Yammer    Space emoji picker   │
+# │                                                                          │
+# │ Khong cai Office cung KHONG thoat: L/T/Y mo web qua go.microsoft.com.    │
+# │ CHI ap dung cho lop Cap+Shift (4 modifier). Lop Cap tran (3 modifier)    │
+# │ dung thoai mai ca 26 chu -- xem d/n/t/y ben duoi.                        │
+# │                                                                          │
+# │ Da thu hai huong khac va bo ca hai: (1) module office-key-off sua        │
+# │ registry ms-officeapp -- chan duoc app mo nhung KHONG nha slot hotkey;   │
+# │ (2) kanata `fork` bo phim Win o lop Shift -- chay duoc nhung lam Windows │
+# │ lech khoi ba target kia. Ne 10 phim la re nhat.                          │
+# └──────────────────────────────────────────────────────────────────────────┘
 
 # ── Cap + phim ──────────────────────────────────────────────────────────
 "ctrl+super+alt+space" = "Terminal"   # "kitty" khong resolve tren Windows (do 08/08/2026)
@@ -25,8 +42,10 @@
 "ctrl+super+alt+z" = "Zalo"
 
 # ── Cap + Shift + phim ──────────────────────────────────────────────────
-"ctrl+alt+shift+b" = "Brave"
-"ctrl+alt+shift+c" = "Google Chrome"
-"ctrl+alt+shift+d" = "DeepSeek"
-"ctrl+alt+shift+f" = "Firefox"
-"ctrl+alt+shift+m" = "Gmail"
+# DeepSeek (`d`) CO O BA TARGET KIA nhung KHONG co o day: d = OneDrive, nam
+# trong bo Office key. Muon co lai thi doi sang chu ngoai bo do (k, s, e, q, z
+# deu con trong) — nho doi ca bon file cho dong bo.
+"ctrl+super+alt+shift+b" = "Brave"
+"ctrl+super+alt+shift+c" = "Google Chrome"
+"ctrl+super+alt+shift+f" = "Firefox"
+"ctrl+super+alt+shift+m" = "Gmail"
