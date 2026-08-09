@@ -18,12 +18,16 @@
 
         # Khong can delay PT15S kieu AHK: beckon dung RegisterHotKey, khong cai
         # hook nao nen khong dua voi VKey/kanata ve thu tu LLHOOK.
-        $logDir = Join-Path $env:LOCALAPPDATA 'beckon'
-        if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
-        $log = Join-Path $logDir 'serve.log'
-        # Bọc cmd /c để bắt stderr: sự cố 09/08 mù hoàn toàn vì task không có
-        # log — "N shortcuts registered" khi đó là toast đếm parse, không phải
-        # bằng chứng. > (ghi đè, không >>): mỗi lần start là một đời serve.
+        # Khong con New-Item cho thu muc log: beckon --log tu tao thu muc cha.
+        $log = Join-Path (Join-Path $env:LOCALAPPDATA 'beckon') 'serve.log'
+        # cmd /c da bi bo (09/08/2026, beckon 0.5.3): beckon co co --log, tu
+        # chuyen huong stderr bang SetStdHandle roi goi FreeConsole. Bat stderr
+        # van la bat buoc — su co 09/08 mu hoan toan vi task khong co log.
+        #
+        # DOI HANH VI: --log GHI TIEP (append), khong ghi de nhu `2>` truoc day.
+        # Co y: RestartOnFailure tung xoa dung cai log giai thich vi sao no phai
+        # restart. Doi lai, file khong tu co lai nua — serve.log moi doi serve
+        # them mot dong, khong dang ke.
         #
         # conhost --headless đứng trước cmd để KHÔNG sinh cửa sổ. cmd.exe là
         # console app, task chạy LogonType=Interactive (bắt buộc — RegisterHotKey
@@ -42,6 +46,23 @@
         #                                    bị Microsoft cho thoái trào)
         #   AutoHotkey Run(..., "Hide")    -> không cửa sổ (thêm phụ thuộc AHK)
         #   conhost --headless             -> không cửa sổ  <- chọn cái này
+        #
+        # Do lai lan hai sau khi beckon co --log (09/08/2026, trong session 1,
+        # 5 dang, lay mau 25ms/lan, co doi chung):
+        #   beckon tran (khong --log)      -> tab WT + PseudoConsoleWindow, CA HAI
+        #                                    TON TAI VINH VIEN
+        #   beckon --log                   -> tab WT hien o 148ms, MAT o 210ms;
+        #                                    khong con gi dong lai
+        #   conhost --headless + --log     -> KHONG CO CUA SO NAO  <- van la nay
+        # Tuc la --log tu no da du de khong con cua so DONG LAI, nhung van nhay
+        # ~60ms vi Windows cap console TRUOC khi main() chay — FreeConsole chi
+        # dong duoc no sau do. conhost --headless chan tu dau, nen giu.
+        #
+        # CANH BAO neu sau nay bo conhost: action phai tro thang vao
+        # scoop\apps\beckon\current\beckon.exe, KHONG phai scoop\shims\beckon.exe.
+        # Shim la mot tien trinh cha con song (do duoc: pid shim la
+        # ParentProcessId cua beckon that), nen no van giu console va FreeConsole
+        # cua beckon se khong dong duoc cua so. Voi conhost o dau thi shim vo hai.
         # conhost vẫn ĐỢI tiến trình con (task giữ State=Running, nên
         # "BeckonServe đang Running" vẫn là tín hiệu daemon còn sống) và stderr
         # vẫn vào log. Cờ --headless không có tài liệu chính thức — nếu bản
@@ -52,7 +73,7 @@
         # đầy cửa sổ — âm tính giả đã làm lạc hướng chẩn đoán một lần.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute 'conhost.exe' `
-            -Argument "--headless cmd /c `"`"$($beckonExe.Source)`" --serve `"$config`" 2> `"$log`"`""
+            -Argument "--headless `"$($beckonExe.Source)`" --serve `"$config`" --log `"$log`""
         $trigger   = New-ScheduledTaskTrigger -AtLogon
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
         $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
