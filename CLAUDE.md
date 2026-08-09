@@ -138,6 +138,75 @@ nix eval --impure                        .#darwinConfigurations.macmini.system.d
 
 `nix fmt` (alejandra) and `nix develop` (alejandra, nixd, deadnix, statix) are wired up.
 
+## Công cụ tách repo riêng (org `xom11`) — sửa ở thượng nguồn
+
+Một phần hành vi của repo này KHÔNG nằm trong cây này. Năm công cụ tự viết đã
+tách thành repo riêng dưới org `xom11`, repo này chỉ ghim và gọi chúng. Khi phím
+tắt không mở app, PWA không cài, bộ gõ nhảy sai — câu hỏi đầu tiên là *lỗi ở lớp
+tích hợp trong repo này hay ở chính công cụ?* Nếu ở công cụ thì sửa BÊN ĐÓ, phát
+hành, rồi bump pin ở đây. Đừng vá vòng bằng một lớp workaround trong repo này:
+công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản vá vòng chỉ chữa
+đúng một điểm gọi.
+
+| Công cụ | Là gì | Đường vào repo này | Clone làm việc |
+|---|---|---|---|
+| [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `--serve` đọc `configs/shortcuts/apps.*.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
+| [`dotbrave`](https://github.com/xom11/dotbrave) | quản Brave bằng một file TOML | flake input + overlay, **và** `dotbrave.darwinModules.default` cho bảng `[pwa]`; xem mục "dotbrave: one file, two readers" bên dưới | `~/Documents/dev/dotbrave` |
+| [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (x1g6/vm cố ý không có) | `~/Documents/dev/tongue` |
+| [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
+| [`nix-apt`](https://github.com/xom11/nix-apt) | apt khai báo trên Debian/Ubuntu | flake input → `homeManagerModules.default` (nối trong `lib/mkConfigs.nix`), dùng qua `services.nix-apt` | chưa clone |
+
+`dotbrowser` (tiền thân của `dotbrave`) và `dotpkg` (private, quản winget/scoop)
+**không** được repo này dùng — đừng tưởng chúng là đường vào thứ hai.
+
+### Mỗi công cụ có nhiều hơn một cái pin, và chúng không tự đồng bộ
+
+Đây là chỗ dễ mất buổi chiều nhất: sửa xong upstream, bump một chỗ, thấy mac hết
+lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là kênh chưa bump.
+
+| Kênh | Ghim ở đâu | Bump bằng |
+|---|---|---|
+| Máy Nix (mac/NixOS/HM) | `flake.lock` | `nix flake update beckon` (input theo nhánh mặc định, không ghim tag) rồi rebuild |
+| Windows — beckon | manifest trong **repo thứ ba** `xom11/scoop-bucket`, cài qua `xom11/beckon` ở `windows/modules/packages/scoop/module.ps1` | release beckon → sửa manifest bên scoop-bucket → `scoop update` |
+| Windows — dotbrave | chuỗi `dotbrave==<ver>` trong `windows/modules/programs/dotbrave/module.ps1` | publish PyPI → sửa tay chuỗi đó (cố ý ghim: script chạy Administrator và ghi HKLM policy) |
+| Windows — tongue | `%USERPROFILE%\.local\bin\tongue.exe`, cài **ngoài luồng** — `apply.ps1` lẫn scoop đều không cài | copy tay binary mới lên máy |
+| nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
+| GNOME | extension `beckon@xom11.github.io` cài tay trên máy (Wayland: Mutter chặn focus từ ngoài) | cài lại tay; nhớ `disable-user-extensions = false` |
+| CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
+
+Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải
+bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon --check`
+của CI chạy bằng binary cũ và đỏ (hoặc tệ hơn: xanh giả theo chiều ngược lại).
+
+### Thử bản sửa chưa phát hành: `--override-input`
+
+Trỏ input sang clone local, không cần commit lên GitHub, không cần đụng
+`flake.lock`:
+
+```bash
+nix eval --impure --raw \
+  --override-input beckon "git+file://$HOME/Documents/dev/beckon" \
+  ~/.nix#darwinConfigurations.macmini.pkgs.beckon.drvPath
+```
+
+drvPath đổi = bản local đã vào. Áp thật thì thêm đúng cờ đó vào
+`darwin-rebuild switch` / `nixos-rebuild switch` / `home-manager switch`.
+
+Bốn điều đã đo trên máy (09/08/2026), cả bốn đều im lặng khi sai:
+
+- **`path:...` chết**, không phải `git+file://`. `path:` copy cả thư mục nên gặp
+  `.codegraph/daemon.sock` là dừng: `error: file '…/daemon.sock' has an
+  unsupported type`. Lỗi đọc như hỏng flake chứ không như "chọn sai lược đồ".
+- **Sửa file đã tracked mà chưa commit thì VÀO.** nix in
+  `→ 'git+file:///…'` (không kèm `rev=`) và drvPath đổi.
+- **File chưa `git add` thì KHÔNG vào.** nix vẫn coi cây là sạch, resolve ra
+  `?ref=…&rev=…` và trả về drvPath y hệt bản đang ghim — nghĩa là "sửa rồi mà
+  không thấy gì đổi" gần như luôn là file mới chưa add. `git add -N` là đủ.
+- **Phải ghi rõ `~/.nix#…`.** Chạy lệnh khi đang đứng trong repo công cụ thì
+  `.#` trỏ vào flake của công cụ đó; nix báo `does not provide attribute` kèm
+  `warning: … override for a non-existent input 'beckon'` — hai thông điệp
+  không hề gợi ra rằng mình gọi nhầm flake.
+
 ## Architecture
 
 ### Flake outputs
