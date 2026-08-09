@@ -92,11 +92,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785823699,
-        "narHash": "sha256-3TdJM4sLkP4FyULjfCbZKyOBpCUtZmcS9yzjLH+y0tY=",
+        "lastModified": 1786249650,
+        "narHash": "sha256-Epeg+1p5YcXlU/Zdjp1vuHURKUf79xoPX0Y+pIvwPRc=",
         "owner": "xom11",
         "repo": "dotbrave",
-        "rev": "80ca8c7dce3656ef3380bf0935dcb4e3f5215f8a",
+        "rev": "937e941eb6646fabb60e5c9e9368251b49754b3e",
         "type": "github"
       },
       "original": {
