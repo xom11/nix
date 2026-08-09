@@ -419,9 +419,10 @@ phạm:
 
 - `,` `.` `/` đã thuộc về `window-manager.ahk` (snap trái/phải/max, CÙNG tổ
   hợp `Cap`) — đừng thêm ba phím này vào `apps.windows.toml`.
-- Toast/log "N shortcuts registered" hiện đếm SỐ DÒNG PARSE ĐƯỢC chứ không
-  phải số hotkey đăng ký thành công — đọc con số này LUÔN kèm dòng lỗi ngay
-  phía trên, đừng tin một mình con số, cho tới khi beckon v0.4.1 sửa cách đếm.
+- Log "N shortcuts registered" từ beckon v0.4.1 đếm số đăng ký THÀNH CÔNG
+  ("X of N ... (M failed)" khi có phím trượt, kèm đúng một toast tổng hợp).
+  Trên binary cũ hơn (< 0.4.1) con số đó là số dòng parse — đừng tin một mình
+  nó, phải đọc kèm dòng lỗi phía trên.
 - Xác nhận AHK/Hammerspoon đã reload thật bằng CreationDate của tiến trình
   (process mới có mốc khởi động mới), đừng tin cảm giác "vừa bấm phím
   reload" — bài học 09/08/2026.
