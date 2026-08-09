@@ -18,8 +18,15 @@
 
         # KHAC AHKWatchdog, khong can launcher script -- action la CHINH lenh serve;
         # khi service dang song, instance moi bi lock don-instance cua beckon da ra
-        # (exit 1) nen watchdog la no-op; khi chet, lan lap ke khoi dong lai. (Cung ly
-        # do, chay tay `beckon --serve` tren file that cung vo hai -- lock chan.)
+        # nen watchdog la no-op; khi chet, lan lap ke khoi dong lai. (Cung ly do,
+        # chay tay `beckon --serve` tren file that cung vo hai -- lock chan.)
+        #
+        # LastTaskResult cua task nay KHONG con y nghia tu khi bo conhost vao
+        # truoc (09/08/2026): Task Scheduler nhan exit code cua conhost, luon la
+        # 0x0, chu khong phai exit 1 cua beckon. Truoc do 0x1 = "bi tu choi lock"
+        # = khoe; bay gio 0x0 xuat hien ca khi probe bi tu choi lan khi no vua
+        # dung len mot serve moi. Bang chung duy nhat con lai la serve-watchdog.log
+        # duoi day -- doc NOI DUNG no, va doc mtime de biet nhip probe con chay.
         $logDir = Join-Path $env:LOCALAPPDATA 'beckon'
         if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
         $log = Join-Path $logDir 'serve-watchdog.log'
