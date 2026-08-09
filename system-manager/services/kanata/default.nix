@@ -7,7 +7,7 @@
   # Baked into the store, not read from ${repoPath}: the service runs under a
   # DynamicUser with ProtectHome=true, and /home/kln is 0750, so it cannot reach
   # the working tree. The whole configs/kanata dir is copied so the relative
-  # (include "defcfg.kbd" / "main.kbd") in kanata_ubuntu.kbd resolve in the store.
+  # (include "defcfg.kbd" / "main.kbd") in kanata_linux.kbd resolve in the store.
   # Editing a .kbd therefore needs a `system-manager switch`, not just a restart.
   kanataConfig = ../../../configs/kanata;
 in
@@ -30,7 +30,8 @@ in
       wantedBy = ["multi-user.target"];
       serviceConfig = {
         Type = "notify";
-        ExecStart = "${pkgs.kanata}/bin/kanata --cfg ${kanataConfig}/kanata_ubuntu.kbd";
+        # kanata_linux.kbd: MOT file dung chung voi nixos/services/kanata.
+        ExecStart = "${pkgs.kanata}/bin/kanata --cfg ${kanataConfig}/kanata_linux.kbd";
         Restart = "no";
 
         # Unprivileged and isolated — kln never joins the input group; only this
