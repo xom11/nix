@@ -115,10 +115,10 @@ sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
 sudo nixos-rebuild switch --impure --flake ~/.nix#vm
 
 # Standalone home-manager
-home-manager switch --impure -b backup --flake ~/.nix#server     # also: rog, desktop, a14, minimal
+home-manager switch --impure -b backup --flake ~/.nix#server     # also: rog, desktop, minimal
 
 # system-manager (system-level config on a non-NixOS Linux distro)
-sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#a14   # also: desktop
+sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#desktop
 ```
 
 ## Checking a host without rebuilding it
@@ -148,8 +148,8 @@ nix eval --impure                        .#darwinConfigurations.macmini.system.d
 |---|---|
 | `lib.mkDarwin` | `darwinConfigurations.{macmini,airm3}` |
 | `lib.mkNixos` | `nixosConfigurations.{x1g6,vm}` |
-| `lib.mkHomeManager` | `homeConfigurations.{rog,server,desktop,a14,minimal}` |
-| `lib.mkSystemManager` | `systemConfigs.<system>.{desktop,a14}` — keyed by system (`aarch64-linux`, `x86_64-linux`) |
+| `lib.mkHomeManager` | `homeConfigurations.{rog,server,desktop,minimal}` |
+| `lib.mkSystemManager` | `systemConfigs.<system>.{desktop}` — keyed by system (`aarch64-linux`, `x86_64-linux`) |
 
 `mkDarwin`/`mkNixos` wire home-manager in as a module (`useGlobalPkgs = true`, so
 home-manager reuses the system `pkgs` rather than instantiating nixpkgs twice).
@@ -242,10 +242,14 @@ Before writing an `enable = true` into a host, confirm the directory exists.
 
 ```
 nix-darwin/          # macOS system: base, brew, launchd/kanata, setting
-nixos/               # NixOS system: base, programs, systemPackages,
+nixos/               # NixOS system: base, programs,
                      #   services/{environments,hibernate,ibus,kanata,keyd}
-system-manager/      # system-level config on non-NixOS Linux (a14, desktop):
+system-manager/      # system-level config on non-NixOS Linux (desktop):
                      #   base, etc/trackpad, services/{docker,kanata,keyd,openssh}
+                     #   Ca bon service deu DANG NGU: a14 (Ubuntu tren Snapdragon)
+                     #   la host duy nhat tung bat chung, va da bi xoa 09/08/2026
+                     #   khi may do chuyen han sang Windows. `desktop` van import
+                     #   cay nay nhung khong bat gi.
 home-manager/
   base/              # username, homeDir, stateVersion, sessionVariables
                      #   + macos/, ubuntu/, nixos/ — each carries that platform's `update` alias

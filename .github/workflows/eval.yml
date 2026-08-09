@@ -8,8 +8,8 @@ name: Eval
 # builtins.currentSystem and $USER, so eval is impure by design. `nix eval
 # --impure` per host gives the same coverage.
 #
-# --system pins the host's real architecture, so a14/vm (aarch64) are
-# checked from the x86_64 runner too. Eval only; nothing is built.
+# --system pins the host's real architecture, so vm (aarch64) is checked
+# from the x86_64 runner too. Eval only; nothing is built.
 
 on:
   push:
@@ -57,9 +57,6 @@ jobs:
             nix eval --impure --system x86_64-linux ".#homeConfigurations.$h.activationPackage.drvPath"
             echo "::endgroup::"
           done
-          echo "::group::hm/a14"
-          nix eval --impure --system aarch64-linux ".#homeConfigurations.a14.activationPackage.drvPath"
-          echo "::endgroup::"
 
       - name: nixosConfigurations
         run: |
@@ -73,7 +70,6 @@ jobs:
       - name: systemConfigs
         run: |
           nix eval --impure ".#systemConfigs.x86_64-linux.desktop.drvPath"
-          nix eval --impure ".#systemConfigs.aarch64-linux.a14.drvPath"
 
   darwin:
     runs-on: macos-latest

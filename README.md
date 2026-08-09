@@ -22,8 +22,8 @@ Per-host commands live in each `hosts/<device>/README.md`.
 |----------|--------|-----------------|
 | macOS (nix-darwin) | `macmini`, `airm3` | `sudo darwin-rebuild switch --impure --flake ~/.nix#<device>` |
 | NixOS | `x1g6`, `vm` | `sudo nixos-rebuild switch --impure --flake ~/.nix#<device>` |
-| Linux (home-manager) | `rog`, `server`, `desktop`, `a14`, `minimal` | `home-manager switch --impure -b backup --flake ~/.nix#<device>` |
-| Linux (system-manager) | `desktop`, `a14` | `sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#<device>` |
+| Linux (home-manager) | `rog`, `server`, `desktop`, `minimal` | `home-manager switch --impure -b backup --flake ~/.nix#<device>` |
+| Linux (system-manager) | `desktop` | `sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#<device>` |
 | Windows | — | PowerShell scripts + symlinks (no Nix) |
 
 `--impure` is required: `lib/mkConfigs.nix` reads `$USER` and `builtins.currentSystem` at eval time.
@@ -41,7 +41,6 @@ hosts/{device}/          # Per-device configuration.nix and/or home.nix
 ├── rog/                 # ASUS ROG laptop (home-manager)
 ├── server/              # Headless Linux server
 ├── desktop/             # Linux desktop (home-manager + system-manager)
-├── a14/                 # ASUS ZenBook A14 (Snapdragon ARM — see hosts/a14/README.md)
 └── minimal/             # Minimal home-manager profile
 nix-darwin/              # macOS system modules
 ├── base/                #   Nix settings, sudo, garbage collection
@@ -57,9 +56,8 @@ home-manager/            # User-level modules (cross-platform)
 nixos/                   # NixOS system modules
 ├── base/                #   Boot, network, locale, users, bluetooth
 ├── programs/            #   nix-ld
-├── services/            #   environments, hibernate, ibus, kanata, keyd
-└── systemPackages/      #   Python 3.11-3.13
-system-manager/          # Non-NixOS Linux system config (a14, desktop)
+└── services/            #   environments, hibernate, ibus, kanata, keyd
+system-manager/          # Non-NixOS Linux system config (desktop)
 ├── base/                #   sudoers secure_path
 ├── etc/trackpad/        #   libinput trackpad tuning
 └── services/            #   docker, kanata, keyd, openssh
