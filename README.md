@@ -133,8 +133,16 @@ modules.home-manager = {
 | `system-manager` | System config for non-NixOS Linux |
 | `nix-flatpak` | Declarative Flatpak |
 | `nixgl` | OpenGL wrapper for non-NixOS |
-| `nix-apt` | Declarative apt packages on Debian/Ubuntu |
-| `beckon`, `dotbrave` | Custom tools, shipped as overlays |
+| [`nix-apt`](https://github.com/xom11/nix-apt) | Declarative apt packages on Debian/Ubuntu |
+| [`beckon`](https://github.com/xom11/beckon) | Focus-or-launch app switcher, shipped as an overlay |
+| [`dotbrave`](https://github.com/xom11/dotbrave) | Brave as a dotfile (shortcuts, settings, PWAs) — overlay + darwin module |
+| [`tongue`](https://github.com/xom11/tongue) | vi/en/zh input-mode switcher, overlay, darwin only |
+
+The last four are own tools kept in their own repos, as is
+[`tongue.nvim`](https://github.com/xom11/tongue.nvim) (pinned in
+`nvim-pack-lock.json`, not a flake input). A bug in any of them is fixed
+upstream, not worked around here — see [`CLAUDE.md`](CLAUDE.md) for how each
+one is pinned and how to test an unreleased fix with `--override-input`.
 
 ## Documentation
 
