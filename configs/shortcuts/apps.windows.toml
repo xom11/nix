@@ -1,7 +1,9 @@
 # Phim tat focus-or-launch — TARGET: Windows. Doc luc CHAY boi `beckon --serve`
 # (scheduled task \BeckonServe + \BeckonServeWatchdog): sua file la ap dung
 # trong ~1-2 s. File hong thi beckon GIU bang cu + toast.
-#   Cap giu = ctrl+super+alt (kanata; super = phim Win)
+#   Cap giu = ctrl+super+alt (kanata; super = phim Win). RIENG lop Cap+Shift
+#   tren Windows = ctrl+alt+shift KHONG Win (kanata fork ne chord Office key
+#   cua Windows — xem comment cap-action trong configs/kanata/kanata_windows.kbd).
 # Ten khop CHINH XAC `beckon -L` (exact ~57ms, truot = quet catalog ~400ms).
 # `,` `.` `/` thuoc window-manager.ahk — KHONG them vao day.
 
@@ -23,7 +25,7 @@
 "ctrl+super+alt+z" = "Zalo"
 
 # ── Cap + Shift + phim ──────────────────────────────────────────────────
-"ctrl+super+alt+shift+b" = "Brave"
-"ctrl+super+alt+shift+c" = "Google Chrome"
-"ctrl+super+alt+shift+f" = "Firefox"
-"ctrl+super+alt+shift+m" = "Gmail"
+"ctrl+alt+shift+b" = "Brave"
+"ctrl+alt+shift+c" = "Google Chrome"
+"ctrl+alt+shift+f" = "Firefox"
+"ctrl+alt+shift+m" = "Gmail"

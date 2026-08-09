@@ -23,8 +23,18 @@
 )
 (include "main.kbd")
 ;; fix bug hold cap + aaaa, detail in readme
+;;
+;; fork: khi Shift dang giu, phat ctrl+alt+shift+<phim> KHONG co Win — vi
+;; Ctrl+Win+Alt+Shift la chord OFFICE KEY cua Windows (W=Word D=OneDrive...),
+;; Windows giu san RegisterHotKey cho bo chu do va moi trick registry de nha
+;; deu vo dung (do 09/08/2026 tren a14). Ne chord ngay tu ban phim la cach
+;; tat dinh duy nhat. apps.windows.toml lop shift vi the dung ctrl+alt+shift.
 (deftemplate cap-action (k)
-  (multi lmet lctl lalt $k)
+  (fork
+    (multi lmet lctl lalt $k)
+    (multi lctl lalt lsft $k)
+    (lsft rsft)
+  )
 )
 (deflayermap (caplayer)
   ;; --- Alphabet ---

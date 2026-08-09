@@ -23,7 +23,6 @@ Describe 'windows/apply.ps1 shared entry point' {
             'programs.nvim'
             'programs.yazi'
             'programs.beckon'
-            'programs.office-key-off'
             'services.kanata'
             'services.kanata-watchdog'
             'services.ahk'
