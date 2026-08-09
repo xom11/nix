@@ -43,6 +43,7 @@ $modules = @(
     'programs.nvim'
     'programs.yazi'
     'programs.beckon'             # Start Menu shortcut names beckon resolves by exact name
+    'programs.office-key-off'     # neuter Office-key chords; frees Ctrl+Win+Alt+Shift slots for beckon (after logon)
     'programs.dotbrave'           # brave.toml: shortcuts, settings, PWA policy (needs uv)
     'programs.look'               # pinned NSIS release; macOS gets the same app from brew
 
