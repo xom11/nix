@@ -4,7 +4,7 @@
 
 ```bash
 sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
-sudo nixos-rebuild switch --impure --flake ~/.nix#vmware
+sudo nixos-rebuild switch --impure --flake ~/.nix#vm
 ```
 
 ## Fresh install (Disko)
@@ -17,8 +17,8 @@ that host's `disko.nix`:
 # x1g6 — ThinkPad X1 Carbon Gen 6
 curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/x1g6/install.sh | bash
 
-# vmware
-curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/vmware/install.sh | bash
+# vm
+curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/vm/install.sh | bash
 ```
 
 Or, if the repo is already cloned:

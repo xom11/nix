@@ -1,14 +1,14 @@
 name: Eval
 
 # Every flake output must still evaluate. This is the gate that was missing
-# when desktop/x1g6/vmware rotted: renaming a module in home-manager/ silently
+# when desktop/x1g6/vm rotted: renaming a module in home-manager/ silently
 # breaks any host that has not been rebuilt since, and nothing catches it.
 #
 # `nix flake check` is not usable here -- lib/mkConfigs.nix reads
 # builtins.currentSystem and $USER, so eval is impure by design. `nix eval
 # --impure` per host gives the same coverage.
 #
-# --system pins the host's real architecture, so a14/vmware (aarch64) are
+# --system pins the host's real architecture, so a14/vm (aarch64) are
 # checked from the x86_64 runner too. Eval only; nothing is built.
 
 on:
@@ -66,8 +66,8 @@ jobs:
           echo "::group::nixos/x1g6"
           nix eval --impure --system x86_64-linux ".#nixosConfigurations.x1g6.config.system.build.toplevel.drvPath"
           echo "::endgroup::"
-          echo "::group::nixos/vmware"
-          nix eval --impure --system aarch64-linux ".#nixosConfigurations.vmware.config.system.build.toplevel.drvPath"
+          echo "::group::nixos/vm"
+          nix eval --impure --system aarch64-linux ".#nixosConfigurations.vm.config.system.build.toplevel.drvPath"
           echo "::endgroup::"
 
       - name: systemConfigs

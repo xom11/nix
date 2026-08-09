@@ -112,7 +112,7 @@ sudo darwin-rebuild switch --impure --flake ~/.nix#airm3
 
 # NixOS
 sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
-sudo nixos-rebuild switch --impure --flake ~/.nix#vmware
+sudo nixos-rebuild switch --impure --flake ~/.nix#vm
 
 # Standalone home-manager
 home-manager switch --impure -b backup --flake ~/.nix#server     # also: rog, desktop, a14, minimal
@@ -129,7 +129,7 @@ fastest way to know whether a change breaks a host you are not sitting at:
 
 ```bash
 nix eval --impure --system x86_64-linux  .#homeConfigurations.desktop.activationPackage.drvPath
-nix eval --impure --system aarch64-linux .#nixosConfigurations.vmware.config.system.build.toplevel.drvPath
+nix eval --impure --system aarch64-linux .#nixosConfigurations.vm.config.system.build.toplevel.drvPath
 nix eval --impure                        .#darwinConfigurations.macmini.system.drvPath
 ```
 
@@ -147,7 +147,7 @@ nix eval --impure                        .#darwinConfigurations.macmini.system.d
 | Builder | Outputs |
 |---|---|
 | `lib.mkDarwin` | `darwinConfigurations.{macmini,airm3}` |
-| `lib.mkNixos` | `nixosConfigurations.{x1g6,vmware}` |
+| `lib.mkNixos` | `nixosConfigurations.{x1g6,vm}` |
 | `lib.mkHomeManager` | `homeConfigurations.{rog,server,desktop,a14,minimal}` |
 | `lib.mkSystemManager` | `systemConfigs.<system>.{desktop,a14}` — keyed by system (`aarch64-linux`, `x86_64-linux`) |
 
