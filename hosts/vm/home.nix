@@ -7,10 +7,12 @@
       nixos.enable = true;
     };
     dotfiles = {
+      ai.enable = true;
       terminal.kitty.enable = true;
       # browser.qutebrowser.enable = true;
       rofi.enable = true;
-      # vscode.enable = true;
+      vscode.enable = true;
+      conda.enable = true;
     };
     environments = {
       fonts.enable = true;
@@ -21,10 +23,15 @@
       dev.enable = true;
       lang.enable = true;
       tools.enable = true;
+      # Bo ung dung desktop cua Linux: kitty, brave, vscode, telegram, vlc...
+      # Truoc day KHONG host NixOS nao bat cai nay, nen `kitty` khong duoc cai
+      # du nixos/base dat xdg.terminal-exec mac dinh la kitty.desktop va
+      # i3 conf.d/launch-app.conf binding $mod+Return -> kitty.
+      nixos.enable = true;
     };
     programs = {
       btop.enable = true;
-      # git.enable = true;
+      git.enable = true;
       herdr.enable = true;
       nvim.enable = true;
       ssh.enable = true;
@@ -34,5 +41,9 @@
     };
   };
   home.packages = [
+    # macmini/airm3 co ca beckon + tongue; tren Linux chi co beckon --
+    # overlay tongue khong cung cap aarch64-linux.
+    pkgs.beckon
+    pkgs.bws
   ];
 }

@@ -112,8 +112,11 @@
 
     in
     {
-      # Local packages (fcitx5-macos, neofetch2, raiseorlaunch), consumable
-      # from outside this flake.
+      # Local packages (fcitx5-macos, neofetch2), consumable from outside this
+      # flake. `raiseorlaunch` da bo khoi day: overlay ghim fork
+      # khanhkhanhlele/raiseorlaunch, ma ca repo lan tai khoan do gio deu 404
+      # nen goi khong build duoc nua -- va nixpkgs von da co raiseorlaunch
+      # 2.3.5 (upstream open-dynaMIX) nen overlay chi dang CHE MAT ban that.
       overlays.default = import ./overlays;
 
       formatter = forAllSystems (system: (pkgsFor system).alejandra);
