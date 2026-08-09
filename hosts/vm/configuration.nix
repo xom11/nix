@@ -9,6 +9,7 @@
   modules.nixos = {
     services = {
       environments.enable = true;
+      environments.type = "gnome";
       kanata.enable = true;
     };
   };
@@ -31,7 +32,14 @@
   # khong phan giai duoc ten mien => home-manager-<user>.service chet exit 128
   # => khong dotfile nao duoc tao => i3 boot ra wizard "first configuration".
   # Dat DNS cung o day de VM tu dung duoc sau moi lan reboot.
-  networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
+  #
+  # PHAI la insertNameservers chu KHONG phai networking.nameservers: cai sau
+  # van de NetworkManager chen DNS tu DHCP (192.168.163.2) len TRUOC, ma
+  # resolver thu tuan tu -- no treo o server hong roi bo cuoc, khong bao gio
+  # toi 1.1.1.1. Trieu chung: resolv.conf trong "co ve dung" (co ca ba dong)
+  # nhung `getent hosts cache.nixos.org` van rong va nixos-rebuild chet vi
+  # "Could not resolve host". insertNameservers chen len dau danh sach.
+  networking.networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   # VMware Guest Tools
   virtualisation.vmware.guest.enable = true;

@@ -17,6 +17,17 @@ with lib.hm.gvariant; {
   dconf = {
     "org/gnome/shell" = {
       favorite-apps = [];
+      # CONG TAC TONG. Bat len la MOI extension nguoi dung bi tat, bat ke
+      # enabled-extensions liet ke gi -- ca 8 cai duoi day deu khong nap.
+      # Trieu chung rat de doc nham: `gnome-extensions list` van liet ke du,
+      # `gnome-extensions info` bao State: INITIALIZED, va `gnome-extensions
+      # enable <uuid>` chay khong bao loi nhung Enabled van la No.
+      # Do tren VM 09/08/2026: beckon tren GNOME Wayland can extension
+      # beckon@xom11.github.io (Mutter chan focus tu ngoai), extension da cai
+      # dung cho va co trong enabled-extensions, nhung khoa nay = true nen
+      # beckon bao "extension not reachable on D-Bus" va MOI phim tat trong
+      # apps.gnome.toml chay lenh xong khong mo duoc app nao.
+      disable-user-extensions = false;
       disable-extension-version-validation = true;
       enabled-extensions = [
         # "run-or-raise@edvard.cz"
