@@ -28,9 +28,15 @@
         # bằng chứng. > (ghi đè, không >>): mỗi lần start là một đời serve.
         # Watchdog probe nào serve dang song thi file nay chi chua dong tu-choi-lock
         # — do la dau hieu KHOE; serve.log la cua task chinh, watchdog khong duoc dung.
+        # conhost --headless: xem giai thich day du trong module beckon-serve.
+        # Tom tat — cmd.exe la console app + task chay Interactive + may nay de
+        # Windows Terminal lam terminal mac dinh => moi lan chay sinh MOT TAB WT
+        # moi. Watchdog chay 5 phut/lan nen no la thu phat sinh tab nhieu nhat,
+        # va khi watchdog phai dung len giu serve (da xay ra) thi tab do song
+        # mai. `powershell -WindowStyle Hidden` KHONG cuu duoc — da do.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        $action    = New-ScheduledTaskAction -Execute 'cmd.exe' `
-            -Argument "/c `"`"$($beckonExe.Source)`" --serve `"$config`" 2> `"$log`"`""
+        $action    = New-ScheduledTaskAction -Execute 'conhost.exe' `
+            -Argument "--headless cmd /c `"`"$($beckonExe.Source)`" --serve `"$config`" 2> `"$log`"`""
         $trigger   = New-ScheduledTaskTrigger -Once -At '2020-01-01T00:00:00' `
             -RepetitionInterval (New-TimeSpan -Minutes 5)
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
