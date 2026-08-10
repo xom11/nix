@@ -189,9 +189,10 @@ Windows còn chết **âm thầm**: stderr đi vào `--log`, dấu hiệu duy nh
 tray icon biến mất, và watchdog restart 5 phút một lần mãi mãi.
 
 **Cap binary+plist KHONG nguyen tu luc activation — do duoc 10/08/2026 tren
-macmini.** home-manager chep binary moi vao `~/.local/libexec/beckon` TRUOC
-khi ghi lai plist, nen launchd con giu plist cu da chay `beckon --serve` vao
-binary 0.6.0. `serve.log` ghi lai dung khoanh khac do:
+macmini. TREN macOS CUA SO NAY DA BI XOA cung ngay; muc nay giu lai vi Windows
+van dinh nguyen.** home-manager chep binary moi vao `~/.local/libexec/beckon`
+TRUOC khi ghi lai plist, nen launchd con giu plist cu da chay `beckon --serve`
+vao binary 0.6.0. `serve.log` ghi lai dung khoanh khac do:
 
 ```
 error: unexpected argument '--serve' found
@@ -199,10 +200,16 @@ Usage: beckon [OPTIONS] <ID>
 beckon serve: 20 shortcuts registered from .../apps.macos.toml
 ```
 
-Tren macOS no tu lanh vi `setupLaunchAgents` chay ngay sau va KeepAlive dung
-day len. Tren Windows thi KHONG: giua `scoop update beckon` va `apply.ps1`
-khong co ai dung day, watchdog 5 phut/lan cung fail, va stderr di vao `--log`
-nen khong ai thay. Vi vay tren a14 phai lam theo thu tu khac:
+macOS het dinh vi khong con buoc chep: agent tro THANG vao store path, nen
+binary va plist la cung mot thu va doi cung mot luc. Do la he qua phu cua viec
+bo grant Accessibility (xem `home-manager/programs/beckon-serve/README.md`) —
+neu ngay nao khoi phuc lai ban copy o `~/.local/libexec`, cua so nay quay lai
+y nguyen.
+
+Ngay ca truoc do macOS cung tu lanh vi `setupLaunchAgents` chay ngay sau va
+KeepAlive dung day len. Tren Windows thi KHONG: giua `scoop update beckon` va
+`apply.ps1` khong co ai dung day, watchdog 5 phut/lan cung fail, va stderr di
+vao `--log` nen khong ai thay. Vi vay tren a14 phai lam theo thu tu khac:
 
 1. `Disable-ScheduledTask` ca BeckonServe lan BeckonServeWatchdog
 2. `Get-Process beckon | Stop-Process -Force` -- `Stop-ScheduledTask` mot
