@@ -13,7 +13,7 @@
 
 # ── Cap + phim ──────────────────────────────────────────────────────────
 "ctrl+super+alt+space" = "kitty"   # DUNG doi thanh "Terminal": tren mac no exact-match NHAM Terminal.app cua Apple (do 08/08/2026)
-"ctrl+super+alt+b" = "Brave"       # khop "Brave Browser" bang substring (do 08/08/2026)
+"ctrl+super+alt+b" = "Brave Browser"   # doi tu "Brave" 10/08/2026: "Brave" chi khop bang substring (tier thap nhat, phai quet catalog); "Brave Browser" khop running-name exact, khong cham catalog
 "ctrl+super+alt+c" = "Claude"
 "ctrl+super+alt+d" = "Discord"
 "ctrl+super+alt+f" = "Finder"
@@ -30,7 +30,7 @@
 
 # ── Cap + Shift + phim ──────────────────────────────────────────────────
 "ctrl+super+alt+shift+a" = "Apps"
-"ctrl+super+alt+shift+b" = "Brave"
+"ctrl+super+alt+shift+b" = "Brave Browser"
 "ctrl+super+alt+shift+c" = "Google Chrome"
 "ctrl+super+alt+shift+d" = "DeepSeek"   # khop "DeepSeek - Into the Unknown" bang substring
 "ctrl+super+alt+shift+f" = "Firefox"
