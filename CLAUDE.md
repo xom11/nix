@@ -188,6 +188,34 @@ mà quên chúng, hoặc sửa chúng mà quên bump, đều làm phím tắt ch
 Windows còn chết **âm thầm**: stderr đi vào `--log`, dấu hiệu duy nhất là
 tray icon biến mất, và watchdog restart 5 phút một lần mãi mãi.
 
+**Cap binary+plist KHONG nguyen tu luc activation — do duoc 10/08/2026 tren
+macmini.** home-manager chep binary moi vao `~/.local/libexec/beckon` TRUOC
+khi ghi lai plist, nen launchd con giu plist cu da chay `beckon --serve` vao
+binary 0.6.0. `serve.log` ghi lai dung khoanh khac do:
+
+```
+error: unexpected argument '--serve' found
+Usage: beckon [OPTIONS] <ID>
+beckon serve: 20 shortcuts registered from .../apps.macos.toml
+```
+
+Tren macOS no tu lanh vi `setupLaunchAgents` chay ngay sau va KeepAlive dung
+day len. Tren Windows thi KHONG: giua `scoop update beckon` va `apply.ps1`
+khong co ai dung day, watchdog 5 phut/lan cung fail, va stderr di vao `--log`
+nen khong ai thay. Vi vay tren a14 phai lam theo thu tu khac:
+
+1. `Disable-ScheduledTask` ca BeckonServe lan BeckonServeWatchdog
+2. `Get-Process beckon | Stop-Process -Force` -- `Stop-ScheduledTask` mot
+   minh KHONG du: no dung task chu khong giet tien trinh chau, va scoop tu
+   choi ghi de khi binary con dang chay
+3. `scoop update beckon`
+4. chay lai hai module (dang ky lai task)
+5. `Enable-ScheduledTask` + `Start-ScheduledTask`
+
+Cua so hong bang khong. Con `apply.ps1` khong co bo loc module (`$modules`
+hardcode), nen chay rieng hai module beckon bang cach dung lai dung `$Ctx`
+cua no thay vi reconcile ca may.
+
 ### Thử bản sửa chưa phát hành: `--override-input`
 
 Trỏ input sang clone local, không cần commit lên GitHub, không cần đụng
