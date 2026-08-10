@@ -1,9 +1,5 @@
 {pkgs, username, ...}:
 {
-  imports = [
-    # ./hibernate.nix
-    # ./keyd.nix
-  ];
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = [ "docker" ];
 

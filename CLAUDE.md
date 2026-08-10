@@ -302,7 +302,7 @@ directories.** This is the single most common source of broken host files:
 | `home-manager/dotfiles/terminal/kitty` | `modules.home-manager.dotfiles.terminal.kitty.enable` — **not** `dotfiles.kitty` |
 | `home-manager/dotfiles/browser/dotbrave` | `modules.home-manager.dotfiles.browser.dotbrave.enable` |
 | `home-manager/dotfiles/ai/claude.d` | `modules.home-manager.dotfiles.ai."claude.d".enable` — the dot must be quoted |
-| `nixos/services/keyd` | `modules.nixos.services.keyd.enable` — **not** `modules.services.keyd` |
+| `nixos/services/kanata` | `modules.nixos.services.kanata.enable` — **not** `modules.services.kanata` |
 
 Before writing an `enable = true` into a host, confirm the directory exists.
 `find home-manager nixos nix-darwin system-manager -name default.nix` is the source of truth.
@@ -312,7 +312,7 @@ Before writing an `enable = true` into a host, confirm the directory exists.
 ```
 nix-darwin/          # macOS system: base, brew, launchd/kanata, setting
 nixos/               # NixOS system: base, programs,
-                     #   services/{environments,hibernate,ibus,kanata,keyd}
+                     #   services/{environments,kanata}
 system-manager/      # system-level config on non-NixOS Linux (desktop):
                      #   base, etc/trackpad, services/{docker,kanata,keyd,openssh}
                      #   Ca bon service deu DANG NGU: a14 (Ubuntu tren Snapdragon)

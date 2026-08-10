@@ -56,7 +56,7 @@ home-manager/            # User-level modules (cross-platform)
 nixos/                   # NixOS system modules
 ├── base/                #   Boot, network, locale, users, bluetooth
 ├── programs/            #   nix-ld
-└── services/            #   environments, hibernate, ibus, kanata, keyd
+└── services/            #   environments, kanata
 system-manager/          # Non-NixOS Linux system config (desktop)
 ├── base/                #   sudoers secure_path
 ├── etc/trackpad/        #   libinput trackpad tuning
