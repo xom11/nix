@@ -112,11 +112,11 @@
 
     in
     {
-      # Local packages (fcitx5-macos, neofetch2), consumable from outside this
-      # flake. `raiseorlaunch` da bo khoi day: overlay ghim fork
-      # khanhkhanhlele/raiseorlaunch, ma ca repo lan tai khoan do gio deu 404
-      # nen goi khong build duoc nua -- va nixpkgs von da co raiseorlaunch
-      # 2.3.5 (upstream open-dynaMIX) nen overlay chi dang CHE MAT ban that.
+      # Overlay goi local, consumable tu ngoai flake nay. HIEN DANG TRONG:
+      # fcitx5-macos + neofetch2 go 10/08/2026, raiseorlaunch go 09/08/2026
+      # (xem ATTIC.md o goc repo). Co che van giu nguyen -- overlays/default.nix
+      # doc readDir roi mapAttrs, nen them mot thu muc goi moi vao overlays/ la
+      # no tu vao, khong phai sua dong nay.
       overlays.default = import ./overlays;
 
       formatter = forAllSystems (system: (pkgsFor system).alejandra);

@@ -36,8 +36,6 @@ in {
     bws
     beckon
     tongue
-    # fcitx5-macos
-    # neofetch2
   ];
 
   modules.home-manager = {
