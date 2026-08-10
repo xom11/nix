@@ -50,7 +50,6 @@ in {
         kitty.enable = true;
       };
       browser = {
-        # firefox.enable = true;
         dotbrave.enable = true;
       };
       macos = {

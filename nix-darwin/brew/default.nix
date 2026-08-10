@@ -72,7 +72,6 @@ mkModule config ./. {
       "gonhanh"
       "monitorcontrol"
       "vivaldi"
-      "firefox"
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"

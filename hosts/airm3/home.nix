@@ -22,9 +22,6 @@
       terminal = {
         kitty.enable = true;
       };
-      browser = {
-        firefox.enable = true;
-      };
       ai.enable = true;
       conda.enable = true;
     };

@@ -62,7 +62,6 @@
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
 
-  programs.firefox.enable = true;
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 

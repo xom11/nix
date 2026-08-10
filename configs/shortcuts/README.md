@@ -32,7 +32,6 @@
 | `b` | Brave | Brave | Brave | brave |
 | `c` | Google Chrome | Google Chrome | Google Chrome | Google Chrome |
 | `d` | DeepSeek | DeepSeek | DeepSeek | DeepSeek |
-| `f` | Firefox | Firefox | Firefox | Firefox |
 | `m` | Gmail | Gmail | Gmail | Gmail |
 | `v` | VMware Fusion | -- | -- | -- |
 
