@@ -300,7 +300,7 @@ directories.** This is the single most common source of broken host files:
 |---|---|
 | `home-manager/programs/zsh` | `modules.home-manager.programs.zsh.enable` |
 | `home-manager/dotfiles/terminal/kitty` | `modules.home-manager.dotfiles.terminal.kitty.enable` — **not** `dotfiles.kitty` |
-| `home-manager/dotfiles/browser/qutebrowser` | `modules.home-manager.dotfiles.browser.qutebrowser.enable` |
+| `home-manager/dotfiles/browser/firefox` | `modules.home-manager.dotfiles.browser.firefox.enable` |
 | `home-manager/dotfiles/ai/claude.d` | `modules.home-manager.dotfiles.ai."claude.d".enable` — the dot must be quoted |
 | `nixos/services/keyd` | `modules.nixos.services.keyd.enable` — **not** `modules.services.keyd` |
 
@@ -336,17 +336,22 @@ home-manager/
                      #       https://api.pixellab.ai/mcp \
                      #       --header 'Authorization: Bearer ${PIXELLAB_TOKEN}'
                      #   Single quotes, and URL before --header (it is variadic).
-                     # browser/{firefox,qutebrowser}, terminal/{alacritty,kitty}
-                     # macos/{aerospace,hammerspoon,karabiner,sleepwatcher}
-                     # conda, rofi, run-or-raise, vscode
-  environments/      # fonts, gnome, i18n, i3wm, sway, wayland
+                     # browser/{dotbrave,firefox}, terminal/kitty
+                     # macos/{hammerspoon,sleepwatcher}
+                     # conda, rofi, vscode
+  environments/      # fonts, gnome, i18n, i3wm, sway
   pkgs/              # dev, lang, nixos, tools, ubuntu
-overlays/            # local packages: fcitx5-macos, neofetch2, raiseorlaunch
+overlays/            # local packages -- hien TRONG. Co che readDir van chay, nen
+                     #   them mot thu muc goi vao day la no tu vao overlays.default
 hosts/{device}/      # per-device configuration.nix and/or home.nix
-configs/             # non-Nix: ansible playbooks, kanata layouts
+configs/             # non-Nix: kanata layouts, shortcuts (apps.*.toml)
 windows/             # live parallel PowerShell config; reuses the shared dotfiles
                      #   under home-manager/dotfiles via links.ps1. Not orphaned.
 ```
+
+Code đã gỡ khỏi cây nằm trong `ATTIC.md` ở gốc repo — mỗi mục kèm tag `attic/*`
+và lệnh khôi phục. `git tag -l 'attic/*'` liệt kê nhanh. Trước khi kết luận "repo
+này chưa bao giờ có X", tra đó đã.
 
 Modules are auto-discovered — `home-manager/default.nix` (and the equivalent in
 `nixos/`, `nix-darwin/`, `system-manager/`) is just `imports = autoImport ./.`,

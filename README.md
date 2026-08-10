@@ -51,7 +51,7 @@ home-manager/            # User-level modules (cross-platform)
 ├── base/                #   User, home dir, env variables (+ macos/, ubuntu/)
 ├── programs/            #   agenix, btop, git, herdr, nvim, ssh, tmux, yazi, zsh
 ├── dotfiles/            #   Symlinked configs (ai/, browser/, terminal/, macos/, vscode, ...)
-├── environments/        #   fonts, gnome, i18n (Vietnamese), i3wm, sway, wayland
+├── environments/        #   fonts, gnome, i18n (Vietnamese), i3wm, sway
 └── pkgs/                #   Package groups: dev, lang, tools, nixos, ubuntu
 nixos/                   # NixOS system modules
 ├── base/                #   Boot, network, locale, users, bluetooth
@@ -66,9 +66,10 @@ windows/                 # Windows config (no Nix — PowerShell + symlinks)
 ├── modules/             #   packages/ (winget, scoop, npm, psmodules), services/ (ahk, kanata, sshd)
 ├── apply.ps1            #   Entry point
 └── links.ps1            #   Symlinks the shared dotfiles from home-manager/dotfiles/
-overlays/                # Custom packages (fcitx5-macos, neofetch2, raiseorlaunch)
-configs/                 # Non-Nix configs: kanata keyboards, Ansible playbooks
+overlays/                # Local package overlays (currently empty — see ATTIC.md)
+configs/                 # Non-Nix configs: kanata keyboards, app shortcuts
 scripts/                 # Install & bootstrap scripts
+ATTIC.md                 # Code removed from the tree — what, when, how to get it back
 ```
 
 ## Module System
