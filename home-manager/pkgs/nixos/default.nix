@@ -15,7 +15,6 @@ mkModule config ./. {
     kitty
     localsend
     nemo
-    # qutebrowser
     # slack
     telegram-desktop
     vlc

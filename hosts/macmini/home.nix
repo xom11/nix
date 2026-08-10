@@ -52,13 +52,11 @@ in {
         kitty.enable = true;
       };
       browser = {
-        # qutebrowser.enable = true;
         # firefox.enable = true;
         dotbrave.enable = true;
       };
       macos = {
         hammerspoon.enable = true;
-        # karabiner.enable = true;
         sleepwatcher.enable = true;
       };
       ai.enable = true;

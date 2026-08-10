@@ -95,11 +95,9 @@ mkModule config ./. {
       "maccy"
       "microsoft-edge"
       # "miniconda"
-      # "nikitabobko/tap/aerospace"
       "nomachine"
       "notion"
       # "orbstack"
-      # "qutebrowser"
       # Dropped for look, which wants the same Cmd+Space. Two launchers on one
       # hotkey means whichever registered it last wins, silently.
       # "raycast"

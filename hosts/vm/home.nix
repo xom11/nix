@@ -9,7 +9,6 @@
     dotfiles = {
       ai.enable = true;
       terminal.kitty.enable = true;
-      # browser.qutebrowser.enable = true;
       browser.firefox.enable = true;
       rofi.enable = true;
       vscode.enable = true;

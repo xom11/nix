@@ -1,9 +1,0 @@
-{
-  config,
-  mkModule,
-  ...
-}:
-mkModule config ./.
-{
-}
-

@@ -5,7 +5,6 @@
 with lib.hm.gvariant; {
   packages = with pkgs; [
     gnomeExtensions.dash-to-dock
-    gnomeExtensions.run-or-raise
     gnomeExtensions.clipboard-history
     gnomeExtensions.blur-my-shell
     gnomeExtensions.just-perfection
@@ -30,7 +29,6 @@ with lib.hm.gvariant; {
       disable-user-extensions = false;
       disable-extension-version-validation = true;
       enabled-extensions = [
-        # "run-or-raise@edvard.cz"
         "clipboard-history@alexsaveau.dev"
         "blur-my-shell@aunetx"
         "kimpanel@kde.org"
@@ -80,9 +78,6 @@ with lib.hm.gvariant; {
     "org/gnome/shell/extensions/clipboard-history" = {
       toggle-menu = ["<Alt>v"];
     };
-    # "org/gnome/shell/extensions/run-or-raise" = {
-    #   center-mouse-to-focused-window = true;
-    # };
     "org/gnome/shell/extensions/switcher" = {
       only-current-workspace = true;
       fade-enable = true;

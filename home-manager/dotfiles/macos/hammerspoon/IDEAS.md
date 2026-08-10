@@ -90,7 +90,7 @@ end
 
 ## Quản lý cửa sổ
 
-`aerospace` có module trong repo nhưng **không host nào bật**, nên `WindowManager.spoon`
+`aerospace` đã gỡ khỏi repo 10/08/2026 (xem `ATTIC.md`), nên `WindowManager.spoon`
 (nửa trái / nửa phải / maximize) hiện là toàn bộ window management.
 
 ### 3. Modal `hyper+w` — thirds, quarters, center, đẩy sang màn khác `[vừa]`
