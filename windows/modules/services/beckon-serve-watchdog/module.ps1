@@ -1,5 +1,5 @@
 @{
-    Description = 'Scheduled task: restart beckon --serve if it dies between logons'
+    Description = 'Scheduled task: restart beckon serve if it dies between logons'
     Apply = {
         param($Ctx)
         $taskName = 'BeckonServeWatchdog'
@@ -19,7 +19,7 @@
         # KHAC AHKWatchdog, khong can launcher script -- action la CHINH lenh serve;
         # khi service dang song, instance moi bi lock don-instance cua beckon da ra
         # nen watchdog la no-op; khi chet, lan lap ke khoi dong lai. (Cung ly do,
-        # chay tay `beckon --serve` tren file that cung vo hai -- lock chan.)
+        # chay tay `beckon serve` tren file that cung vo hai -- lock chan.)
         #
         # LastTaskResult cua task nay KHONG con y nghia tu khi bo conhost vao
         # truoc (09/08/2026): Task Scheduler nhan exit code cua conhost, luon la
@@ -49,7 +49,7 @@
         # mai. `powershell -WindowStyle Hidden` KHONG cuu duoc — da do.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute 'conhost.exe' `
-            -Argument "--headless `"$($beckonExe.Source)`" --serve `"$config`" --log `"$log`""
+            -Argument "--headless `"$($beckonExe.Source)`" serve `"$config`" --log `"$log`""
         $trigger   = New-ScheduledTaskTrigger -Once -At '2020-01-01T00:00:00' `
             -RepetitionInterval (New-TimeSpan -Minutes 5)
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited

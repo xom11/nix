@@ -37,7 +37,7 @@ hs.loadSpoon("RecursiveBinder")
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")
 
--- Focus-or-launch: beckon --serve (launchd com.xom11.beckon-serve),
+-- Focus-or-launch: beckon serve (launchd com.xom11.beckon-serve),
 -- du lieu configs/shortcuts/apps.macos.toml — sua la an ngay.
 -- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerManager")

@@ -150,7 +150,7 @@ công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản 
 
 | Công cụ | Là gì | Đường vào repo này | Clone làm việc |
 |---|---|---|---|
-| [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `--serve` đọc `configs/shortcuts/apps.*.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
+| [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `serve` đọc `configs/shortcuts/apps.*.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
 | [`dotbrave`](https://github.com/xom11/dotbrave) | quản Brave bằng một file TOML | flake input + overlay, **và** `dotbrave.darwinModules.default` cho bảng `[pwa]`; xem mục "dotbrave: one file, two readers" bên dưới | `~/Documents/dev/dotbrave` |
 | [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (x1g6/vm cố ý không có) | `~/Documents/dev/tongue` |
 | [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
@@ -175,8 +175,18 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
 
 Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải
-bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon --check`
+bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon check`
 của CI chạy bằng binary cũ và đỏ (hoặc tệ hơn: xanh giả theo chiều ngược lại).
+
+Quy tắc đó rộng hơn TOML: nó áp cho **mọi** thay đổi beckon mà repo này gọi
+tới, kể cả bề mặt CLI. beckon 0.6.0 đổi cờ thành subcommand (`--serve` →
+`serve`, `--check` → `check`, `-L` → `installed`, `-d` → `doctor`) và không
+giữ alias nào. Ba chỗ THỰC THI mang cú pháp đó — launchd agent
+(`home-manager/programs/beckon-serve/default.nix`), hai scheduled task
+(`windows/modules/services/beckon-serve{,-watchdog}`) — nên bump `flake.lock`
+mà quên chúng, hoặc sửa chúng mà quên bump, đều làm phím tắt chết. Trên
+Windows còn chết **âm thầm**: stderr đi vào `--log`, dấu hiệu duy nhất là
+tray icon biến mất, và watchdog restart 5 phút một lần mãi mãi.
 
 ### Thử bản sửa chưa phát hành: `--override-input`
 
@@ -458,7 +468,7 @@ giữa như hệ cũ. `Cap` giữ = `ctrl+super+alt` (macOS: super=Cmd; Windows/
 super=phím Win), do kanata sinh ra — bản thân bốn file này không biết `Cap`
 là gì.
 
-Tên app phải khớp **CHÍNH XÁC** chuỗi `beckon -L` in ra trên đúng target đó:
+Tên app phải khớp **CHÍNH XÁC** chuỗi `beckon installed` in ra trên đúng target đó:
 khớp chính xác ~57 ms; trượt xuống quét toàn catalog ~400 ms mỗi lần bấm
 phím. Bốn file KHÔNG đồng bộ tên với nhau — mac dùng `"kitty"` chạy thẳng,
 Windows phải là `"Terminal"` (`"kitty"` không resolve trên Windows); mac dùng
@@ -472,8 +482,8 @@ target chứ không phải hai bảng trong một file:
 
 | Nền tảng | Đọc bằng | Sửa file rồi áp dụng bằng | Agent/task | Log |
 |---|---|---|---|---|
-| macOS | `beckon --serve` LÚC CHẠY, tự watch file | không gì cả — watcher ăn trong ~1-2 s | launchd `com.xom11.beckon-serve` (`home-manager/programs/beckon-serve`) | `~/Library/Logs/beckon/serve.log` |
-| Windows | `beckon --serve` LÚC CHẠY, tự watch file | không gì cả — ăn trong ~1-2 s | task `\BeckonServe` + `\BeckonServeWatchdog` (`windows/modules/services/beckon-serve{,-watchdog}`) | `%LOCALAPPDATA%\beckon\serve.log` |
+| macOS | `beckon serve` LÚC CHẠY, tự watch file | không gì cả — watcher ăn trong ~1-2 s | launchd `com.xom11.beckon-serve` (`home-manager/programs/beckon-serve`) | `~/Library/Logs/beckon/serve.log` |
+| Windows | `beckon serve` LÚC CHẠY, tự watch file | không gì cả — ăn trong ~1-2 s | task `\BeckonServe` + `\BeckonServeWatchdog` (`windows/modules/services/beckon-serve{,-watchdog}`) | `%LOCALAPPDATA%\beckon\serve.log` |
 | GNOME | `builtins.fromTOML` LÚC EVAL | **`home-manager switch`** | dconf `custom-keybindings`, sinh lúc eval (`home-manager/environments/gnome/launch-app.nix`) | — |
 | sway | `builtins.fromTOML` LÚC EVAL | **switch** + tự reload sway tay (`Tab+r`) | binding sinh vào `~/.config/sway-nix/launch-app.conf` (`home-manager/environments/sway/launch-app.nix`) | — |
 
@@ -487,7 +497,7 @@ home-manager không tự gọi `swaymsg reload`. Binding sway chỉ là
 workspace-per-app (quyết định 09/08/2026); workspace logic là việc riêng của
 sway config, beckon không biết gì về workspace.
 
-CI: job `shortcuts` trong `.github/workflows/eval.yml` chạy `beckon --check`
+CI: job `shortcuts` trong `.github/workflows/eval.yml` chạy `beckon check`
 trên cả bốn file, nhưng bằng ĐÚNG rev `beckon` đã ghim trong `flake.lock`
 (đọc qua `nix eval --raw --impure` ngay trong step) — CI kiểm cùng một binary
 mà các host sẽ deploy, không phải bản mới nhất thượng nguồn của beckon.

@@ -1,4 +1,4 @@
-# Phim tat focus-or-launch — TARGET: macOS. Doc luc CHAY boi `beckon --serve`
+# Phim tat focus-or-launch — TARGET: macOS. Doc luc CHAY boi `beckon serve`
 # (launchd agent com.xom11.beckon-serve, module home-manager/programs/beckon-serve):
 # sua file la watcher ap dung trong ~1-2 s, khong rebuild, khong reload gi ca.
 # File hong thi beckon GIU nguyen bang cu va ban notification — sua xong tu an lai.
@@ -7,8 +7,8 @@
 #   modifier: ctrl / super (=Cmd) / alt (=Option) / shift — thu tu viet tu do
 #   Cap giu = ctrl+super+alt (kanata sinh ra — file nay khong can biet Cap la gi)
 #
-# Ten phai khop CHINH XAC `beckon -L`: exact match ~57 ms; truot xuong quet
-# catalog ~400 ms moi lan bam. Validate: `beckon --check <file nay>` (CI cung chay).
+# Ten phai khop CHINH XAC `beckon installed`: exact match ~57 ms; truot xuong quet
+# catalog ~400 ms moi lan bam. Validate: `beckon check <file nay>` (CI cung chay).
 # Cac target khac: apps.windows.toml, apps.gnome.toml, apps.sway.toml — moi target mot file rieng.
 
 # ── Cap + phim ──────────────────────────────────────────────────────────

@@ -2,8 +2,8 @@
 # nen sua file nay la PHAI switch + reload sway (Tab+r) — khong switch thi binding
 # khong ap dung. Binding sinh ra chi la `exec beckon "<app>"` tran, khong workspace logic.
 # Cap giu = ctrl+super+alt (kanata; super = phim Windows/Super).
-# Ten khop CHINH XAC `beckon -L`: exact ~57ms, truot = quet catalog ~400ms.
-# Validate: `beckon --check <file nay>` (CI cung chay).
+# Ten khop CHINH XAC `beckon installed`: exact ~57ms, truot = quet catalog ~400ms.
+# Validate: `beckon check <file nay>` (CI cung chay).
 
 # ── Cap + phim ──────────────────────────────────────────────────────────
 "ctrl+super+alt+space" = "kitty"

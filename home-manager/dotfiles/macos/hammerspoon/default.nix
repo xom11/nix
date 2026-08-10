@@ -17,7 +17,7 @@
   #
   # Chỉ AClock thực sự đang có consumer (Tab.spoon, tab+t). RecursiveBinder thì
   # KHÔNG: LaunchApp.spoon TỪNG dùng nó cho lớp Cap+a, nhưng từ khi lớp 2
-  # chuyển sang Cap+Shift (nay là apps.macos.toml qua beckon --serve) thì hết; consumer còn lại,
+  # chuyển sang Cap+Shift (nay là apps.macos.toml qua beckon serve) thì hết; consumer còn lại,
   # LaunchTerminal.spoon:15 (`hs.loadSpoon("RecursiveBinder")` chạy ngay lúc
   # load, thiếu là rb.singleKey thành nil), đang bị comment ra ở init.lua
   # (`-- hs.loadSpoon("LaunchTerminal")`) nên cũng không chạy. Giữ input này là

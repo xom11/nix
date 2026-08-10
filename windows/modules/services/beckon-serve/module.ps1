@@ -1,5 +1,5 @@
 @{
-    Description = 'Scheduled task: beckon --serve at logon (hotkey host, replaces launch-app.ahk)'
+    Description = 'Scheduled task: beckon serve at logon (hotkey host, replaces launch-app.ahk)'
     Apply = {
         param($Ctx)
         $taskName = 'BeckonServe'
@@ -73,7 +73,7 @@
         # đầy cửa sổ — âm tính giả đã làm lạc hướng chẩn đoán một lần.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute 'conhost.exe' `
-            -Argument "--headless `"$($beckonExe.Source)`" --serve `"$config`" --log `"$log`""
+            -Argument "--headless `"$($beckonExe.Source)`" serve `"$config`" --log `"$log`""
         $trigger   = New-ScheduledTaskTrigger -AtLogon
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
         $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `

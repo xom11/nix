@@ -41,7 +41,7 @@ in
       enable = true;
       config = {
         Label = label;
-        ProgramArguments = [bin "--serve" configFile];
+        ProgramArguments = [bin "serve" configFile];
         RunAtLoad = true;
         # Serve khong bao gio thoat "thanh cong" — chet la relaunch. Throttle
         # 60s theo bai agenix: khong crash-loop 10s khi binary/config hong.

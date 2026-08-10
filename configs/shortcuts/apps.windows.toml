@@ -1,9 +1,9 @@
-# Phim tat focus-or-launch — TARGET: Windows. Doc luc CHAY boi `beckon --serve`
+# Phim tat focus-or-launch — TARGET: Windows. Doc luc CHAY boi `beckon serve`
 # (scheduled task \BeckonServe + \BeckonServeWatchdog): sua file la ap dung
 # trong ~1-2 s. File hong thi beckon GIU bang cu + toast.
 #   Cap giu = ctrl+super+alt (kanata; super = phim Win). Lop Cap+Shift dung
 #   ctrl+super+alt+shift, GIONG ba target kia.
-# Ten khop CHINH XAC `beckon -L` (exact ~57ms, truot = quet catalog ~400ms).
+# Ten khop CHINH XAC `beckon installed` (exact ~57ms, truot = quet catalog ~400ms).
 # `,` `.` `/` thuoc window-manager.ahk — KHONG them vao day.
 #
 # ┌─ RANG BUOC RIENG WINDOWS: chord OFFICE KEY ─────────────────────────────┐

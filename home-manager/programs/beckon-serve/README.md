@@ -1,6 +1,6 @@
 # beckon-serve
 
-`beckon --serve` chạy như launchd agent (`com.xom11.beckon-serve`), đọc
+`beckon serve` chạy như launchd agent (`com.xom11.beckon-serve`), đọc
 `configs/shortcuts/apps.macos.toml` từ working tree — sửa file là áp dụng
 trong ~1-2 s, không cần switch.
 
@@ -12,7 +12,7 @@ cần Accessibility, và agent tự chịu TCC (không còn "ké" Hammerspoon):
 1. Switch xong, xác nhận binary tồn tại: `ls ~/.local/libexec/beckon`
 2. System Settings → Privacy & Security → Accessibility → `+` →
    nhấn Cmd+Shift+G, gõ `~/.local/libexec/beckon` → Open → bật toggle.
-3. Kiểm: `~/.local/libexec/beckon -d` phải in "Accessibility permission granted".
+3. Kiểm: `~/.local/libexec/beckon doctor` phải in "Accessibility permission granted".
 
 Grant sống qua các lần copy đè cùng path (tiền lệ kanata Homebrew). Nếu một
 ngày cycle 5a ngừng chạy sau khi bump beckon: vào lại danh sách, gỡ rồi thêm

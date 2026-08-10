@@ -112,10 +112,10 @@ jobs:
       # cung mot binary ma cac host se deploy, khong phai main moi nhat.
       # `nix run` build beckon tu source tren runner (~vai phut, khong cache)
       # — chap nhan duoc voi tan suat push cua repo nay.
-      - name: beckon --check moi file apps.*.toml
+      - name: beckon check moi file apps.*.toml
         run: |
           rev="$(nix eval --raw --impure --expr \
             '(builtins.fromJSON (builtins.readFile ./flake.lock)).nodes.beckon.locked.rev')"
           for f in configs/shortcuts/apps.*.toml; do
-            nix run "github:xom11/beckon/$rev" -- --check "$f"
+            nix run "github:xom11/beckon/$rev" -- check "$f"
           done
