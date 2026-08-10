@@ -21,14 +21,13 @@ mkModule config ./. {
     vscode
   ];
 
-  #NOTE: Replace vimiumc with surfingkeys
+  # Khoi nay DANG TAT (enable = false), giu lai lam khung san cho lan can toi.
+  # Hai extension vimium c da bo cung luc go dotfiles/browser/vimiumc
+  # (10/08/2026) -- surfingkeys da thay, va no khong cai qua day: extension tu
+  # tai configs.js bang URL raw tren GitHub, xem dotfiles/browser/surfingkeys.
   programs.chromium = {
     enable = false;
     package = pkgs.brave;
-    extensions = [
-      {id = "hfjbmagddngcpeloejdejnfgbamkjaeg";} # vimium c
-      {id = "nacjakoppgmdcpemlfnfegmlhipddanj";} # pdf for vimium c
-    ];
     commandLineArgs = [
       "--enable-features=ParallelDownloading"
       "--extensions-on-chrome-urls"
