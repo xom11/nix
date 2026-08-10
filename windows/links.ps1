@@ -20,11 +20,6 @@ $Hm = $Ctx.HomeManagerDir
     # the link only created a stray settings.json. The source file is kept in the repo for when
     # PowerToys comes back -- re-add the entry here and to $modules in apply.ps1 at that point.
 
-    'dotfiles.terminal.wezterm' = @(
-        @{ Source = "$Hm\dotfiles\terminal\wezterm\wezterm.lua"
-           Target = "$env:USERPROFILE\.config\wezterm\wezterm.lua" }
-    )
-
     'dotfiles.ai.claude' = @(
         @{ Source = "$Hm\dotfiles\ai\claude.d\CLAUDE.md"
            Target = "$env:USERPROFILE\.claude\CLAUDE.md" }

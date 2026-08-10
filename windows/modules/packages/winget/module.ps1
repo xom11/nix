@@ -18,7 +18,6 @@
             # ---- Terminals / shells ----
             # PowerShell 7 is deliberately not here: winget only carries the MSIX build, and
             # sshd cannot launch a packaged app. See modules/packages/pwsh.
-            'wez.wezterm'
             'JanDeDobbeleer.OhMyPosh'
             'ajeetdsouza.zoxide'
 
