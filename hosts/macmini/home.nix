@@ -59,7 +59,6 @@ in {
       };
       ai.enable = true;
       conda.enable = true;
-      vscode.enable = true;
     };
     pkgs = {
       dev.enable = true;

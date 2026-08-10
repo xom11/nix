@@ -50,7 +50,7 @@ nix-darwin/              # macOS system modules
 home-manager/            # User-level modules (cross-platform)
 ├── base/                #   User, home dir, env variables (+ macos/, ubuntu/)
 ├── programs/            #   agenix, btop, git, herdr, nvim, ssh, tmux, yazi, zsh
-├── dotfiles/            #   Symlinked configs (ai/, browser/, terminal/, macos/, vscode, ...)
+├── dotfiles/            #   Symlinked configs (ai/, browser/, terminal/, macos/, ...)
 ├── environments/        #   fonts, gnome, i18n (Vietnamese), i3wm, sway
 └── pkgs/                #   Package groups: dev, lang, tools, nixos, ubuntu
 nixos/                   # NixOS system modules
@@ -113,7 +113,7 @@ modules.home-manager = {
 
 **Desktop Linux** — i3wm + picom + rofi + dunst, Vietnamese input (fcitx5/ibus-bamboo)
 
-**Windows** — AutoHotkey v2 (window manager, app launcher, input switcher), PowerShell profile (Oh-My-Posh, PSFzf, posh-git), registry-based system tweaks, dotfiles via PowerShell symlinks — shares Neovim, VSCode, SSH, Yazi, and Claude configs with the Nix side
+**Windows** — AutoHotkey v2 (window manager, app launcher, input switcher), PowerShell profile (Oh-My-Posh, PSFzf, posh-git), registry-based system tweaks, dotfiles via PowerShell symlinks — shares Neovim, SSH, Yazi, and Claude configs with the Nix side
 
 **Dotfiles** — Symlinked via `mkOutOfStoreSymlink` (Nix) or PowerShell `New-Item -SymbolicLink` (Windows) — edit in repo, changes apply instantly without rebuild
 

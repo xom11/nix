@@ -11,7 +11,6 @@
       terminal.kitty.enable = true;
       browser.firefox.enable = true;
       rofi.enable = true;
-      vscode.enable = true;
       conda.enable = true;
     };
     environments = {

@@ -26,7 +26,6 @@ $modules = @(
     # 'dotfiles.powertoys'        # disabled: PowerToys is not installed on any host
 
     # ---- dotfiles (shared with home-manager) ----
-    'dotfiles.vscode'
     'dotfiles.terminal.wezterm'
     'dotfiles.ai.claude'
     'dotfiles.ai.codex'

@@ -338,7 +338,7 @@ home-manager/
                      #   Single quotes, and URL before --header (it is variadic).
                      # browser/{dotbrave,firefox}, terminal/kitty
                      # macos/{hammerspoon,sleepwatcher}
-                     # conda, rofi, vscode
+                     # conda, rofi
   environments/      # fonts, gnome, i18n, i3wm, sway
   pkgs/              # dev, lang, nixos, tools, ubuntu
 overlays/            # local packages -- hien TRONG. Co che readDir van chay, nen
