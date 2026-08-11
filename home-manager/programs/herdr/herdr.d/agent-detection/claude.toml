@@ -7,14 +7,16 @@
 #
 # The only rule that yields `working` upstream is osc_title_working: a braille
 # spinner at the head of the OSC title. Claude swaps that spinner for U+2733 the
-# moment a turn ends, so a turn that ends while a background shell is still
-# running (waiting on CI, a build, a long job) falls through to live_prompt_box
-# and the pane shows a green idle tick while the work is still in flight.
-# Upstream bug, still open: https://github.com/herdrdev/herdr/issues/1217
+# moment a turn ends, so a turn that ends while background work is still running
+# (a shell waiting on CI, a Monitor, an MCP task) falls through to
+# live_prompt_box and the pane shows a green idle tick while the work is still
+# in flight. Upstream bug, still open:
+# https://github.com/herdrdev/herdr/issues/1217
 #
-# Claude's footer does expose the fact though — it renders `· N shell` (plural
-# `shells`) for as long as any background shell is alive, and drops it when the
-# last one exits. background_shell_working below keys off that.
+# Claude's footer does expose the fact though — the hints line carries a
+# one-slot summary of live background work for as long as any of it is alive,
+# and drops the slot when the last one exits. background_task_working below
+# keys off that.
 #
 # Everything else in this file is a verbatim copy of the upstream remote
 # manifest (~/.local/state/herdr/agent-detection/remote/claude.toml) at the
@@ -27,9 +29,9 @@
 # Drop the override entirely to go back to upstream behaviour.
 
 id = "claude"
-version = "2026.07.13.1"
+version = "2026.08.04.1"
 min_engine_version = 2
-updated_at = "2026-07-13T00:00:00Z"
+updated_at = "2026-08-04T00:00:00Z"
 aliases = ["claude-code"]
 
 [[rules]]
@@ -55,17 +57,35 @@ line_regex = [
 # Sits above live_prompt_box (950) so a finished turn with live background work
 # reads as working, and below btw_overlay_working (975) so nothing that already
 # claims the pane loses. The `not` list mirrors live_prompt_box's so an approval
-# prompt still wins as `blocked` even while background work runs.
+# prompt still wins as `blocked` even while background work runs — that list is
+# why the region stays `after_last_horizontal_rule` (which spans the statusline
+# AND the hints line) instead of narrowing to the hints line alone: narrowing it
+# would put "do you want to proceed?" out of reach and let a 960 `working` beat
+# generic_permission_prompt at 840.
 #
-# Claude reports every kind of background work through one footer slot, in one
-# shape: `· 1 shell ·`, `· 2 monitors ·`. Match the kinds, not a bare count --
-# that slot sits on the same line as `⏵⏵ bypass permissions on` and `← for
-# agents`, and a loose `·\s*\d+` would fire on whatever lands there next.
-# A Monitor waiting on CI is what motivated widening this: the turn has ended
-# and the spinner is gone, yet the agent is nowhere near done. Only shell and
-# monitor are covered because those are the two observed live; `bashes` is not
-# a form Claude ships (the 2.1.221 bundle has no such string, while both
-# `shells` and `monitors` are in it).
+# Claude reports every kind of background work through ONE footer slot, and the
+# wording is a closed set — read it off `IRt` in the bundle, which is the only
+# thing that renders these counts:
+#   N shell(s) · N monitor(s) · N team(s) · N local agent(s)
+#   N background dynamic workflow(s) · N MCP task(s) (or job(s), gated)
+#   N background task(s)   <- the fallback whenever the live types are MIXED
+# The mixed-type fallback matters more than it looks: one shell plus one MCP
+# task renders `2 background tasks`, and neither noun appears.
+# Deliberately NOT matched: `N loops` (a registered cron is not running work,
+# and matching it would pin the pane to working forever), `auto-mode scan`
+# (no count, one-shot setup scan), and anything remote — `cloud session`,
+# `ultraplan`, `dreaming` never reach this slot, the producer filters them out.
+#
+# Anchor on `^` or `·`, never on a bare count. This region also holds the
+# statusline, whose first field is the session title — user text. Requiring the
+# count to open the line or follow a separator keeps a title like
+# "Sua 3 MCP tasks bi treo" from pinning the pane to working. It also has to be
+# `^`-OR-`·` rather than `·` alone: the summary is only preceded by a separator
+# when a mode indicator sits to its left, so in default mode the line opens
+# `  1 MCP task · ← for agents` with nothing in front of the count. The old
+# `·`-only form silently missed every non-bypass pane.
+# `← N agents` / `← N done` on the same line are the fleet nudge, a different
+# signal; they stay unmatched because `agents` is not in the alternation.
 #
 # Trade-off: any surviving background work counts, including something parked
 # on purpose (a dev server, a tail -f). Such a pane reads working until it
@@ -76,7 +96,7 @@ state = "working"
 priority = 960
 region = "after_last_horizontal_rule"
 visible_working = true
-regex = ['·\s*\d+\s+(?:shells?|monitors?)\b']
+line_regex = ['(?i)(?:^|·)\s*\d+\s+(?:shells?|monitors?|teams?|local\s+agents?|MCP\s+(?:tasks?|jobs?)|background\s+(?:dynamic\s+workflows?|tasks?))\b']
 not = [
   { contains = ["enter to select"] },
   { contains = ["esc to cancel"] },
@@ -107,13 +127,16 @@ state = "blocked"
 priority = 980
 region = "after_last_horizontal_rule"
 visible_blocker = true
-contains = ["enter to select", "esc to cancel"]
+contains = ["esc to cancel"]
 any = [
-  { contains = ["tab/arrow keys to navigate"] },
-  { contains = ["arrow keys to navigate"] },
-  { contains = ["arrows to navigate"] },
-  { contains = ["↑/↓ to navigate"] },
-  { contains = ["↑↓ to navigate"] },
+  { contains = ["enter to confirm"] },
+  { contains = ["enter to select"], any = [
+    { contains = ["tab/arrow keys to navigate"] },
+    { contains = ["arrow keys to navigate"] },
+    { contains = ["arrows to navigate"] },
+    { contains = ["↑/↓ to navigate"] },
+    { contains = ["↑↓ to navigate"] },
+  ] },
 ]
 
 [[rules]]
