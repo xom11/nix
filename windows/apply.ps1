@@ -14,9 +14,13 @@ $ErrorActionPreference = 'Stop'
 
 $modules = @(
     # ---- packages ----
-    'packages.winget'             # GUI apps, fonts, system tools
+    # dotfiles.dotpkg is FIRST and lives here rather than with the other dotfiles:
+    # it links pkg.toml and pkg.lock into the home directory, and packages.dotpkg
+    # reads exactly those two paths. Left in the dotfiles group below it would run
+    # after, and a fresh machine would fail on a missing file.
+    'dotfiles.dotpkg'             # links pkg.toml + pkg.lock
+    'packages.dotpkg'             # winget + scoop, both declared in pkg.toml
     'packages.pwsh'               # PowerShell 7 from the MSI; must precede services.sshd
-    'packages.scoop'              # portable CLI dev tools
     'packages.psmodules'          # PowerShell modules
     'packages.npm'                # global npm packages (needs nodejs from scoop)
 
@@ -26,7 +30,8 @@ $modules = @(
     # 'dotfiles.powertoys'        # disabled: PowerToys is not installed on any host
 
     # ---- dotfiles (shared with home-manager) ----
-    'dotfiles.dotpkg'
+    # 'dotfiles.dotpkg' is deliberately not here -- it moved up into the packages
+    # group, because packages.dotpkg reads the two files it links.
     'dotfiles.ai.claude'
     'dotfiles.ai.codex'
     'dotfiles.ai.gemini'

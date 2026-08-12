@@ -4,14 +4,13 @@ Describe 'windows/apply.ps1 shared entry point' {
         $ApplyText = Get-Content -LiteralPath (Join-Path $RepoRoot 'windows\apply.ps1') -Raw
         $ObsoleteHostFile = Join-Path $RepoRoot 'hosts\zenbook-a14\windows.ps1'
         $ExpectedModules = @(
-            'packages.winget'
+            'dotfiles.dotpkg'
+            'packages.dotpkg'
             'packages.pwsh'
-            'packages.scoop'
             'packages.psmodules'
             'packages.npm'
             'dotfiles.pwsh'
             'dotfiles.windows-terminal'
-            'dotfiles.dotpkg'
             'dotfiles.ai.claude'
             'dotfiles.ai.codex'
             'dotfiles.ai.gemini'
@@ -43,6 +42,24 @@ Describe 'windows/apply.ps1 shared entry point' {
             # (?m) so ^ anchors per line -- PowerShell's -match is single-line by default.
             $ApplyText | Should Match ("(?m)^\s*'" + [regex]::Escape($module) + "'")
         }
+    }
+
+    It 'links pkg.toml before the module that reads it' {
+        # packages.dotpkg reads %USERPROFILE%\pkg.toml and pkg.lock; dotfiles.dotpkg
+        # is what puts them there. This constraint is new -- dotfiles.dotpkg used to
+        # sit in the dotfiles group, which runs AFTER packages, and nothing noticed
+        # because no packages module read those files. Reversed, a fresh machine
+        # fails the packages module on a missing file and the cause is a list order
+        # nobody looks at.
+        #
+        # Both indexes come from a quoted, line-anchored match so a mention in a
+        # comment cannot satisfy either one.
+        $linkAt = [regex]::Match($ApplyText, "(?m)^\s*'dotfiles\.dotpkg'")
+        $useAt  = [regex]::Match($ApplyText, "(?m)^\s*'packages\.dotpkg'")
+
+        $linkAt.Success | Should Be $true
+        $useAt.Success  | Should Be $true
+        $linkAt.Index   | Should BeLessThan $useAt.Index
     }
 
     It 'keeps disabled modules commented out rather than active' {
