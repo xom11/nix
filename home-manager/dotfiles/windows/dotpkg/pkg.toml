@@ -44,3 +44,25 @@ packages = [
 #   VNGCorp.Zalo  -- winget download that bai (0x80072f05), cai tay
 #   9PFXXSHC64H3  -- Raycast (Store), da bo vi dung look, cung Alt+Space
 # Them chung vao day se lam ca module do chu khong phai cai duoc chung.
+
+# winget khong cho dotpkg biet ten tien trinh cua goi -- `winget list` khong bao
+# executable lan alias. Voi goi nao co thu muc package, dotpkg nhan ra tien trinh
+# theo DUONG DAN; voi nam id duoi day winget khong tao thu muc nao, nen thu duy
+# nhat con lai la DOAN theo id. Thieu bang nay thi dotpkg co the nang cap mot app
+# dang mo.
+#
+# Nam dong duoi la ten tien trinh DO tren a14 ngay 12/08/2026, khong phai ten
+# doan. Bon cai dau trung voi cai dotpkg doan; cai thu nam thi KHONG:
+#
+#   dotpkg doan cho OhMyPosh : "ohmyposh", "oh my posh"
+#   binary that su           : oh-my-posh.exe
+#                              (%LOCALAPPDATA%\Microsoft\WindowsApps\oh-my-posh.exe)
+#
+# Ca hai cai doan deu truot, nen neu khong co dong do thi hang rao cho oh-my-posh
+# la hang rao rong -- va no rong mot cach im lang.
+[winget.guard]
+"Discord.Discord"         = ["Discord"]
+"Google.Chrome"           = ["chrome"]
+"Obsidian.Obsidian"       = ["Obsidian"]
+"Warp.Warp"               = ["warp"]
+"JanDeDobbeleer.OhMyPosh" = ["oh-my-posh"]
