@@ -20,3 +20,27 @@ rustup = { arch = "keep" }
 # Bo khai bao la sua ve phia dung: no khop voi thuc te thay vi doi thuc te khop
 # voi no. Neu mot ngay bucket co ban arm64 thi them lai dong nay -- kiem truoc
 # bang `(Get-Content ...\buckets\main\bucket\stylua.json | ConvertFrom-Json).architecture`.
+
+[winget]
+packages = [
+  # ---- Apps ----
+  "Brave.Brave", "Discord.Discord", "Google.Chrome",
+  "Microsoft.VisualStudioCode", "Obsidian.Obsidian", "Tailscale.Tailscale",
+  "Vivaldi.Vivaldi", "Warp.Warp",
+
+  # ---- Terminals / shells ----
+  # PowerShell 7 CO Y khong nam o day: winget chi mang ban MSIX, ma sshd khong
+  # khoi dong duoc app dong goi. No den tu MSI, xem windows/modules/packages/pwsh.
+  "JanDeDobbeleer.OhMyPosh", "ajeetdsouza.zoxide",
+
+  # ---- Fonts ----
+  "DEVCOM.JetBrainsMonoNerdFont",
+
+  # ---- System tools ----
+  "7zip.7zip", "AutoHotkey.AutoHotkey", "gerardog.gsudo", "PhatMT97.VKey",
+]
+
+# Hai id CO Y khong khai bao, giu nguyen trang thai comment trong module cu:
+#   VNGCorp.Zalo  -- winget download that bai (0x80072f05), cai tay
+#   9PFXXSHC64H3  -- Raycast (Store), da bo vi dung look, cung Alt+Space
+# Them chung vao day se lam ca module do chu khong phai cai duoc chung.

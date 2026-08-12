@@ -78,14 +78,41 @@ Describe 'dotpkg pkg.toml agrees with the scoop module' {
         (Test-Path -LiteralPath (Join-Path $dir 'state.json')) | Should Be $false
     }
 
-    It 'does not pretend the winget halves agree, because they do not' {
-        # Measured the same day: the winget module declares 15 ids and pkg.toml
-        # declares none, so `dotpkg status` on a14 reports every winget package
-        # as unmanaged. That is the current, deliberate state -- dotpkg owns no
-        # winget package on this fleet yet. This assertion exists so that adding
-        # a [winget] table to pkg.toml is a decision someone makes on purpose
-        # rather than a drift nobody notices.
-        $script:WingetModule | Should Match 'Install-WingetPackages'
-        $script:PkgToml | Should Not Match '(?m)^\[winget\]'
+    It 'declares the same winget ids as the module it replaces' {
+        # Why this exists: during the migration both halves are still in the tree,
+        # and the module is still the thing that installs. The moment pkg.toml
+        # carries a different set, `dotpkg apply` and `apply.ps1` describe two
+        # different machines and nothing says so.
+        #
+        # This is a migration scaffold, not a keeper -- it dies with the module.
+        # It replaced an assertion that pkg.toml must have NO [winget] table,
+        # which existed to make adding one a deliberate act. That act has now
+        # been taken.
+        $moduleIds = @(
+            [regex]::Matches($script:WingetModule, "(?m)^\s*'(?<n>[^']+)'") |
+                ForEach-Object { $_.Groups['n'].Value } |
+                Sort-Object
+        )
+
+        # [winget] only, stopping at the next table header -- [winget.guard] is a
+        # sub-table and must not be read as more package ids.
+        $tomlSection = [regex]::Match(
+            $script:PkgToml,
+            '(?ms)^\[winget\](?<body>.*?)(?=^\[|\z)').Groups['body'].Value
+        $tomlBlock = [regex]::Match(
+            $tomlSection,
+            '(?ms)^packages\s*=\s*\[(?<body>.*?)^\]').Groups['body'].Value
+        $tomlIds = @(
+            [regex]::Matches($tomlBlock, '"(?<n>[^"]+)"') |
+                ForEach-Object { $_.Groups['n'].Value } |
+                Sort-Object
+        )
+
+        # A gate that parses nothing passes everything.
+        $moduleIds.Count | Should BeGreaterThan 10
+        $tomlIds.Count   | Should BeGreaterThan 10
+
+        @($moduleIds | Where-Object { $tomlIds -notcontains $_ }) -join ', ' | Should Be ''
+        @($tomlIds | Where-Object { $moduleIds -notcontains $_ }) -join ', ' | Should Be ''
     }
 }
