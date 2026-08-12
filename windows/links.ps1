@@ -20,26 +20,25 @@ $Hm = $Ctx.HomeManagerDir
     # the link only created a stray settings.json. The source file is kept in the repo for when
     # PowerToys comes back -- re-add the entry here and to $modules in apply.ps1 at that point.
 
-    # dotpkg's declaration AND its lock, both committed. state.json is the one
-    # that stays out: it records what dotpkg OWNS on this machine, while the lock
-    # is bucket + commit + version and names no machine at all -- the same role
-    # flake.lock and nvim-pack-lock.json already play in this repo.
-    # windows/tests/dotpkgDeclaration.Tests.ps1 asserts both halves of that split.
+    # 'dotfiles.dotpkg' is deliberately absent, and was removed on 2026-08-12
+    # after a measurement rather than on principle.
     #
-    # Linked rather than passed by path so that a human running `dotpkg status`
-    # from their home directory reads the same two files packages.dotpkg does.
-    # dotpkg rewrites the lock with an in-place overwrite (std::fs::write, no
-    # atomic rename), so `dotpkg update` flows back through the link into the
-    # working tree -- exactly the arrangement nvim-pack-lock.json has with
-    # vim.pack. If a future dotpkg switches to write-temp-then-rename, the link
-    # becomes a real file and the repo silently stops receiving updates; the
-    # symptom is `git status` staying clean across an update that changed pins.
-    'dotfiles.dotpkg' = @(
-        @{ Source = "$Hm\dotfiles\windows\dotpkg\pkg.toml"
-           Target = "$env:USERPROFILE\pkg.toml" }
-        @{ Source = "$Hm\dotfiles\windows\dotpkg\pkg.lock"
-           Target = "$env:USERPROFILE\pkg.lock" }
-    )
+    # pkg.toml and pkg.lock used to be linked into %USERPROFILE%. dotpkg writes
+    # the lock atomically -- File::create on a temp file, then fs::rename over the
+    # target -- and a rename REPLACES a symlink with a regular file. Measured on
+    # a14: LinkType went from SymbolicLink to blank on the first `dotpkg update`,
+    # the new pin landed in the home-directory copy, and the repo silently stopped
+    # receiving updates. `git status` stays clean through all of it.
+    #
+    # So nothing writable is linked. packages.dotpkg passes --config and --lock
+    # pointing straight at the committed files, and a human drives dotpkg by
+    # cd-ing into home-manager/dotfiles/windows/dotpkg and running it bare, where
+    # its own ./pkg.toml and ./pkg.lock defaults resolve to the same two files.
+    #
+    # The rule this leaves behind is worth more than the entry was: a file some
+    # tool REWRITES does not belong behind a symlink into this repo unless that
+    # tool has been measured to overwrite in place. vim.pack has been (see
+    # nvim-pack-lock.json); dotpkg has been, and failed.
 
     'dotfiles.ai.claude' = @(
         @{ Source = "$Hm\dotfiles\ai\claude.d\CLAUDE.md"

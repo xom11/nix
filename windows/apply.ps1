@@ -14,11 +14,10 @@ $ErrorActionPreference = 'Stop'
 
 $modules = @(
     # ---- packages ----
-    # dotfiles.dotpkg is FIRST and lives here rather than with the other dotfiles:
-    # it links pkg.toml and pkg.lock into the home directory, and packages.dotpkg
-    # reads exactly those two paths. Left in the dotfiles group below it would run
-    # after, and a fresh machine would fail on a missing file.
-    'dotfiles.dotpkg'             # links pkg.toml + pkg.lock
+    # packages.dotpkg reads pkg.toml and pkg.lock straight out of the repo, so it
+    # depends on no link module and no ordering. There was briefly a
+    # 'dotfiles.dotpkg' entry here for exactly that reason; see links.ps1 for why
+    # linking a file dotpkg REWRITES turned out to be the wrong shape.
     'packages.dotpkg'             # winget + scoop, both declared in pkg.toml
     'packages.pwsh'               # PowerShell 7 from the MSI; must precede services.sshd
     'packages.psmodules'          # PowerShell modules
@@ -30,8 +29,8 @@ $modules = @(
     # 'dotfiles.powertoys'        # disabled: PowerToys is not installed on any host
 
     # ---- dotfiles (shared with home-manager) ----
-    # 'dotfiles.dotpkg' is deliberately not here -- it moved up into the packages
-    # group, because packages.dotpkg reads the two files it links.
+    # 'dotfiles.dotpkg' used to be here and is gone entirely, not moved: pkg.toml
+    # and pkg.lock are read straight out of the repo now. See links.ps1.
     'dotfiles.ai.claude'
     'dotfiles.ai.codex'
     'dotfiles.ai.gemini'

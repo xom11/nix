@@ -4,7 +4,6 @@ Describe 'windows/apply.ps1 shared entry point' {
         $ApplyText = Get-Content -LiteralPath (Join-Path $RepoRoot 'windows\apply.ps1') -Raw
         $ObsoleteHostFile = Join-Path $RepoRoot 'hosts\zenbook-a14\windows.ps1'
         $ExpectedModules = @(
-            'dotfiles.dotpkg'
             'packages.dotpkg'
             'packages.pwsh'
             'packages.psmodules'
@@ -44,22 +43,19 @@ Describe 'windows/apply.ps1 shared entry point' {
         }
     }
 
-    It 'links pkg.toml before the module that reads it' {
-        # packages.dotpkg reads %USERPROFILE%\pkg.toml and pkg.lock; dotfiles.dotpkg
-        # is what puts them there. This constraint is new -- dotfiles.dotpkg used to
-        # sit in the dotfiles group, which runs AFTER packages, and nothing noticed
-        # because no packages module read those files. Reversed, a fresh machine
-        # fails the packages module on a missing file and the cause is a list order
-        # nobody looks at.
+    It 'has no dotfiles.dotpkg module, because nothing is linked for dotpkg' {
+        # There was one, for two hours on 2026-08-12. It linked pkg.toml and
+        # pkg.lock into %USERPROFILE%, and packages.dotpkg read them there.
+        # dotpkg writes the lock with File::create + fs::rename, and a rename
+        # replaces a symlink with a regular file -- measured on a14: the link
+        # became a real file on the first `dotpkg update`, the new pin landed in
+        # the home directory, and the repo stopped receiving updates with
+        # `git status` clean throughout.
         #
-        # Both indexes come from a quoted, line-anchored match so a mention in a
-        # comment cannot satisfy either one.
-        $linkAt = [regex]::Match($ApplyText, "(?m)^\s*'dotfiles\.dotpkg'")
-        $useAt  = [regex]::Match($ApplyText, "(?m)^\s*'packages\.dotpkg'")
-
-        $linkAt.Success | Should Be $true
-        $useAt.Success  | Should Be $true
-        $linkAt.Index   | Should BeLessThan $useAt.Index
+        # This asserts the absence so the entry does not come back by reflex.
+        # The name is quoted and line-anchored, so the explanatory comments in
+        # apply.ps1 and links.ps1 do not satisfy it.
+        $ApplyText | Should Not Match "(?m)^\s*'dotfiles\.dotpkg'"
     }
 
     It 'keeps disabled modules commented out rather than active' {

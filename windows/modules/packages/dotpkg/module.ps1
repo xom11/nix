@@ -16,19 +16,30 @@
             throw 'dotpkg not found in PATH. Take the binary from https://github.com/xom11/dotpkg/releases, check it against the release SHA256SUMS, and put it somewhere on PATH.'
         }
 
-        # Explicit paths. dotpkg defaults to ./pkg.toml and apply.ps1 guarantees
-        # no working directory; a run whose CWD happened to be system32 reported
-        # "cannot read pkg.toml" and nothing else.
+        # Straight at the repo files, not at links in the home directory.
         #
-        # These are the LINKS in the home directory, not the repo files, on
-        # purpose: a human running `dotpkg status` from their home directory then
-        # reads exactly what this module reads. dotfiles.dotpkg creates them and
-        # apply.ps1 runs it first -- windows/tests/apply.Tests.ps1 pins that order.
-        $config = Join-Path $env:USERPROFILE 'pkg.toml'
-        $lock   = Join-Path $env:USERPROFILE 'pkg.lock'
+        # There WERE links -- %USERPROFILE%\pkg.toml and pkg.lock -- and they were
+        # removed on 2026-08-12 after a measurement: dotpkg writes the lock
+        # atomically (File::create on a temp file, then fs::rename over the
+        # target), and a rename REPLACES a symlink with a regular file. Measured
+        # on a14: LinkType went from SymbolicLink to blank on the first
+        # `dotpkg update`, the new pin landed in the home-directory copy, and the
+        # repo silently stopped receiving updates. Nothing about that is visible
+        # unless you go looking at LinkType.
+        #
+        # So nothing writable sits behind a symlink here. To drive dotpkg by hand,
+        # cd into the directory below and run it with no flags at all -- its own
+        # defaults (./pkg.toml, ./pkg.lock) then resolve to these same files.
+        #
+        # Passing them explicitly also covers apply.ps1 guaranteeing no working
+        # directory: a run whose CWD happened to be system32 reported "cannot read
+        # pkg.toml" and nothing else.
+        $dotpkgDir = Join-Path $Ctx.RepoRoot 'home-manager\dotfiles\windows\dotpkg'
+        $config = Join-Path $dotpkgDir 'pkg.toml'
+        $lock   = Join-Path $dotpkgDir 'pkg.lock'
         foreach ($p in @($config, $lock)) {
             if (-not (Test-Path -LiteralPath $p)) {
-                throw "$p is missing -- the dotfiles.dotpkg link module has to run before this one"
+                throw "$p is missing -- it is committed to this repo, so a working tree without it is broken"
             }
         }
 

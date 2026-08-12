@@ -55,6 +55,13 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $line = [regex]::Match($script:ModuleText, '(?m)^\s*dotpkg apply .*$').Value
         $line | Should Match '--config'
         $line | Should Match '--lock'
+
+        # And they point at the repo, not at %USERPROFILE%. The home-directory
+        # links were removed on 2026-08-12: dotpkg rewrites the lock with
+        # File::create + fs::rename, and a rename turns a symlink into a real
+        # file, after which the repo silently stops receiving pins.
+        $script:ModuleText | Should Match '\$Ctx\.RepoRoot'
+        $script:ModuleText | Should Not Match '\$config = Join-Path \$env:USERPROFILE'
     }
 
     It 'never prunes' {

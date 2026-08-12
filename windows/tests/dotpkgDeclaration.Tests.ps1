@@ -18,13 +18,15 @@ Describe 'dotpkg declaration and lock' {
     # lock have to agree. That is a real invariant rather than a bookkeeping one --
     # `dotpkg apply` exits 2 on a declared package with no lock entry.
 
-    It 'links both the declaration and the lock into the home directory' {
-        # Without the links a third copy exists: the repo's, and whatever is
-        # actually sitting in the home directory. The gate would then be
-        # comparing two files while the machine obeys a third.
-        $script:LinksText | Should Match "dotfiles\.dotpkg"
-        $script:LinksText | Should Match 'dotpkg\\pkg\.toml'
-        $script:LinksText | Should Match 'dotpkg\\pkg\.lock'
+    It 'links neither file into the home directory' {
+        # Nothing writable belongs behind a symlink into this repo. dotpkg
+        # rewrites pkg.lock with File::create + fs::rename, and the rename
+        # replaces a symlink with a regular file -- measured on a14 2026-08-12,
+        # after which the repo stopped receiving pins and `git status` stayed
+        # clean. packages.dotpkg passes --config and --lock at the committed
+        # files instead.
+        $script:LinksText | Should Not Match 'dotpkg\\pkg\.toml'
+        $script:LinksText | Should Not Match 'dotpkg\\pkg\.lock'
     }
 
     It 'keeps state.json out of the repository but requires the lock in it' {
