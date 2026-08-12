@@ -54,7 +54,19 @@ function New-IdempotentSymlink {
     }
 
     try {
-        New-Item -ItemType SymbolicLink -Path $Target -Value $sourceResolved -Force | Out-Null
+        # -ErrorAction Stop is load-bearing, and its absence was a silent lie.
+        #
+        # New-Item reports "Administrator privilege required for this operation"
+        # as a NON-terminating error, so catch never fired: the function printed
+        # OK and returned $true for a link it had not created. apply.ps1 sets
+        # $ErrorActionPreference = 'Stop', but preference variables do not cross
+        # a module boundary -- code in a .psm1 runs under the module's own scope,
+        # which defaults to Continue. So the caller's Stop never applied here.
+        #
+        # Measured on a14 2026-08-12, in a non-elevated session with the caller
+        # at Stop: returned True, printed OK, and Test-Path on the target was
+        # False. Every link in that run reported green while nothing was linked.
+        New-Item -ItemType SymbolicLink -Path $Target -Value $sourceResolved -Force -ErrorAction Stop | Out-Null
         Write-OK "$Target  ->  $sourceResolved"
         return $true
     } catch {
