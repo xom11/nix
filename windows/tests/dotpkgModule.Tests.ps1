@@ -97,6 +97,18 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $script:ModuleText | Should Match 'throw'
     }
 
+    It 'handles exit 1, which is what a missing pin really produces here' {
+        # Measured on a14 2026-08-12 with one package declared and an empty lock:
+        #     without --keep-going : exit 2
+        #     with    --keep-going : exit 1
+        # The README documents 2, and this module passes --keep-going -- so 2 is
+        # the code that never fires and 1 is the one that does. An earlier version
+        # handled only 2 and would have answered a missing pin with the generic
+        # "exited with 1", sending the reader nowhere.
+        $script:ModuleText | Should Match '\$rc -eq 1'
+        $script:ModuleText | Should Match '\$rc -eq 2'
+    }
+
     It 'names the SSH limitation in a comment' {
         # Over SSH the sshd service's Redirection Guard blocks traversal of scoop
         # junctions created by a non-elevated user, so those packages come back as

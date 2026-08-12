@@ -70,10 +70,22 @@
 
         # throw, not Write-Fail: apply.ps1 counts a module as failed only when it
         # throws. Write-Fail prints in red and still lands in the ok column.
+        #
+        # The two failing codes were measured on a14 2026-08-12, with one package
+        # declared and an empty lock, because the README's account is true only
+        # for the flags it assumes:
+        #     without --keep-going : exit 2, "nothing has been changed"
+        #     with    --keep-going : exit 1, the ready packages still applied
+        # This module passes --keep-going, so 1 is the code a missing pin actually
+        # produces here and 2 is the one that never fires. Both are handled: the
+        # flag could come off one day, and a wrong exit-code message is worse than
+        # none because it sends the reader after the wrong file.
         if ($rc -eq 0) {
             Write-OK 'dotpkg apply'
+        } elseif ($rc -eq 1) {
+            throw 'dotpkg apply: some packages could not be prepared or verified (the rest were still applied, because --keep-going). The usual cause is a declared package with no pkg.lock entry -- run `dotpkg update` and commit the lock. Read the output above for which.'
         } elseif ($rc -eq 2) {
-            throw 'dotpkg apply: a declared package has no pkg.lock entry. Run `dotpkg update` and commit the lock.'
+            throw 'dotpkg apply: something could not be prepared, so nothing was changed. Usually a declared package with no pkg.lock entry -- run `dotpkg update` and commit the lock.'
         } else {
             throw "dotpkg apply exited with $rc"
         }
