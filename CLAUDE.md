@@ -580,6 +580,16 @@ trên cả bốn file, nhưng bằng ĐÚNG rev `beckon` đã ghim trong `flake.
 (đọc qua `nix eval --raw --impure` ngay trong step) — CI kiểm cùng một binary
 mà các host sẽ deploy, không phải bản mới nhất thượng nguồn của beckon.
 
+**Từ beckon 0.8.0, luồng này chạy CẢ HAI CHIỀU.** Bản đó mọc thêm cửa sổ
+Settings, và `crates/beckon-core/src/config_write.rs` **ghi ngược** lựa chọn vào
+chính file `apps.*.toml` — đo trên a14 12/08/2026, hai dòng `keyboard.caps` và
+`keyboard.caps_tap` tự xuất hiện trong `configs/shortcuts/apps.windows.toml` mà
+không ai sửa file. Nghĩa là file này giờ cùng hạng với `pi.d/settings.json` và
+`nvim-pack-lock.json`: **một chương trình đang chạy có thể làm bẩn working tree
+bất cứ lúc nào.** Hệ quả cụ thể: `git pull --ff-only` trên a14 sẽ bị chặn, và
+`git status` bẩn không có nghĩa là ai đó quên commit. Trước khi kết luận "có
+người sửa tay", hỏi xem cửa sổ Settings của beckon có được mở không.
+
 Ba bẫy kế thừa từ đợt dọn 09/08/2026, đáng nhớ vì không có gì tự báo khi vi
 phạm:
 
