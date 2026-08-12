@@ -48,12 +48,3 @@
 "ctrl+super+alt+shift+b" = "Brave"
 "ctrl+super+alt+shift+c" = "Google Chrome"
 "ctrl+super+alt+shift+m" = "Gmail"
-
-# Hai dong duoi KHONG do nguoi go vao day: beckon 0.8.0 co cua so Settings, va
-# `crates/beckon-core/src/config_write.rs` ghi lua chon nguoc lai chinh file nay.
-# Chung tu xuat hien tren a14 ngay 12/08/2026. Commit vi day la khai bao that va
-# de working tree cua a14 thoi ban -- `git pull --ff-only` bi chan boi no.
-# He qua can nho: file nay co the bi mot chuong trinh dang chay sua bat cu luc
-# nao, giong pi.d/settings.json va nvim-pack-lock.json.
-keyboard.caps = true
-keyboard.caps_tap = "capslock"
