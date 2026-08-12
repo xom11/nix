@@ -208,7 +208,7 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | Kênh | Ghim ở đâu | Bump bằng |
 |---|---|---|
 | Máy Nix (mac/NixOS/HM) | `flake.lock` | `nix flake update beckon` (input theo nhánh mặc định, không ghim tag) rồi rebuild |
-| Windows — beckon | manifest trong **repo thứ ba** `xom11/scoop-bucket`, cài qua `xom11/beckon` ở `windows/modules/packages/scoop/module.ps1` | release beckon → sửa manifest bên scoop-bucket → `scoop update` |
+| Windows — beckon | manifest trong **repo thứ ba** `xom11/scoop-bucket`; khai báo ở `pkg.toml`, và version bị ghim theo **commit của bucket** trong `pkg.lock` | release beckon → sửa manifest bên scoop-bucket → `dotpkg update` → **commit diff của `pkg.lock`**. `scoop update` một mình không đủ nữa: dotpkg sẽ kéo ngược về đúng commit đã ghim |
 | Windows — dotbrave | chuỗi `dotbrave==<ver>` trong `windows/modules/programs/dotbrave/module.ps1` | publish PyPI → sửa tay chuỗi đó (cố ý ghim: script chạy Administrator và ghi HKLM policy) |
 | Windows — tongue | `%USERPROFILE%\.local\bin\tongue.exe`, cài **ngoài luồng** — `apply.ps1` lẫn scoop đều không cài | copy tay binary mới lên máy |
 | nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
