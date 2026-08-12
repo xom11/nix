@@ -135,28 +135,12 @@ pin     = "version-only"
 version = "2.0.26"
 pin     = "version-only"
 
-[winget."Brave.Brave"]
-version = "151.1.93.132"
-pin     = "version-only"
-
 [winget."DEVCOM.JetBrainsMonoNerdFont"]
 version = "3.3.0"
 pin     = "version-only"
 
-[winget."Discord.Discord"]
-version = "1.0.9252"
-pin     = "version-only"
-
 [winget."gerardog.gsudo"]
 version = "2.6.1"
-pin     = "version-only"
-
-[winget."Google.Chrome"]
-version = "151.0.7922.138"
-pin     = "version-only"
-
-[winget."JanDeDobbeleer.OhMyPosh"]
-version = "30.6.4"
 pin     = "version-only"
 
 [winget."Microsoft.VisualStudioCode"]
@@ -173,13 +157,5 @@ pin     = "version-only"
 
 [winget."Tailscale.Tailscale"]
 version = "1.102.2"
-pin     = "version-only"
-
-[winget."Vivaldi.Vivaldi"]
-version = "8.1.4087.62"
-pin     = "version-only"
-
-[winget."Warp.Warp"]
-version = "v0.2026.07.29.09.05.stable_02"
 pin     = "version-only"
 

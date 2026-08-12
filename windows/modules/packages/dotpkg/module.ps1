@@ -89,26 +89,40 @@
         }
         $global:LASTEXITCODE = 0
 
-        # throw, not Write-Fail: apply.ps1 counts a module as failed only when it
-        # throws. Write-Fail prints in red and still lands in the ok column.
+        # 1 warns, 2 and up throw. That split is not squeamishness -- it follows
+        # dotpkg's own definition, which is written in terms of what the operator
+        # must do next rather than what went wrong:
         #
-        # The two failing codes were measured on a14 2026-08-12, with one package
-        # declared and an empty lock, because the README's account is true only
-        # for the flags it assumes:
-        #     without --keep-going : exit 2, "nothing has been changed"
-        #     with    --keep-going : exit 1, the ready packages still applied
-        # This module passes --keep-going, so 1 is the code a missing pin actually
-        # produces here and 2 is the one that never fires. Both are handled: the
-        # flag could come off one day, and a wrong exit-code message is worse than
-        # none because it sends the reader after the wrong file.
+        #   0  the plan is fully realised, nothing outstanding
+        #   1  something is OUTSTANDING -- a package failed, was held, could not
+        #      be prepared, "or was skipped because its own process was running.
+        #      That last one is not a failure"
+        #   2  refused before anything was attempted; nothing changed
+        #
+        # So 1 deliberately mixes a real failure with a package that was merely
+        # busy, and the exit code cannot tell them apart. On this fleet the busy
+        # case is the NORMAL one: python, beckon and kanata are managed by scoop
+        # and are almost always running. Measured on a14 2026-08-12 with a fully
+        # resolved lock and nothing wrong: `7 of 7 changes ready, 0 failed,
+        # 1 skipped` -> exit 1, and that 1 was python.
+        #
+        # Throwing on 1 would therefore paint apply.ps1 red on nearly every run,
+        # which is the fastest way to teach someone to stop reading red. The
+        # warning still names what is outstanding, and dotpkg has already printed
+        # the per-package detail above it.
+        #
+        # throw, where it is used, matters: apply.ps1 counts a module as failed
+        # only when it throws. Write-Fail prints in red and still lands in the ok
+        # column.
         if ($rc -eq 0) {
             Write-OK 'dotpkg apply'
         } elseif ($rc -eq 1) {
-            throw 'dotpkg apply: some packages could not be prepared or verified (the rest were still applied, because --keep-going). The usual cause is a declared package with no pkg.lock entry -- run `dotpkg update` and commit the lock. Read the output above for which.'
-        } elseif ($rc -eq 2) {
-            throw 'dotpkg apply: something could not be prepared, so nothing was changed. Usually a declared package with no pkg.lock entry -- run `dotpkg update` and commit the lock.'
+            Write-Warn 'dotpkg apply: something is still outstanding -- a package failed, was held, or was skipped because it was running. Read the plan above; close the app and rerun, or fix what failed.'
         } else {
-            throw "dotpkg apply exited with $rc"
+            # 2 is "refused before anything was attempted, nothing changed": a
+            # guard fired, or a declared package has no pkg.lock entry. Both need
+            # a person, and neither is fixed by running apply again.
+            throw "dotpkg apply refused the run (exit $rc) and changed nothing. Usually a declared package with no pkg.lock entry -- run ``dotpkg update`` and commit the lock."
         }
     }
 }

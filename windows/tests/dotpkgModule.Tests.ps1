@@ -124,16 +124,28 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $script:ModuleText | Should Match 'throw'
     }
 
-    It 'handles exit 1, which is what a missing pin really produces here' {
-        # Measured on a14 2026-08-12 with one package declared and an empty lock:
-        #     without --keep-going : exit 2
-        #     with    --keep-going : exit 1
-        # The README documents 2, and this module passes --keep-going -- so 2 is
-        # the code that never fires and 1 is the one that does. An earlier version
-        # handled only 2 and would have answered a missing pin with the generic
-        # "exited with 1", sending the reader nowhere.
-        $script:ModuleText | Should Match '\$rc -eq 1'
-        $script:ModuleText | Should Match '\$rc -eq 2'
+    It 'warns on exit 1 instead of failing the run' {
+        # dotpkg defines 1 as "something is outstanding", and says outright that
+        # one of the things it covers -- a package skipped because its own process
+        # was running -- "is not a failure". The exit code cannot separate that
+        # from a real one.
+        #
+        # On this fleet the busy case is the NORMAL case: python, beckon and
+        # kanata come from scoop and are almost always running. Measured on a14
+        # 2026-08-12 with a fully resolved lock and nothing wrong at all:
+        # `7 of 7 changes ready, 0 failed, 1 skipped` -> exit 1. Throwing there
+        # would paint apply.ps1 red on nearly every run, and a module that is
+        # always red is a module nobody reads.
+        #
+        # Anything from 2 up still throws: that is "refused before anything was
+        # attempted, nothing changed", which needs a person.
+        $one = [regex]::Match($script:ModuleText, '(?ms)\$rc -eq 1.*?\}')
+        $one.Success | Should Be $true
+        $one.Value | Should Match 'Write-Warn'
+        $one.Value | Should Not Match 'throw'
+
+        # And the else branch -- everything >= 2 -- must still throw.
+        $script:ModuleText | Should Match '(?ms)\} else \{.*?throw'
     }
 
     It 'names the SSH limitation in a comment' {

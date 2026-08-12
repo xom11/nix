@@ -23,3 +23,14 @@ result
 # (số biến, độ dài giá trị, tập ký tự) và mkdocs không có `nav:` nên mọi .md
 # dưới docs/ đều lên thẳng GitHub Pages, có index tìm kiếm. Giữ ở máy thôi.
 docs/superpowers/
+
+# dotpkg de lai hai thu ben canh khai bao cua no, va ca hai deu KHONG thuoc repo:
+#   pkg.lock.bak -- ban sao no tu ghi truoc khi viet lai lock (do tren a14
+#                   12/08/2026, xuat hien sau `dotpkg update` dau tien)
+#   state.json   -- thu dotpkg SO HUU tren MOT may; commit no la publish trang
+#                   thai cua mot host nhu the do la cua ca dan
+# pkg.lock thi nguoc lai VAN duoc commit: no chi la bucket + commit + version,
+# khong mang gi rieng may nao -- windows/tests/dotpkgDeclaration.Tests.ps1 gac
+# ca hai nua cua ranh gioi do.
+home-manager/dotfiles/windows/dotpkg/pkg.lock.bak
+home-manager/dotfiles/windows/dotpkg/state.json

@@ -52,6 +52,17 @@ Describe 'dotpkg declaration and lock' {
         #
         # Reads TOML by regex only, so CI needs no dotpkg binary. dotpkg is not a
         # flake input and CI has none.
+        # Sanity floors, per backend. They exist only to stop a regex that has
+        # silently stopped matching from reporting agreement -- a gate that parses
+        # nothing passes everything.
+        #
+        # They are deliberately well under the real counts (25 scoop, 9 winget as
+        # of 2026-08-12) so that ordinary edits do not touch them. The winget one
+        # started at 10 and had to come down when five self-updating apps were
+        # dropped from the declaration; a floor that tracks the list closely is a
+        # floor that gets edited for the wrong reasons.
+        $floors = @{ scoop = 15; winget = 5 }
+
         foreach ($backend in 'scoop', 'winget') {
             $section = [regex]::Match(
                 $script:PkgToml,
@@ -75,9 +86,8 @@ Describe 'dotpkg declaration and lock' {
                     Sort-Object
             )
 
-            # A gate that parses nothing passes everything.
-            $declared.Count | Should BeGreaterThan 10
-            $locked.Count   | Should BeGreaterThan 10
+            $declared.Count | Should BeGreaterThan $floors[$backend]
+            $locked.Count   | Should BeGreaterThan $floors[$backend]
 
             $missing = @($declared | Where-Object { $locked -notcontains $_ })
             "$backend : " + ($missing -join ', ') | Should Be "$backend : "
