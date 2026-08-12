@@ -21,17 +21,34 @@ rustup = { arch = "keep" }
 # voi no. Neu mot ngay bucket co ban arm64 thi them lai dong nay -- kiem truoc
 # bang `(Get-Content ...\buckets\main\bucket\stylua.json | ConvertFrom-Json).architecture`.
 
+# dotpkg chi co MOT kieu ghim: `pin = "version-only"`. Khong co kieu "chi can co
+# mat". Voi app TU CAP NHAT thi kieu ghim do la sai viec:
+#
+#   app tu nang len -> vuot qua pin -> dotpkg tu choi downgrade (dung, va co chu
+#   dich) -> thoat 1 -> packages.dotpkg throw -> apply.ps1 DO. Moi lan chay, mai
+#   mai, cho toi khi ai do chay `dotpkg update` roi commit.
+#
+# Do tren a14 12/08/2026: chi mot downgrade bi tu choi la du de thoat 1, du
+# "0 failed". Module packages.winget cu khong dinh vi no chi dam bao CO MAT.
+#
+# Nen bay gio [winget] chi mang thu KHONG tu cap nhat. Nam app duoi day co y
+# nam ngoai va van la `unmanaged` nhu truoc dot nay -- do cung la ly do dung:
+# ghim version mot trinh duyet roi chan no nang cap la viec khong nen lam.
+#
+#   Brave.Brave, Vivaldi.Vivaldi, Google.Chrome, Discord.Discord, Warp.Warp
+#
+# Microsoft.VisualStudioCode va Obsidian.Obsidian CUNG tu cap nhat; chung con o
+# day vi hom nay chua troi, nhung neu mot ngay `dotpkg status` bao downgrade cho
+# chung thi cach xu la go khoi day, khong phai chay update de duoi theo.
 [winget]
 packages = [
   # ---- Apps ----
-  "Brave.Brave", "Discord.Discord", "Google.Chrome",
   "Microsoft.VisualStudioCode", "Obsidian.Obsidian", "Tailscale.Tailscale",
-  "Vivaldi.Vivaldi", "Warp.Warp",
 
   # ---- Terminals / shells ----
   # PowerShell 7 CO Y khong nam o day: winget chi mang ban MSIX, ma sshd khong
   # khoi dong duoc app dong goi. No den tu MSI, xem windows/modules/packages/pwsh.
-  "JanDeDobbeleer.OhMyPosh", "ajeetdsouza.zoxide",
+  "ajeetdsouza.zoxide",
 
   # ---- Fonts ----
   "DEVCOM.JetBrainsMonoNerdFont",
@@ -40,10 +57,13 @@ packages = [
   "7zip.7zip", "AutoHotkey.AutoHotkey", "gerardog.gsudo", "PhatMT97.VKey",
 ]
 
-# Hai id CO Y khong khai bao, giu nguyen trang thai comment trong module cu:
+# Ba id CO Y khong khai bao, ngoai nam app tu cap nhat o tren:
 #   VNGCorp.Zalo  -- winget download that bai (0x80072f05), cai tay
 #   9PFXXSHC64H3  -- Raycast (Store), da bo vi dung look, cung Alt+Space
-# Them chung vao day se lam ca module do chu khong phai cai duoc chung.
+#   JanDeDobbeleer.OhMyPosh -- winget bao ban da cai la "30.6.4.0" con chi muc
+#     ghi "30.6.4": CUNG mot ban, khac cach viet, nhung dotpkg so sanh chuoi chua
+#     chuan hoa nen coi la downgrade va tu choi -- vinh vien. Day la viec sua o
+#     dotpkg chu khong phai o day; khi nao no chuan hoa version thi them lai.
 
 # winget khong cho dotpkg biet ten tien trinh cua goi -- `winget list` khong bao
 # executable lan alias. Voi goi nao co thu muc package, dotpkg nhan ra tien trinh
@@ -61,8 +81,7 @@ packages = [
 # Ca hai cai doan deu truot, nen neu khong co dong do thi hang rao cho oh-my-posh
 # la hang rao rong -- va no rong mot cach im lang.
 [winget.guard]
-"Discord.Discord"         = ["Discord"]
-"Google.Chrome"           = ["chrome"]
-"Obsidian.Obsidian"       = ["Obsidian"]
-"Warp.Warp"               = ["warp"]
-"JanDeDobbeleer.OhMyPosh" = ["oh-my-posh"]
+"Obsidian.Obsidian" = ["Obsidian"]
+# Chi con Obsidian: bon dong kia (Discord, Google.Chrome, Warp, OhMyPosh) da di
+# theo cac id khong con khai bao o tren. Guard cho mot id khong khai bao la vo
+# nghia -- dotpkg khong bao gio dong toi goi unmanaged.
