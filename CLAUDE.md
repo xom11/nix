@@ -156,8 +156,18 @@ công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản 
 | [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
 | [`nix-apt`](https://github.com/xom11/nix-apt) | apt khai báo trên Debian/Ubuntu | flake input → `homeManagerModules.default` (nối trong `lib/mkConfigs.nix`), dùng qua `services.nix-apt` | chưa clone |
 
-`dotbrowser` (tiền thân của `dotbrave`) và `dotpkg` (private, quản winget/scoop)
-**không** được repo này dùng — đừng tưởng chúng là đường vào thứ hai.
+`dotbrowser` (tiền thân của `dotbrave`) **không** được repo này dùng — đừng
+tưởng nó là đường vào thứ hai.
+
+`dotpkg` thì khác, và đừng đọc nó theo khuôn của bốn cái trên: nó **không** là
+flake input và **không** có overlay. Một cái flake đã được thêm rồi gỡ trong
+cùng ngày 2026-08-12 — `pkgs.dotpkg` trên mac hay NixOS là một binary không có
+gì để quản, vì thứ nó quản là winget và scoop. Đường vào duy nhất là
+`home-manager/dotfiles/windows/dotpkg/pkg.toml`, được link sang
+`%USERPROFILE%\pkg.toml` qua `dotfiles.dotpkg`, và **danh sách scoop trong đó bị
+gác cho khớp với `windows/modules/packages/scoop/module.ps1`** — xem
+`windows/tests/dotpkgDeclaration.Tests.ps1`. Binary thì tải tay từ GitHub
+Release, repo này không ghim phiên bản nào.
 
 ### Mỗi công cụ có nhiều hơn một cái pin, và chúng không tự đồng bộ
 
@@ -173,6 +183,7 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
 | GNOME | extension `beckon@xom11.github.io` cài tay trên máy (Wayland: Mutter chặn focus từ ngoài) | cài lại tay; nhớ `disable-user-extensions = false` |
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
+| Windows — dotpkg | **không ghim ở đâu trong repo này.** Binary tải tay từ GitHub Release kèm `SHA256SUMS`; repo chỉ giữ *khai báo* (`pkg.toml`), không giữ phiên bản | tải release mới lên máy |
 
 Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải
 bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon check`

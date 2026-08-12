@@ -11,6 +11,7 @@ Describe 'windows/apply.ps1 shared entry point' {
             'packages.npm'
             'dotfiles.pwsh'
             'dotfiles.windows-terminal'
+            'dotfiles.dotpkg'
             'dotfiles.ai.claude'
             'dotfiles.ai.codex'
             'dotfiles.ai.gemini'

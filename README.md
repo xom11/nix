@@ -139,6 +139,13 @@ modules.home-manager = {
 | [`dotbrave`](https://github.com/xom11/dotbrave) | Brave as a dotfile (shortcuts, settings, PWAs) — overlay + darwin module |
 | [`tongue`](https://github.com/xom11/tongue) | vi/en/zh input-mode switcher, overlay, darwin only |
 
+[`dotpkg`](https://github.com/xom11/dotpkg) is a fifth own tool, wired
+differently: it manages winget and scoop, so there is no flake input and no
+overlay — a machine without either has nothing for it to manage. What lives here
+is its declaration, `home-manager/dotfiles/windows/dotpkg/pkg.toml`, linked to
+`%USERPROFILE%\pkg.toml`, with its scoop list gated against
+`windows/modules/packages/scoop/module.ps1`.
+
 The last four are own tools kept in their own repos, as is
 [`tongue.nvim`](https://github.com/xom11/tongue.nvim) (pinned in
 `nvim-pack-lock.json`, not a flake input). A bug in any of them is fixed

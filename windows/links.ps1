@@ -20,6 +20,15 @@ $Hm = $Ctx.HomeManagerDir
     # the link only created a stray settings.json. The source file is kept in the repo for when
     # PowerToys comes back -- re-add the entry here and to $modules in apply.ps1 at that point.
 
+    # dotpkg's DECLARATION only. pkg.lock and state.json are per-machine
+    # outputs and stay out of the repo -- windows/tests/dotpkgDeclaration.Tests.ps1
+    # asserts that. Linked so the machine reads the committed copy rather than a
+    # third hand-maintained one, which is what makes the list gate mean anything.
+    'dotfiles.dotpkg' = @(
+        @{ Source = "$Hm\dotfiles\windows\dotpkg\pkg.toml"
+           Target = "$env:USERPROFILE\pkg.toml" }
+    )
+
     'dotfiles.ai.claude' = @(
         @{ Source = "$Hm\dotfiles\ai\claude.d\CLAUDE.md"
            Target = "$env:USERPROFILE\.claude\CLAUDE.md" }

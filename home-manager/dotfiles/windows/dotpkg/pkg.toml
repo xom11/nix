@@ -1,0 +1,13 @@
+[scoop]
+buckets  = ["main", "extras", "xom11=https://github.com/xom11/scoop-bucket"]
+packages = [
+  "git", "nodejs", "gh", "bat", "ripgrep", "fzf", "fastfetch", "neovim",
+  "tree-sitter", "lazygit", "lazydocker", "yazi", "zellij", "opencode",
+  "shfmt", "yamlfmt", "stylua", "actionlint", "kanata", "beckon",
+  "python", "go", "rustup", "uv", "age",
+]
+
+[scoop.opts]
+python = { arch = "64bit" }
+rustup = { arch = "keep" }
+stylua = { arch = "arm64" }

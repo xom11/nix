@@ -26,6 +26,7 @@ $modules = @(
     # 'dotfiles.powertoys'        # disabled: PowerToys is not installed on any host
 
     # ---- dotfiles (shared with home-manager) ----
+    'dotfiles.dotpkg'
     'dotfiles.ai.claude'
     'dotfiles.ai.codex'
     'dotfiles.ai.gemini'
