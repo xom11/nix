@@ -10,4 +10,13 @@ packages = [
 [scoop.opts]
 python = { arch = "64bit" }
 rustup = { arch = "keep" }
-stylua = { arch = "arm64" }
+
+# stylua CO ghim arm64 o day cho toi 12/08/2026, va khai bao do khong bao gio
+# thoa man duoc: manifest stylua trong bucket main chi cong bo DUY NHAT `64bit`
+# (do tren a14, stylua 2.5.2). scoop khong the cai mot kien truc khong ai xuat
+# ban, nen `dotpkg status` in mot dong `~ scoop stylua 64bit, declared arm64` o
+# moi lan chay, mai mai, va khong lan cai lai nao chua duoc.
+#
+# Bo khai bao la sua ve phia dung: no khop voi thuc te thay vi doi thuc te khop
+# voi no. Neu mot ngay bucket co ban arm64 thi them lai dong nay -- kiem truoc
+# bang `(Get-Content ...\buckets\main\bucket\stylua.json | ConvertFrom-Json).architecture`.
