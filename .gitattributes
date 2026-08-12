@@ -2,3 +2,10 @@
 
 *.json text eol=lf
 *.lua text eol=lf
+
+# dotpkg reads this on Windows and the repo is edited on macOS. Without a rule
+# here `* text=auto` checks it out CRLF on one side and LF on the other, so the
+# same declaration hashes differently on the two machines forever -- 449 bytes
+# against 462, measured. Content parses either way; what this buys is that a
+# reader comparing the two copies gets one answer instead of two.
+home-manager/dotfiles/windows/dotpkg/pkg.toml text eol=lf
