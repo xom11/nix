@@ -141,10 +141,18 @@ modules.home-manager = {
 
 [`dotpkg`](https://github.com/xom11/dotpkg) is a fifth own tool, wired
 differently: it manages winget and scoop, so there is no flake input and no
-overlay — a machine without either has nothing for it to manage. What lives here
-is its declaration, `home-manager/dotfiles/windows/dotpkg/pkg.toml`, linked to
-`%USERPROFILE%\pkg.toml`, with its scoop list gated against
-`windows/modules/packages/scoop/module.ps1`.
+overlay — a machine without either has nothing for it to manage. Since
+2026-08-12 it is the only thing that installs packages on Windows;
+`packages.scoop` and `packages.winget` are gone and
+`windows/modules/packages/dotpkg` calls `dotpkg apply` in their place.
+
+Two committed files drive it, both under
+`home-manager/dotfiles/windows/dotpkg/`: `pkg.toml` declares, and `pkg.lock`
+pins — the same role `flake.lock` plays for the nix hosts. Neither is symlinked
+into `%USERPROFILE%`: dotpkg rewrites the lock through `fs::rename`, and a
+rename replaces a symlink with a regular file, after which the repo silently
+stops receiving pins. Run it by hand from that directory, where its own
+defaults resolve to those two files.
 
 The last four are own tools kept in their own repos, as is
 [`tongue.nvim`](https://github.com/xom11/tongue.nvim) (pinned in

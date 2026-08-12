@@ -162,12 +162,43 @@ tưởng nó là đường vào thứ hai.
 `dotpkg` thì khác, và đừng đọc nó theo khuôn của bốn cái trên: nó **không** là
 flake input và **không** có overlay. Một cái flake đã được thêm rồi gỡ trong
 cùng ngày 2026-08-12 — `pkgs.dotpkg` trên mac hay NixOS là một binary không có
-gì để quản, vì thứ nó quản là winget và scoop. Đường vào duy nhất là
-`home-manager/dotfiles/windows/dotpkg/pkg.toml`, được link sang
-`%USERPROFILE%\pkg.toml` qua `dotfiles.dotpkg`, và **danh sách scoop trong đó bị
-gác cho khớp với `windows/modules/packages/scoop/module.ps1`** — xem
-`windows/tests/dotpkgDeclaration.Tests.ps1`. Binary thì tải tay từ GitHub
-Release, repo này không ghim phiên bản nào.
+gì để quản, vì thứ nó quản là winget và scoop.
+
+Từ 2026-08-12 nó là **thứ duy nhất cài gói trên Windows**: `packages.scoop` và
+`packages.winget` đã bị xoá, `windows/modules/packages/dotpkg/module.ps1` gọi
+`dotpkg apply` thay cả hai. Hai file trong repo là nguồn chân lý:
+
+- `home-manager/dotfiles/windows/dotpkg/pkg.toml` — khai báo
+- `home-manager/dotfiles/windows/dotpkg/pkg.lock` — pin, **có commit**, cùng vai
+  `flake.lock`. `state.json` và `pkg.lock.bak` thì gitignore: cái đầu là thứ
+  dotpkg SỞ HỮU trên một máy, cái sau là rác dotpkg tự để lại.
+
+**Không file nào được symlink sang `%USERPROFILE%`, và đó là kết luận từ đo đạc
+chứ không phải sở thích.** dotpkg ghi lock bằng `File::create` + `fs::rename`, mà
+rename **thay symlink bằng file thật**: link đứt ngay lần `dotpkg update` đầu,
+pin mới rơi vào bản ở thư mục nhà, repo im lặng ngừng nhận, `git status` sạch
+suốt. Module truyền `--config`/`--lock` trỏ thẳng vào repo; muốn gõ tay thì `cd`
+vào `home-manager/dotfiles/windows/dotpkg` rồi chạy `dotpkg` trần.
+Luật rộng hơn rút ra từ đây: **file nào một công cụ GHI LẠI thì đừng để sau
+symlink vào repo, trừ khi đã ĐO là nó ghi đè tại chỗ** (`vim.pack` đã đo và đạt,
+xem `nvim-pack-lock.json`; dotpkg đã đo và trượt).
+
+Ba điều nữa, cả ba đều im lặng khi sai:
+
+- **`apply.ps1` đặt `$ErrorActionPreference = 'Stop'`, và thân module chạy dưới
+  preference của CALLER** (nó là scriptblock gọi bằng `&`). PowerShell 5.1 biến
+  stderr của lệnh ngoài thành lỗi kết thúc, mà dotpkg in cảnh báo ra stderr —
+  module chết trước khi đọc được mã thoát. Phải hạ về `Continue` quanh lời gọi.
+- **Exit 1 là trạng thái bình thường, không phải lỗi.** dotpkg định nghĩa 1 là
+  "outstanding", gộp cả gói bị bỏ qua vì tiến trình đang chạy — mà python,
+  beckon, kanata thì gần như luôn chạy. Module cảnh báo ở 1, chỉ throw từ 2.
+- **Đừng khai báo app tự cập nhật trong `[winget]`.** dotpkg chỉ có
+  `pin = "version-only"`, không có kiểu "chỉ cần có mặt", nên Brave/Vivaldi/
+  Chrome/Discord/Warp luôn vượt pin → từ chối downgrade → đỏ vĩnh viễn. Chúng cố
+  ý nằm ngoài và vẫn là `unmanaged`.
+
+Binary dotpkg vẫn tải tay từ GitHub Release, repo này không ghim phiên bản **của
+chính công cụ** — nhưng có ghim phiên bản **của các gói nó cài**, qua `pkg.lock`.
 
 ### Mỗi công cụ có nhiều hơn một cái pin, và chúng không tự đồng bộ
 
@@ -183,7 +214,8 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
 | GNOME | extension `beckon@xom11.github.io` cài tay trên máy (Wayland: Mutter chặn focus từ ngoài) | cài lại tay; nhớ `disable-user-extensions = false` |
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
-| Windows — dotpkg | **không ghim ở đâu trong repo này.** Binary tải tay từ GitHub Release kèm `SHA256SUMS`; repo chỉ giữ *khai báo* (`pkg.toml`), không giữ phiên bản | tải release mới lên máy |
+| Windows — dotpkg (bản thân binary) | **không ghim ở đâu trong repo này.** Tải tay từ GitHub Release kèm `SHA256SUMS` | tải release mới lên máy |
+| Windows — các gói dotpkg cài | `home-manager/dotfiles/windows/dotpkg/pkg.lock`, **có commit** | `dotpkg update` trong thư mục đó, rồi commit diff của lock |
 
 Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải
 bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon check`
