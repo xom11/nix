@@ -71,13 +71,6 @@
     tongue.url = "github:xom11/tongue";
     tongue.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Quản winget + scoop trên Windows từ một pkg.toml, có lock thật và prune.
-    # Ghim ở đây để `pkgs.dotpkg` và `nix run` dùng được, nhưng KHÔNG host nào
-    # cài nó: thứ nó quản là winget và scoop, nên trên mac/NixOS nó không có gì
-    # để làm. Máy Windows lấy binary từ GitHub Release, ngoài luồng nix.
-    dotpkg.url = "github:xom11/dotpkg";
-    dotpkg.inputs.nixpkgs.follows = "nixpkgs";
-
     nix-apt.url = "github:xom11/nix-apt";
 
     fcitx5-lotus = {
@@ -107,7 +100,6 @@
       flakeOverlays = [
         inputs.beckon.overlays.default
         inputs.dotbrave.overlays.default
-        inputs.dotpkg.overlays.default
         inputs.tongue.overlays.default
         inputs."fcitx5-lotus".overlays.default
       ];
