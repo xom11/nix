@@ -40,9 +40,9 @@ $modules = @(
     'dotfiles.ai.pi'              # config only; the binary self-updates, see links.ps1
 
     # ---- programs (shared with home-manager) ----
-    'programs.githooks'           # pre-push secret guard; needs git from packages.scoop
+    'programs.githooks'           # pre-push secret guard; needs git from packages.dotpkg
     'programs.herdr'              # config only; the binary self-updates, see links.ps1
-    'programs.agenix'             # needs age from packages.scoop and ps1.d from dotfiles.pwsh
+    'programs.agenix'             # needs age from packages.dotpkg and ps1.d from dotfiles.pwsh
     'programs.ssh'
     'programs.nvim'
     'programs.yazi'

@@ -3,7 +3,9 @@ Describe 'windows packages.pwsh module' {
         $RepoRoot   = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
         $ModulePath = Join-Path $RepoRoot 'windows\modules\packages\pwsh\module.ps1'
         $ModuleText = Get-Content -Raw -LiteralPath $ModulePath
-        $WingetText = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\modules\packages\winget\module.ps1')
+        # The winget list moved into pkg.toml when dotpkg took over installing
+        # (2026-08-12); windows\modules\packages\winget\module.ps1 no longer exists.
+        $WingetText = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'home-manager\dotfiles\windows\dotpkg\pkg.toml')
         $ApplyText  = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\apply.ps1')
 
         function Write-OK { param($Msg) }
@@ -27,7 +29,11 @@ Describe 'windows packages.pwsh module' {
         $ModuleText | Should Match 'releases/latest'
         $ModuleText | Should Match 'msiexec'
         $ModuleText | Should Match 'ADD_PATH=1'
-        $ModuleText | Should Not Match 'Install-WingetPackages'
+        # There used to be a `Should Not Match 'Install-WingetPackages'` here. That
+        # function no longer exists anywhere, so the assertion could never fail
+        # again -- and a permanently-vacuous assertion reads like coverage without
+        # being any. The invariant it stood for is still held, by the
+        # Microsoft.PowerShell assertion below.
     }
 
     It 'covers every architecture the release publishes an MSI for' {
@@ -37,7 +43,9 @@ Describe 'windows packages.pwsh module' {
     }
 
     It 'keeps Microsoft.PowerShell out of the winget list, whose manifest is MSIX only' {
-        $WingetText | Should Not Match "(?m)^\s*'Microsoft\.PowerShell'"
+        # TOML quotes ids with double quotes, and the entries share lines, so this
+        # cannot be line-anchored the way the old single-quoted module list was.
+        $WingetText | Should Not Match '"Microsoft\.PowerShell"'
     }
 
     It 'is applied before services.sshd, which points DefaultShell at the MSI path' {

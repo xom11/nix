@@ -6,8 +6,8 @@
         # The GitHub release is the only Windows channel there is. Upstream
         # publishes an AUR package, a .deb, an AppImage, a Homebrew tap and this
         # NSIS installer -- there is no winget manifest (no manifests/k/kunkka19xx
-        # in microsoft/winget-pkgs) and no scoop bucket, so Install-WingetPackages
-        # and Install-ScoopPackages have nothing to point at.
+        # in microsoft/winget-pkgs) and no scoop bucket, so neither backend of
+        # dotpkg has anything to point at -- look cannot be declared in pkg.toml.
         $Repo = 'kunkka19xx/look'
 
         # Tracks latest rather than pinning, by request. The SHA256 check below

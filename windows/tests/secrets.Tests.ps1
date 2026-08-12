@@ -449,7 +449,9 @@ Describe 'windows programs.agenix module wiring' {
         $RepoRoot   = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
         $ModulePath = Join-Path $RepoRoot 'windows\modules\programs\agenix\module.ps1'
         $ApplyText  = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\apply.ps1')
-        $ScoopText  = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\modules\packages\scoop\module.ps1')
+        # The scoop list moved into pkg.toml when dotpkg took over installing
+        # (2026-08-12); windows\modules\packages\scoop\module.ps1 no longer exists.
+        $ScoopText  = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'home-manager\dotfiles\windows\dotpkg\pkg.toml')
     }
 
     It 'has a module file with Description and Apply' {
@@ -463,12 +465,14 @@ Describe 'windows programs.agenix module wiring' {
         $ApplyText | Should Match "'programs\.agenix'"
     }
 
-    It 'runs after packages.scoop, which provides age' {
-        $scoopAt  = $ApplyText.IndexOf("'packages.scoop'")
+    It 'runs after packages.dotpkg, which provides age' {
+        # Was packages.scoop until 2026-08-12; dotpkg installs both backends now,
+        # so the module that has to come first is packages.dotpkg.
+        $pkgAt    = $ApplyText.IndexOf("'packages.dotpkg'")
         $agenixAt = $ApplyText.IndexOf("'programs.agenix'")
-        ($scoopAt  -ge 0) | Should Be $true
+        ($pkgAt    -ge 0) | Should Be $true
         ($agenixAt -ge 0) | Should Be $true
-        ($agenixAt -gt $scoopAt) | Should Be $true
+        ($agenixAt -gt $pkgAt) | Should Be $true
     }
 
     It 'runs after dotfiles.pwsh, which links ps1.d' {
@@ -480,7 +484,9 @@ Describe 'windows programs.agenix module wiring' {
     }
 
     It 'installs age via scoop' {
-        $ScoopText | Should Match "(?m)^\s*'age'\s*$"
+        # TOML double-quotes package names and packs several onto a line, so this
+        # cannot be line-anchored the way the old single-quoted module list was.
+        $ScoopText | Should Match '"age"'
     }
 
     It 'leaves OutFile at its default, so nothing is written under the repo' {
