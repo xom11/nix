@@ -155,9 +155,11 @@ công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản 
 | [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (x1g6/vm cố ý không có) | `~/Documents/dev/tongue` |
 | [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
 | [`nix-apt`](https://github.com/xom11/nix-apt) | apt khai báo trên Debian/Ubuntu | flake input → `homeManagerModules.default` (nối trong `lib/mkConfigs.nix`), dùng qua `services.nix-apt` | chưa clone |
+| [`dotpkg`](https://github.com/xom11/dotpkg) | winget + scoop từ một `pkg.toml`, có lock thật và prune | flake input + overlay → `pkgs.dotpkg`; **không host nào cài** — nó quản winget/scoop nên trên mac/NixOS không có gì để làm. Máy Windows lấy binary từ GitHub Release, ngoài luồng nix | `~/Documents/dev/dotpkg` |
 
-`dotbrowser` (tiền thân của `dotbrave`) và `dotpkg` (private, quản winget/scoop)
-**không** được repo này dùng — đừng tưởng chúng là đường vào thứ hai.
+`dotbrowser` (tiền thân của `dotbrave`) **không** được repo này dùng — đừng
+tưởng nó là đường vào thứ hai. `dotpkg` thì đã đổi: nó là input + overlay từ
+2026-08-12, nhưng **không host nào cài nó** — xem dòng của nó trong bảng trên.
 
 ### Mỗi công cụ có nhiều hơn một cái pin, và chúng không tự đồng bộ
 
@@ -173,6 +175,7 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
 | GNOME | extension `beckon@xom11.github.io` cài tay trên máy (Wayland: Mutter chặn focus từ ngoài) | cài lại tay; nhớ `disable-user-extensions = false` |
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
+| Windows — dotpkg | **không ghim ở repo này chút nào**: binary tải tay từ GitHub Release của `xom11/dotpkg`, kèm `SHA256SUMS`. `flake.lock` chỉ ghim bản dùng cho `pkgs.dotpkg`/`nix run`, mà không máy nào cài — nên hai con số này trôi độc lập và điều đó là cố ý | tải release mới lên máy Windows |
 
 Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải
 bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon check`
