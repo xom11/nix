@@ -64,8 +64,29 @@
         # breaks; it just does less than it says. Run it from a real user session
         # when that matters. The old Install-ScoopPackages did not have this
         # problem because it never read a manifest through `current`.
-        dotpkg apply --yes --keep-going --clone-missing-buckets --config $config --lock $lock
-        $rc = $LASTEXITCODE
+        # $ErrorActionPreference has to come off for the call itself, and this is
+        # not defensive tidying -- without it the module cannot work at all.
+        #
+        # apply.ps1 sets $ErrorActionPreference = 'Stop'. This Apply block is a
+        # scriptblock invoked with `&`, so it runs under the CALLER's preference,
+        # not the file's. Under 'Stop', PowerShell 5.1 turns any output a native
+        # command writes to stderr into a terminating NativeCommandError -- and
+        # dotpkg writes its warnings there. Measured on a14 2026-08-12: the module
+        # threw on the first warning line, one about `winget list` collapsing
+        # duplicate rows, which is not an error at all and cannot be made to go
+        # away. Every real apply.ps1 run would have failed this module before the
+        # exit code was ever read.
+        #
+        # Scoped with try/finally so the caller gets its own setting back even if
+        # the call throws for a real reason.
+        $prevEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            dotpkg apply --yes --keep-going --clone-missing-buckets --config $config --lock $lock
+            $rc = $LASTEXITCODE
+        } finally {
+            $ErrorActionPreference = $prevEap
+        }
         $global:LASTEXITCODE = 0
 
         # throw, not Write-Fail: apply.ps1 counts a module as failed only when it

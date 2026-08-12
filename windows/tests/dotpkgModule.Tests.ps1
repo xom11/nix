@@ -83,6 +83,33 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $line | Should Match '--clone-missing-buckets'
     }
 
+    It 'takes ErrorActionPreference off Stop around the native call' {
+        # Without this the module cannot work at all. apply.ps1 sets
+        # $ErrorActionPreference = 'Stop', and this Apply block runs under the
+        # CALLER's preference because it is a scriptblock invoked with `&`. Under
+        # 'Stop', PowerShell 5.1 turns anything a native command writes to stderr
+        # into a terminating NativeCommandError -- and dotpkg writes its warnings
+        # there.
+        #
+        # Measured on a14 2026-08-12: the module threw on the first warning line
+        # (`winget list` collapsing duplicate rows), which is not an error and
+        # cannot be silenced. The exit code was never reached. Every real
+        # apply.ps1 run would have failed this module.
+        $script:ModuleText | Should Match "\`$ErrorActionPreference = 'Continue'"
+        $script:ModuleText | Should Match 'finally'
+
+        # The call has to sit INSIDE that window, not before or after it.
+        $relaxAt = [regex]::Match($script:ModuleText, "(?m)^\s*\`$ErrorActionPreference = 'Continue'")
+        $callAt  = [regex]::Match($script:ModuleText, '(?m)^\s*dotpkg apply ')
+        $restore = [regex]::Match($script:ModuleText, '(?m)^\s*\} finally \{')
+
+        $relaxAt.Success | Should Be $true
+        $callAt.Success  | Should Be $true
+        $restore.Success | Should Be $true
+        $relaxAt.Index | Should BeLessThan $callAt.Index
+        $callAt.Index  | Should BeLessThan $restore.Index
+    }
+
     It 'clears LASTEXITCODE after the external call' {
         # A leaked non-zero $LASTEXITCODE turns a green Pester run into a red
         # GitHub Actions job, with nothing in the test output to explain it.
