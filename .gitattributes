@@ -9,3 +9,9 @@
 # against 462, measured. Content parses either way; what this buys is that a
 # reader comparing the two copies gets one answer instead of two.
 home-manager/dotfiles/windows/dotpkg/pkg.toml text eol=lf
+
+# Cung ly do, nhung nang hon mot bac: pkg.lock khong chi duoc DOC tren Windows,
+# no duoc GHI o do -- `dotpkg update` viet lai file nay bang LF (Rust). Neu no
+# duoc checkout thanh CRLF thi moi lan update se lam CA file hien ra nhu da sua,
+# va thay doi that su -- mot version moi - chim mat trong 185 dong nhieu.
+home-manager/dotfiles/windows/dotpkg/pkg.lock text eol=lf

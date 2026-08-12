@@ -5,6 +5,8 @@ Describe 'dotpkg pkg.toml agrees with the scoop module' {
         $script:WingetModule = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\modules\packages\winget\module.ps1')
         $script:PkgTomlPath = Join-Path $RepoRoot 'home-manager\dotfiles\windows\dotpkg\pkg.toml'
         $script:PkgToml = Get-Content -Raw -LiteralPath $script:PkgTomlPath
+        $script:PkgLockPath = Join-Path (Split-Path $script:PkgTomlPath) 'pkg.lock'
+        $script:PkgLock = Get-Content -Raw -LiteralPath $script:PkgLockPath
         $script:LinksText = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot 'windows\links.ps1')
 
         # Packages the scoop module installs. Bucket-qualified entries such as
@@ -60,22 +62,68 @@ Describe 'dotpkg pkg.toml agrees with the scoop module' {
         $onlyInToml -join ', ' | Should Be ''
     }
 
-    It 'links pkg.toml to the home directory, so the machine reads the committed copy' {
-        # Without the link, a third copy exists: the repo's, and whatever is
+    It 'links both the declaration and the lock into the home directory' {
+        # Without the links a third copy exists: the repo's, and whatever is
         # actually sitting in the home directory. The gate would then be
         # comparing two files while the machine obeys a third.
         $script:LinksText | Should Match "dotfiles\.dotpkg"
         $script:LinksText | Should Match 'dotpkg\\pkg\.toml'
+        $script:LinksText | Should Match 'dotpkg\\pkg\.lock'
     }
 
-    It 'keeps dotpkg outputs out of the repository' {
-        # pkg.toml is the declaration and belongs here. pkg.lock and state.json
-        # are what dotpkg resolved and what it owns on one machine -- they are
-        # per-machine outputs, and committing them would publish one host's
-        # state as if it were the fleet's.
+    It 'keeps state.json out of the repository but requires the lock in it' {
+        # This used to forbid BOTH files, on the grounds that committing them
+        # would publish one host's state as if it were the fleet's. That reason
+        # holds for state.json, which records what dotpkg OWNS on one machine.
+        # It does not hold for pkg.lock: bucket + commit + version describes no
+        # particular machine, which is the same role flake.lock and
+        # nvim-pack-lock.json already play here -- both committed.
+        #
+        # Committing it is also what lets apply.ps1 work on a fresh machine:
+        # `dotpkg apply` exits 2 on a declared package with no lock entry.
         $dir = Split-Path $script:PkgTomlPath
-        (Test-Path -LiteralPath (Join-Path $dir 'pkg.lock')) | Should Be $false
+        (Test-Path -LiteralPath (Join-Path $dir 'pkg.lock'))   | Should Be $true
         (Test-Path -LiteralPath (Join-Path $dir 'state.json')) | Should Be $false
+    }
+
+    It 'locks every package it declares, for both backends' {
+        # The failure this catches: adding a package to pkg.toml and not running
+        # `dotpkg update`. On a machine that already has the package nothing
+        # looks wrong -- but a fresh one fails the whole packages module with
+        # exit 2, and the cause is a file nobody edited.
+        #
+        # Reads TOML by regex only, so CI needs no dotpkg binary. dotpkg is not a
+        # flake input and CI has none.
+        foreach ($backend in 'scoop', 'winget') {
+            $section = [regex]::Match(
+                $script:PkgToml,
+                ('(?ms)^\[' + $backend + '\](?<body>.*?)(?=^\[|\z)')).Groups['body'].Value
+            $block = [regex]::Match(
+                $section, '(?ms)^packages\s*=\s*\[(?<body>.*?)^\]').Groups['body'].Value
+            $declared = @(
+                [regex]::Matches($block, '"(?<n>[^"]+)"') |
+                    ForEach-Object { $_.Groups['n'].Value } |
+                    Sort-Object
+            )
+
+            # Lock table headers differ by backend, and the difference is easy to
+            # miss: scoop names are bare ([scoop.actionlint]) while winget ids
+            # carry dots and so are quoted ([winget."7zip.7zip"]). Measured on the
+            # real file 2026-08-12. Trim the quotes or every winget id compares
+            # unequal to its own declaration.
+            $locked = @(
+                [regex]::Matches($script:PkgLock, ('(?m)^\[' + $backend + '\.(?<n>[^\]]+)\]')) |
+                    ForEach-Object { $_.Groups['n'].Value.Trim('"') } |
+                    Sort-Object
+            )
+
+            # A gate that parses nothing passes everything.
+            $declared.Count | Should BeGreaterThan 10
+            $locked.Count   | Should BeGreaterThan 10
+
+            $missing = @($declared | Where-Object { $locked -notcontains $_ })
+            "$backend : " + ($missing -join ', ') | Should Be "$backend : "
+        }
     }
 
     It 'declares the same winget ids as the module it replaces' {

@@ -20,13 +20,25 @@ $Hm = $Ctx.HomeManagerDir
     # the link only created a stray settings.json. The source file is kept in the repo for when
     # PowerToys comes back -- re-add the entry here and to $modules in apply.ps1 at that point.
 
-    # dotpkg's DECLARATION only. pkg.lock and state.json are per-machine
-    # outputs and stay out of the repo -- windows/tests/dotpkgDeclaration.Tests.ps1
-    # asserts that. Linked so the machine reads the committed copy rather than a
-    # third hand-maintained one, which is what makes the list gate mean anything.
+    # dotpkg's declaration AND its lock, both committed. state.json is the one
+    # that stays out: it records what dotpkg OWNS on this machine, while the lock
+    # is bucket + commit + version and names no machine at all -- the same role
+    # flake.lock and nvim-pack-lock.json already play in this repo.
+    # windows/tests/dotpkgDeclaration.Tests.ps1 asserts both halves of that split.
+    #
+    # Linked rather than passed by path so that a human running `dotpkg status`
+    # from their home directory reads the same two files packages.dotpkg does.
+    # dotpkg rewrites the lock with an in-place overwrite (std::fs::write, no
+    # atomic rename), so `dotpkg update` flows back through the link into the
+    # working tree -- exactly the arrangement nvim-pack-lock.json has with
+    # vim.pack. If a future dotpkg switches to write-temp-then-rename, the link
+    # becomes a real file and the repo silently stops receiving updates; the
+    # symptom is `git status` staying clean across an update that changed pins.
     'dotfiles.dotpkg' = @(
         @{ Source = "$Hm\dotfiles\windows\dotpkg\pkg.toml"
            Target = "$env:USERPROFILE\pkg.toml" }
+        @{ Source = "$Hm\dotfiles\windows\dotpkg\pkg.lock"
+           Target = "$env:USERPROFILE\pkg.lock" }
     )
 
     'dotfiles.ai.claude' = @(

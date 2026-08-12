@@ -1,0 +1,185 @@
+[scoop.actionlint]
+bucket  = "main"
+commit  = "a087540af4a34e28c279d25ca048db89152fbdd8"
+version = "1.7.12"
+
+[scoop.age]
+bucket  = "extras"
+commit  = "5086db83cf52e54d0dcab8cc5ea6c1368e2c8cb7"
+version = "1.3.1"
+
+[scoop.bat]
+bucket  = "main"
+commit  = "9627dac0f665a5eec1d71b17170243f49cd74696"
+version = "0.26.1"
+
+[scoop.beckon]
+bucket  = "xom11"
+commit  = "71dbf6fe2c2931101aa9586cf251042cdbdcbea5"
+version = "0.8.0"
+
+[scoop.fastfetch]
+bucket  = "main"
+commit  = "52496578ec476f77248d7c2f801e978ebb998d40"
+version = "2.67.0"
+
+[scoop.fzf]
+bucket  = "main"
+commit  = "a8a3faedc7f518d8714ef4c4b0cc646e89eb40e3"
+version = "0.74.2"
+
+[scoop.gh]
+bucket  = "main"
+commit  = "1176440fe5d70b22b9deb2394b4f82960ecd342c"
+version = "2.97.0"
+
+[scoop.git]
+bucket  = "main"
+commit  = "54f4aeecd6f95d97ba16cb88043ffa528d84d3d1"
+version = "2.55.0.4"
+
+[scoop.go]
+bucket  = "main"
+commit  = "ac228564d208cb84002e4446e3d22c2f123f144e"
+version = "1.26.5"
+
+[scoop.kanata]
+bucket  = "extras"
+commit  = "60aead329a788932794103eaefb2eb575c74d00b"
+version = "1.12.0"
+
+[scoop.lazydocker]
+bucket  = "main"
+commit  = "494f9d000077ba3d79c56ff9b71155a87c8894af"
+version = "0.25.2"
+
+[scoop.lazygit]
+bucket  = "extras"
+commit  = "39b549d63b532c4d0be109dbdd4b286f3fe367de"
+version = "0.64.0"
+
+[scoop.neovim]
+bucket  = "main"
+commit  = "f9f58287a5c9d1cc19bd694482e34361598c71fd"
+version = "0.12.4"
+
+[scoop.nodejs]
+bucket  = "main"
+commit  = "e3aa537ad167aa57417338c27722cea3481dfe09"
+version = "26.7.0"
+
+[scoop.opencode]
+bucket  = "main"
+commit  = "18895f4d7199b3bcb0a473dedfd6a8c27a259ea1"
+version = "1.18.16"
+
+[scoop.python]
+bucket  = "main"
+commit  = "1b2868b1e2e1b19ac0c9de48288e94de331f5bd3"
+version = "3.14.7"
+
+[scoop.ripgrep]
+bucket  = "main"
+commit  = "58544924f363abbb72fd3729a448fad9bb0fa8b4"
+version = "15.2.0"
+
+[scoop.rustup]
+bucket  = "main"
+commit  = "e93a24dcbafa0355368576cced0ba2617326f5bb"
+version = "1.29.0"
+
+[scoop.shfmt]
+bucket  = "main"
+commit  = "cfa3ce30e129bf6fa752d6779fb9e70991e3508f"
+version = "3.13.1"
+
+[scoop.stylua]
+bucket  = "main"
+commit  = "e963a159e168763135c02eb93d537ed32a095f1b"
+version = "2.5.2"
+
+[scoop.tree-sitter]
+bucket  = "main"
+commit  = "b5859a0e68f3c242511de2374d526dd2155025c7"
+version = "0.26.12"
+
+[scoop.uv]
+bucket  = "main"
+commit  = "36160060fe5f7d39f7025b3f8de08ac13bf67638"
+version = "0.12.3"
+
+[scoop.yamlfmt]
+bucket  = "main"
+commit  = "aec60c5b6219c908651c1eb1bb4fe8332970b956"
+version = "0.21.0"
+
+[scoop.yazi]
+bucket  = "main"
+commit  = "99696dbf53caffca443320c7037635609fc6e96b"
+version = "26.5.6"
+
+[scoop.zellij]
+bucket  = "main"
+commit  = "926d1141b3f70c775120ef19fa4dafd1db14f91f"
+version = "0.44.3"
+
+[winget."7zip.7zip"]
+version = "26.02"
+pin     = "version-only"
+
+[winget."ajeetdsouza.zoxide"]
+version = "0.10.0"
+pin     = "version-only"
+
+[winget."AutoHotkey.AutoHotkey"]
+version = "2.0.26"
+pin     = "version-only"
+
+[winget."Brave.Brave"]
+version = "151.1.93.132"
+pin     = "version-only"
+
+[winget."DEVCOM.JetBrainsMonoNerdFont"]
+version = "3.3.0"
+pin     = "version-only"
+
+[winget."Discord.Discord"]
+version = "1.0.9252"
+pin     = "version-only"
+
+[winget."gerardog.gsudo"]
+version = "2.6.1"
+pin     = "version-only"
+
+[winget."Google.Chrome"]
+version = "151.0.7922.138"
+pin     = "version-only"
+
+[winget."JanDeDobbeleer.OhMyPosh"]
+version = "30.6.4"
+pin     = "version-only"
+
+[winget."Microsoft.VisualStudioCode"]
+version = "1.132.0"
+pin     = "version-only"
+
+[winget."Obsidian.Obsidian"]
+version = "1.13.6"
+pin     = "version-only"
+
+[winget."PhatMT97.VKey"]
+version = "4.2.0"
+pin     = "version-only"
+
+[winget."Tailscale.Tailscale"]
+version = "1.102.2"
+pin     = "version-only"
+
+[winget."Vivaldi.Vivaldi"]
+version = "8.1.4087.62"
+pin     = "version-only"
+
+[winget."Warp.Warp"]
+version = "v0.2026.07.29.09.05.stable_02"
+pin     = "version-only"
+
