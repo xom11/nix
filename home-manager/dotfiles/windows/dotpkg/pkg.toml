@@ -21,29 +21,29 @@ rustup = { arch = "keep" }
 # voi no. Neu mot ngay bucket co ban arm64 thi them lai dong nay -- kiem truoc
 # bang `(Get-Content ...\buckets\main\bucket\stylua.json | ConvertFrom-Json).architecture`.
 
-# dotpkg chi co MOT kieu ghim: `pin = "version-only"`. Khong co kieu "chi can co
-# mat". Voi app TU CAP NHAT thi kieu ghim do la sai viec:
+# CAN dotpkg >= 0.2.0. Ban 0.1.0 khong bo qua `[winget.opts]` ma TU CHOI ca file
+# (`unknown field 'opts'`), nen moi goi thanh unmanaged.
+# windows/modules/packages/dotpkg/module.ps1 gac dieu kien nay truoc khi chay.
 #
-#   app tu nang len -> vuot qua pin -> dotpkg tu choi downgrade (dung, va co chu
-#   dich) -> thoat 1 -> packages.dotpkg throw -> apply.ps1 DO. Moi lan chay, mai
-#   mai, cho toi khi ai do chay `dotpkg update` roi commit.
+# Nam app duoi day tu cap nhat, va voi chung `pin = "version-only"` la sai viec:
+# app tu nang len -> vuot qua pin -> dotpkg tu choi downgrade (dung, va co chu
+# dich) -> ca run thoat khac 0 -> apply.ps1 DO moi lan chay. Do tren a14
+# 12/08/2026: chi mot downgrade bi tu choi la du, du "0 failed". Chung tung phai
+# XOA HAN khoi khai bao vi ly do do.
 #
-# Do tren a14 12/08/2026: chi mot downgrade bi tu choi la du de thoat 1, du
-# "0 failed". Module packages.winget cu khong dinh vi no chi dam bao CO MAT.
-#
-# Nen bay gio [winget] chi mang thu KHONG tu cap nhat. Nam app duoi day co y
-# nam ngoai va van la `unmanaged` nhu truoc dot nay -- do cung la ly do dung:
-# ghim version mot trinh duyet roi chan no nang cap la viec khong nen lam.
-#
-#   Brave.Brave, Vivaldi.Vivaldi, Google.Chrome, Discord.Discord, Warp.Warp
-#
-# Microsoft.VisualStudioCode va Obsidian.Obsidian CUNG tu cap nhat; chung con o
-# day vi hom nay chua troi, nhung neu mot ngay `dotpkg status` bao downgrade cho
-# chung thi cach xu la go khoi day, khong phai chay update de duoi theo.
+# `pin = "none"` la ve con lai cua quyet dinh item 1 ben dotpkg, lam theo dung
+# bao cao tu dot tich hop nay: cai neu chua co, KHONG bao gio quan version.
+# Khong sinh entry trong pkg.lock (khai bao khong ghim thi khong resolve ra gi),
+# khong sinh dong nao trong `status`, khong dem vao thay doi -- theo ca hai
+# chieu, mai mai.
 [winget]
 packages = [
   # ---- Apps ----
   "Microsoft.VisualStudioCode", "Obsidian.Obsidian", "Tailscale.Tailscale",
+
+  # Tu cap nhat -- xem [winget.opts] ben duoi
+  "Brave.Brave", "Vivaldi.Vivaldi", "Google.Chrome", "Discord.Discord",
+  "Warp.Warp",
 
   # ---- Terminals / shells ----
   # PowerShell 7 CO Y khong nam o day: winget chi mang ban MSIX, ma sshd khong
@@ -80,6 +80,18 @@ packages = [
 #
 # Ca hai cai doan deu truot, nen neu khong co dong do thi hang rao cho oh-my-posh
 # la hang rao rong -- va no rong mot cach im lang.
+[winget.opts]
+"Brave.Brave"     = { pin = "none" }
+"Vivaldi.Vivaldi" = { pin = "none" }
+"Google.Chrome"   = { pin = "none" }
+"Discord.Discord" = { pin = "none" }
+"Warp.Warp"       = { pin = "none" }
+
+# Microsoft.VisualStudioCode va Obsidian.Obsidian CUNG tu cap nhat nhung con
+# ghim, vi tinh toi 13/08/2026 chung chua troi khoi pin lan nao. Neu mot ngay
+# `dotpkg status` bao downgrade cho chung thi chuyen sang pin = "none" o day --
+# dung chay `dotpkg update` de duoi theo, do la cuoc dua khong thang duoc.
+
 [winget.guard]
 "Obsidian.Obsidian" = ["Obsidian"]
 # Chi con Obsidian: bon dong kia (Discord, Google.Chrome, Warp, OhMyPosh) da di

@@ -112,15 +112,27 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $script:ModuleText | Should Match 'finally'
 
         # The call has to sit INSIDE that window, not before or after it.
-        $relaxAt = [regex]::Match($script:ModuleText, "(?m)^\s*\`$ErrorActionPreference = 'Continue'")
-        $callAt  = [regex]::Match($script:ModuleText, '(?m)^\s*dotpkg apply ')
-        $restore = [regex]::Match($script:ModuleText, '(?m)^\s*\} finally \{')
+        #
+        # Anchored on the call and searched outwards, because there is now MORE
+        # THAN ONE such window: the version gate relaxes and restores around
+        # `dotpkg --version` before this one. Taking the first match of each
+        # made the assertion compare the apply call against the version gate's
+        # `finally` and fail on a module that was correct.
+        $callAt = [regex]::Match($script:ModuleText, '(?m)^\s*dotpkg apply ')
+        $callAt.Success | Should Be $true
 
-        $relaxAt.Success | Should Be $true
-        $callAt.Success  | Should Be $true
-        $restore.Success | Should Be $true
-        $relaxAt.Index | Should BeLessThan $callAt.Index
-        $callAt.Index  | Should BeLessThan $restore.Index
+        # Nearest relax BEFORE the call, nearest restore AFTER it.
+        $relaxBefore = @(
+            [regex]::Matches($script:ModuleText, "(?m)^\s*\`$ErrorActionPreference = 'Continue'") |
+                Where-Object { $_.Index -lt $callAt.Index }
+        )
+        $restoreAfter = @(
+            [regex]::Matches($script:ModuleText, '(?m)^\s*\} finally \{') |
+                Where-Object { $_.Index -gt $callAt.Index }
+        )
+
+        $relaxBefore.Count  | Should BeGreaterThan 0
+        $restoreAfter.Count | Should BeGreaterThan 0
     }
 
     It 'clears LASTEXITCODE after the external call' {
@@ -137,32 +149,42 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $script:ModuleText | Should Match 'throw'
     }
 
-    It 'warns on exit 1 instead of failing the run' {
-        # dotpkg defines 1 as "something is outstanding", and says outright that
-        # one of the things it covers -- a package skipped because its own process
-        # was running -- "is not a failure". The exit code cannot separate that
-        # from a real one.
+    It 'fails the run on exit 1, now that exit 3 carries the benign case' {
+        # This assertion is the inverse of what it said until 2026-08-13, and the
+        # flip is the whole point of requiring dotpkg >= 0.2.0.
         #
-        # On this fleet the busy case is the NORMAL case: python, beckon and
-        # kanata come from scoop and are almost always running. Measured on a14
-        # 2026-08-12 with a fully resolved lock and nothing wrong at all:
-        # `7 of 7 changes ready, 0 failed, 1 skipped` -> exit 1. Throwing there
-        # would paint apply.ps1 red on nearly every run, and a module that is
-        # always red is a module nobody reads.
+        # Before: 1 meant "something is outstanding", and dotpkg said outright
+        # that one of the things it covered -- a package skipped because its own
+        # process was running -- "is not a failure". On this fleet that is the
+        # NORMAL state (python, beckon and kanata run essentially always), so
+        # throwing on 1 would have painted apply.ps1 red every run and the module
+        # only warned -- which meant a real failure warned too.
         #
-        # Anything from 2 up still throws: that is "refused before anything was
-        # attempted, nothing changed", which needs a person.
-        # Comment lines are stripped before asserting. Without that, the TODO in
-        # this very branch -- which contains the word "throw" -- satisfies a
-        # `Should Not Match 'throw'` and the assertion inverts. That is the third
-        # time in this file that matching prose as if it were code produced a
-        # wrong answer; strip first, assert second.
+        # After: 0.2.0 added exit 3 for exactly that benign case, so 1 means only
+        # "failed, could not be prepared, or held". A warning is too weak for it.
         $one = Get-BranchCode -Text $script:ModuleText -Pattern '(?ms)\$rc -eq 1.*?\r?\n        \}'
-        $one | Should Match 'Write-Warn'
-        $one | Should Not Match 'throw'
+        $one | Should Match 'throw'
+        $one | Should Not Match 'Write-Warn'
 
         # And the else branch -- everything not named above -- must still throw.
         $script:ModuleText | Should Match '(?ms)\} else \{.*?throw'
+    }
+
+    It 'refuses to run against a dotpkg too old to read pkg.toml' {
+        # pkg.toml declares `[winget.opts] pin = "none"`, and 0.1.0 does not
+        # ignore that table -- it refuses the whole file with `unknown field
+        # 'opts', expected 'packages' or 'guard'`, so every package silently goes
+        # unmanaged. Measured on a14 2026-08-12.
+        #
+        # The gate is only expressible because 0.2.0 bumped the version: builds
+        # from main used to report 0.1.0 as well, so no consumer could tell a
+        # fixed binary from the released one.
+        $script:ModuleText | Should Match "\[version\]'0\.2\.0'"
+        $script:ModuleText | Should Match 'dotpkg --version'
+
+        # The comparison has to be a version comparison, not a string one:
+        # '0.10.0' -lt '0.2.0' is true for strings and false for versions.
+        $script:ModuleText | Should Match '\[version\]\$Matches\[1\]'
     }
 
     It 'treats exit 3 as success' {

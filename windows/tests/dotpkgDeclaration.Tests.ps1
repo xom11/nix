@@ -75,6 +75,24 @@ Describe 'dotpkg declaration and lock' {
                     Sort-Object
             )
 
+            # A package declared `pin = "none"` is EXPECTED to have no lock
+            # entry, and that is not a hole in this gate -- it is dotpkg's item 7
+            # ("two sources of truth about permitted versions is how a tool
+            # starts lying"): a declaration that pins nothing resolves to
+            # nothing, so there is nothing to record. Requiring a lock line for
+            # one would demand a fact that does not exist.
+            #
+            # Parsed from `[<backend>.opts]`, one id per line, so an entry that
+            # pins something normally is unaffected and still has to be locked.
+            $optsSection = [regex]::Match(
+                $script:PkgToml,
+                ('(?ms)^\[' + $backend + '\.opts\](?<body>.*?)(?=^\[|\z)')).Groups['body'].Value
+            $unpinned = @(
+                [regex]::Matches($optsSection, '(?m)^\s*"(?<n>[^"]+)"\s*=\s*\{[^}]*pin\s*=\s*"none"') |
+                    ForEach-Object { $_.Groups['n'].Value }
+            )
+            $declared = @($declared | Where-Object { $unpinned -notcontains $_ })
+
             # Lock table headers differ by backend, and the difference is easy to
             # miss: scoop names are bare ([scoop.actionlint]) while winget ids
             # carry dots and so are quoted ([winget."7zip.7zip"]). Measured on the

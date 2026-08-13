@@ -16,6 +16,34 @@
             throw 'dotpkg not found in PATH. Take the binary from https://github.com/xom11/dotpkg/releases, check it against the release SHA256SUMS, and put it somewhere on PATH.'
         }
 
+        # Version gate. pkg.toml uses `[winget.opts] pin = "none"`, which 0.1.0
+        # does not merely ignore -- it refuses the whole file with
+        # `unknown field 'opts', expected 'packages' or 'guard'`, so every
+        # package goes unmanaged and the module fails with a message that points
+        # at the config rather than at the binary. Measured on a14 2026-08-12.
+        #
+        # This gate is only possible because 0.2.0 bumped the version: builds
+        # from main used to report 0.1.0 too, so nothing could tell them apart.
+        # Do not raise the floor without a matching reason -- an integration that
+        # demands the newest build of a hand-installed binary is one that breaks
+        # every machine the day it lands.
+        $MinDotpkg = [version]'0.2.0'
+        $prevEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            $verRaw = (& dotpkg --version 2>&1 | Out-String)
+        } finally {
+            $ErrorActionPreference = $prevEap
+            $global:LASTEXITCODE = 0
+        }
+        if ($verRaw -notmatch '(\d+\.\d+\.\d+)') {
+            throw "cannot read a version out of ``dotpkg --version`` (got: $($verRaw.Trim()))"
+        }
+        $haveDotpkg = [version]$Matches[1]
+        if ($haveDotpkg -lt $MinDotpkg) {
+            throw "dotpkg $haveDotpkg is too old; pkg.toml needs $MinDotpkg or newer for [winget.opts] pin = ""none"". Take the binary from https://github.com/xom11/dotpkg/releases, check it against SHA256SUMS, and replace the one on PATH."
+        }
+
         # Straight at the repo files, not at links in the home directory.
         #
         # There WERE links -- %USERPROFILE%\pkg.toml and pkg.lock -- and they were
@@ -120,21 +148,21 @@
             # 3 was added upstream in response to this integration: "everything
             # dotpkg could do succeeded, and the only thing left is a package
             # skipped because its own process was running". Nothing to diagnose,
-            # so it is a success with a note rather than a warning.
-            #
-            # No binary on this fleet emits it yet -- 0.1.0 is the only release
-            # and it predates the change. Handled ahead of time because the arm
-            # is free and the alternative is remembering to add it on the day
-            # the binary lands.
+            # so it is a success with a note rather than a warning. On this fleet
+            # it is the ordinary steady state: python, beckon and kanata come
+            # from scoop and are running essentially all the time.
             Write-OK 'dotpkg apply (a package was skipped because it was running)'
         } elseif ($rc -eq 1) {
-            # TODO once every machine runs a build that has exit 3: make this
-            # throw. Today 1 still carries the benign "skipped because running"
-            # case on 0.1.0, and python/beckon/kanata are running essentially
-            # always, so throwing here would paint apply.ps1 red on every run.
-            # The moment 3 exists, 1 means only "needs looking at" and warning
-            # is too weak for it.
-            Write-Warn 'dotpkg apply: something is still outstanding -- a package failed, was held, or was skipped because it was running. Read the plan above; close the app and rerun, or fix what failed.'
+            # Throws, since 0.2.0. Before exit 3 existed, 1 also carried the
+            # benign running-skip and throwing here would have painted apply.ps1
+            # red on every run -- so it only warned, and a real failure warned
+            # too. 3 took the benign case away, so 1 now means what it says:
+            # something failed, could not be prepared, or was held. That needs a
+            # person, and a warning is too weak for it.
+            #
+            # The version gate above is what makes this safe: a 0.1.0 binary
+            # cannot reach here, because it cannot read pkg.toml at all.
+            throw 'dotpkg apply: something failed, could not be prepared, or was held. Read the plan above -- this is not the "app was running" case, which is exit 3.'
         } else {
             # 2 is "refused before anything was attempted, nothing changed": a
             # guard fired, or a declared package has no pkg.lock entry. Both need
