@@ -1,36 +1,15 @@
-# Package helpers that survived the move to dotpkg (2026-08-12).
+# What outlived the move to dotpkg (2026-08-12): the winget and scoop install
+# paths -- 13 functions, ~300 lines -- are `dotpkg apply` now.
 #
-# What left, and where it went: every winget and scoop INSTALL path -- 13 functions,
-# 299 lines -- is now `dotpkg apply`, driven by
-# home-manager/dotfiles/windows/dotpkg/pkg.toml plus its committed pkg.lock. See
-# windows/modules/packages/dotpkg/module.ps1.
-#
-# What stayed, and why each one had to:
-#   Install-Scoop        dotpkg MANAGES scoop but does not INSTALL it -- its README
-#                        says "on a machine with neither, it has nothing to do", so
-#                        bootstrapping is still this repo's job.
-#   Get-NativeArchitecture  modules/packages/pwsh and modules/programs/look both call
-#                        it, and it is the one place that reads the emulation case
-#                        correctly.
-#   Install-NpmPackages  dotpkg has no npm backend.
-#   Install-PSModules    dotpkg has no PSGallery backend.
-#   Update-Path          apply.ps1 calls it between modules; Install-Scoop uses it.
-#   Test-IsAdmin         used outside this file.
-#
-# One capability was given up rather than kept: Test-ScoopArchDrift and
-# Set-ScoopArchitectureDefault used to FIX an architecture mismatch (that is how a14
-# shed 17 emulated packages on 2026-08-03). dotpkg only REPORTS drift -- it is item 8
-# in its own OPEN-ITEMS.md. Deliberate: see
-# docs/superpowers/specs/2026-08-12-dotpkg-thay-tang-quan-goi-windows-design.md.
+# One capability went with them rather than being kept: Test-ScoopArchDrift and
+# Set-ScoopArchitectureDefault used to FIX an architecture mismatch, which is how
+# a14 shed 17 emulated packages on 2026-08-03. dotpkg only reports drift (item 8
+# in its OPEN-ITEMS.md).
 
 function Update-Path {
     # Refresh PATH from registry (Machine + User) so tools just installed are visible.
     $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' +
                 [System.Environment]::GetEnvironmentVariable('Path', 'User')
-}
-
-function Test-IsAdmin {
-    ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
 function Get-NativeArchitecture {
@@ -140,4 +119,4 @@ function Install-PSModules {
     }
 }
 
-Export-ModuleMember -Function Update-Path, Test-IsAdmin, Install-Scoop, Get-NativeArchitecture, Install-NpmPackages, Install-PSModules
+Export-ModuleMember -Function Update-Path, Install-Scoop, Get-NativeArchitecture, Install-NpmPackages, Install-PSModules
