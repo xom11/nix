@@ -5,6 +5,19 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $script:ModuleText = if (Test-Path -LiteralPath $script:ModulePath) {
             Get-Content -Raw -LiteralPath $script:ModulePath
         } else { '' }
+
+        # Pull one `if`/`elseif` branch out of the module and return only its
+        # CODE -- every `#` comment line removed. This module is heavily
+        # commented on purpose, and prose that names the thing an assertion
+        # forbids ("make this throw", "No --allow-prune") reads to a regex
+        # exactly like the code doing it. Three assertions in this file have
+        # already been wrong that way, two of them silently green.
+        function Get-BranchCode {
+            param([string]$Text, [string]$Pattern)
+            $m = [regex]::Match($Text, $Pattern)
+            if (-not $m.Success) { return '' }
+            ($m.Value -split "`n" | Where-Object { $_ -notmatch '^\s*#' }) -join "`n"
+        }
     }
 
     It 'exists and is a module hashtable with an Apply block' {
@@ -139,13 +152,31 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         #
         # Anything from 2 up still throws: that is "refused before anything was
         # attempted, nothing changed", which needs a person.
-        $one = [regex]::Match($script:ModuleText, '(?ms)\$rc -eq 1.*?\}')
-        $one.Success | Should Be $true
-        $one.Value | Should Match 'Write-Warn'
-        $one.Value | Should Not Match 'throw'
+        # Comment lines are stripped before asserting. Without that, the TODO in
+        # this very branch -- which contains the word "throw" -- satisfies a
+        # `Should Not Match 'throw'` and the assertion inverts. That is the third
+        # time in this file that matching prose as if it were code produced a
+        # wrong answer; strip first, assert second.
+        $one = Get-BranchCode -Text $script:ModuleText -Pattern '(?ms)\$rc -eq 1.*?\r?\n        \}'
+        $one | Should Match 'Write-Warn'
+        $one | Should Not Match 'throw'
 
-        # And the else branch -- everything >= 2 -- must still throw.
+        # And the else branch -- everything not named above -- must still throw.
         $script:ModuleText | Should Match '(?ms)\} else \{.*?throw'
+    }
+
+    It 'treats exit 3 as success' {
+        # Added upstream because of this integration: 3 means "everything dotpkg
+        # could do succeeded, and the only thing left is a package skipped
+        # because its own process was running -- there is nothing to diagnose".
+        #
+        # Nothing on this fleet emits it yet: v0.1.0 is the only release and it
+        # predates the change. Asserted anyway so the arm cannot be dropped by
+        # someone tidying up a branch that "never runs", which is exactly what it
+        # looks like today.
+        $three = Get-BranchCode -Text $script:ModuleText -Pattern '(?ms)\$rc -eq 3.*?\r?\n        \}'
+        $three | Should Match 'Write-OK'
+        $three | Should Not Match 'throw'
     }
 
     It 'names the SSH limitation in a comment' {

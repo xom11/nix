@@ -116,7 +116,24 @@
         # column.
         if ($rc -eq 0) {
             Write-OK 'dotpkg apply'
+        } elseif ($rc -eq 3) {
+            # 3 was added upstream in response to this integration: "everything
+            # dotpkg could do succeeded, and the only thing left is a package
+            # skipped because its own process was running". Nothing to diagnose,
+            # so it is a success with a note rather than a warning.
+            #
+            # No binary on this fleet emits it yet -- 0.1.0 is the only release
+            # and it predates the change. Handled ahead of time because the arm
+            # is free and the alternative is remembering to add it on the day
+            # the binary lands.
+            Write-OK 'dotpkg apply (a package was skipped because it was running)'
         } elseif ($rc -eq 1) {
+            # TODO once every machine runs a build that has exit 3: make this
+            # throw. Today 1 still carries the benign "skipped because running"
+            # case on 0.1.0, and python/beckon/kanata are running essentially
+            # always, so throwing here would paint apply.ps1 red on every run.
+            # The moment 3 exists, 1 means only "needs looking at" and warning
+            # is too weak for it.
             Write-Warn 'dotpkg apply: something is still outstanding -- a package failed, was held, or was skipped because it was running. Read the plan above; close the app and rerun, or fix what failed.'
         } else {
             # 2 is "refused before anything was attempted, nothing changed": a

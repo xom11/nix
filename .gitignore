@@ -26,7 +26,9 @@ docs/superpowers/
 
 # dotpkg de lai hai thu ben canh khai bao cua no, va ca hai deu KHONG thuoc repo:
 #   pkg.lock.bak -- ban sao no tu ghi truoc khi viet lai lock (do tren a14
-#                   12/08/2026, xuat hien sau `dotpkg update` dau tien)
+#                   12/08/2026). Ban dotpkg tren main da BO ghi file nay, nhung
+#                   v0.1.0 -- ban duy nhat da phat hanh, va la ban a14 dang chay
+#                   -- van ghi. Giu dong nay cho toi khi ca dan len ban moi.
 #   state.json   -- thu dotpkg SO HUU tren MOT may; commit no la publish trang
 #                   thai cua mot host nhu the do la cua ca dan
 # pkg.lock thi nguoc lai VAN duoc commit: no chi la bucket + commit + version,
