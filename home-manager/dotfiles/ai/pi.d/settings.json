@@ -2,6 +2,7 @@
   "defaultProvider": "9router",
   "defaultModel": "combo1",
   "defaultThinkingLevel": "xhigh",
+  "hideThinkingBlock": true,
   "theme": "dark",
   "packages": [
     "git:github.com/obra/superpowers"
@@ -19,5 +20,5 @@
   "enabledModels": [
     "combo1"
   ],
-  "lastChangelogVersion": "0.80.10"
+  "lastChangelogVersion": "0.82.1"
 }
