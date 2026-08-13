@@ -200,24 +200,24 @@ Ba điều nữa, cả ba đều im lặng khi sai:
 Binary dotpkg vẫn tải tay từ GitHub Release, repo này không ghim phiên bản **của
 chính công cụ** — nhưng có ghim phiên bản **của các gói nó cài**, qua `pkg.lock`.
 
-**Và tính tới 13/08/2026 chỗ đó đang là một cái bẫy đang mở.** Upstream đã sửa
-ba thứ do chính lần tích hợp này tìm ra — so sánh version có số 0 đuôi,
-`[winget.opts] pin = "none"` cho app tự cập nhật, và **exit 3** cho ca "chỉ còn
-gói đang chạy" — nhưng **chưa phát hành**. Ba hệ quả, cái sau tệ hơn cái trước:
+**Sàn phiên bản là `0.2.0`, và nó được gác.** Ba thứ upstream sửa theo đúng
+báo cáo từ lần tích hợp này — so sánh version có số 0 đuôi,
+`[winget.opts] pin = "none"`, và **exit 3** — đều nằm trong v0.2.0 (13/08/2026).
+`pkg.toml` đang dùng cả hai surface mới, nên máy chạy binary cũ hơn sẽ **hỏng
+toàn phần chứ không hỏng một phần**: 0.1.0 gặp `[winget.opts]` là từ chối cả
+file (`unknown field 'opts', expected 'packages' or 'guard'`) và mọi gói thành
+unmanaged. `windows/modules/packages/dotpkg/module.ps1` kiểm `dotpkg --version`
+trước khi chạy và đỏ kèm hướng dẫn nếu thấp hơn.
 
-- `pkg.toml` **chưa được dùng cú pháp mới**. Đo trên a14: binary v0.1.0 gặp
-  `[winget.opts]` là chết ngay với `unknown field 'opts', expected 'packages'
-  or 'guard'` — tức toàn bộ module đỏ, không phải bỏ qua một dòng.
-- Module đã xử sẵn exit 3 (coi là thành công) nhưng **chưa có binary nào phát ra
-  nó**. Nhánh `$rc -eq 1` vẫn phải chỉ cảnh báo; chỉ được đổi thành throw khi
-  mọi máy đã lên bản có exit 3.
-- **Không cách nào phân biệt hai bản.** `Cargo.toml` của dotpkg chưa bump, nên
-  build từ main cũng báo `dotpkg 0.1.0` y hệt bản phát hành. Máy không tự biết,
-  repo không gác được, và `--version` nói dối một cách thành thật.
+Gác được là nhờ v0.2.0 bump version: trước đó build từ main cũng báo `0.1.0` y
+hệt bản phát hành, nên không consumer nào phân biệt nổi hai bản.
 
-Nên thứ tự bắt buộc là: dotpkg bump version + phát hành → cài binary mới lên mọi
-máy Windows → **rồi mới** sửa `pkg.toml` và nhánh exit 1. Đảo thứ tự là a14 đỏ
-ngay từ lần `apply.ps1` kế tiếp.
+Thứ tự khi lên phiên bản mới vẫn không đổi: **phát hành → cài binary lên mọi máy
+Windows → rồi mới sửa `pkg.toml`.** Đảo lại là a14 đỏ ngay lần `apply.ps1` kế
+tiếp, và lần này nó đỏ ở gate chứ không đỏ mù mờ.
+
+Cài binary: tải asset theo kiến trúc từ release, đối chiếu `SHA256SUMS`, **chỉ
+ghi đè khi hash khớp**, rồi kiểm lại bằng `dotpkg --version`.
 
 ### Mỗi công cụ có nhiều hơn một cái pin, và chúng không tự đồng bộ
 
