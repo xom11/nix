@@ -77,7 +77,7 @@
         }
         $haveDotpkg = [version]$Matches[1]
         if ($haveDotpkg -lt $MinDotpkg) {
-            throw "dotpkg $haveDotpkg is too old; pkg.toml needs $MinDotpkg or newer for [winget.opts] pin = ""none"". Take the binary from https://github.com/xom11/dotpkg/releases, check it against SHA256SUMS, and replace the one on PATH."
+            throw "dotpkg $haveDotpkg is too old; pkg.toml needs $MinDotpkg or newer for [winget.opts] pin = ""none"". Run ``scoop update dotpkg`` -- and if that reports the version you already have, something earlier in PATH is shadowing the scoop shim (check ``Get-Command dotpkg -All``)."
         }
 
         # Straight at the repo files, not at links in the home directory.
