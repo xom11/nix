@@ -1,3 +1,6 @@
+# Khai bao goi cho Windows. Ap dung boi windows/modules/packages/dotpkg.
+# CAN dotpkg >= 0.2.0 ([winget.opts]); ly do tung quyet dinh o CLAUDE.md muc "dotpkg".
+
 [scoop]
 buckets  = ["main", "extras", "xom11=https://github.com/xom11/scoop-bucket"]
 packages = [
@@ -6,114 +9,45 @@ packages = [
   "shfmt", "yamlfmt", "stylua", "actionlint", "kanata", "beckon",
   "python", "go", "rustup", "uv", "age",
 
-  # dotpkg khai bao CHINH NO. Ky la nhung dung viec: tu 13/08/2026
-  # xom11/scoop-bucket co manifest cho no, nen phien ban duoc ghim bang commit
-  # cua bucket trong pkg.lock giong moi goi khac -- day la lan dau repo nay ghim
-  # duoc chinh cong cu, thay vi "tai tay tu Release, khong ghim o dau".
-  #
-  # Vong tu tham chieu duoc cat o cho khac: windows/modules/packages/dotpkg
-  # bootstrap bang `scoop install xom11/dotpkg` khi PATH chua co gi, roi moi giao
-  # viec cho dotpkg. May trang van dung duoc bang mot lenh.
-  #
-  # DOTPKG KHONG TU NANG CAP DUOC CHINH NO, va day la do chu khong phai doan.
-  # Ep no bang mot lock ghi version cu hon (a14, 13/08/2026):
-  #
-  #     ! scoop  dotpkg         running -- stop it first
-  #
-  # Hang rao "tien trinh dang chay" cua no bat trung chinh no -- dung, vi
-  # Windows khong cho ghi de mot .exe dang chay. He qua phai nho: khi co ban
-  # moi, `dotpkg apply` se BAO HELD chu khong nang, va ca run thoat 3 (lanh
-  # tinh). Nang bang tay luc no khong chay:  scoop update dotpkg
+  # dotpkg khai bao chinh no: pkg.lock ghim no theo commit bucket. Module
+  # bootstrap bang scoop khi PATH trong, nen vong nay khong tu khoa.
+  # No KHONG tu nang cap duoc -- hang rao tien-trinh-dang-chay bat trung chinh
+  # no, nen co ban moi thi `apply` bao held; nang bang `scoop update dotpkg`.
   "dotpkg",
 ]
 
 [scoop.opts]
-python = { arch = "64bit" }
-rustup = { arch = "keep" }
+python = { arch = "64bit" }   # wheel native da build theo ban nay
+rustup = { arch = "keep" }    # post_install giu file, doi arch la mat rustup
+# stylua khong ghim arm64: manifest chi cong bo 64bit, ghim la khong bao gio
+# thoa man duoc. Bucket co arm64 thi them lai.
 
-# stylua CO ghim arm64 o day cho toi 12/08/2026, va khai bao do khong bao gio
-# thoa man duoc: manifest stylua trong bucket main chi cong bo DUY NHAT `64bit`
-# (do tren a14, stylua 2.5.2). scoop khong the cai mot kien truc khong ai xuat
-# ban, nen `dotpkg status` in mot dong `~ scoop stylua 64bit, declared arm64` o
-# moi lan chay, mai mai, va khong lan cai lai nao chua duoc.
-#
-# Bo khai bao la sua ve phia dung: no khop voi thuc te thay vi doi thuc te khop
-# voi no. Neu mot ngay bucket co ban arm64 thi them lai dong nay -- kiem truoc
-# bang `(Get-Content ...\buckets\main\bucket\stylua.json | ConvertFrom-Json).architecture`.
-
-# CAN dotpkg >= 0.2.0. Ban 0.1.0 khong bo qua `[winget.opts]` ma TU CHOI ca file
-# (`unknown field 'opts'`), nen moi goi thanh unmanaged.
-# windows/modules/packages/dotpkg/module.ps1 gac dieu kien nay truoc khi chay.
-#
-# Nam app duoi day tu cap nhat, va voi chung `pin = "version-only"` la sai viec:
-# app tu nang len -> vuot qua pin -> dotpkg tu choi downgrade (dung, va co chu
-# dich) -> ca run thoat khac 0 -> apply.ps1 DO moi lan chay. Do tren a14
-# 12/08/2026: chi mot downgrade bi tu choi la du, du "0 failed". Chung tung phai
-# XOA HAN khoi khai bao vi ly do do.
-#
-# `pin = "none"` la ve con lai cua quyet dinh item 1 ben dotpkg, lam theo dung
-# bao cao tu dot tich hop nay: cai neu chua co, KHONG bao gio quan version.
-# Khong sinh entry trong pkg.lock (khai bao khong ghim thi khong resolve ra gi),
-# khong sinh dong nao trong `status`, khong dem vao thay doi -- theo ca hai
-# chieu, mai mai.
+# Chi khai o day thu KHONG tu cap nhat. App tu cap nhat vuot qua pin -> dotpkg
+# tu choi downgrade -> ca run thoat khac 0 -> apply.ps1 do moi lan. Voi chung
+# dung [winget.opts] pin = "none" ben duoi.
 [winget]
 packages = [
-  # ---- Apps ----
   "Microsoft.VisualStudioCode", "Obsidian.Obsidian", "Tailscale.Tailscale",
-
-  # Tu cap nhat -- xem [winget.opts] ben duoi
   "Brave.Brave", "Vivaldi.Vivaldi", "Google.Chrome", "Discord.Discord",
-  "Warp.Warp",
-
-  # ---- Terminals / shells ----
-  # PowerShell 7 CO Y khong nam o day: winget chi mang ban MSIX, ma sshd khong
-  # khoi dong duoc app dong goi. No den tu MSI, xem windows/modules/packages/pwsh.
-  "ajeetdsouza.zoxide",
-
-  # ---- Fonts ----
-  "DEVCOM.JetBrainsMonoNerdFont",
-
-  # ---- System tools ----
+  "Warp.Warp", "ajeetdsouza.zoxide", "DEVCOM.JetBrainsMonoNerdFont",
   "7zip.7zip", "AutoHotkey.AutoHotkey", "gerardog.gsudo", "PhatMT97.VKey",
 ]
+# Co y khong khai: VNGCorp.Zalo (winget download loi 0x80072f05, cai tay),
+# 9PFXXSHC64H3 (Raycast, da bo), Microsoft.PowerShell (chi co MSIX, sshd khong
+# chay duoc app dong goi -- den tu MSI, xem modules/packages/pwsh),
+# JanDeDobbeleer.OhMyPosh (winget bao 30.6.4.0 con chi muc ghi 30.6.4).
 
-# Ba id CO Y khong khai bao, ngoai nam app tu cap nhat o tren:
-#   VNGCorp.Zalo  -- winget download that bai (0x80072f05), cai tay
-#   9PFXXSHC64H3  -- Raycast (Store), da bo vi dung look, cung Alt+Space
-#   JanDeDobbeleer.OhMyPosh -- winget bao ban da cai la "30.6.4.0" con chi muc
-#     ghi "30.6.4": CUNG mot ban, khac cach viet, nhung dotpkg so sanh chuoi chua
-#     chuan hoa nen coi la downgrade va tu choi -- vinh vien. Day la viec sua o
-#     dotpkg chu khong phai o day; khi nao no chuan hoa version thi them lai.
-
-# winget khong cho dotpkg biet ten tien trinh cua goi -- `winget list` khong bao
-# executable lan alias. Voi goi nao co thu muc package, dotpkg nhan ra tien trinh
-# theo DUONG DAN; voi nam id duoi day winget khong tao thu muc nao, nen thu duy
-# nhat con lai la DOAN theo id. Thieu bang nay thi dotpkg co the nang cap mot app
-# dang mo.
-#
-# Nam dong duoi la ten tien trinh DO tren a14 ngay 12/08/2026, khong phai ten
-# doan. Bon cai dau trung voi cai dotpkg doan; cai thu nam thi KHONG:
-#
-#   dotpkg doan cho OhMyPosh : "ohmyposh", "oh my posh"
-#   binary that su           : oh-my-posh.exe
-#                              (%LOCALAPPDATA%\Microsoft\WindowsApps\oh-my-posh.exe)
-#
-# Ca hai cai doan deu truot, nen neu khong co dong do thi hang rao cho oh-my-posh
-# la hang rao rong -- va no rong mot cach im lang.
+# Cai neu chua co, khong bao gio quan version. Khong sinh entry pkg.lock.
 [winget.opts]
 "Brave.Brave"     = { pin = "none" }
 "Vivaldi.Vivaldi" = { pin = "none" }
 "Google.Chrome"   = { pin = "none" }
 "Discord.Discord" = { pin = "none" }
 "Warp.Warp"       = { pin = "none" }
+# VS Code va Obsidian cung tu cap nhat nhung chua troi lan nao; troi thi chuyen
+# sang pin = "none", dung chay update de duoi theo.
 
-# Microsoft.VisualStudioCode va Obsidian.Obsidian CUNG tu cap nhat nhung con
-# ghim, vi tinh toi 13/08/2026 chung chua troi khoi pin lan nao. Neu mot ngay
-# `dotpkg status` bao downgrade cho chung thi chuyen sang pin = "none" o day --
-# dung chay `dotpkg update` de duoi theo, do la cuoc dua khong thang duoc.
-
+# winget khong cho dotpkg biet ten tien trinh, no phai doan tu id. Chi khai
+# nhung id doan truot -- do tren may, khong phai doan lai.
 [winget.guard]
 "Obsidian.Obsidian" = ["Obsidian"]
-# Chi con Obsidian: bon dong kia (Discord, Google.Chrome, Warp, OhMyPosh) da di
-# theo cac id khong con khai bao o tren. Guard cho mot id khong khai bao la vo
-# nghia -- dotpkg khong bao gio dong toi goi unmanaged.
