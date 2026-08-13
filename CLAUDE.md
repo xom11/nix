@@ -216,8 +216,25 @@ Thứ tự khi lên phiên bản mới vẫn không đổi: **phát hành → c�
 Windows → rồi mới sửa `pkg.toml`.** Đảo lại là a14 đỏ ngay lần `apply.ps1` kế
 tiếp, và lần này nó đỏ ở gate chứ không đỏ mù mờ.
 
-Cài binary: tải asset theo kiến trúc từ release, đối chiếu `SHA256SUMS`, **chỉ
-ghi đè khi hash khớp**, rồi kiểm lại bằng `dotpkg --version`.
+**Binary đến từ scoop, và dotpkg tự khai báo chính nó.** Từ 13/08/2026
+`xom11/scoop-bucket` có manifest cho dotpkg, nên `pkg.toml` khai `"dotpkg"` như
+mọi gói khác và phiên bản được ghim bằng commit bucket trong `pkg.lock` — không
+còn bước tải tay nào. Module bootstrap bằng `scoop bucket add` + `scoop install
+xom11/dotpkg` khi PATH chưa có gì, nên máy trắng vẫn dựng được bằng một lệnh.
+
+Hai điều đã đo, cả hai đều im lặng khi vi phạm:
+
+- **dotpkg KHÔNG tự nâng cấp được chính nó.** Ép bằng một lock ghi version cũ
+  hơn trên a14: `! scoop dotpkg running -- stop it first`. Hàng rào "tiến trình
+  đang chạy" bắt trúng chính nó — đúng, vì Windows không cho ghi đè `.exe` đang
+  chạy. Nên khi có bản mới, `apply` **báo held chứ không nâng**, và cả run thoát
+  3 (lành tính). Nâng bằng `scoop update dotpkg` lúc nó không chạy.
+- **Một bản cũ nằm sớm hơn trong PATH sẽ che bản scoop.** Đo được:
+  `%USERPROFILE%\.local\bin` đứng **trước** `scoop\shims`, và bản cài tay ở đó
+  đã che shim cho tới khi bị xoá. Đây đúng là bệnh `stylua.exe` vẫn đang mắc
+  trên máy đó. Gate `dotpkg --version` trong module là thứ bắt được chuyện này;
+  không có nó thì triệu chứng là `dotpkg update` cần mẫn nâng cấp một binary
+  không ai chạy.
 
 ### Mỗi công cụ có nhiều hơn một cái pin, và chúng không tự đồng bộ
 
@@ -233,7 +250,7 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
 | GNOME | extension `beckon@xom11.github.io` cài tay trên máy (Wayland: Mutter chặn focus từ ngoài) | cài lại tay; nhớ `disable-user-extensions = false` |
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
-| Windows — dotpkg (bản thân binary) | **không ghim ở đâu trong repo này.** Tải tay từ GitHub Release kèm `SHA256SUMS` | tải release mới lên máy |
+| Windows — dotpkg (bản thân binary) | `pkg.lock`, y như mọi gói scoop khác: nó **tự khai báo chính nó** và đến từ bucket `xom11` | phát hành → sửa manifest bên scoop-bucket → `dotpkg update` → commit lock. **Rồi `scoop update dotpkg` bằng tay**, vì nó không tự nâng được chính nó (xem dưới) |
 | Windows — các gói dotpkg cài | `home-manager/dotfiles/windows/dotpkg/pkg.lock`, **có commit** | `dotpkg update` trong thư mục đó, rồi commit diff của lock |
 
 Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải

@@ -15,8 +15,13 @@ version = "0.26.1"
 
 [scoop.beckon]
 bucket  = "xom11"
-commit  = "71dbf6fe2c2931101aa9586cf251042cdbdcbea5"
-version = "0.8.0"
+commit  = "5adb38ab8586a38d1a6b3fe981c8a770a4df6ab3"
+version = "0.9.2"
+
+[scoop.dotpkg]
+bucket  = "xom11"
+commit  = "184c23b0ab03f4092789cd61e32d034f59448649"
+version = "0.2.0"
 
 [scoop.fastfetch]
 bucket  = "main"
@@ -55,8 +60,8 @@ version = "0.25.2"
 
 [scoop.lazygit]
 bucket  = "extras"
-commit  = "39b549d63b532c4d0be109dbdd4b286f3fe367de"
-version = "0.64.0"
+commit  = "4ec7bd1ccb089531968e85db0fe2f0fd445e97a5"
+version = "0.64.1"
 
 [scoop.neovim]
 bucket  = "main"
@@ -70,8 +75,8 @@ version = "26.7.0"
 
 [scoop.opencode]
 bucket  = "main"
-commit  = "18895f4d7199b3bcb0a473dedfd6a8c27a259ea1"
-version = "1.18.16"
+commit  = "233a6511ab66d3bcef5ec9c22a7a15e9cf624c9e"
+version = "1.18.17"
 
 [scoop.python]
 bucket  = "main"

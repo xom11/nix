@@ -69,6 +69,14 @@ Describe 'dotpkg declaration and lock' {
                 ('(?ms)^\[' + $backend + '\](?<body>.*?)(?=^\[|\z)')).Groups['body'].Value
             $block = [regex]::Match(
                 $section, '(?ms)^packages\s*=\s*\[(?<body>.*?)^\]').Groups['body'].Value
+
+            # Comment lines come out before the quotes are read. The array is
+            # heavily commented, and prose in it quotes things -- a comment
+            # reading `thay vi "tai tay tu Release, khong ghim o dau"` was parsed
+            # as two more declared packages and turned this gate red on a
+            # declaration that was correct. Strip first, extract second.
+            $block = (($block -split "`n") | Where-Object { $_ -notmatch '^\s*#' }) -join "`n"
+
             $declared = @(
                 [regex]::Matches($block, '"(?<n>[^"]+)"') |
                     ForEach-Object { $_.Groups['n'].Value } |

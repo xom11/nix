@@ -8,12 +8,39 @@
         # On a machine that already has scoop this returns immediately.
         if (-not (Install-Scoop)) { return }
 
+        # dotpkg comes from scoop and declares ITSELF in pkg.toml, so its version
+        # is pinned by a bucket commit in pkg.lock like every other package.
+        #
+        # This block used to throw and send you to the GitHub release, on the
+        # stated grounds that installing it here "would invent a second pin
+        # channel that nothing declares and nothing tests". That was true while
+        # no manifest existed. xom11/scoop-bucket carries one now, so the bucket
+        # IS the channel, pkg.lock is where it is pinned, and
+        # dotpkgDeclaration.Tests.ps1 is what gates it -- bootstrapping stopped
+        # inventing anything the day the manifest landed.
         if (-not (Get-Command dotpkg -ErrorAction SilentlyContinue)) {
-            # Deliberately not downloaded here. This repo pins no dotpkg version
-            # anywhere -- not flake.lock, not a scoop manifest -- so fetching one
-            # would invent a second pin channel that nothing declares and nothing
-            # tests. Whoever sets up a machine takes the binary by hand.
-            throw 'dotpkg not found in PATH. Take the binary from https://github.com/xom11/dotpkg/releases, check it against the release SHA256SUMS, and put it somewhere on PATH.'
+            $prevEap = $ErrorActionPreference
+            $ErrorActionPreference = 'Continue'
+            try {
+                # The bucket has to be there before an install can name it, and
+                # dotpkg's own --clone-missing-buckets cannot help: it is the
+                # thing not yet installed.
+                if ((scoop bucket list | Out-String) -notmatch 'xom11') {
+                    Write-Info 'scoop bucket add xom11'
+                    scoop bucket add xom11 https://github.com/xom11/scoop-bucket
+                }
+                Write-Info 'scoop install xom11/dotpkg'
+                scoop install xom11/dotpkg
+            } finally {
+                $ErrorActionPreference = $prevEap
+                $global:LASTEXITCODE = 0
+            }
+
+            # PATH in this process predates the shim scoop just wrote.
+            Update-Path
+            if (-not (Get-Command dotpkg -ErrorAction SilentlyContinue)) {
+                throw 'scoop install xom11/dotpkg ran but dotpkg is still not on PATH'
+            }
         }
 
         # Version gate. pkg.toml uses `[winget.opts] pin = "none"`, which 0.1.0
@@ -24,9 +51,18 @@
         #
         # This gate is only possible because 0.2.0 bumped the version: builds
         # from main used to report 0.1.0 too, so nothing could tell them apart.
-        # Do not raise the floor without a matching reason -- an integration that
-        # demands the newest build of a hand-installed binary is one that breaks
-        # every machine the day it lands.
+        #
+        # It still earns its place now that scoop installs dotpkg, and for a
+        # second reason: an older copy EARLIER IN PATH silently wins over the
+        # scoop shim. Measured on a14 2026-08-13 -- `%USERPROFILE%\.local\bin`
+        # precedes `scoop\shims`, and a hand-installed dotpkg.exe there shadowed
+        # scoop's for as long as it existed. That is the same trap `stylua` is
+        # still caught in on that machine. Without this gate the symptom would be
+        # `dotpkg update` faithfully upgrading a binary nobody runs.
+        #
+        # Do not raise the floor without a matching reason: pkg.lock pins dotpkg
+        # by bucket commit, so a floor above what the lock resolves to fails
+        # every machine at once.
         $MinDotpkg = [version]'0.2.0'
         $prevEap = $ErrorActionPreference
         $ErrorActionPreference = 'Continue'

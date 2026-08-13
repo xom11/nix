@@ -5,6 +5,26 @@ packages = [
   "tree-sitter", "lazygit", "lazydocker", "yazi", "zellij", "opencode",
   "shfmt", "yamlfmt", "stylua", "actionlint", "kanata", "beckon",
   "python", "go", "rustup", "uv", "age",
+
+  # dotpkg khai bao CHINH NO. Ky la nhung dung viec: tu 13/08/2026
+  # xom11/scoop-bucket co manifest cho no, nen phien ban duoc ghim bang commit
+  # cua bucket trong pkg.lock giong moi goi khac -- day la lan dau repo nay ghim
+  # duoc chinh cong cu, thay vi "tai tay tu Release, khong ghim o dau".
+  #
+  # Vong tu tham chieu duoc cat o cho khac: windows/modules/packages/dotpkg
+  # bootstrap bang `scoop install xom11/dotpkg` khi PATH chua co gi, roi moi giao
+  # viec cho dotpkg. May trang van dung duoc bang mot lenh.
+  #
+  # DOTPKG KHONG TU NANG CAP DUOC CHINH NO, va day la do chu khong phai doan.
+  # Ep no bang mot lock ghi version cu hon (a14, 13/08/2026):
+  #
+  #     ! scoop  dotpkg         running -- stop it first
+  #
+  # Hang rao "tien trinh dang chay" cua no bat trung chinh no -- dung, vi
+  # Windows khong cho ghi de mot .exe dang chay. He qua phai nho: khi co ban
+  # moi, `dotpkg apply` se BAO HELD chu khong nang, va ca run thoat 3 (lanh
+  # tinh). Nang bang tay luc no khong chay:  scoop update dotpkg
+  "dotpkg",
 ]
 
 [scoop.opts]
