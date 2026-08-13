@@ -45,14 +45,23 @@ Describe 'windows/modules/packages/dotpkg module contract' {
         $installMatch.Index   | Should BeLessThan $applyMatch.Index
     }
 
-    It 'refuses to install the dotpkg binary itself' {
-        # This repo pins no dotpkg version anywhere -- not in flake.lock, not in a
-        # scoop manifest, nowhere. A module that downloaded the binary would be
-        # inventing a second pin channel that nothing declares and nothing tests.
-        # Fail with instructions instead.
+    It 'gets the binary from scoop rather than fetching it itself' {
+        # Until 2026-08-13 this asserted the opposite -- that the module REFUSED
+        # to install dotpkg and pointed at the GitHub release instead, because
+        # nothing pinned a dotpkg version and downloading one would have invented
+        # a second channel that nothing declared and nothing tested.
+        #
+        # xom11/scoop-bucket carries a manifest now, so the bucket is the channel
+        # and pkg.lock is the pin. The module bootstraps -- but through scoop, not
+        # by hand-rolling a download: a fetch here would bypass the manifest's
+        # hash, the bucket commit in pkg.lock, and the arch selection, all of
+        # which scoop already does correctly.
         $script:ModuleText | Should Not Match 'Invoke-WebRequest'
         $script:ModuleText | Should Not Match 'Invoke-RestMethod'
-        $script:ModuleText | Should Match 'releases'
+        $script:ModuleText | Should Not Match 'curl'
+
+        $script:ModuleText | Should Match 'scoop install xom11/dotpkg'
+        $script:ModuleText | Should Match 'scoop bucket add xom11'
     }
 
     # Every flag assertion below reads the INVOCATION LINE, not the whole file.
