@@ -101,7 +101,7 @@ try {
 
     Import-Module (Join-Path $WindowsDir 'lib\Logging.psm1') -Force
     Import-Module (Join-Path $WindowsDir 'lib\Symlink.psm1') -Force
-    Import-Module (Join-Path $WindowsDir 'lib\Package.psm1') -Force
+    Import-Module (Join-Path $WindowsDir 'lib\Environment.psm1') -Force
     Import-Module (Join-Path $WindowsDir 'lib\ScheduledTask.psm1') -Force
 
     $Ctx = @{

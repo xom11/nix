@@ -36,6 +36,17 @@ Describe 'dotpkg declaration and lock' {
         (Test-Path -LiteralPath (Join-Path $dir 'state.json')) | Should Be $false
     }
 
+    It 'declares the tree-sitter CLI, which the nvim config shells out to on startup' {
+        # treesitter.lua calls install() for every parser missing from its ensure list,
+        # on every launch. The nix hosts get the CLI from home.packages; Windows runs no
+        # home-manager and only symlinks lua/, so without this a14 spent every launch
+        # downloading 31 parser tarballs and printing 31 ENOENT failures.
+        $lua = Get-Content -Raw -LiteralPath (Join-Path (Split-Path $script:PkgTomlPath) '..\..\..\programs\nvim\lua\plugins\treesitter.lua')
+        $lua            | Should Match 'nvim-treesitter'
+        $lua            | Should Match 'install\(missing\)'
+        $script:PkgToml | Should Match '"tree-sitter"'
+    }
+
     It 'locks every package it declares, for both backends' {
         # Catches a package added to pkg.toml without `dotpkg update`: harmless on
         # a machine that already has it, exit 2 on a fresh one. Regex only, so CI
