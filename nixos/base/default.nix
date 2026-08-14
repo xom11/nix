@@ -54,9 +54,29 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      # uinput: can cho che do "Uinput" cua fcitx5-lotus. Lotus co 6 che do
+      # (OFF / Uinput Smooth / Uinput Super Smooth / Uinput Slow / Surrounding
+      # Text / Preedit) va chi nhom Uinput moi go duoc trong TERMINAL ma khong
+      # de lai gach chan -- vi no phat phim that qua /dev/uinput thay vi gui
+      # preedit cho app. Terminal khong co surrounding text, nen moi che do
+      # khac deu buoc phai preedit (do tren rog 14/08/2026, ke ca khi fcitx5
+      # da chay duong Wayland native `protocol: 1` tren Hyprland).
+      #
+      # KHONG dung cham gi toi kanata: kanata EVIOCGRAB de DOC ban phim that,
+      # con lotus chi GHI ra /dev/uinput. Hai chieu nguoc nhau.
+      #
+      # Nhom chi co hieu luc o PHIEN DANG NHAP MOI. Rebuild xong van phai
+      # logout/login, `id -nG` trong phien cu se noi doi la chua co.
+      "uinput"
     ];
     initialHashedPassword = "$6$jPRPjdqCcIet/MMB$zUyMpQzb28Oe3D0SdxEk4PwZyoa2iBUfWkonP95rXS3RsI63TQLJOOB3hAZ26YvnNE77Wwoh.vqcmKS540PIu0"; # password is "1"
   };
+
+  # Tao group `uinput` + udev rule cho /dev/uinput. Tren rog no da co san vi
+  # `services.kanata` tu bat, nhung host khong chay kanata thi khong -- va
+  # `extraGroups` tro toi mot group khong ton tai la loi luc activation chu
+  # khong phai luc eval, nen khai o day cho chac.
+  hardware.uinput.enable = true;
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
