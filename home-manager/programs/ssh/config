@@ -25,10 +25,17 @@ Host a14
 Host airm3
   HostName 100.127.95.48
   User kln
-# Ten trong tailnet la `rog-1`, khong phai `rog` -- mot node `rog` cu tu thoi
-# may nay con chay Ubuntu van con dang ky, nen tailscale tu them hau to.
+# Mot may vat ly, hai he dieu hanh (dual-boot), HAI ten rieng -- co y.
+#
+# Dung chung mot alias la hong that: khoa host SSH cua NixOS va cua Windows
+# khac nhau, nen chung mot muc known_hosts thi moi lan doi he dieu hanh ssh se
+# bao REMOTE HOST IDENTIFICATION HAS CHANGED va tu choi ket noi. Chua doi nao
+# online cung luc, nen ten khong phan hoi = he kia dang chay.
 Host rog
   HostName 100.92.201.41
+  User kln
+Host rog-win
+  HostName 100.79.249.5
   User kln
 Host tao
   HostName 100.127.63.100
