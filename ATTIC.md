@@ -30,8 +30,10 @@ git tag -l 'attic/*'
 | neofetch2 (overlay) | `overlays/neofetch2` | 2026-08-10 | `attic/neofetch2-2026-08-10` | Comment-out ở macmini từ lâu |
 | run-or-raise | `home-manager/dotfiles/run-or-raise` | 2026-08-10 | `attic/run-or-raise-2026-08-10` | Thay bằng beckon. Module vốn **không bật được**: option path lối cũ `modules.dotfiles.*` (thiếu tầng `home-manager`) và nhận special arg `dotfileDir` mà `lib/mkConfigs.nix` không còn cấp |
 | fcitx5-macos (overlay) | `overlays/fcitx5-macos` | 2026-08-10 | `attic/fcitx5-macos-2026-08-10` | Thay bằng tongue + flake input `fcitx5-lotus` |
-| wayland | `home-manager/environments/wayland` | 2026-08-10 | `attic/wayland-2026-08-10` | Thân rỗng, không làm gì |
+| wayland | `home-manager/environments/wayland` | 2026-08-10 | `attic/wayland-2026-08-10` | Thân rỗng, không làm gì. Đường dẫn này về sau được dùng lại cho một module thật (mako/kanshi/swaylock dùng chung) — xem `attic/sway-submodules-2026-08-14` trở đi |
 | raiseorlaunch (overlay) | `overlays/raiseorlaunch` | 2026-08-09 | — (gỡ trước khi có quy ước tag) | Overlay ghim fork `khanhkhanhlele/raiseorlaunch`, cả repo lẫn tài khoản đều 404 nên không build được; nixpkgs vốn đã có `raiseorlaunch` 2.3.5 nên overlay chỉ đang che mất bản thật |
+| sway/nixos (module con) | `home-manager/environments/sway/nixos` | 2026-08-14 | `attic/sway-submodules-2026-08-14` | Bản trùng lặp cũ của module cha, không host nào bật. Trỏ đường dẫn tương đối vào `kanshi.d` — thư mục đã chuyển sang `environments/wayland` |
+| sway/ubuntu (module con) | `home-manager/environments/sway/ubuntu` | 2026-08-14 | `attic/sway-submodules-2026-08-14` | Cài sway qua `nix-apt` cho host Ubuntu; `desktop` dùng i3wm, không host nào bật. Trỏ vào `swaylock.d` đã chuyển đi |
 
 ## Xem lại / khôi phục
 

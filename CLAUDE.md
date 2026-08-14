@@ -464,7 +464,10 @@ home-manager/
                      # browser/dotbrave, terminal/kitty
                      # macos/{hammerspoon,sleepwatcher}
                      # conda, rofi
-  environments/      # fonts, gnome, i18n, i3wm, sway
+  environments/      # fonts, gnome, i18n, i3wm, sway, hyprland, wayland
+                     #   wayland: phan dung chung cua moi phien Wayland (mako,
+                     #   kanshi, swaylock + goi chung). Ton tai vi sway va
+                     #   hyprland cung bat tren rog se dung nhau o home.file
   pkgs/              # dev, lang, nixos, tools, ubuntu
 overlays/            # local packages -- hien TRONG. Co che readDir van chay, nen
                      #   them mot thu muc goi vao day la no tu vao overlays.default
@@ -575,23 +578,24 @@ so read its output rather than trusting the switch's exit status.
 
 ### Phím tắt focus-or-launch: beckon serve + TOML per-target
 
-`configs/shortcuts/apps.{macos,windows,gnome,sway}.toml` — bốn file, mỗi
-target một file riêng (thay `apps.toml` dùng chung cũ, XOÁ 09/08/2026, xem
-dưới). Format phẳng: mỗi dòng là một shortcut trọn vẹn,
-`"tổ_hợp_phím" = "tên app"` — không còn lớp override/resolve nào len vào
-giữa như hệ cũ. `Cap` giữ = `ctrl+super+alt` (macOS: super=Cmd; Windows/Linux:
-super=phím Win), do kanata sinh ra — bản thân bốn file này không biết `Cap`
-là gì.
+`configs/shortcuts/apps.{macos,windows,linux}.toml` — ba file. macOS và Windows
+mỗi target một file; **Linux thì một file chung `apps.linux.toml` cho cả GNOME,
+sway và hyprland** (gộp 14/08/2026), vì ba session đó chạy trên cùng một máy nên
+`beckon installed` trả về cùng một danh sách. Format phẳng: mỗi dòng là một
+shortcut trọn vẹn, `"tổ_hợp_phím" = "tên app"` — không còn lớp override/resolve
+nào len vào giữa như hệ cũ. `Cap` giữ = `ctrl+super+alt` (macOS: super=Cmd;
+Windows/Linux: super=phím Win), do kanata sinh ra — bản thân ba file này không
+biết `Cap` là gì.
 
 Tên app phải khớp **CHÍNH XÁC** chuỗi `beckon installed` in ra trên đúng target đó:
 khớp chính xác ~57 ms; trượt xuống quét toàn catalog ~400 ms mỗi lần bấm
-phím. Bốn file KHÔNG đồng bộ tên với nhau — mac dùng `"kitty"` chạy thẳng,
+phím. Ba file KHÔNG đồng bộ tên với nhau — mac dùng `"kitty"` chạy thẳng,
 Windows phải là `"Terminal"` (`"kitty"` không resolve trên Windows); mac dùng
-`"Telegram"` (app native, exact match), gnome/sway dùng `"Telegram Web"`
+`"Telegram"` (app native, exact match), linux dùng `"Telegram Web"`
 (PWA — Cap+t từng hỏng âm thầm trên Windows vì lẫn hai tên này). Copy nguyên
 một dòng từ file target này sang file target khác là cách chắc chắn hỏng.
 
-Engine là `beckon` ở cả bốn nơi, nhưng file được ĐỌC ở hai thời điểm khác
+Engine là `beckon` ở cả năm nơi, nhưng file được ĐỌC ở hai thời điểm khác
 nhau tuỳ cặp target — cùng bẫy dotbrave ở mục trên, rộng hơn vì chia theo cặp
 target chứ không phải hai bảng trong một file:
 
@@ -599,21 +603,22 @@ target chứ không phải hai bảng trong một file:
 |---|---|---|---|---|
 | macOS | `beckon serve` LÚC CHẠY, tự watch file | không gì cả — watcher ăn trong ~1-2 s | launchd `com.xom11.beckon-serve` (`home-manager/programs/beckon-serve`) | `~/Library/Logs/beckon/serve.log` |
 | Windows | `beckon serve` LÚC CHẠY, tự watch file | không gì cả — ăn trong ~1-2 s | task `\BeckonServe` + `\BeckonServeWatchdog` (`windows/modules/services/beckon-serve{,-watchdog}`) | `%LOCALAPPDATA%\beckon\serve.log` |
-| GNOME | `builtins.fromTOML` LÚC EVAL | **`home-manager switch`** | dconf `custom-keybindings`, sinh lúc eval (`home-manager/environments/gnome/launch-app.nix`) | — |
-| sway | `builtins.fromTOML` LÚC EVAL | **switch** + tự reload sway tay (`Tab+r`) | binding sinh vào `~/.config/sway-nix/launch-app.conf` (`home-manager/environments/sway/launch-app.nix`) | — |
+| GNOME | `builtins.fromTOML` LÚC EVAL | **`nixos-rebuild switch`** | dconf `custom-keybindings` (`home-manager/environments/gnome/launch-app.nix`) | — |
+| sway | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`swaymsg reload`) | `~/.config/sway-nix/launch-app.conf` | — |
+| hyprland | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`hyprctl reload`) | `~/.config/hypr-nix/launch-app.conf` | — |
 
 mac/Windows: sửa file là đủ, watcher tự đọc lại, không switch không rebuild gì
 cả — file hỏng thì beckon giữ nguyên bảng cũ và báo qua notification/toast,
-sửa xong tự ăn lại. GNOME/sway thì ngược hẳn: đây là NIX đọc file lúc eval,
-không phải chương trình chạy nền đọc trực tiếp, nên sửa file mà không switch
-là vô nghĩa — và sway còn cần thêm một bước reload tay riêng sau switch vì
-home-manager không tự gọi `swaymsg reload`. Binding sway chỉ là
-`exec beckon "<app>"` TRẦN — không `sway-beckon.sh`, không
-workspace-per-app (quyết định 09/08/2026); workspace logic là việc riêng của
-sway config, beckon không biết gì về workspace.
+sửa xong tự ăn lại. GNOME/sway/hyprland thì ngược hẳn: đây là NIX đọc file lúc
+eval, không phải chương trình chạy nền đọc trực tiếp, nên sửa file mà không
+switch là vô nghĩa — và sway/hyprland còn cần thêm một bước reload tay riêng
+sau switch vì home-manager không tự gọi `swaymsg reload`/`hyprctl reload`.
+Binding sway/hyprland chỉ là `exec beckon "<app>"` TRẦN — không
+`sway-beckon.sh`, không workspace-per-app (quyết định 09/08/2026); workspace
+logic là việc riêng của sway/hypr config, beckon không biết gì về workspace.
 
 CI: job `shortcuts` trong `.github/workflows/eval.yml` chạy `beckon check`
-trên cả bốn file, nhưng bằng ĐÚNG rev `beckon` đã ghim trong `flake.lock`
+trên cả ba file, nhưng bằng ĐÚNG rev `beckon` đã ghim trong `flake.lock`
 (đọc qua `nix eval --raw --impure` ngay trong step) — CI kiểm cùng một binary
 mà các host sẽ deploy, không phải bản mới nhất thượng nguồn của beckon.
 

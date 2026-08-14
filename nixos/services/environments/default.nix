@@ -15,10 +15,14 @@ in {
   );
   options = lib.setAttrByPath pathList {
     enable = lib.mkEnableOption "Enable desktop environment services";
-    type = lib.mkOption {
-      type = lib.types.enum ["i3wm" "gnome" "kde"];
-      default = "i3wm";
-      description = "Choose your desktop environment";
+    types = lib.mkOption {
+      type = lib.types.listOf (lib.types.enum ["i3wm" "gnome" "kde" "sway" "hyprland"]);
+      default = ["i3wm"];
+      description = ''
+        Danh sach desktop environment / compositor se cai. Moi phan tu la mot
+        session rieng o man dang nhap. Truoc day day la `type` mot gia tri --
+        doi ten CO Y de host nao con cu phap cu thi loi eval to, khong im lang.
+      '';
     };
   };
 }

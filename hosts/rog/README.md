@@ -1,4 +1,4 @@
-# rog — ASUS ROG Strix G531GT (NixOS · GNOME)
+# rog — ASUS ROG Strix G531GT (NixOS · GNOME + sway + hyprland)
 
 i5-9300H · 8 GB RAM · NVMe 476,9 GiB · UHD 630 + GTX 1650 Mobile (Optimus, PRIME offload).
 
@@ -13,6 +13,22 @@ Rebuild (shell alias: `update`):
 ```sh
 sudo nixos-rebuild switch --impure --flake ~/.nix#rog
 ```
+
+## Ba session, chọn ở GDM
+
+Máy này cài **ba** môi trường; chọn bằng nút bánh răng ở màn đăng nhập GDM.
+
+| Session | Config | Áp dụng thay đổi phím |
+|---|---|---|
+| GNOME | dconf, sinh lúc eval | `nixos-rebuild switch` |
+| sway | `home-manager/environments/sway/sway.d` | switch, rồi `Tab+r` |
+| hyprland | `home-manager/environments/hyprland/hypr.d` | switch, rồi `Tab+r` |
+
+GNOME cố ý ở lại làm lưới an toàn: cấu hình sway/hyprland hỏng cũng không khoá
+được người dùng khỏi máy. Phím tắt launcher của cả ba đến từ **một** file
+`configs/shortcuts/apps.linux.toml`.
+
+Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không phải reboot.
 
 ## Bố cục ổ
 

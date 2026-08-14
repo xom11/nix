@@ -1,9 +1,9 @@
-# Sinh dconf custom-keybindings tu configs/shortcuts/apps.gnome.toml.
+# Sinh dconf custom-keybindings tu configs/shortcuts/apps.linux.toml.
 # DOC LUC EVAL (fromTOML): sua file la phai `home-manager switch` — khac han
 # mac/windows (beckon serve doc luc chay). Path literal o day la CO Y:
 # dconf von la san pham cua eval.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.gnome.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.linux.toml);
 
   modMap = {
     ctrl = "<Ctrl>";

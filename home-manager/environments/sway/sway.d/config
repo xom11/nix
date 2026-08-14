@@ -8,9 +8,12 @@ font pango:monospace 14
 
 include conf.d/*.conf
 
-# Binding launcher sinh ra tu configs/shortcuts/apps.sway.toml.
+# Binding launcher sinh ra tu configs/shortcuts/apps.linux.toml.
 include $HOME/.config/sway-nix/launch-app.conf
 
 for_window [app_id=".*"] border pixel 0
 
-xwayland disable
+# Xwayland BAT (bo `xwayland disable` ngay 14/08/2026): Zalo va vai Electron
+# cu la X11-only. De nguyen thi chung khong mo duoc va khong co thong bao loi
+# nao chi ra nguyen nhan.
+xwayland enable

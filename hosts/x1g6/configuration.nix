@@ -9,7 +9,7 @@
   modules.nixos.services = {
     environments = {
       enable = true;
-      type = "i3wm";
+      types = ["i3wm"];
     };
     # Truoc day la keyd (go 10/08/2026). kanata dung CHUNG configs/kanata voi
     # macmini, airm3, vm va a14-win -- mot engine, mot bo layout, thay vi mot

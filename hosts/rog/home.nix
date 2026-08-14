@@ -20,13 +20,22 @@
       ai.enable = true;
       terminal.kitty.enable = true;
       conda.enable = true;
-      # rofi KHONG bat, khac x1g6: rofi la X11-only va host nay chay GNOME tren
-      # Wayland. Muon launcher rieng thi phai la rofi-wayland, khong phai rofi.
+      # Bat tu 14/08/2026 cung luc voi sway/hyprland. Ghi chu cu o day noi
+      # "rofi la X11-only, muon dung phai la rofi-wayland" — dieu do DA SAI:
+      # nixpkgs gop hai goi lam mot, `rofi-wayland` gio la alias nem loi
+      # ('rofi-wayland' has been merged into 'rofi'), va `pkgs.rofi` chinh la
+      # rofi 2.0.0 — ban upstream da nuot fork Wayland. sway.d va hypr.d moi
+      # ben goi rofi o 8 cho rieng (drun, combi, window, cliphist, 4 menu
+      # nguon) — ca hai session Wayland tren host nay deu can goi nay.
+      rofi.enable = true;
     };
     environments = {
       fonts.enable = true;
       gnome.enable = true;
+      hyprland.enable = true;
       i18n.enable = true;
+      sway.enable = true;
+      wayland.enable = true;
     };
     pkgs = {
       dev.enable = true;

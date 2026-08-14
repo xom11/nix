@@ -1,11 +1,11 @@
-# Sinh binding launcher cho sway tu configs/shortcuts/apps.sway.toml.
+# Sinh binding launcher cho sway tu configs/shortcuts/apps.linux.toml.
 # DOC LUC EVAL — sua file do la phai switch + reload sway.
 # Chi la `exec beckon "<app>"` TRAN (chi dao 09/08/2026): khong
 # sway-beckon.sh, khong workspace-per-app — hanh vi workspace user tu config
 # rieng trong sway.d. File sinh ra o ~/.config/sway-nix/launch-app.conf vi
 # ~/.config/sway la symlink ca thu muc (xem default.nix).
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.sway.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.linux.toml);
 
   modMap = {
     ctrl = "Ctrl";
@@ -27,7 +27,7 @@
 in
   ''
     # vim: ft=swayconfig
-    # SINH TU configs/shortcuts/apps.sway.toml — dung sua tay file nay.
+    # SINH TU configs/shortcuts/apps.linux.toml — dung sua tay file nay.
   ''
   + lib.concatStringsSep "\n" lines
   + "\n"
