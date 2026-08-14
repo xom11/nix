@@ -52,7 +52,7 @@ jobs:
 
       - name: homeConfigurations
         run: |
-          for h in rog server desktop minimal; do
+          for h in server desktop minimal; do
             echo "::group::hm/$h"
             nix eval --impure --system x86_64-linux ".#homeConfigurations.$h.activationPackage.drvPath"
             echo "::endgroup::"
@@ -65,6 +65,9 @@ jobs:
           echo "::endgroup::"
           echo "::group::nixos/vm"
           nix eval --impure --system aarch64-linux ".#nixosConfigurations.vm.config.system.build.toplevel.drvPath"
+          echo "::endgroup::"
+          echo "::group::nixos/rog"
+          nix eval --impure --system x86_64-linux ".#nixosConfigurations.rog.config.system.build.toplevel.drvPath"
           echo "::endgroup::"
 
       - name: systemConfigs

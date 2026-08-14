@@ -87,5 +87,9 @@
 
   hardware.bluetooth.enable = true;
   hardware.graphics.enable = true;
-  system.stateVersion = "24.11";
+  # mkDefault: gia tri nay dung cho cac host cai tu lau. Host cai moi phai dat
+  # lai theo dung phien ban luc cai (rog = 26.05) — stateVersion khong phai so
+  # phien ban he thong, no la moc de nixpkgs biet giu hanh vi cu nao cho du
+  # lieu da ton tai tren o.
+  system.stateVersion = lib.mkDefault "24.11";
 }

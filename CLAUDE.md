@@ -113,9 +113,10 @@ sudo darwin-rebuild switch --impure --flake ~/.nix#airm3
 # NixOS
 sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
 sudo nixos-rebuild switch --impure --flake ~/.nix#vm
+sudo nixos-rebuild switch --impure --flake ~/.nix#rog
 
 # Standalone home-manager
-home-manager switch --impure -b backup --flake ~/.nix#server     # also: rog, desktop, minimal
+home-manager switch --impure -b backup --flake ~/.nix#server     # also: desktop, minimal
 
 # system-manager (system-level config on a non-NixOS Linux distro)
 sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#desktop
@@ -340,8 +341,8 @@ Bốn điều đã đo trên máy (09/08/2026), cả bốn đều im lặng khi 
 | Builder | Outputs |
 |---|---|
 | `lib.mkDarwin` | `darwinConfigurations.{macmini,airm3}` |
-| `lib.mkNixos` | `nixosConfigurations.{x1g6,vm}` |
-| `lib.mkHomeManager` | `homeConfigurations.{rog,server,desktop,minimal}` |
+| `lib.mkNixos` | `nixosConfigurations.{x1g6,vm,rog}` |
+| `lib.mkHomeManager` | `homeConfigurations.{server,desktop,minimal}` |
 | `lib.mkSystemManager` | `systemConfigs.<system>.{desktop}` — keyed by system (`aarch64-linux`, `x86_64-linux`) |
 
 `mkDarwin`/`mkNixos` wire home-manager in as a module (`useGlobalPkgs = true`, so

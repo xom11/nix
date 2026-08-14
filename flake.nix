@@ -134,9 +134,9 @@
       nixosConfigurations = {
         x1g6 = lib.mkNixos { device = "x1g6"; };
         vm = lib.mkNixos { device = "vm"; };
+        rog = lib.mkNixos { device = "rog"; };
       };
       homeConfigurations = {
-        rog = lib.mkHomeManager { device = "rog"; };
         server = lib.mkHomeManager { device = "server"; };
         desktop = lib.mkHomeManager { device = "desktop"; };
         minimal = lib.mkHomeManager { device = "minimal"; };
