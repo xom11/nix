@@ -26,8 +26,6 @@ in {
     NUGET_PACKAGES = "${ssd}/data/NuGet";
     # Prisma engines
     PRISMA_ENGINES_CACHE_DIR = "${ssd}/cache/prisma";
-    # micromamba
-    MAMBA_ROOT_PREFIX = "${ssd}/micromamba";
     # Ollama
     OLLAMA_MODELS = "${ssd}/ollama/models";
   };
@@ -57,7 +55,6 @@ in {
         sleepwatcher.enable = true;
       };
       ai.enable = true;
-      conda.enable = true;
     };
     pkgs = {
       dev.enable = true;

@@ -34,6 +34,7 @@ git tag -l 'attic/*'
 | raiseorlaunch (overlay) | `overlays/raiseorlaunch` | 2026-08-09 | — (gỡ trước khi có quy ước tag) | Overlay ghim fork `khanhkhanhlele/raiseorlaunch`, cả repo lẫn tài khoản đều 404 nên không build được; nixpkgs vốn đã có `raiseorlaunch` 2.3.5 nên overlay chỉ đang che mất bản thật |
 | sway/nixos (module con) | `home-manager/environments/sway/nixos` | 2026-08-14 | `attic/sway-submodules-2026-08-14` | Bản trùng lặp cũ của module cha, không host nào bật. Trỏ đường dẫn tương đối vào `kanshi.d` — thư mục đã chuyển sang `environments/wayland` |
 | sway/ubuntu (module con) | `home-manager/environments/sway/ubuntu` | 2026-08-14 | `attic/sway-submodules-2026-08-14` | Cài sway qua `nix-apt` cho host Ubuntu; `desktop` dùng i3wm, không host nào bật. Trỏ vào `swaylock.d` đã chuyển đi |
+| **conda + micromamba** | `home-manager/dotfiles/conda` | 2026-08-14 | `attic/conda-micromamba-2026-08-14` | Chủ máy không còn dùng. Gỡ **sạch khỏi mọi máy**, không chỉ module: `conda.enable` ở cả 5 host (airm3/macmini/rog/vm/x1g6), `pkgs.micromamba` ở rog, brew `micromamba` (nix-darwin/brew), và `MAMBA_ROOT_PREFIX` ở macmini. Việc gỡ được kích hoạt bởi một lỗi thật: `libmamba-2.6.2` không compile trên nixpkgs `6b5e5b7` (2026-08-13) — `'format' is not a member of 'fmt'` — và nó chặn nguyên `nixos-system-rog`. Dữ liệu env cũ ở `/Volumes/ssd/micromamba` **không** bị đụng, xoá tay nếu muốn |
 
 ## Xem lại / khôi phục
 

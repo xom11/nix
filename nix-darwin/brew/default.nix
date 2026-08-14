@@ -53,7 +53,6 @@ mkModule config ./. {
       "docker-compose"
       "kanata"
       # "lima"
-      "micromamba"
       "openssl@3"
       "podman"
       # "scrcpy"

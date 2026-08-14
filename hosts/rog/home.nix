@@ -4,11 +4,12 @@
   # standalone tren Ubuntu, tu 14/08/2026 la NixOS that.
   #
   # LD_LIBRARY_PATH da BO. No co mat vi ban Ubuntu: binary tai ngoai nixpkgs
-  # (micromamba/conda) khong tu tim thay libstdc++. Tren NixOS dat bien do o
-  # muc phien lam viec la phan tac dung — no ro vao MOI tien trinh con, ke ca
-  # binary cua store da co closure dung, va gay loi symbol kieu rat kho truy.
-  # Neu conda hong that thi vá bang `programs.nix-ld` hoac mot wrapper rieng,
-  # dung dat lai bien toan cuc.
+  # (micromamba/conda) khong tu tim thay libstdc++. Ca micromamba lan module
+  # conda deu da go 14/08/2026 nen cai co gay ra bien nay khong con, nhung luat
+  # thi van dung: dat LD_LIBRARY_PATH o muc phien lam viec la phan tac dung —
+  # no ro vao MOI tien trinh con, ke ca binary cua store da co closure dung, va
+  # gay loi symbol kieu rat kho truy. Binary ngoai store thieu thu vien thi va
+  # bang `programs.nix-ld` hoac mot wrapper rieng, dung dat lai bien toan cuc.
   imports = [
     ../../home-manager
   ];
@@ -19,7 +20,6 @@
     dotfiles = {
       ai.enable = true;
       terminal.kitty.enable = true;
-      conda.enable = true;
       # Bat tu 14/08/2026 cung luc voi sway/hyprland. Ghi chu cu o day noi
       # "rofi la X11-only, muon dung phai la rofi-wayland" — dieu do DA SAI:
       # nixpkgs gop hai goi lam mot, `rofi-wayland` gio la alias nem loi
@@ -68,6 +68,5 @@
     pkgs.bws
     # Giu lai tu ban standalone thoi con chay Ubuntu.
     pkgs.discordchatexporter-cli
-    pkgs.micromamba
   ];
 }

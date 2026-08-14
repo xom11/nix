@@ -25,7 +25,6 @@
     dotfiles = {
       ai.enable = true;
       terminal.kitty.enable = true;
-      conda.enable = true;
       rofi.enable = true;
     };
     environments = {

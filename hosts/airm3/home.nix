@@ -23,7 +23,6 @@
         kitty.enable = true;
       };
       ai.enable = true;
-      conda.enable = true;
     };
     pkgs = {
       dev.enable = true;

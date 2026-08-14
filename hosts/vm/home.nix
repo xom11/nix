@@ -10,7 +10,6 @@
       ai.enable = true;
       terminal.kitty.enable = true;
       rofi.enable = true;
-      conda.enable = true;
     };
     environments = {
       fonts.enable = true;
