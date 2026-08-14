@@ -34,6 +34,11 @@
       # luoi an toan.
       types = ["gnome" "sway" "hyprland" "niri"];
     };
+    # Chi ghi /etc/brave/policies/managed/ cho [pwa]. Nua kia cua brave.toml
+    # ([shortcuts] + [settings]) do modules.home-manager.dotfiles.browser.dotbrave
+    # trong home.nix chay o quyen user -- phai bat CA HAI, bat mot ben thi ben
+    # kia im lang khong duoc ap.
+    dotbrave.enable = true;
     kanata.enable = true;
     # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
     # x1g6/vm khong phai keo theo virt-manager va closure QEMU.

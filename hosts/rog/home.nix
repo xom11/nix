@@ -19,6 +19,17 @@
     };
     dotfiles = {
       ai.enable = true;
+      # Nua quyen user cua brave.toml: [shortcuts] + [settings]. [pwa] thi
+      # modules.nixos.services.dotbrave ben configuration.nix ghi bang root.
+      #
+      # Hai dieu khong doc ma biet duoc, ca hai deu im lang khi vap:
+      #   - CLI chi ap khi Brave DONG luc activation. Dang mo ma khong co
+      #     DevTools endpoint (mac dinh tren Linux -- Brave chi ghi
+      #     DevToolsActivePort khi port dong) thi `--unattended` in ke hoach
+      #     roi bo qua, ghi 0 byte, thoat 0.
+      #   - Entry activation nuot loi (`|| echo ... failed, continuing`), nen
+      #     switch xanh KHONG chung minh gi. Phai doc output cua no.
+      browser.dotbrave.enable = true;
       terminal.kitty.enable = true;
       # Bat tu 14/08/2026 cung luc voi sway/hyprland. Ghi chu cu o day noi
       # "rofi la X11-only, muon dung phai la rofi-wayland" — dieu do DA SAI:

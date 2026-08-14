@@ -67,8 +67,16 @@ focus_search = ["Control+KeyS", "Meta+Alt+KeyF"]
 "omnibox.prevent_url_elisions" = true
 
 [pwa]
+# Danh sach TOAN PHAN: Brave go moi PWA do policy cai ma khong con ten o day.
+#
+# web.telegram.org va chat.zalo.me co mat vi LINUX. Tren mac/Windows hai app do
+# la ban native (apps.{macos,windows}.toml tro toi "Telegram"/"Zalo"), con
+# apps.linux.toml phai tro toi PWA: Zalo khong co ban Linux, va Cap+t ben Linux
+# CO Y khong dung telegram-desktop. Hai may kia van cai hai PWA nay theo danh
+# sach dung chung -- chung nam khong, khong phim tat nao cham toi.
 urls = [
   "https://chat.deepseek.com",
+  "https://chat.zalo.me/",
   "https://chatgpt.com/",
   "https://claude.ai/new",
   "https://discord.com/app",
@@ -76,6 +84,7 @@ urls = [
   "https://keep.google.com",
   "https://mail.google.com/",
   "https://tao.lenamkhanh.xyz",
+  "https://web.telegram.org/k/",
   "https://www.facebook.com/messages",
   "https://www.messenger.com",
   "https://www.notion.so/",
