@@ -31,6 +31,7 @@
     environments = {
       fonts.enable = true;
       gnome.enable = true;
+      hyprland.enable = true;
       i18n.enable = true;
       sway.enable = true;
       wayland.enable = true;
