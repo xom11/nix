@@ -47,9 +47,8 @@ in {
       terminal = {
         kitty.enable = true;
       };
-      browser = {
-        dotbrave.enable = true;
-      };
+      # dotbrave KHONG khai o day du no co chay cho user nay: cai
+      # `modules.nix-darwin.dotbrave` ben configuration.nix bat ca hai nua.
       macos = {
         hammerspoon.enable = true;
         sleepwatcher.enable = true;

@@ -1,24 +1,18 @@
 {
   lib,
   config,
-  dotbrave,
-  homeDir,
   ...
 }: {
   imports = [
     ../../nix-darwin
-    dotbrave.darwinModules.default
   ];
-  # [pwa] o tang he thong: darwin-rebuild von chay bang root nen viet duoc
-  # policy tai /Library/Managed Preferences ma khong can prompt sudo giua
-  # activation. Tro toi dung brave.toml ma module home-manager (Task 6)
-  # dung -- ca hai phai doc chung mot file.
-  services.dotbrave = {
-    enable = true;
-    config = "${homeDir}/.nix/home-manager/dotfiles/browser/dotbrave/brave.toml";
-  };
   modules.nix-darwin = {
     brew.enable = true;
+    # Bat CA HAI nua cua dotbrave: [pwa] o /Library/Managed Preferences bang
+    # root, va [shortcuts] + [settings] o profile Brave bang quyen user (module
+    # tu bat ho ben home-manager). Vi vay hosts/macmini/home.nix KHONG con dong
+    # dotbrave nao.
+    dotbrave.enable = true;
     launchd = {
       kanata.enable = true;
     };
