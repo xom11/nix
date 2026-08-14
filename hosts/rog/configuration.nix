@@ -27,5 +27,8 @@
       type = "gnome";
     };
     kanata.enable = true;
+    # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
+    # x1g6/vm khong phai keo theo virt-manager va closure QEMU.
+    libvirtd.enable = true;
   };
 }
