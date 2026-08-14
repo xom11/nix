@@ -1,22 +1,26 @@
 { pkgs, ... }:
 {
-  # Touchpad ELAN1203 (I2C-HID) KHONG len sau khi boot. Do tren may 14/08/2026:
+  # Touchpad ELAN1203 (I2C-HID) probe TRUOT o lan boot dau sau khi cai
+  # (14/08/2026):
   #
   #   [ 5.325] i2c_hid_acpi i2c-ELAN1203:00: can't add hid device: -22
-  #   [ 5.325] i2c_hid_acpi i2c-ELAN1203:00: probe ... failed with error -22
   #
   # -22 la -EINVAL: driver doc HID descriptor truoc khi thiet bi san sang. Khong
-  # co thiet bi input nao duoc tao, nen GNOME khong co gi de doc — trieu chung
-  # nhin y het "GNOME khong nhan touchpad", va di tim o tang libinput/Wayland
-  # thi khong bao gio ra.
+  # thiet bi input nao duoc tao, nen GNOME khong co gi de doc — trieu chung nhin
+  # y het "GNOME khong nhan touchpad", va di tim o tang libinput/Wayland thi
+  # khong bao gio ra. (Phien la Wayland: mutter noi thang voi libinput, khong
+  # dinh gi toi xf86-input-libinput.)
   #
-  # Nap lai module sau khi he thong on dinh thi probe THANH CONG:
-  #   [554.119] input: ELAN1203:00 04F3:307A Touchpad ...
-  #   hid-multitouch 0018:04F3:307A.0004: I2C HID v1.00
+  # DO LAI SAU DO: lan boot BINH THUONG ke tiep probe THANH CONG o giay 5.42,
+  # khong co loi nao. Lan truot kia di sau chuoi kexec + warm reboot cua buoi
+  # cai dat, nen nhieu kha nang la di chung cua no chu khong phai benh co huu.
   #
-  # Vong lap kiem TRUOC khi nap lai, nen neu mot ngay nao do probe luc boot tu
-  # chay duoc (kernel moi, BIOS moi) thi service nay thoat ngay va khong dung
-  # vao gi. Workaround tu vo hieu khi khong con can — dung de lai rac im lang.
+  # VAN GIU service nay, vi mot lan boot sach KHONG chung minh duoc dieu gi:
+  # dua tien trinh o i2c-hid von la loai chap chon. Vong lap kiem
+  # /proc/bus/input/devices TRUOC khi dung toi modprobe, nen khi phan cung
+  # ngoan no chi grep mot file roi thoat — nhat ky lan boot 14/08 ghi dung
+  # "ELAN1203 present, nothing to do". Workaround tu vo hieu khi khong con can.
+  # Bo di thi xoa file nay va dong import trong configuration.nix.
   systemd.services.elan-touchpad-reload = {
     description = "Reload i2c_hid_acpi to work around the ELAN1203 probe race";
     wantedBy = [ "multi-user.target" ];
