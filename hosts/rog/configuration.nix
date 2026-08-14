@@ -24,7 +24,9 @@
   modules.nixos.services = {
     environments = {
       enable = true;
-      types = ["gnome"];
+      # GNOME o lai lam luoi an toan: cau hinh sway/hyprland hong cung khong
+      # khoa duoc nguoi dung khoi may. Ba muc nay = ba session o GDM.
+      types = ["gnome" "sway" "hyprland"];
     };
     kanata.enable = true;
     # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
