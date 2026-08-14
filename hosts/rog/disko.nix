@@ -1,23 +1,18 @@
-# Dual-boot NixOS + Windows tren mot o NVMe 476,9 GiB.
+# Toan bo o cho NixOS. Dual-boot Windows da BO han 14/08/2026 sau hai lan cai
+# that bai (lan dau Windows Update pha boot, lan hai trinh cai khong nhin thay
+# o khi boot tu USB) -- chu may quyet dinh khong dung Windows tren may nay nua.
 #
-#   ESP    1G      EF00   /boot    <- DUNG CHUNG cho ca systemd-boot lan
-#                                     Windows Boot Manager
-#   root   222G    ext4   /
+#   ESP    1G      EF00   /boot
+#   root   ~459.9G ext4   /        <- an het o, tru 16G cuoi
 #   swap   16G     8200            <- >= RAM (8G) nen hibernate duoc
-#   ~238G con lai DE TRONG          <- trinh cai Windows tu tao MSR + NTFS
-#                                     + recovery trong khoang nay
 #
-# Hai cho khac x1g6, ca hai deu do dual-boot:
+# Gio giong het hosts/x1g6/disko.nix, chi khac ESP 1G thay vi 512M: kich thuoc
+# do la di san tu thoi con chia cho Windows Boot Manager, va khong dang thu hep
+# lai vi phai xoa/tao lai phan vung dau o.
 #
-# - ESP 1G thay vi 512M. Mot ESP duy nhat phai chua ca cac generation cua
-#   systemd-boot LAN `EFI/Microsoft/Boot/bootmgfw.efi`. 512M du cho NixOS mot
-#   minh, chat khi them Windows.
-# - `size` tuyet doi cho `root` thay vi `end = "-16G"`. x1g6 an het o nen tinh
-#   nguoc tu duoi len duoc; o day phai chua lai mot khoang trong o CUOI o cho
-#   Windows, nen phai neu kich thuoc thang.
-#
-# Thu tu vat ly = thu tu alphabet cua ten partition (ESP < root < swap), vi
-# khong cai nao dung `size = "100%"` — thu do bi disko day xuong cuoi cung.
+# `end = "-16G"` cho root + `size = "100%"` cho swap: disko day phan vung
+# `100%` xuong cuoi cung, nen thu tu vat ly ra dung ESP -> root -> swap ma
+# khong phai tinh sector nao.
 {
   disko.devices = {
     disk = {
@@ -33,16 +28,12 @@
               content = {
                 type = "filesystem";
                 format = "vfat";
-                # Windows CHI chap nhan ESP la FAT32. mkfs.vfat thuong tu chon
-                # FAT32 o kich thuoc nay, nhung ep thang thi khong phai dat cuoc
-                # vao heuristic cua dosfstools.
-                extraArgs = [ "-F" "32" ];
                 mountpoint = "/boot";
                 mountOptions = [ "umask=0077" ];
               };
             };
             root = {
-              size = "222G";
+              end = "-16G";
               content = {
                 type = "filesystem";
                 format = "ext4";
@@ -50,7 +41,7 @@
               };
             };
             swap = {
-              size = "16G";
+              size = "100%";
               content = {
                 type = "swap";
                 discardPolicy = "both";
