@@ -9,7 +9,7 @@
   modules.nixos = {
     services = {
       environments.enable = true;
-      environments.type = "gnome";
+      environments.types = ["gnome"];
       kanata.enable = true;
     };
   };

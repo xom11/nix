@@ -8,7 +8,7 @@
   pathList = ["modules"] ++ (lib.splitString "/" relPath);
   cfg = lib.getAttrFromPath pathList config;
 in {
-  config = lib.mkIf (cfg.enable && cfg.type == "gnome") {
+  config = lib.mkIf (cfg.enable && builtins.elem "gnome" cfg.types) {
     services.displayManager.gdm.enable = true;
     services.desktopManager.gnome.enable = true;
     # Delete core apps

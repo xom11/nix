@@ -8,7 +8,7 @@
   pathList = ["modules"] ++ (lib.splitString "/" relPath);
   cfg = lib.getAttrFromPath pathList config;
 in {
-  config = lib.mkIf (cfg.enable && cfg.type == "i3wm") {
+  config = lib.mkIf (cfg.enable && builtins.elem "i3wm" cfg.types) {
     services.xserver.enable = true;
     services.xserver.windowManager.i3.enable = true;
     # services.xserver.dpi = 144;

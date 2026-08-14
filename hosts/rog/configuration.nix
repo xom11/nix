@@ -24,7 +24,7 @@
   modules.nixos.services = {
     environments = {
       enable = true;
-      type = "gnome";
+      types = ["gnome"];
     };
     kanata.enable = true;
     # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
