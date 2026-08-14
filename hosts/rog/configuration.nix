@@ -10,6 +10,7 @@
     ./disko.nix
     ./hardware.nix
     ./nvidia.nix
+    ./touchpad.nix
   ];
 
   # Dual-boot: Windows ghi RTC theo gio dia phuong, Linux mac dinh doc RTC la
