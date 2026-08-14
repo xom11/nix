@@ -27,6 +27,8 @@
       fonts.enable = true;
       gnome.enable = true;
       i18n.enable = true;
+      sway.enable = true;
+      wayland.enable = true;
     };
     pkgs = {
       dev.enable = true;

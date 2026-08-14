@@ -32,6 +32,8 @@ git tag -l 'attic/*'
 | fcitx5-macos (overlay) | `overlays/fcitx5-macos` | 2026-08-10 | `attic/fcitx5-macos-2026-08-10` | Thay bằng tongue + flake input `fcitx5-lotus` |
 | wayland | `home-manager/environments/wayland` | 2026-08-10 | `attic/wayland-2026-08-10` | Thân rỗng, không làm gì |
 | raiseorlaunch (overlay) | `overlays/raiseorlaunch` | 2026-08-09 | — (gỡ trước khi có quy ước tag) | Overlay ghim fork `khanhkhanhlele/raiseorlaunch`, cả repo lẫn tài khoản đều 404 nên không build được; nixpkgs vốn đã có `raiseorlaunch` 2.3.5 nên overlay chỉ đang che mất bản thật |
+| sway/nixos (module con) | `home-manager/environments/sway/nixos` | 2026-08-14 | `attic/sway-submodules-2026-08-14` | Ban trung lap cu cua module cha, khong host nao bat. Tro duong dan tuong doi vao `kanshi.d` — thu muc da chuyen sang `environments/wayland` |
+| sway/ubuntu (module con) | `home-manager/environments/sway/ubuntu` | 2026-08-14 | `attic/sway-submodules-2026-08-14` | Cai sway qua `nix-apt` cho host Ubuntu; `desktop` dung i3wm, khong host nao bat. Tro vao `swaylock.d` da chuyen di |
 
 ## Xem lại / khôi phục
 

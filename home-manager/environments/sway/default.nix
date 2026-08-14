@@ -9,6 +9,8 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
+    # CAN environments/wayland bat kem: mako, kanshi, swaylock va toan bo goi
+    # Wayland dung chung nam o do. Module nay chi con thu rieng cua sway.
     home.file = {
       ".config/sway" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sway.d";
@@ -17,29 +19,8 @@ in
       # ~/.config/sway vi cho do la symlink vao ca thu muc sway.d cua repo.
       ".config/sway-nix/launch-app.conf".text =
         import ./launch-app.nix {inherit lib;};
-      ".config/kanshi/config" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/kanshi.d/kanshi.conf";
-      };
-      ".config/mako/config" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/mako.d/config";
-      };
     };
     home.packages = with pkgs; [
-      beckon
-      libnotify
-      mako
-      wl-clipboard
-      brightnessctl
-      rofi
-      grim
-      slurp
-      swaybg
-      swayidle
       autotiling
-      bluetui
-      wtype
-      cliphist
-      kanshi
-      jq
     ];
   }
