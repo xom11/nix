@@ -14,7 +14,7 @@
     };
     environments = {
       fonts.enable = true;
-      # GNOME thay i3wm de test configs/shortcuts/apps.gnome.toml. Hai cai
+      # GNOME thay i3wm de test configs/shortcuts/apps.linux.toml. Hai cai
       # loai tru nhau: modules.nixos.services.environments.type la enum, chi
       # chon duoc mot desktop.
       # i3wm.enable = true;
