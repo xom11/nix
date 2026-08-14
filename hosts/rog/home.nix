@@ -35,14 +35,15 @@
       nixos.enable = true;
     };
     programs = {
-      # agenix CO Y khong bat, khac x1g6. Chu may quyet dinh host nay khong can
-      # secret (14/08/2026). He qua co that: module ssh boc `age.secrets` trong
-      # `lib.mkIf agenixEnabled`, nen ~/.ssh/age.d/config khong duoc tao va
-      # dong `Include ~/.ssh/age.d/*` trong programs/ssh/config khong khop gi.
-      # ssh van chay binh thuong -- Include khong khop la khong loi.
+      # agenix BAT tu 14/08/2026 (dao lai quyet dinh cung ngay truoc do). Khoa
+      # cong khai cua may nay da vao programs/ssh/authorized_keys, ma keys.nix
+      # sinh tu chinh file do -- nen rog la recipient agenix, va hai file .age
+      # trong cay da duoc rekey lai cho du 5 nguoi nhan.
       #
-      # Keo theo: khoa cua rog KHONG duoc them vao programs/ssh/authorized_keys,
-      # nen no cung khong phai recipient agenix (keys.nix sinh tu file do).
+      # Khac macOS: agent giai ma tren Linux la systemd oneshot KHONG co
+      # `Restart=`, nen no khong tu thu lai nhu launchd. Lan switch dau tren mot
+      # may vua co khoa moi, neu secret chua ra thi chay tay `agenix-reload`.
+      agenix.enable = true;
       btop.enable = true;
       git.enable = true;
       herdr.enable = true;
