@@ -5,7 +5,7 @@
 # pane.report_agent_session (session identity), never a state. So every
 # working/idle call comes from reading the pane.
 #
-# The only rule that yields `working` upstream is osc_title_working: a braille
+# The only rule that yields `working` upstream is osc_title_working: a busy
 # spinner at the head of the OSC title. Claude swaps that spinner for U+2733 the
 # moment a turn ends, so a turn that ends while background work is still running
 # (a shell waiting on CI, a Monitor, an MCP task) falls through to
@@ -21,7 +21,14 @@
 # Everything else in this file is a verbatim copy of the upstream remote
 # manifest (~/.local/state/herdr/agent-detection/remote/claude.toml) at the
 # version recorded below. A local override ALWAYS wins and stops remote updates
-# from applying to this agent, so re-sync it against upstream now and then:
+# from applying to this agent, and that has already cost one silent regression:
+# Claude Code 2.1.228 swapped the OSC-title busy spinner from braille to the
+# half-circles U+25D0-U+25D3, upstream shipped the wider class in 2026.08.13.1,
+# and this copy — frozen at 2026.08.04.1 — kept matching braille only. Every
+# working pane fell through to live_prompt_box and showed a green idle tick
+# while it was mid-turn. Nothing warns you: the override still loads, still
+# matches its own rules, and the panes look merely quiet. So re-sync it against
+# upstream now and then:
 #   diff ~/.local/state/herdr/agent-detection/remote/claude.toml \
 #        ~/.nix/home-manager/programs/herdr/herdr.d/agent-detection/claude.toml
 # Apply edits without restarting the server (attached panes survive):
@@ -29,9 +36,9 @@
 # Drop the override entirely to go back to upstream behaviour.
 
 id = "claude"
-version = "2026.08.04.1"
+version = "2026.08.13.1"
 min_engine_version = 2
-updated_at = "2026-08-04T00:00:00Z"
+updated_at = "2026-08-13T00:00:00Z"
 aliases = ["claude-code"]
 
 [[rules]]
@@ -40,7 +47,8 @@ state = "working"
 priority = 1100
 region = "osc_title"
 visible_working = true
-regex = ['^[\x{2800}-\x{28FF}] ']
+# Braille covers <= 2.1.227; half-circles are the 2.1.228 busy spinner.
+regex = ['^[\x{2800}-\x{28FF}\x{25D0}-\x{25D3}] ']
 
 [[rules]]
 id = "btw_overlay_working"
