@@ -25,6 +25,11 @@ Host a14
 Host airm3
   HostName 100.127.95.48
   User kln
+# Ten trong tailnet la `rog-1`, khong phai `rog` -- mot node `rog` cu tu thoi
+# may nay con chay Ubuntu van con dang ky, nen tailscale tu them hau to.
+Host rog
+  HostName 100.92.201.41
+  User kln
 Host tao
   HostName 100.127.63.100
   User kln

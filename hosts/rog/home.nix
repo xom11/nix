@@ -35,7 +35,14 @@
       nixos.enable = true;
     };
     programs = {
-      agenix.enable = true;
+      # agenix CO Y khong bat, khac x1g6. Chu may quyet dinh host nay khong can
+      # secret (14/08/2026). He qua co that: module ssh boc `age.secrets` trong
+      # `lib.mkIf agenixEnabled`, nen ~/.ssh/age.d/config khong duoc tao va
+      # dong `Include ~/.ssh/age.d/*` trong programs/ssh/config khong khop gi.
+      # ssh van chay binh thuong -- Include khong khop la khong loi.
+      #
+      # Keo theo: khoa cua rog KHONG duoc them vao programs/ssh/authorized_keys,
+      # nen no cung khong phai recipient agenix (keys.nix sinh tu file do).
       btop.enable = true;
       git.enable = true;
       herdr.enable = true;
