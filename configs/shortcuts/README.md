@@ -1,7 +1,7 @@
 # Phim tat focus-or-launch
 
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
-- Engine la `beckon` o ca bon nen tang.
+- Engine la `beckon` o ca nam nen tang.
 - Linux (GNOME, sway, hyprland) dung CHUNG `apps.linux.toml` — ba session chay
   tren cung mot may nen `beckon installed` tra ve cung mot danh sach.
 - Sua apps.*.toml thi sua ca bang nay — khong con sync.sh kiem tra.
