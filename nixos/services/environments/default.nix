@@ -16,7 +16,7 @@ in {
   options = lib.setAttrByPath pathList {
     enable = lib.mkEnableOption "Enable desktop environment services";
     types = lib.mkOption {
-      type = lib.types.listOf (lib.types.enum ["i3wm" "gnome" "kde" "sway" "hyprland"]);
+      type = lib.types.listOf (lib.types.enum ["i3wm" "gnome" "kde" "sway" "hyprland" "niri"]);
       default = ["i3wm"];
       description = ''
         Danh sach desktop environment / compositor se cai. Moi phan tu la mot

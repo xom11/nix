@@ -34,6 +34,10 @@
       gnome.enable = true;
       hyprland.enable = true;
       i18n.enable = true;
+      # Bat 14/08/2026 de thu. Bo phim la MAC DINH cua niri chu khong dich tu
+      # sway/hyprland, va bo phim launcher (beckon, to hop `Cap`) CHUA duoc noi
+      # vao — xem niri.d/config.kdl.
+      niri.enable = true;
       sway.enable = true;
       wayland.enable = true;
     };

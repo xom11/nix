@@ -24,9 +24,15 @@
   modules.nixos.services = {
     environments = {
       enable = true;
-      # GNOME o lai lam luoi an toan: cau hinh sway/hyprland hong cung khong
-      # khoa duoc nguoi dung khoi may. Ba muc nay = ba session o GDM.
-      types = ["gnome" "sway" "hyprland"];
+      # GNOME o lai lam luoi an toan: cau hinh sway/hyprland/niri hong cung
+      # khong khoa duoc nguoi dung khoi may. Bon muc nay = bon session o GDM.
+      #
+      # "niri" them 14/08/2026 de THU (scrollable-tiling). Xem
+      # nixos/services/environments/niri.nix: module nixpkgs cua no CO Y dat
+      # `defaultSession = "niri"`, va file do phai chan lai — neu khong,
+      # autoLogin cua nixos/base se dua may vao thang niri va GNOME het lam
+      # luoi an toan.
+      types = ["gnome" "sway" "hyprland" "niri"];
     };
     kanata.enable = true;
     # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
