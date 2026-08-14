@@ -546,15 +546,31 @@ invisible at a glance and tends to be discovered the hard way:
 
 - `[shortcuts]` and `[settings]` are read by the `dotbrave` CLI at
   **activation** (`programs.dotbrave` in
-  `home-manager/dotfiles/browser/dotbrave/default.nix`, enabled on macmini).
-  The activation script embeds the *path* to `brave.toml`, not its contents,
-  so editing those tables changes no derivation — a switch applies them
-  without rebuilding anything.
-- `[pwa]` is read by Nix itself, via `builtins.fromTOML`, at **evaluation**
-  (`services.dotbrave` in `hosts/macmini/configuration.nix`; the module comes
-  from `dotbrave.darwinModules.default`). Editing the PWA list edits an *input
-  to eval*, so the switch rebuilds the plist. A malformed entry fails
-  evaluation, taking the whole switch down before anything is applied.
+  `home-manager/dotfiles/browser/dotbrave/default.nix`, enabled on macmini and
+  rog). The activation script embeds the *path* to `brave.toml`, not its
+  contents, so editing those tables changes no derivation — a switch applies
+  them without rebuilding anything.
+- `[pwa]` is read by Nix itself at **evaluation**, by whichever system-level
+  module the host uses: `dotbrave.darwinModules.default` wired inline in
+  `hosts/macmini/configuration.nix`, or `dotbrave.nixosModules.default` wrapped
+  by `nixos/services/dotbrave/` for rog. Editing the PWA list edits an *input
+  to eval*, so the switch rebuilds the plist (darwin) or the `/etc` file
+  (NixOS). A malformed entry fails evaluation, taking the whole switch down
+  before anything is applied.
+
+**Both halves must be enabled together.** They own different tables of one
+file and neither warns about the other, so enabling one alone leaves half of
+`brave.toml` silently unapplied. On rog that is
+`modules.nixos.services.dotbrave.enable` **plus**
+`modules.home-manager.dotfiles.browser.dotbrave.enable`.
+
+**rog is the first NixOS host whose *evaluation* reads a file out of
+`repoPath`**, and that breaks the cross-host check documented above:
+`nix eval --impure --system x86_64-linux .#nixosConfigurations.rog…` run from a
+Mac fails with `path '/…/home/<user>/.nix/…/brave.toml' does not exist`, because
+`--system` overrides `builtins.currentSystem` and `lib/mkConfigs.nix` derives
+`homeDir` from it. That is a **false red** — evaluate rog on rog. CI stays green
+because `.github/workflows/eval.yml` points `$HOME/.nix` at the checkout first.
 
 **This is not the "edit without rebuilding" pattern** the section above
 describes, and conflating the two is the easy mistake. A symlinked dotfile
