@@ -1,0 +1,52 @@
+# Cau hinh Viet+ (vietc). Daemon doc file nay o ~/.config/vietc/config.toml —
+# KHONG phai vietc.toml. Ten `vietc.toml` trong repo upstream chi duoc tim o thu
+# muc hien tai (cwd), nen dat sai ten la config im lang bi bo qua va daemon chay
+# bang mac dinh built-in. Xem daemon/src/config.rs::load().
+#
+# File nay daemon chi DOC. Thu daemon GHI la ~/.config/vietc/overrides.toml
+# (app_state.rs::save_overrides), va file do co y khong duoc symlink vao repo.
+
+input_method = "telex"
+toggle_key = "space"
+start_enabled = true
+
+# false = khong EVIOCGRAB ban phim vat ly. Bat buoc phai giu false o day: rog
+# chay kanata, ma kanata da grab ban phim that roi. Duong dung cua vietc tren
+# sway/hyprland la zwp_input_method_v2 (rootless, khong can group input, khong
+# dung gi toi kanata). Chi bat grab = true tren may KHONG co kanata.
+grab = false
+debug = false
+
+[auto_restore]
+enabled = true
+trigger_keys = [
+    "space",
+    "escape",
+]
+
+[app_state]
+enabled = true
+# kitty/alacritty/foot/ghostty DA BI BO khoi danh sach nay, khac ban upstream.
+# Upstream coi terminal la app tieng Anh — dung ly do khien ta tim toi vietc
+# (go tieng Viet trong kitty ma khong bi gach chan) thi lai bi tat mac dinh.
+english_apps = [
+    "code",
+    "jetbrains",
+    "intellij",
+    "pycharm",
+    "webstorm",
+]
+vietnamese_apps = [
+    "telegram",
+    "discord",
+    "slack",
+    "firefox",
+    "chromium",
+    "thunderbird",
+]
+
+# [macros] CO Y de trong. Ban upstream mac dinh co "ko" -> "khong", "dc" ->
+# "duoc"... — vo hai khi chat, nhung day la bo go dung TRONG TERMINAL, noi "ko"
+# va "dc" hay la ten lenh/bien that. Mot macro no giua dong shell thi hong lang
+# le. Muon dung thi them tay tung cai mot.
+[macros]
