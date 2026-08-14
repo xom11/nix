@@ -68,14 +68,14 @@ mkModule config ./. {
       # notarized .app here, and its Nix flake (apps/linows) declares
       # meta.platforms = linux -- there is no darwin derivation to use instead.
       "look"
-      "obsidian"
+      # "obsidian"
       "gonhanh"
       "monitorcontrol"
-      "vivaldi"
+      # "vivaldi"
       # "Tunnelblick"
       # "android-platform-tools"
       "balenaetcher"
-      "bitwarden"
+      # "bitwarden"
       "brave-browser"
       # "chromedriver"
       # "deskreen"
@@ -92,9 +92,9 @@ mkModule config ./. {
       # path, so a store path that changes on each bump silently drops the
       # Accessibility permission Maccy needs in order to paste.
       "maccy"
-      "microsoft-edge"
+      # "microsoft-edge"
       # "miniconda"
-      "nomachine"
+      # "nomachine"
       "notion"
       # "orbstack"
       # Dropped for look, which wants the same Cmd+Space. Two launchers on one
@@ -105,7 +105,7 @@ mkModule config ./. {
       # "slack"
       "telegram"
       # "visual-studio-code"
-      "vlc"
+      # "vlc"
       # "zalo"
     ];
   };
