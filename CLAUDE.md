@@ -139,6 +139,31 @@ nix eval --impure                        .#darwinConfigurations.macmini.system.d
 
 `nix fmt` (alejandra) and `nix develop` (alejandra, nixd, deadnix, statix) are wired up.
 
+## Kiểm trên chính máy đó — ba cách nói dối quen thuộc
+
+Ba thứ dưới đây đều trả lời **sai mà nghe hợp lý**, nên không ai nghĩ tới việc kiểm
+chéo. Cả ba đã làm hai phiên làm việc độc lập cùng kết luận ngược trong một buổi.
+
+- **Đừng kết luận "tiến trình X không chạy" bằng `pgrep -x` / `ps -eo comm`.**
+  nixpkgs bọc binary thành `.NAME-wrapped`, mà `comm` cắt ở **15 ký tự** →
+  `.Hyprland-wrapp`. Và bẫy **không đồng đều giữa các gói**: cùng máy, cùng lớp
+  `programs.*`, Hyprland ra `.Hyprland-wrapp` còn sway ra `sway` (wrapper `exec`
+  sang bản unwrapped rồi tự thay thế mình). Nên không suy được từ gói này sang gói
+  kia — kiểm từng cái bằng `readlink -f` + xem thư mục `bin`, hoặc khớp
+  `grep -E "(^| )\.?NAME(-wrapp)?"`, hoặc nhìn `args` thay vì `comm`.
+- **`pgrep -f <ten>` thì sai ngược lại**: nó khớp cả dòng lệnh của chính bạn. Một
+  vòng `for` kiểm 7 dịch vụ cho 7 dương tính giả liền.
+- **`sway --validate` trần qua SSH là XANH GIẢ** — nó dựng backend DRM trước khi
+  đọc config nên chết ở `Could not open target tty`, và bản sạch với bản hỏng cho
+  output y hệt. Phải `WLR_BACKENDS=headless WLR_LIBINPUT_NO_DEVICES=1 sway --validate`,
+  và **mã thoát luôn 0 kể cả khi hỏng** → phải đọc output. `Hyprland --verify-config`
+  thì ngược lại: chạy thẳng qua SSH, in `config ok`, và có đi theo `source`.
+
+Hệ quả rộng hơn, đúng cho cả `nix eval`: khi viết một kết luận dạng *"A thế nào thì
+B cũng thế"* mà chỉ đo A — dừng lại và đo B. Riêng repo này đã dính ba lần, và cả
+ba đều là hai thứ **cùng một họ** (32-bit→64-bit, GNOME→stack khác, Hyprland→sway),
+tức đúng chỗ cảm giác "chắc giống nhau" mạnh nhất.
+
 ## Công cụ tách repo riêng (org `xom11`) — sửa ở thượng nguồn
 
 Một phần hành vi của repo này KHÔNG nằm trong cây này. Năm công cụ tự viết đã
@@ -183,6 +208,14 @@ vào `home-manager/dotfiles/windows/dotpkg` rồi chạy `dotpkg` trần.
 Luật rộng hơn rút ra từ đây: **file nào một công cụ GHI LẠI thì đừng để sau
 symlink vào repo, trừ khi đã ĐO là nó ghi đè tại chỗ** (`vim.pack` đã đo và đạt,
 xem `nvim-pack-lock.json`; dotpkg đã đo và trượt).
+
+**"Ghi đè tại chỗ" là điều kiện CẦN chứ chưa đủ** — fcitx5 dạy ra vế thiếu.
+`i18n/fcitx5.d/{config,profile}` được symlink ra `~/.config/fcitx5/`, và fcitx5 ghi
+đè tại chỗ (symlink sống nguyên) nên theo câu trên nó *đạt*. Nhưng nó giữ state
+trong bộ nhớ và ghi ra lúc thoát, nên sửa file trong repo khi nó đang chạy là bị
+đè mất — `git checkout --` dọn xong bẩn lại ngay. Vế thứ hai: **công cụ đó không
+được giữ bản sao trong bộ nhớ rồi ghi lại theo lịch của nó.** Muốn sửa tay thì dừng
+fcitx5 trước. Dấu nhận biết: nó luôn thêm đúng một dòng trống cuối file.
 
 Ba điều nữa, cả ba đều im lặng khi sai:
 
