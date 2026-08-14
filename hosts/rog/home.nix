@@ -24,7 +24,7 @@
       # "rofi la X11-only, muon dung phai la rofi-wayland" — dieu do DA SAI:
       # nixpkgs gop hai goi lam mot, `rofi-wayland` gio la alias nem loi
       # ('rofi-wayland' has been merged into 'rofi'), va `pkgs.rofi` chinh la
-      # rofi 2.0.0 — ban upstream da nuot fork Wayland. sway.d goi rofi o 6 cho
+      # rofi 2.0.0 — ban upstream da nuot fork Wayland. sway.d goi rofi o 8 cho
       # (drun, combi, window, cliphist, 4 menu nguon).
       rofi.enable = true;
     };
