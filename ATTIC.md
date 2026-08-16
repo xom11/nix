@@ -37,26 +37,34 @@ git tag -l 'attic/*'
 | **conda + micromamba** | `home-manager/dotfiles/conda` | 2026-08-14 | `attic/conda-micromamba-2026-08-14` | Chủ máy không còn dùng. Gỡ **sạch khỏi mọi máy**, không chỉ module: `conda.enable` ở cả 5 host (airm3/macmini/rog/vm/x1g6), `pkgs.micromamba` ở rog, brew `micromamba` (nix-darwin/brew), và `MAMBA_ROOT_PREFIX` ở macmini. Việc gỡ được kích hoạt bởi một lỗi thật: `libmamba-2.6.2` không compile trên nixpkgs `6b5e5b7` (2026-08-13) — `'format' is not a member of 'fmt'` — và nó chặn nguyên `nixos-system-rog`. Dữ liệu env cũ ở `/Volumes/ssd/micromamba` **không** bị đụng, xoá tay nếu muốn |
 | **dotbrave (cả 3 module)** | `home-manager/dotfiles/browser/dotbrave/default.nix`, `nix-darwin/dotbrave`, `nixos/services/dotbrave` | 2026-08-16 | `attic/dotbrave-modules-2026-08-16` | Chủ máy chốt: công cụ chưa chạy lại nhiều lần mà không có sự cố, nên nó ra khỏi đường rebuild hẳn. **`brave.toml` VẪN Ở NGUYÊN CHỖ CŨ** (`home-manager/dotfiles/browser/dotbrave/brave.toml`) và vẫn là nguồn chân lý — chỉ không còn ai đọc nó lúc rebuild. Gỡ kèm `dotbrave.enable` ở macmini/rog. Flake input + overlay **giữ lại**, và `pkgs.dotbrave` được khai thẳng vào `home.packages` của macmini/rog — trước đây binary đến từ chính module (`home.packages = [cfg.package]` của module upstream), gỡ suông là mất luôn CLI khỏi PATH. Xem "Việc phải làm tay" bên dưới |
 
-## Việc phải làm tay sau khi gỡ dotbrave (2026-08-16)
+## Cái mà gỡ dotbrave KHÔNG dọn (2026-08-16)
 
 Nửa `[pwa]` **không có teardown**. Rebuild chỉ gỡ cái chạy nó, không dọn cái nó
-đã ghi, nên phải dọn tay — và **chỉ sau** lần rebuild đã gỡ module:
+đã ghi. Sau lần switch gỡ module, `/Library/LaunchDaemons/org.dotbrave.*` biến
+mất và `launchctl` sạch, nhưng file policy thì ở lại.
 
-- **macmini** — file bị ghim `schg` nên `sudo rm` trần cũng trượt:
+**macmini — ĐÃ CHỐT: giữ nguyên file, không dọn.**
+`/Library/Managed Preferences/com.brave.Browser.plist` còn nguyên, vẫn ghim
+`schg`, giữ 14 PWA. Lý do giữ: xoá nó có thể làm Brave **gỡ cài cả 14 PWA** ở
+lần khởi động sau — upstream ghi rõ điều đó trong `nix/darwin.nix`, và không có
+gì bù lại vì Nix không còn dựng lại file nữa. Đừng "dọn nốt cho sạch".
 
-  ```sh
-  sudo chflags noschg "/Library/Managed Preferences/com.brave.Browser.plist"
-  sudo rm "/Library/Managed Preferences/com.brave.Browser.plist"
-  ```
+Hệ quả phải nhớ: **Brave vẫn cưỡng chế danh sách PWA cũ, và không gì trong repo
+điều khiển nó nữa.** Muốn đổi danh sách PWA thì phải tự tay xoá file rồi chạy
+`dotbrave apply` KHÔNG kèm `--skip pwa` (sẽ hỏi sudo):
 
-  Làm trước khi rebuild là vô ích: daemon còn nạp thì `WatchPaths` dựng lại
-  file và ghim lại trong ~1 giây, `StartInterval` 60s bắt nốt nếu watch trượt.
+```sh
+sudo chflags noschg "/Library/Managed Preferences/com.brave.Browser.plist"
+sudo rm "/Library/Managed Preferences/com.brave.Browser.plist"
+```
 
-- **rog** — `[pwa]` ghi vào `/etc/brave/policies/managed/`, mà `/etc` trên NixOS
-  do rebuild sở hữu, nên khả năng cao nó tự biến mất. **Chưa đo** — kiểm lại
-  sau lần switch: `ls /etc/brave/policies/managed/`.
+(Làm trước khi rebuild là vô ích: daemon còn nạp thì `WatchPaths` dựng lại file
+và ghim lại trong ~1 giây, `StartInterval` 60s bắt nốt nếu watch trượt. Nay
+daemon đã gỡ nên không còn rào đó.)
 
-Cho tới khi dọn, Brave vẫn cưỡng chế danh sách PWA cũ.
+**rog — chưa đo.** `[pwa]` ghi vào `/etc/brave/policies/managed/`, mà `/etc`
+trên NixOS do rebuild sở hữu nên khả năng cao tự biến mất. Kiểm sau lần switch
+tới: `ls /etc/brave/policies/managed/`.
 
 Áp `brave.toml` bằng tay từ nay:
 
@@ -64,10 +72,8 @@ Cho tới khi dọn, Brave vẫn cưỡng chế danh sách PWA cũ.
 dotbrave apply --skip pwa ~/.nix/home-manager/dotfiles/browser/dotbrave/brave.toml
 ```
 
-`--skip pwa` **bắt buộc** khi managed policy chưa dọn: bỏ nó thì CLI ghi đè
-vùng mà daemon cũ vẫn đang giữ, và sẽ hỏi sudo. Dọn xong thì `--skip pwa`
-không còn bắt buộc, nhưng bỏ nó nghĩa là CLI bắt đầu quản `[pwa]` — một quyết
-định khác, không phải mặc định.
+`--skip pwa` **bắt buộc** chừng nào file managed policy còn đó: bỏ nó thì CLI
+ghi đè vùng đang có chủ và sẽ hỏi sudo.
 
 ## Xem lại / khôi phục
 
