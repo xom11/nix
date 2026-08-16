@@ -38,6 +38,12 @@
     # `attic/dotbrave-modules-2026-08-16`. brave.toml van trong repo va binary
     # van trong PATH (home.nix), ap bang tay.
     kanata.enable = true;
+    # Tang he thong cua bo go: nap udev rule + unit fcitx5-lotus-server@.
+    # Thieu no thi bon che do Uinput cua lotus (thu KHONG gach chan trong kitty)
+    # khong the chay. Addon fcitx5 van do home-manager/environments/i18n cai.
+    # Di kem: `linux-dev-names-exclude` trong configs/kanata/defcfg.kbd, vi
+    # kanata mac dinh se grab luon thiet bi ao cua lotus.
+    fcitx5-lotus.enable = true;
     # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
     # x1g6/vm khong phai keo theo virt-manager va closure QEMU.
     libvirtd.enable = true;

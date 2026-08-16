@@ -1,8 +1,24 @@
 (defcfg
-;; You can set the value below to no if you only use the keys defined in defsrc.
+  ;; You can set the value below to no if you only use the keys defined in defsrc.
   process-unmapped-keys yes
   linux-continue-if-no-devs-found yes
   macos-dev-names-exclude (
     "MX Master 3 Mac"
+  )
+  ;; `Lotus-Uinput-Server` la thiet bi ao ma fcitx5-lotus-server tao ra de phat
+  ;; BackSpace that (nixos/services/fcitx5-lotus). KHONG loai tru thi kanata grab
+  ;; luon no, va moi BackSpace cua bo go phai di xuyen qua cac lop remap cua
+  ;; kanata truoc khi toi ung dung.
+  ;;
+  ;; Do khong hien nhien, va truc giac "no chi khai moi mot phim thi kanata bo
+  ;; qua thoi" la SAI: `has_keyboard_keys` cua kanata 1.12 tra ve true khi thiet
+  ;; bi khai BAT KY scancode nao trong 1..=115, ma KEY_BACKSPACE = 14. Che do
+  ;; mac dinh `keyboard-mice` nhan no la DeviceType::Keyboard va grab.
+  ;; Kanata chi tu bo qua dung mot ten: `kanata` — thiet bi dau ra cua chinh no.
+  ;;
+  ;; File nay dung chung cho NixOS lan Ubuntu (system-manager); may khong chay
+  ;; lotus thi ten nay khong ton tai va dong duoi bi bo qua, khong hai gi.
+  linux-dev-names-exclude (
+    "Lotus-Uinput-Server"
   )
 )
