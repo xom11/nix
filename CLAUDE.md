@@ -177,7 +177,7 @@ công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản 
 | Công cụ | Là gì | Đường vào repo này | Clone làm việc |
 |---|---|---|---|
 | [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `serve` đọc `configs/shortcuts/apps.*.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
-| [`dotbrave`](https://github.com/xom11/dotbrave) | quản Brave bằng một file TOML | flake input + overlay, **và** `dotbrave.darwinModules.default` cho bảng `[pwa]`; xem mục "dotbrave: one file, two readers" bên dưới | `~/Documents/dev/dotbrave` |
+| [`dotbrave`](https://github.com/xom11/dotbrave) | quản Brave bằng một file TOML | flake input + overlay → `pkgs.dotbrave` trong `home.packages`. **Không còn module Nix nào** (gỡ 16/08/2026) — chạy tay, xem mục "dotbrave: config trong repo, apply hoàn toàn bằng tay" bên dưới | `~/Documents/dev/dotbrave` |
 | [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (x1g6/vm cố ý không có) | `~/Documents/dev/tongue` |
 | [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
 | [`nix-apt`](https://github.com/xom11/nix-apt) | apt khai báo trên Debian/Ubuntu | flake input → `homeManagerModules.default` (nối trong `lib/mkConfigs.nix`), dùng qua `services.nix-apt` | chưa clone |
@@ -458,7 +458,6 @@ directories.** This is the single most common source of broken host files:
 |---|---|
 | `home-manager/programs/zsh` | `modules.home-manager.programs.zsh.enable` |
 | `home-manager/dotfiles/terminal/kitty` | `modules.home-manager.dotfiles.terminal.kitty.enable` — **not** `dotfiles.kitty` |
-| `home-manager/dotfiles/browser/dotbrave` | `modules.home-manager.dotfiles.browser.dotbrave.enable` |
 | `home-manager/dotfiles/ai/claude.d` | `modules.home-manager.dotfiles.ai."claude.d".enable` — the dot must be quoted |
 | `nixos/services/kanata` | `modules.nixos.services.kanata.enable` — **not** `modules.services.kanata` |
 
@@ -494,7 +493,8 @@ home-manager/
                      #       https://api.pixellab.ai/mcp \
                      #       --header 'Authorization: Bearer ${PIXELLAB_TOKEN}'
                      #   Single quotes, and URL before --header (it is variadic).
-                     # browser/dotbrave, terminal/kitty
+                     # browser/dotbrave -- CHI con brave.toml, khong con module
+                     #   (go 16/08/2026); terminal/kitty
                      # macos/{hammerspoon,sleepwatcher}
                      # conda, rofi
   environments/      # fonts, gnome, i18n, i3wm, sway, hyprland, wayland
@@ -537,93 +537,56 @@ The symlink target is a plain string, so it is **not** a reference of the
 home-manager generation. It must point into the `~/.nix` working tree — never into
 the store, or the dotfiles are read-only and get collected on the next GC.
 
-### dotbrave: one file, two readers, two different times
+### dotbrave: config trong repo, apply hoàn toàn bằng tay
 
-`home-manager/dotfiles/browser/dotbrave/brave.toml` carries three tables
-(`[shortcuts]`, `[settings]`, `[pwa]`), but nothing reads all three — and the
-two things that do read it read at **different times**. That asymmetry is
-invisible at a glance and tends to be discovered the hard way:
+**Từ 16/08/2026 Nix không còn dính gì tới dotbrave.** Cả ba module đã gỡ —
+`home-manager/dotfiles/browser/dotbrave/default.nix`, `nix-darwin/dotbrave`,
+`nixos/services/dotbrave` — xem `ATTIC.md`, tag
+`attic/dotbrave-modules-2026-08-16`. Lý do: công cụ chưa chạy lại nhiều lần mà
+không có sự cố, nên chủ máy cho nó ra khỏi đường rebuild hẳn.
 
-- `[shortcuts]` and `[settings]` are read by the `dotbrave` CLI at
-  **activation** (`programs.dotbrave` in
-  `home-manager/dotfiles/browser/dotbrave/default.nix`, enabled on macmini and
-  rog). The activation script embeds the *path* to `brave.toml`, not its
-  contents, so editing those tables changes no derivation — a switch applies
-  them without rebuilding anything.
-- `[pwa]` is read by Nix itself at **evaluation**, by whichever system-level
-  module the host uses: `dotbrave.darwinModules.default` wired inline in
-  `hosts/macmini/configuration.nix`, or `dotbrave.nixosModules.default` wrapped
-  by `nixos/services/dotbrave/` for rog. Editing the PWA list edits an *input
-  to eval*, so the switch rebuilds the plist (darwin) or the `/etc` file
-  (NixOS). A malformed entry fails evaluation, taking the whole switch down
-  before anything is applied.
+Còn lại đúng hai thứ:
 
-**Both halves must be enabled together.** They own different tables of one
-file and neither warns about the other, so enabling one alone leaves half of
-`brave.toml` silently unapplied. On rog that is
-`modules.nixos.services.dotbrave.enable` **plus**
-`modules.home-manager.dotfiles.browser.dotbrave.enable`.
+- **`home-manager/dotfiles/browser/dotbrave/brave.toml`** — vẫn ở nguyên chỗ,
+  vẫn là nguồn chân lý cho `[shortcuts]`, `[settings]`, `[pwa]`. Chỉ là không
+  còn ai đọc nó lúc rebuild.
+- **`pkgs.dotbrave`** — flake input + overlay giữ nguyên, và binary được khai
+  thẳng trong `home.packages` của macmini và rog. **Đừng gỡ dòng đó**: trước
+  đây binary đến từ chính module (`home.packages = [cfg.package]` của module
+  upstream), nên gỡ module mà không khai lại là `dotbrave` biến mất khỏi PATH
+  và hết apply tay được — mất đúng thứ vừa quyết định giữ.
 
-**rog is the first NixOS host whose *evaluation* reads a file out of
-`repoPath`**, and that breaks the cross-host check documented above:
-`nix eval --impure --system x86_64-linux .#nixosConfigurations.rog…` run from a
-Mac fails with `path '/…/home/<user>/.nix/…/brave.toml' does not exist`, because
-`--system` overrides `builtins.currentSystem` and `lib/mkConfigs.nix` derives
-`homeDir` from it. That is a **false red** — evaluate rog on rog. CI stays green
-because `.github/workflows/eval.yml` points `$HOME/.nix` at the checkout first.
-
-**This is not the "edit without rebuilding" pattern** the section above
-describes, and conflating the two is the easy mistake. A symlinked dotfile
-like `zsh.d` needs no switch at all — the program reads the file directly.
-Both dotbrave tables need *something to run the CLI*, and the CLI only runs at
-activation. So:
-
-| | Needs a switch? | Rebuilds anything? | Appliable outside Nix? |
-|---|---|---|---|
-| symlinked dotfile | no | no | yes, the program reads it |
-| `[shortcuts]`, `[settings]` | **yes** | no | yes, `dotbrave apply --skip pwa` |
-| `[pwa]` | **yes** | yes, a new plist | no, Nix owns it |
-
-The agenix analogy one section below still holds for the *eval-vs-runtime*
-half: changing a secret's contents needs no switch, but adding one does.
-Do not stretch it further than that — agenix decrypts from a launchd agent,
-so its contents really do apply without a switch. Nothing here does.
-
-In practice on macmini there is a third gate: Brave is usually open, and the
-CLI skips `[shortcuts]`/`[settings]` rather than closing it. Those tables
-therefore only land when Brave is closed *and* something runs the CLI.
-
-Why `[pwa]` is the odd one out: the home-manager module declares
-`skip = [ "pwa" ]`, so the CLI never builds a plan for that table. The CLI runs
-as you (home-manager activation), but force-installing a PWA means writing a
-managed-policy file, which needs root. Handing that one table to Nix
-(`darwin-rebuild` already runs as root) avoids an interactive sudo prompt in
-the middle of an activation — the "never ask for sudo mid-rebuild" rule this
-repo follows everywhere else.
-
-**A manual run must repeat the skip**:
+Áp bằng tay:
 
 ```bash
-dotbrave apply --skip pwa home-manager/dotfiles/browser/dotbrave/brave.toml
+dotbrave apply --skip pwa ~/.nix/home-manager/dotfiles/browser/dotbrave/brave.toml
 ```
 
-A bare `dotbrave apply` also builds a `[pwa]` plan, and that namespace belongs
-to the system module. The CLI would write the same managed policy as a second
-owner, from your user account, prompting for sudo. It is harmless today only
-because both writers happen to emit byte-identical output; the moment they
-diverge, whichever ran last wins and the next rebuild silently reverts it.
+**Còn một việc dọn tay chưa xong**, ghi ở `ATTIC.md` mục "Việc phải làm tay":
+nửa `[pwa]` không có teardown, nên trên macmini file
+`/Library/Managed Preferences/com.brave.Browser.plist` ở lại và **vẫn bị ghim
+`schg`** (nên `sudo rm` trần cũng trượt). Chừng nào chưa dọn thì `--skip pwa`
+là **bắt buộc**, không phải tuỳ chọn. Trên rog thì `[pwa]` ghi vào
+`/etc/brave/policies/managed/`, mà `/etc` do rebuild sở hữu nên khả năng cao
+tự biến mất — **chưa đo**.
 
-**The other surprise:** the CLI skips `[shortcuts]`/`[settings]` when it finds
-**no live DevTools endpoint** for a running Brave — not merely "because Brave
-is running". With an endpoint it live-applies to the running browser and skips
-nothing. Under `--unattended` (how activation invokes it) a missing endpoint
-means skip rather than close Brave, deliberately: an activation must not
-interrupt an open session. A second, narrower skip exists for settings Brave
-cannot change live. In practice Brave runs here without an endpoint, so those
-two tables only really land while Brave is closed — a "successful" activation
-does **not** mean the shortcut policy was applied. The activation entry also
-swallows failures (`|| echo "dotbrave: apply failed, continuing activation"`),
-so read its output rather than trusting the switch's exit status.
+Hai cái bẫy dưới đây là của bản thân CLI, không phải của Nix, nên vẫn còn
+nguyên giá trị khi chạy tay:
+
+- CLI bỏ qua `[shortcuts]`/`[settings]` khi **không tìm thấy DevTools endpoint
+  sống** của một Brave đang chạy — không phải đơn giản là "vì Brave đang mở".
+  Có endpoint thì nó áp thẳng vào trình duyệt đang chạy và không bỏ qua gì.
+  Trên máy này Brave thường chạy mà không có endpoint, nên hai bảng đó thực tế
+  chỉ ăn khi Brave đóng. Một lần chạy "thành công" **không** có nghĩa là chính
+  sách phím tắt đã được áp — đọc output, đừng tin mã thoát.
+- Chạy `dotbrave apply` trần sẽ dựng luôn kế hoạch `[pwa]`, và nó cần root nên
+  sẽ hỏi sudo.
+
+**Một hệ quả phụ, dễ chịu:** rog từng là host NixOS duy nhất mà *evaluation*
+đọc file từ `repoPath` (chính là `brave.toml`), khiến
+`nix eval --impure --system x86_64-linux .#nixosConfigurations.rog…` chạy từ
+máy Mac báo đỏ giả `path '/…/home/<user>/.nix/…/brave.toml' does not exist`.
+Gỡ module là gỡ luôn chỗ đọc đó, nên **kiểm chéo rog từ Mac lại chạy được**.
 
 ### Phím tắt focus-or-launch: beckon serve + TOML per-target
 
@@ -645,8 +608,10 @@ Windows phải là `"Terminal"` (`"kitty"` không resolve trên Windows); mac d�
 một dòng từ file target này sang file target khác là cách chắc chắn hỏng.
 
 Engine là `beckon` ở cả năm nơi, nhưng file được ĐỌC ở hai thời điểm khác
-nhau tuỳ cặp target — cùng bẫy dotbrave ở mục trên, rộng hơn vì chia theo cặp
-target chứ không phải hai bảng trong một file:
+nhau tuỳ cặp target — đây từng là cùng hình dạng với bẫy dotbrave, nhưng
+dotbrave đã ra khỏi Nix hẳn (mục trên) nên giờ **chỉ còn chỗ này** trong repo
+mang nó. Rộng hơn bản dotbrave cũ vì chia theo cặp target chứ không phải hai
+bảng trong một file:
 
 | Nền tảng | Đọc bằng | Sửa file rồi áp dụng bằng | Agent/task | Log |
 |---|---|---|---|---|

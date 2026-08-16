@@ -11,8 +11,6 @@
   #                                              Linux beckon duoc goi thang tu
   #                                              binding cua WM (i3 conf.d /
   #                                              dconf GNOME / sway config)
-  #   dotfiles.browser.dotbrave                  bang [pwa] ghi managed policy
-  #                                              cua macOS
   #   pkgs.tongue                                overlay khong cung cap
   #                                              aarch64-linux (da kiem)
   imports = [

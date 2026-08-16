@@ -34,10 +34,9 @@
       # luoi an toan.
       types = ["gnome" "sway" "hyprland" "niri"];
     };
-    # Bat CA HAI nua cua dotbrave: [pwa] o /etc bang root, va [shortcuts] +
-    # [settings] o profile Brave bang quyen user (module tu bat ho ben
-    # home-manager). Vi vay hosts/rog/home.nix KHONG co dong dotbrave nao.
-    dotbrave.enable = true;
+    # dotbrave KHONG con o tang nao cua rebuild nua (16/08/2026) -- ATTIC.md,
+    # `attic/dotbrave-modules-2026-08-16`. brave.toml van trong repo va binary
+    # van trong PATH (home.nix), ap bang tay.
     kanata.enable = true;
     # Host duy nhat bat libvirtd: no la may co VT-x va con du dia. Nho vay
     # x1g6/vm khong phai keo theo virt-manager va closure QEMU.

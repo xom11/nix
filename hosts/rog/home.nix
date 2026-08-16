@@ -19,8 +19,6 @@
     };
     dotfiles = {
       ai.enable = true;
-      # dotbrave KHONG khai o day du no co chay cho user nay: cai
-      # `modules.nixos.services.dotbrave` ben configuration.nix bat ca hai nua.
       terminal.kitty.enable = true;
       # Bat tu 14/08/2026 cung luc voi sway/hyprland. Ghi chu cu o day noi
       # "rofi la X11-only, muon dung phai la rofi-wayland" — dieu do DA SAI:
@@ -72,6 +70,10 @@
   home.packages = [
     pkgs.beckon
     pkgs.bws
+    # Truoc 16/08/2026 binary nay den tu module dotbrave (`home.packages =
+    # [cfg.package]` cua module upstream). Module da go, nen phai khai o day --
+    # neu khong thi `dotbrave` bien mat khoi PATH va het ap tay duoc.
+    pkgs.dotbrave
     # Giu lai tu ban standalone thoi con chay Ubuntu.
     pkgs.discordchatexporter-cli
   ];

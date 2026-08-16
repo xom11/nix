@@ -26,11 +26,16 @@ jobs:
       # host keeps a real working tree there (CLAUDE.md is explicit about
       # this). actions/checkout puts the repo at $GITHUB_WORKSPACE instead,
       # so a module that builtins.readFile's something under repoPath at
-      # eval time (services.dotbrave on macmini today; any host could add
-      # one next) dies on CI with "path ... does not exist" even though the
+      # eval time dies on CI with "path ... does not exist" even though the
       # same eval works on every real machine. Symlinking closes that gap
       # instead of special-casing around it -- delete this and the trap is
-      # back, silently, for the first Linux host that grows a module like it.
+      # back, silently, for the first host that grows a module like it.
+      #
+      # 16/08/2026: NO host does this right now. services.dotbrave was the
+      # only one and it has been removed (ATTIC.md). So this step currently
+      # protects nothing measurable -- kept because the invariant it encodes
+      # is about repoPath, not about dotbrave, and the failure it prevents is
+      # silent and confusing when it comes back.
       #
       # `rm -rf` first: `ln -sfn` does NOT replace a pre-existing REAL
       # directory at the target -- it drops the new symlink *inside* it
@@ -79,12 +84,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Same invariant as the linux job above: repoPath is $HOME/.nix, and
-      # services.dotbrave here (hosts/macmini) reads brave.toml through it
-      # at eval time. Without this the darwin job is the one that actually
-      # dies today -- keep it, do not "simplify" it back out. The rm -rf +
-      # GITHUB_ACTIONS guard is explained in the linux job above; kept
-      # identical here on purpose.
+      # Same invariant as the linux job above: repoPath is $HOME/.nix. Until
+      # 16/08/2026 services.dotbrave on macmini read brave.toml through it at
+      # eval time, and this job was the one that actually died without this
+      # step; that module is gone now (ATTIC.md), so nothing exercises it
+      # today. Kept for the same reason as the linux job -- see there. The
+      # rm -rf + GITHUB_ACTIONS guard is explained there too.
       - name: Point $HOME/.nix at the checkout
         run: |
           if [ "$GITHUB_ACTIONS" != "true" ]; then

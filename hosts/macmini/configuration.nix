@@ -8,11 +8,10 @@
   ];
   modules.nix-darwin = {
     brew.enable = true;
-    # Bat CA HAI nua cua dotbrave: [pwa] o /Library/Managed Preferences bang
-    # root, va [shortcuts] + [settings] o profile Brave bang quyen user (module
-    # tu bat ho ben home-manager). Vi vay hosts/macmini/home.nix KHONG con dong
-    # dotbrave nao.
-    dotbrave.enable = true;
+    # dotbrave KHONG con o tang nao cua rebuild nua (16/08/2026) -- ATTIC.md,
+    # `attic/dotbrave-modules-2026-08-16`. brave.toml van trong repo va binary
+    # van trong PATH (home.nix), ap bang tay. CON MOT VIEC PHAI LAM TAY tren
+    # may nay: managed plist cu bi ghim schg, xem ATTIC.md.
     launchd = {
       kanata.enable = true;
     };

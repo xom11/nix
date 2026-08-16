@@ -33,6 +33,10 @@ in {
   home.packages = with pkgs; [
     bws
     beckon
+    # Truoc 16/08/2026 binary nay den tu module dotbrave (`home.packages =
+    # [cfg.package]` cua module upstream). Module da go, nen phai khai o day --
+    # neu khong thi `dotbrave` bien mat khoi PATH va het ap tay duoc.
+    dotbrave
     tongue
   ];
 
@@ -47,8 +51,6 @@ in {
       terminal = {
         kitty.enable = true;
       };
-      # dotbrave KHONG khai o day du no co chay cho user nay: cai
-      # `modules.nix-darwin.dotbrave` ben configuration.nix bat ca hai nua.
       macos = {
         hammerspoon.enable = true;
         sleepwatcher.enable = true;
