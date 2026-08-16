@@ -2,40 +2,67 @@
 
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
 - Engine la `beckon` o ca nam nen tang.
-- Linux (GNOME, sway, hyprland) dung CHUNG `apps.linux.toml` — ba session chay
-  tren cung mot may nen `beckon installed` tra ve cung mot danh sach.
-- Sua apps.*.toml thi sua ca bang nay — khong con sync.sh kiem tra.
+- **MOT file cho ca ba target: `apps.shared.toml`** (gop 16/08/2026 tu
+  `apps.{linux,macos,windows}.toml`). Bang duoi day khong con cot theo OS, vi
+  khong con gi de tach.
+
+Cai lam viec gop kha thi la CHUOI UNG VIEN cua beckon >= 0.9.6:
+`"A || B"` thu trai sang phai, cai dau tien hanh dong duoc thi thang. Nho no,
+bon dong tung khac nhau theo OS gio la mot dong.
+
+Bang nay sinh tay tu `apps.shared.toml` — sua file thi sua ca bang, khong co
+gi kiem tra ho.
 
 ## `Cap` + phim
 
-| Phim | macOS | Windows | Linux |
-|---|---|---|---|
-| `b` | Brave | Brave | Brave |
-| `c` | Claude | Claude | Claude |
-| `d` | Discord | Discord | Discord |
-| `f` | Finder | File Explorer | -- |
-| `g` | Google Gemini | Google Gemini | Google Gemini |
-| `h` | Facebook | Facebook | Facebook |
-| `j` | Tao Monitor | Tao Monitor | Tao Monitor |
-| `k` | Google Keep | Google Keep | Google Keep |
-| `m` | Messenger | Messenger | Messenger |
-| `n` | Notion | Notion | Notion |
-| `s` | Settings | Settings | Settings |
-| `space` | kitty | Terminal | kitty |
-| `t` | Telegram | Telegram | Telegram Web |
-| `y` | YouTube | YouTube | YouTube |
-| `z` | -- | Zalo | Zalo |
+| Phim | Gia tri | Ghi chu |
+|---|---|---|
+| `b` | `Brave Browser \|\| Brave` | ten dau exact tren mac, khong cham catalog |
+| `c` | `Claude` | |
+| `d` | `Discord` | |
+| `f` | `Finder \|\| File Explorer \|\| Files` | ba OS ba ten, khong ten nao chung |
+| `g` | `Google Gemini` | |
+| `h` | `Facebook` | |
+| `j` | `Tao Monitor \|\| https://tao.lenamkhanh.xyz/` | PWA tren Linux mang URL lam Name |
+| `k` | `Google Keep \|\| https://keep.google.com/` | nt |
+| `m` | `Messenger` | |
+| `n` | `Notion` | |
+| `s` | `Settings` | khop "System Settings" bang substring tren mac |
+| `space` | `kitty \|\| Terminal` | kitty PHAI truoc: "Terminal" exact-match nham Terminal.app cua Apple |
+| `t` | `Telegram` | exact ca ba (do 16/08/2026) |
+| `y` | `YouTube` | |
+| `z` | `Zalo` | **chet tren macOS** — khong cai |
 
 ## `Cap` + `Shift` + phim
 
-| Phim | macOS | Windows | Linux |
-|---|---|---|---|
-| `a` | Apps | -- | -- |
-| `b` | Brave | Brave | Brave |
-| `c` | Google Chrome | Google Chrome | Google Chrome |
-| `d` | DeepSeek | DeepSeek | DeepSeek |
-| `m` | Gmail | Gmail | Gmail |
-| `v` | VMware Fusion | -- | -- |
+| Phim | Gia tri | Ghi chu |
+|---|---|---|
+| `a` | `Apps` | |
+| `b` | `Brave Browser \|\| Brave` | |
+| `c` | `Google Chrome` | **chet tren Linux** — chua cai tren rog |
+| `d` | `DeepSeek` | **khong dang ky duoc tren Windows** — `d` = OneDrive, xem Office key |
+| `m` | `Gmail \|\| https://mail.google.com/` | PWA tren Linux mang URL lam Name |
+| `v` | `VMware Fusion` | **chet tren Linux/Windows** — chi co tren mac |
+
+### Ba o chet la co y, khong phai bo sot
+
+Gop mot file nghia la mot chord ton tai o moi may, ke ca may khong cai app do.
+`beckon check --resolve` se bao do nhung dong ay — do la thong tin dung, khong
+phai loi. Do 16/08/2026: **macOS 1 dong** (`Zalo`), **Linux 2 dong**
+(`Google Chrome`, `VMware Fusion`). CI chay `beckon check` tran nen khong vo.
+
+`Google Chrome` da chet tren Linux TU TRUOC khi gop — khong phai gia phai tra
+cho viec gop.
+
+### Office key: xung dot CHORD, chuoi ung vien khong cuu duoc
+
+Windows giu san `Ctrl+Win+Alt+Shift` + **D L N O P T W X Y Space** cho Office.
+`Cap+Shift+d` (DeepSeek) roi dung vao `d` = OneDrive, nen `beckon serve` tren
+Windows dang ky that bai va ghi mot dong loi moi lan khoi dong. Chay dung tren
+mac va Linux. Muon dung ca ba: doi sang chu ngoai bo do (`e`, `q`, `r`, `u`
+con trong o lop nay) — la doi phim tat quen tay nen chua tu doi.
+
+Lop `Cap` tran (3 modifier) khong dinh rang buoc nay, dung thoai mai ca 26 chu.
 
 ## Cac lop phim khac (khong sinh tu apps.*.toml)
 

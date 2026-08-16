@@ -13,7 +13,7 @@
     };
     environments = {
       fonts.enable = true;
-      # GNOME thay i3wm de test configs/shortcuts/apps.linux.toml tren duong
+      # GNOME thay i3wm de test configs/shortcuts/apps.shared.toml tren duong
       # GNOME. Day la LUA CHON, khong phai rang buoc: tu nhanh nay,
       # modules.nixos.services.environments.types la list, mot host duoc bat
       # nhieu desktop cung luc (xem rog).

@@ -7,7 +7,7 @@
 }: let
   # Chuoi tro thang working tree (triet ly mkOutOfStoreSymlink): sua file la
   # watcher cua serve tu ap dung, khong can switch.
-  configFile = "${repoPath}/configs/shortcuts/apps.macos.toml";
+  configFile = "${repoPath}/configs/shortcuts/apps.shared.toml";
   label = "com.xom11.beckon-serve";
   logDir = "${config.home.homeDirectory}/Library/Logs/beckon";
 in

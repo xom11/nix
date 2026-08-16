@@ -25,7 +25,7 @@ with lib.hm.gvariant; {
       # beckon@xom11.github.io (Mutter chan focus tu ngoai), extension da cai
       # dung cho va co trong enabled-extensions, nhung khoa nay = true nen
       # beckon bao "extension not reachable on D-Bus" va MOI phim tat trong
-      # apps.linux.toml chay lenh xong khong mo duoc app nao.
+      # apps.shared.toml chay lenh xong khong mo duoc app nao.
       disable-user-extensions = false;
       disable-extension-version-validation = true;
       enabled-extensions = [

@@ -1,10 +1,10 @@
-# Sinh binding launcher cho hyprland tu configs/shortcuts/apps.linux.toml.
+# Sinh binding launcher cho hyprland tu configs/shortcuts/apps.shared.toml.
 # DOC LUC EVAL — sua file do la phai switch + Tab+r (hyprctl reload).
 # Chi la `exec beckon "<app>"` tran, khong workspace logic — hanh vi workspace
 # la viec rieng cua hypr.d. File sinh ra o ~/.config/hypr-nix/launch-app.conf
 # vi ~/.config/hypr la symlink ca thu muc (xem default.nix).
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.linux.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
 
   modMap = {
     ctrl = "CTRL";
@@ -28,7 +28,7 @@
 in
   ''
     # vim: ft=hyprlang
-    # SINH TU configs/shortcuts/apps.linux.toml — dung sua tay file nay.
+    # SINH TU configs/shortcuts/apps.shared.toml — dung sua tay file nay.
   ''
   + lib.concatStringsSep "\n" lines
   + "\n"

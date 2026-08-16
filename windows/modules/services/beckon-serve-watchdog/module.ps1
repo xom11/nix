@@ -10,7 +10,7 @@
             return
         }
 
-        $config = Join-Path $Ctx.ConfigsDir 'shortcuts\apps.windows.toml'
+        $config = Join-Path $Ctx.ConfigsDir 'shortcuts\apps.shared.toml'
         if (-not (Test-Path $config)) {
             Write-Warn "shortcuts config missing: $config"
             return

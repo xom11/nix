@@ -1,9 +1,9 @@
-# Sinh dconf custom-keybindings tu configs/shortcuts/apps.linux.toml.
+# Sinh dconf custom-keybindings tu configs/shortcuts/apps.shared.toml.
 # DOC LUC EVAL (fromTOML): sua file la phai `home-manager switch` — khac han
 # mac/windows (beckon serve doc luc chay). Path literal o day la CO Y:
 # dconf von la san pham cua eval.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.linux.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
 
   modMap = {
     ctrl = "<Ctrl>";
@@ -27,7 +27,10 @@
     lib.imap0 (i: combo: {
       name = "${base}/custom${toString i}";
       value = {
-        name = "Beckon ${data.${combo}}";
+        # Chi ung vien DAU, khong ca chuoi: day la ten hien trong
+        # Settings -> Keyboard, va "Beckon kitty || Terminal" doc nhu mot loi
+        # danh may. `command` ben duoi van mang ca chuoi — do moi la thu chay.
+        name = "Beckon ${lib.strings.trim (lib.head (lib.splitString "||" data.${combo}))}";
         binding = toBinding combo;
         command = ''beckon "${data.${combo}}"'';
       };

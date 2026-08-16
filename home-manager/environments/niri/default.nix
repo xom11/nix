@@ -13,7 +13,7 @@ in
     #
     # Khac sway/hyprland o mot diem: KHONG co file nao duoc SINH RA o day, nen
     # khong can thu muc `niri-nix/` ben canh. Bo phim launcher tu
-    # configs/shortcuts/apps.linux.toml CHUA duoc noi vao (co y, xem README).
+    # configs/shortcuts/apps.shared.toml CHUA duoc noi vao (co y, xem README).
     #
     # Symlink ca thu muc vao repo la an toan o day vi niri chi GHI vao
     # ~/.config/niri khi config.kdl chua ton tai (no chep ban mac dinh ra). File
