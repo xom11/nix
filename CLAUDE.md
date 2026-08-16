@@ -566,11 +566,27 @@ dotbrave apply --skip pwa ~/.nix/home-manager/dotfiles/browser/dotbrave/brave.to
 nửa `[pwa]` không có teardown, nên trên macmini file
 `/Library/Managed Preferences/com.brave.Browser.plist` ở lại và **vẫn bị ghim
 `schg`** (nên `sudo rm` trần cũng trượt). Chừng nào chưa dọn thì `--skip pwa`
-là **bắt buộc**, không phải tuỳ chọn. Trên rog thì `[pwa]` ghi vào
-`/etc/brave/policies/managed/`, mà `/etc` do rebuild sở hữu nên khả năng cao
-tự biến mất — **chưa đo**.
+là **bắt buộc**, không phải tuỳ chọn.
 
-Hai cái bẫy dưới đây là của bản thân CLI, không phải của Nix, nên vẫn còn
+**ĐÃ ĐO 16/08/2026, và giả thuyết cũ SAI.** Chỗ này từng ghi *"Trên rog thì
+`[pwa]` ghi vào `/etc/brave/policies/managed/`, mà `/etc` do rebuild sở hữu
+nên khả năng cao tự biến mất — chưa đo."* Đo hai đầu quanh một
+`nixos-rebuild switch` thật:
+
+```
+truoc:  -rw-r--r-- root root 1943  dotbrave-pwa.json   sha256 1df7471a…
+        sudo nixos-rebuild switch --impure --flake ~/.nix#rog   (RC=0)
+sau:    -rw-r--r-- root root 1943  dotbrave-pwa.json   sha256 1df7471a…
+```
+
+File **sống sót nguyên vẹn**. NixOS chỉ quản những entry trong `/etc` do chính
+nó tạo (`environment.etc`); file lạ thì activation không đụng. Nên áp `[pwa]`
+bằng tay trên rog là bền qua rebuild, không phải vá tạm.
+
+Cái *thực sự* biến mất thì nằm chỗ khác, và không ai lường — xem bẫy thứ ba
+dưới đây.
+
+Ba cái bẫy dưới đây là của bản thân CLI, không phải của Nix, nên vẫn còn
 nguyên giá trị khi chạy tay:
 
 - CLI bỏ qua `[shortcuts]`/`[settings]` khi **không tìm thấy DevTools endpoint
@@ -580,7 +596,46 @@ nguyên giá trị khi chạy tay:
   chỉ ăn khi Brave đóng. Một lần chạy "thành công" **không** có nghĩa là chính
   sách phím tắt đã được áp — đọc output, đừng tin mã thoát.
 - Chạy `dotbrave apply` trần sẽ dựng luôn kế hoạch `[pwa]`, và nó cần root nên
-  sẽ hỏi sudo.
+  sẽ hỏi sudo. **`--unattended` thì cố ý BỎ QUA `[pwa]`** — in
+  `unattended: skipping [pwa] -- it needs elevated privileges` rồi **thoát 0**.
+  Một lần chạy "thành công" ở chế độ đó không ghi policy nào cả. Áp `[pwa]` qua
+  SSH cần TTY thật (`ssh -tt`); sudo không mật khẩu trên rog thì qua được.
+- **`[pwa]` XOÁ `.desktop` và icon của PWA mà không đụng `Preferences`, và
+  không nói một chữ nào.** Đây là cái tệ nhất trong ba, vì hai cái trên còn
+  đọc output ra được — cái này thì output cũng im.
+
+  Đo 16/08/2026 trên rog. `dotbrave apply --skip shortcuts --skip settings`
+  in kế hoạch gồm 14 dòng `+ <url>` (toàn là *thêm*, không có dòng xoá nào),
+  báo `ok -- applied and verified`, thoát 0. Kết quả thật:
+
+  ```
+  11:02:13      backup tay: 14 file .desktop
+  11:07:00.304  mtime ~/.local/share/applications   <-- luc xoa
+  11:07:01.868  Preferences.bak cua dotbrave        <-- dotbrave dang chay
+  sau do        con 9 file; 5 cai mat sach ca icon
+  ```
+
+  Mất: YouTube, ChatGPT, Claude, Google Keep, Gmail. Chín cái sống sót vẫn giữ
+  mtime cũ — không cái nào bị ghi đè, nên đây là 5 lần **xoá**, không phải
+  reconcile. Brave chưa hề khởi động (`pgrep` = 0 suốt), nên không phải Brave.
+
+  **Và Brave vẫn coi cả 14 là đã cài**: cả 14 app id còn nguyên trong
+  `Preferences` trước lẫn sau (38013 B → 38003 B). Nghĩa là *"áp policy thành
+  công"* và *"PWA còn hiện trong launcher"* là hai chuyện tách rời — trạng
+  thái nội bộ của Brave nói một đằng, tầng tích hợp OS nói một nẻo, và không
+  có tín hiệu nào ở đầu ra báo chuyện thứ hai.
+
+  Bốn trong năm cái có phím tắt trong `configs/shortcuts/apps.linux.toml`
+  (`Cap+y`, `Cap+c`, `Cap+k`, `Cap+Shift+m`), nên đây không phải chuyện thẩm mỹ.
+
+  **Trước khi chạy `[pwa]`, sao lưu:**
+
+  ```sh
+  cp -p ~/.local/share/applications/brave-*.desktop ~/pwa-backup-$(date +%F)/
+  ```
+
+  Sửa thì mở Brave một lần: Preferences còn đủ, policy còn đủ, nên nó dựng lại
+  shortcut kèm icon và tên thật — tốt hơn chép tay bản sao, vốn không có icon.
 
 **Một hệ quả phụ, dễ chịu:** rog từng là host NixOS duy nhất mà *evaluation*
 đọc file từ `repoPath` (chính là `brave.toml`), khiến
