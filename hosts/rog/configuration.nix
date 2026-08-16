@@ -21,6 +21,33 @@
   # 26.05, khong co du lieu cu nao can giu hanh vi cu.
   system.stateVersion = "26.05";
 
+  # Chromium/Electron chay Wayland GOC thay vi XWayland. Day khong phai tinh
+  # chinh hieu nang — no la thu sua phim tat beckon cho PWA cua Brave.
+  #
+  # Do 16/08/2026 tren chinh may nay, cung mot PWA, hai che do:
+  #
+  #   XWayland      class = "Brave-browser"                     <- giong het
+  #                 WM_CLASS = ("crx_<hash>", "Brave-browser")     trinh duyet
+  #   Wayland goc   class = "brave-<app-id>-Default"
+  #
+  # Duoi XWayland moi cua so PWA deu mang class y het trinh duyet chinh, nen
+  # beckon khong nhan ra app dang chay va MO THEM MOT BAN SAO moi lan bam
+  # phim tat (do: bam 2 lan -> 2 cua so, ca Claude lan YouTube). Nua instance
+  # cua WM_CLASS thi dung, nhung Hyprland khong he lo no — dump ca 32 truong
+  # cua `hyprctl clients -j`, khong truong nao chua "crx_".
+  #
+  # Duoi Wayland goc, class chinh la STEM ten file .desktop, thu ma
+  # `desktop::target_classes` cua beckon da dua vao tap target tu dau. Nen van
+  # de bien mat chu khong phai duoc va. Do lai sau khi doi: Launched -> 3,
+  # Focused -> 3 (khong nhan doi), dung cho ca hai PWA.
+  #
+  # An toan tren may nay vi hai le, ca hai deu kiem chu khong doan:
+  #   - wrapper cua nixpkgs khoa KEP: ${NIXOS_OZONE_WL:+${WAYLAND_DISPLAY:+...}}
+  #     nen khong co WAYLAND_DISPLAY thi khong them co nao;
+  #   - rog khong co phien X11 nao ca — /run/current-system/sw/share/xsessions
+  #     rong, chi co bon wayland-session (hyprland, hyprland-uwsm, niri, sway).
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   modules.nixos.services = {
     environments = {
       enable = true;
