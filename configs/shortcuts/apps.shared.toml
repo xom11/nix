@@ -23,10 +23,33 @@
 # Linux/Windows). File nay khong can biet Cap la gi.
 #
 # ── THU TU TRONG CHUOI KHONG TUY TIEN ────────────────────────────────────
-# Mot bac TRUOT phai quet catalog, va gia khac han theo OS (do trong CLAUDE.md
-# cua beckon):  macOS ~400 ms   Windows ~245 ms   Linux ~10 ms
-# => Quy tac: dat ten cua OS co gia truot DAT NHAT len truoc, Linux xuong cuoi.
-#    Nen thu tu la mac -> windows -> linux.
+# Do lai 17/08/2026 tren ca ba may, beckon 0.9.6, median of 9, bang
+# `beckon <id-khong-ton-tai>` nen khong launch gi.
+#
+# Ban cu cua khoi nay gop HAI chi phi rat khac nhau lam mot ("mot bac truot
+# phai quet catalog... macOS ~400 ms"). Tach ra thi loi khuyen DAO CHIEU:
+#
+#                        macmini    rog       a14
+#   san process           22 ms     2 ms      38 ms
+#   BAC TRUOT DAU        ~79 ms    ~3 ms    ~463 ms   <- quet catalog, tra 1 lan
+#   moi bac truot THEM    ~5 ms    ~2.7 ms  ~1-2 ms   <- gan nhu mien phi
+#
+# => CHUOI DAI KHONG TON TIEN. Catalog chi bi quet MOT lan cho ca chuoi, nen
+#    them ung vien thu 4, thu 5 gan nhu khong mat gi.
+# => Chi bac truot DAU moi dat, va WINDOWS dat nhat — gap ~6 lan macOS,
+#    KHONG phai nguoc lai nhu ban cu ghi.
+# => Quy tac moi: dat ten cua WINDOWS len truoc, roi mac, Linux xuong cuoi.
+#    TRU khi ten do khop nham o OS khac — luc do tinh DUNG thang toc do
+#    (xem dong `space`, la dong duy nhat roi vao ngoai le nay).
+#
+# Canh bao ve con so a14, doc truoc khi trich: do trong SESSION 0 qua SSH,
+# khong co desktop. Toast van duoc goi (notify.rs chi im khi stderr LA
+# terminal, va qua SSH thi khong phai), nhung do khong thay no ton thoi gian
+# — stderr ra FILE 482 ms vs ra pipeline 504 ms, bang nhau. Nghia la ~463 ms
+# la SAN chu chua chac la gia cuoi: neu toast that su bat va chi chet nhanh vi
+# khong co desktop de ve, thi session 1 se dat hon. Muon chot phai do qua
+# scheduled task trong session 1.
+# Cac HIEU SO thi vung bat ke dieu do, vi toast/scan la hang so bi tru di.
 #
 # Validate: `beckon check <file nay>`. CI lap glob `apps.*.toml`, va ten file
 # nay khop — `apps.toml` thi KHONG khop, CI se im lang khong kiem gi.
@@ -35,20 +58,53 @@
 # kitty PHAI dung truoc "Terminal", va khong phai vi toc do: tren macOS
 # "Terminal" exact-match NHAM Terminal.app cua Apple (do 08/08/2026). kitty co
 # tren mac va Linux nen bac 2 chi duoc dung toi tren Windows, dung y muon.
+#
+# DAY LA DONG DUY NHAT KHONG DAO DUOC (do 17/08/2026), va no la ngoai le cua
+# quy tac Windows-len-truoc o tren. Ten Windows dung la "Terminal" — do tren
+# a14: "Windows Terminal" MISS, "Terminal" hit exact. Dat "Terminal" truoc thi
+# macOS mo nham Terminal.app: hong ve tinh DUNG, khong phai cham.
+# Hau qua chap nhan co y: Windows tra bac truot dau (~463 ms) o dong nay, moi
+# lan bam. Do la CAI GIA CUA MOT DONG, khong phai cua chuoi `||` noi chung.
+#
+# AUMID khong cuu duoc: `Microsoft.WindowsTerminal_8wekyb3d8bbwe!App` la ten
+# canonical cua no tren a14, nhung CLAUDE.md ghi tier AUMID VAN phai quet full
+# catalog — chi tier "display name exact" moi re. Dat AUMID len truoc thi doi
+# mot bac truot lay mot bac truot. CHUA DO truc tiep, chi suy tu CLAUDE.md.
 "ctrl+super+alt+space" = "kitty || Terminal"
 
-# "Brave Browser" khop running-name exact tren mac, khong cham catalog;
-# "Brave" tren mac chi khop substring (tier thap nhat, ~400 ms). Windows va
-# Linux dung "Brave" va tra gia mot bac truot re hon nhieu.
-"ctrl+super+alt+b" = "Brave Browser || Brave"
+# DAO 17/08/2026. Ban cu la "Brave Browser || Brave", dua tren gia dinh macOS
+# dat nhat. Do lai: "Brave Browser" MISS tren a14, nen Windows phai quet full
+# catalog (~463 ms) roi moi truot sang "Brave". Dat "Brave" truoc thi ca ba
+# may khop o ung vien DAU:
+#   a14      "Brave" exact (Start Menu display name)      -> tiet kiem ~463 ms
+#   macmini  "Brave" substring -> Brave Browser (dung app)
+#   rog      "Brave" substring -> Brave Web Browser (dung app)
+# Gia phai tra: macOS tut tu exact xuong substring, tuc mot app cai sau co ten
+# chua "Brave" co the gianh mat. "Brave Browser" giu lai lam ung vien 2 de
+# neu dieu do xay ra thi con duong lui.
+#
+# HAZARD RIENG CUA ROG, va thu tu KHONG sua duoc no: rog co HAI entry cung
+# Name="Brave Web Browser" — `brave-browser` (nix) va `com.brave.Browser`.
+# Alphabet quyet dinh cai nao thang, khong phai nguoi dung (`beckon check
+# --resolve` bao dung cho nay). Ca hai deu mo Brave nen hau qua nhe, nhung
+# viet ten exact cung KHONG go duoc vi chung TRUNG TEN — chi id moi phan biet
+# duoc, va id thi chi dung tren rog. De nguyen, co ghi lai.
+"ctrl+super+alt+b" = "Brave || Brave Browser"
 
 "ctrl+super+alt+c" = "Claude"
 "ctrl+super+alt+d" = "Discord"
 
-# Ba ten, ba OS, khong ten nao chung: Finder (mac) / File Explorer (win) /
-# Files (Linux — GNOME Nautilus tu goi minh la "Files"; "Nautilus" KHONG
-# resolve, do tren rog 16/08/2026).
-"ctrl+super+alt+f" = "Finder || File Explorer || Files"
+# Ba ten, ba OS, khong ten nao chung: File Explorer (win) / Finder (mac) /
+# Files (Linux). Tren rog cai tra loi "Files" la NEMO (`nemo` -> Name=Files),
+# khong phai Nautilus — do 17/08/2026, sua lai ghi chu cu. "Nautilus" KHONG
+# resolve, do tren rog 16/08/2026.
+#
+# DAO 17/08/2026 theo quy tac Windows-dat-nhat. An toan vi "File Explorer"
+# MISS o ca macmini lan rog (do truc tiep), nen khong the khop nham o dau:
+#   a14      "File Explorer" exact, khop ngay        -> tiet kiem ~463 ms
+#   macmini  truot 1 bac (~79 ms) roi "Finder" khop
+#   rog      truot 2 bac (~6 ms)  roi "Files" khop
+"ctrl+super+alt+f" = "File Explorer || Finder || Files"
 
 "ctrl+super+alt+g" = "Google Gemini"
 "ctrl+super+alt+h" = "Facebook"
@@ -88,7 +144,8 @@
 # └──────────────────────────────────────────────────────────────────────────┘
 #
 "ctrl+super+alt+shift+a" = "Apps"
-"ctrl+super+alt+shift+b" = "Brave Browser || Brave"
+# Dao cung ly do voi dong `b` o tren.
+"ctrl+super+alt+shift+b" = "Brave || Brave Browser"
 "ctrl+super+alt+shift+c" = "Google Chrome"
 
 # XUNG DOT OFFICE KEY: `d` = OneDrive tren Windows, nen dong nay dang ky
