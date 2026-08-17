@@ -68,25 +68,45 @@ CaffeineSet(on) {
 CaffeineShowDot() {
     global CaffeineDot
 
+    ; Mot cham tron TRON, khong chu. Ban dau cho nay chep nguyen thiet ke cua
+    ; Caffeine.spoon: hop bo goc mau do kem chu ☕. Chup man hinh ra thi emoji
+    ; thanh mot VONG TRON DEN vien, tran han khoi hop.
+    ;
+    ; Ly do: Gui.AddText ve bang GDI, ma GDI khong doc duoc bang mau COLR/CBDT
+    ; cua emoji -- no roi ve glyph don sac cua Segoe UI Emoji. hs.canvas ben macOS
+    ; ve duoc emoji mau, nen chep thang thiet ke sang la hong. Muon co emoji mau
+    ; that thi phai nhung mot file anh va dung AddPic; khong dang cho mot cham.
     if (CaffeineDot = "") {
         ; E0x08000000 = WS_EX_NOACTIVATE (khong cuop focus),
         ; E0x20 = WS_EX_TRANSPARENT (chuot bam xuyen qua, khong che thu ben duoi).
-        CaffeineDot := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x08000000 +E0x20")
-        CaffeineDot.BackColor := "ff4019"
+        ;
+        ; -DPIScale la BAT BUOC, khong phai tuy chon. Mac dinh Gui tu nhan kich
+        ; thuoc theo DPI, trong khi MonitorGetWorkArea VA WinSetRegion deu lam viec
+        ; bang pixel VAT LY. Tron hai he toa do lai thi toa do bi nhan hai lan va
+        ; region cat nham -- do la dung cai da lam cham dau tien bi xen mat mot goc
+        ; tren man 150%. Tat scaling di roi tu nhan lay, ca ba dung chung mot he.
+        CaffeineDot := Gui("+AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000 +E0x20")
+        CaffeineDot.BackColor := "e5c07b"
         CaffeineDot.MarginX := 0, CaffeineDot.MarginY := 0
-        CaffeineDot.SetFont("s13", "Segoe UI Emoji")
-        CaffeineDot.AddText("Center w30 h30 +0x200 BackgroundTrans", "☕")
     }
+
+    size := Round(12 * A_ScreenDPI / 96)
+    gap := Round(8 * A_ScreenDPI / 96)
 
     ; Tinh lai toa do MOI LAN hien, khong phai mot lan luc nap. Bai hoc chep tu
     ; Caffeine.spoon: ban cu dung trong Tab.spoon dat cham theo man hinh luc load,
     ; nen cam/rut man hinh hay doi do phan giai la cham nam sai cho, co khi ra han
     ; ngoai vung nhin thay.
     MonitorGetWorkArea(MonitorGetPrimary(), &left, &top, &right, &bottom)
-    x := right - 30 - 6
-    y := top + 6
+    x := right - size - gap
+    y := top + gap
 
-    CaffeineDot.Show("NoActivate x" x " y" y " w30 h30")
-    ; Bo goc, cho giong cham bo tron ben macOS (roundedRectRadii 9).
-    WinSetRegion("0-0 w30 h30 R9-9", CaffeineDot.Hwnd)
+    CaffeineDot.Show("NoActivate x" x " y" y " w" size " h" size)
+
+    ; Doc lai kich thuoc THAT roi moi cat, thay vi cat theo con so vua truyen vao.
+    ; Hai thu do le nhau bat cu khi nao co mot tang nhan ti le xen giua, va kieu
+    ; hong cua no la cham bi xen mot goc chu khong phai bao loi.
+    WinGetClientPos(, , &cw, &ch, CaffeineDot.Hwnd)
+    WinSetRegion("0-0 w" cw " h" ch " E", CaffeineDot.Hwnd)
+    WinSetTransparent(210, CaffeineDot.Hwnd)
 }
