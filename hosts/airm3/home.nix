@@ -4,12 +4,13 @@
   ];
   home.packages = [
     pkgs.bws
-    # beckon: chuyen sang Homebrew, y nhu macmini (17/08/2026). Ly do khong
-    # phai so thich — macOS gan quyen Accessibility/Input Monitoring theo
-    # DUONG DAN file, ma duong dan nix store doi moi lan bump, nen moi lan cap
-    # nhat la mat quyen. Cellar cung mang so phien ban, nhung
-    # /opt/homebrew/opt/beckon/bin/beckon thi on dinh qua cac ban — do la cho
-    # treo grant. Ban chat chi het khi binary duoc ky Developer ID.
+    # beckon: chuyen sang Homebrew, y nhu macmini (17/08/2026). Ly do la
+    # `brew upgrade` gon hon "sua flake.lock roi darwin-rebuild".
+    #
+    # KHONG phai de giu quyen Accessibility: da do 17/08/2026 rang Homebrew
+    # KHONG sua duoc chuyen do -- TCC ghi duong dan Cellar co so phien ban va
+    # ghim cdhash cua tung ban build, nen moi lan bump van phai cap quyen lai.
+    # So do va cach doc TCC.db o nix-darwin/brew, cho khai `xom11/tap/beckon`.
     #
     # Formula duoc KHAI BAO o nix-darwin/brew (tap xom11/tap + brew
     # xom11/tap/beckon), nen `darwin-rebuild switch` tu tap va tu cai; khong

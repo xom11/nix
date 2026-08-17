@@ -48,10 +48,31 @@ mkModule config ./. {
     ];
 
     brews = [
-      # Launcher. Chi macOS lay tu brew (Linux van la pkgs.beckon): macOS gan
-      # quyen Accessibility/Input Monitoring theo DUONG DAN file, ma nix store
-      # path doi moi lan bump nen moi lan cap nhat la mat quyen;
-      # /opt/homebrew/opt/beckon/bin/beckon thi on dinh qua cac ban.
+      # Launcher. Chi macOS lay tu brew (Linux van la pkgs.beckon). Ly do la
+      # `brew upgrade` gon hon "sua flake.lock roi darwin-rebuild" -- CHU
+      # KHONG PHAI de giu quyen Accessibility qua cac ban.
+      #
+      # DA DO 17/08/2026, VA GIA THUYET CU SAI. Cho nay tung ghi
+      # "/opt/homebrew/opt/beckon/bin/beckon on dinh qua cac ban" nhu the do la
+      # cho treo grant. Doc thang TCC.db quanh mot lan bump 0.9.14 -> 0.9.15:
+      #
+      #   airm3    Cellar/beckon/0.9.15/bin/beckon  auth=2  23:14:39
+      #   macmini  Cellar/beckon/0.9.14/bin/beckon  auth=2  17:22:30
+      #   macmini  Cellar/beckon/0.9.15/bin/beckon  auth=0  23:17:32
+      #
+      # TCC ghi DUONG DAN CELLAR CO SO PHIEN BAN, khong phai duong `opt` ma
+      # plist goi -- no resolve symlink roi ghi duong that. Va `codesign -d -r-`
+      # tra ve DR la `cdhash H"..."` (Signature=adhoc, TeamIdentifier not set),
+      # tuc grant ghim vao hash cua DUNG ban build do. Nen duong dan on dinh
+      # khong cuu duoc gi: moi ban moi deu phai cap quyen lai, y het luc con
+      # o nix store. Chi het khi binary duoc ky Developer ID, vi khi do DR neo
+      # vao identifier + team thay vi cdhash.
+      #
+      # BAY KHI CHAN DOAN: dong log "Accessibility is not granted" LUON hien
+      # luc khoi dong roi lat sang "granted; restarting" vai giay sau -- giong
+      # het nhau o ca hai truong hop "con quyen" va "vua cap lai". Doc log
+      # khong phan biet duoc hai cai do; phai doc TCC.db.
+      #
       # Formula tu ship launch agent, nen di kem
       # `modules.home-manager.programs.beckon-serve.enable = false` o ca hai
       # host mac -- hai agent cung dang ky mot chord thi ban thu hai im lang.
