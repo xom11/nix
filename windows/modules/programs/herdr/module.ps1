@@ -13,14 +13,16 @@
 # It lands in %LOCALAPPDATA%\Programs\Herdr\bin and puts that directory first on the user PATH
 # via HKCU\Environment. No admin needed.
 #
-# `herdr --remote macmini` only works when both ends speak the same wire protocol, and the
-# protocol number moves with the release: 0.7.3 is 16, 0.7.5 is 17, 0.8.0 and 0.8.0-preview are
-# 19. Mismatch is refused outright -- a 0.7.5 client asking a 0.7.3 server answers
-# `compatible: no`, there is no backward-compatible range. Since Windows only ever shipped from
-# 0.8.0 onward (v0.7.5 published four assets: macOS x2, Linux x2, nothing for Windows), the two
-# machines cannot meet below 19; the mac side has to reach 0.8.x, not the Windows side come
-# down. Check `herdr status client` on one and `herdr status server` on the other before
-# debugging anything else.
+# `herdr --remote macmini` does NOT work from here, and no version bump fixes that: upstream
+# states plainly that "Native Windows `herdr --remote` is not part of the beta", alongside
+# direct terminal attach, live handoff and remote clipboard image bridging. The documented
+# shape from Windows is `ssh macmini` and then `herdr` on that side, where it behaves like
+# tmux on the remote shell. Protocol numbers (0.8.0 is 19) therefore never come into it on
+# this platform -- they only matter between two ends that can actually attach.
+#
+# The one thing that shape loses is pasting a screenshot into an agent, since the local
+# clipboard never reaches the server. Tab+v fills that hole by hand: ahk\herdr-clip.ahk ->
+# pwsh\ps1.d\herdr-clip.ps1 -> herdr-clip-recv on the mac.
 #
 # Upstream publishes no ARM64 Windows build: install.ps1 maps Arm64 to windows-x86_64 and says
 # so out loud ("installing the x86_64 build under Windows emulation"). On a14 herdr therefore

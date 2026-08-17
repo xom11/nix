@@ -20,7 +20,20 @@ in
     # Anyone who wants the self-updater back drops this line and reinstalls
     # out-of-band -- but then mind that ~/.local/bin precedes the nix profile in
     # PATH, so a leftover binary there silently shadows this one.
-    home.packages = [pkgs.herdr];
+    home.packages = [
+      pkgs.herdr
+
+      # Receiving half of the Windows screenshot bridge; the sending half lives in
+      # dotfiles/windows (pwsh ps1.d/herdr-clip.ps1 + ahk/herdr-clip.ahk). Kept
+      # here rather than in scripts/bin so it lands exactly where herdr is
+      # enabled, and runtimeInputs pins base64/od/find to the GNU flavours the
+      # script was written against instead of whatever PATH offers on darwin.
+      (pkgs.writeShellApplication {
+        name = "herdr-clip-recv";
+        runtimeInputs = [pkgs.herdr pkgs.jq pkgs.coreutils pkgs.findutils];
+        text = builtins.readFile ./herdr-clip-recv;
+      })
+    ];
 
     # Symlink individual files, not ~/.config/herdr: that directory is also where
     # the running server keeps herdr.sock, session.json and its logs.

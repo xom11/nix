@@ -1,0 +1,90 @@
+# herdr-clip-recv -- take a base64 PNG on stdin and hand it to the focused Herdr
+# pane as a file path. The other half is
+# home-manager/dotfiles/windows/pwsh/ps1.d/herdr-clip.ps1.
+#
+# Herdr already solves this, but only in the direction that does not exist on
+# Windows: under `herdr --remote` the local client reads the clipboard image,
+# copies it to a temp file on the server and pastes that path. Upstream does not
+# ship --remote on Windows ("Native Windows `herdr --remote` is not part of the
+# beta") and its clipboard-image reader is not wired there either, so from a
+# Windows box the only working shape is `ssh macmini` + `herdr` on this side --
+# and a screenshot taken over there has no way in at all. This rebuilds that one
+# bridge by hand.
+#
+# Base64 on stdin rather than scp followed by a second ssh:
+#   - One connection. Windows OpenSSH has no ControlMaster, so a second ssh call
+#     pays another full handshake over Tailscale.
+#   - PowerShell re-encodes binary through a native-command pipe (it converts to
+#     text via $OutputEncoding), which corrupts PNG bytes. Base64 is ASCII and
+#     comes through untouched.
+#
+# The path is typed WITHOUT Enter and with a trailing space: the image is only
+# the attachment, the question after it is still the user's to write.
+#
+# No shebang on purpose -- writeShellApplication supplies one and adds
+# `set -euo pipefail`. Run it as `bash herdr-clip-recv` to test before a rebuild.
+
+pane=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --pane)
+            pane="${2:-}"
+            shift 2
+            ;;
+        -h | --help)
+            cat <<'EOF'
+usage: herdr-clip-recv [--pane ID] < base64-encoded-png
+
+Saves the image under ${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip and types its
+path into the focused Herdr pane. Prints the path. Sent from Windows by
+Send-ClipImage (Tab+v).
+EOF
+            exit 0
+            ;;
+        *)
+            echo "herdr-clip-recv: unknown argument: $1" >&2
+            exit 2
+            ;;
+    esac
+done
+
+dir="${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip"
+mkdir -p "$dir"
+
+# $$ disambiguates two screenshots that land inside the same second.
+out="$dir/$(date +%Y%m%d-%H%M%S)-$$.png"
+
+if ! base64 -d >"$out"; then
+    rm -f "$out"
+    echo "herdr-clip-recv: stdin was not valid base64" >&2
+    exit 1
+fi
+
+# A truncated transfer still leaves a file behind, and an agent failing to read a
+# half-written PNG reads as the agent's bug. Check the signature here instead.
+magic=$(head -c 8 "$out" | od -An -tx1 | tr -d ' \n')
+if [ "$magic" != "89504e470d0a1a0a" ]; then
+    rm -f "$out"
+    echo "herdr-clip-recv: decoded data is not a PNG" >&2
+    exit 1
+fi
+
+if [ -z "$pane" ]; then
+    pane=$(herdr pane list | jq -r 'first(.result.panes[] | select(.focused) | .pane_id) // empty')
+fi
+
+if [ -z "$pane" ]; then
+    # Worth keeping the file: the sender has already thrown the clipboard away by
+    # the time this is read, and the path alone still saves the screenshot.
+    echo "herdr-clip-recv: no focused pane, image kept at $out" >&2
+    exit 1
+fi
+
+herdr pane send-text "$pane" "$out " >/dev/null
+
+# A week outlives any screenshot's usefulness, and every file here is a copy of
+# something the sending machine had first.
+find "$dir" -name '*.png' -type f -mtime +7 -delete 2>/dev/null || true
+
+echo "$out"
