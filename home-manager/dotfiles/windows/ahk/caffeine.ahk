@@ -86,11 +86,14 @@ CaffeineShowDot() {
         ; region cat nham -- do la dung cai da lam cham dau tien bi xen mat mot goc
         ; tren man 150%. Tat scaling di roi tu nhan lay, ca ba dung chung mot he.
         CaffeineDot := Gui("+AlwaysOnTop -Caption +ToolWindow -DPIScale +E0x08000000 +E0x20")
-        CaffeineDot.BackColor := "e5c07b"
+        ; CO Y ra ngoai bang mau One Dark cua lib/ui.ahk. Ban dau dung e5c07b
+        ; (vang) cho dong bo, nhung nen desktop o day sang mau be nen cham nhat
+        ; chim han vao nen -- kho nhin la loi thuc te, dong bo bang mau thi khong.
+        CaffeineDot.BackColor := "ff8c1a"
         CaffeineDot.MarginX := 0, CaffeineDot.MarginY := 0
     }
 
-    size := Round(12 * A_ScreenDPI / 96)
+    size := Round(16 * A_ScreenDPI / 96)
     gap := Round(8 * A_ScreenDPI / 96)
 
     ; Tinh lai toa do MOI LAN hien, khong phai mot lan luc nap. Bai hoc chep tu

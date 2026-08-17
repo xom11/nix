@@ -1,8 +1,13 @@
 --- === Caffeine ===
 ---
---- Giữ màn hình không tự tắt, kèm một chấm ☕ ở góc trên bên phải để biết đang bật.
+--- Giữ màn hình không tự tắt, kèm một chấm cam ở góc trên bên phải để biết đang bật.
 ---
 --- Tách từ Tab.spoon.
+---
+--- Có bản đối ứng bên Windows ở `home-manager/dotfiles/windows/ahk/caffeine.ahk`,
+--- cùng phím Tab+c và cùng cái chấm — nhưng **khác nghĩa**, và đừng gộp hai bên lại:
+--- bản này giữ MÀN HÌNH sáng (`displayIdle`), bản Windows cố ý chỉ giữ MÁY thức và
+--- để màn hình tắt, vì trên a14 hễ ngủ là Tailscale rụng. Lý do đầy đủ ở đầu file đó.
 ---
 --- Usage:
 --- ```lua
@@ -17,7 +22,7 @@ obj.version = "1.0"
 obj.author = "kln"
 obj.license = "MIT"
 
-local SIZE, INSET = 30, 6
+local SIZE, INSET = 16, 8
 
 local canvas
 local screenWatcher
@@ -41,17 +46,23 @@ end
 local function build()
     canvas = hs.canvas.new({ x = 0, y = 0, w = SIZE, h = SIZE })
     canvas:level("overlay"):behaviorAsLabels({ "canJoinAllSpaces", "stationary" })
+    -- Một chấm tròn trơn, không chữ. Trước đây là hộp bo góc đỏ kèm ☕; bỏ emoji đi
+    -- vì hai lý do, và lý do thứ hai mới là lý do thật:
+    --
+    -- 1. chấm trơn đọc nhanh hơn ở cỡ này -- ở 16pt thì emoji chỉ còn là một vệt.
+    -- 2. bản Windows KHÔNG vẽ được emoji: `Gui.AddText` của AHK vẽ bằng GDI, mà GDI
+    --    không đọc bảng màu COLR/CBDT nên ☕ rơi về glyph đơn sắc, ra một vòng tròn
+    --    đen tràn khỏi hộp. Giữ emoji ở đây thì hai máy trông khác hẳn nhau.
+    --
+    -- Toạ độ mặc định của phần tử `circle` là tâm 50%/50%, bán kính 50%, nên nó tự
+    -- vừa khít canvas -- không cần khai báo center/radius.
+    --
+    -- Ghi thẳng red/green/blue thay vì `hex`: giá trị số thì không phụ thuộc vào việc
+    -- hs.drawing.color có phân tích được chuỗi hay không. #ff8c1a.
     canvas:appendElements({
-        type = "rectangle",
+        type = "circle",
         action = "fill",
-        roundedRectRadii = { xRadius = 9, yRadius = 9 },
-        fillColor = { red = 1, green = 0.25, blue = 0.1, alpha = 0.95 },
-    }, {
-        type = "text",
-        text = "☕",
-        textSize = 20,
-        textAlignment = "center",
-        frame = { x = 0, y = 4, w = SIZE, h = SIZE },
+        fillColor = { red = 1.0, green = 0.549, blue = 0.102, alpha = 0.85 },
     })
     reposition()
 end
