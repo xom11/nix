@@ -38,7 +38,9 @@ in {
     # Homebrew khong sua duoc dieu do (Cellar cung mang so phien ban), nhung
     # `brew upgrade` + `brew services` la mot buoc, con o day la sua flake.lock
     # roi darwin-rebuild. Ban chat chi het khi binary duoc ky Developer ID.
-    #   brew install xom11/tap/beckon && brew services start beckon
+    # Tu 17/08/2026 formula duoc KHAI BAO o nix-darwin/brew (tap xom11/tap +
+    # brew xom11/tap/beckon) — truoc do may nay cai bang tay nen nam ngoai
+    # khai bao. Chi con `brew services start beckon` la chay tay mot lan.
     # Truoc 16/08/2026 binary nay den tu module dotbrave (`home.packages =
     # [cfg.package]` cua module upstream). Module da go, nen phai khai o day --
     # neu khong thi `dotbrave` bien mat khoi PATH va het ap tay duoc.

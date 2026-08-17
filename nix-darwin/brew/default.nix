@@ -44,9 +44,19 @@ mkModule config ./. {
     taps = [
       # "homebrew-zathura/zathura" # zathura
       "kunkka19xx/tap" # look
+      "xom11/tap" # beckon
     ];
 
     brews = [
+      # Launcher. Chi macOS lay tu brew (Linux van la pkgs.beckon): macOS gan
+      # quyen Accessibility/Input Monitoring theo DUONG DAN file, ma nix store
+      # path doi moi lan bump nen moi lan cap nhat la mat quyen;
+      # /opt/homebrew/opt/beckon/bin/beckon thi on dinh qua cac ban.
+      # Formula tu ship launch agent, nen di kem
+      # `modules.home-manager.programs.beckon-serve.enable = false` o ca hai
+      # host mac -- hai agent cung dang ky mot chord thi ban thu hai im lang.
+      # Truoc 17/08/2026 macmini cai bang tay nen nam ngoai khai bao.
+      "xom11/tap/beckon"
       "npm"
       "colima"
       "docker"
