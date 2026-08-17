@@ -31,5 +31,36 @@
 -- Hai đường sau plugin xử lý bằng `VimSuspend`/`VimLeavePre` và phải chặn, nên
 -- `:q` tốn thêm ~200ms — đó là một lần gọi `tongue`, đổi lấy việc thoát nvim
 -- không để lại bàn phím ở tiếng Anh.
+-- `backend` khai TƯỜNG MINH trên macOS, và đây không phải tối ưu vặt — không có
+-- nó thì plugin nằm im hoàn toàn trên chính máy này. Auto-detect dừng lại khi
+-- thấy phiên SSH, mà từ tongue.nvim `074695f` guard đọc cả ba biến
+-- `SSH_TTY`/`SSH_CONNECTION`/`SSH_CLIENT` chứ không chỉ `SSH_TTY` như trước.
+--
+-- Trên macmini herdr server được sinh ra từ một phiên `ssh rog -> macmini`, nên
+-- MỌI pane của nó thừa kế `SSH_CONNECTION` + `SSH_CLIENT` vĩnh viễn — kể cả khi
+-- người dùng đang ngồi ngay trước máy và gõ qua kitty cục bộ. Biến đó là hoá
+-- thạch của cách server khởi động, không phải mô tả ai đang gõ. Đo 17/08/2026:
+-- nvim trong pane herdr có `SSH_CONNECTION`, KHÔNG có `SSH_TTY`, và
+-- `:Tongue status` báo `enabled=false`. Chính comment trong `backend.lua` gọi
+-- tên đúng ca này là cách duy nhất guard bắn nhầm.
+--
+-- Backend khai tường minh thắng guard đó (`pick()`: "wins outright, including
+-- over SSH"). Chỉ khai khi binary có thật: `pkgs.tongue` chỉ có trên darwin, nên
+-- host Linux vẫn đi auto-detect và tự chọn fcitx5-remote.
+local backend = (vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1) and "tongue" or nil
+
+-- `restore_on_unfocus` (tongue.nvim 1.2.0, mặc định TẮT ở thượng nguồn) trả bộ
+-- gõ lại khi nvim thôi là nơi đang gõ. Bật ở đây vì trên máy này nvim gần như
+-- luôn nằm trong một pane herdr: bộ gõ là trạng thái TOÀN CỤC của máy, nên nếu
+-- không có nó, "ép tiếng Anh ở Normal mode" đi theo sang mọi tab khác — rời tab
+-- nvim là kẹt tiếng Anh, không sự kiện nào bật tiếng Việt lại nữa.
+--
+-- Ba đường ra, chỉ một là focus event, và đã đo cả ba trên máy này (17/08/2026,
+-- backend `tongue` thật, trong herdr thật): đổi pane và đổi tab đều sinh
+-- FocusLost/FocusGained — herdr CÓ chuyển tiếp mode 1004 xuống pane — còn `<C-z>`
+-- và `:q` thì KHÔNG sinh gì cả, vì terminal sở hữu pane vẫn giữ bàn phím suốt.
+-- Hai đường sau plugin xử lý bằng `VimSuspend`/`VimLeavePre` và phải chặn, nên
+-- `:q` tốn thêm ~200ms — đó là một lần gọi `tongue`, đổi lấy việc thoát nvim
+-- không để lại bàn phím ở tiếng Anh.
 vim.pack.add({ { src = "https://github.com/xom11/tongue.nvim" } }, { load = true, confirm = false })
-require("tongue").setup({ restore_on_unfocus = true })
+require("tongue").setup({ backend = backend, restore_on_unfocus = true })
