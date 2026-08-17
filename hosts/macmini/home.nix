@@ -32,7 +32,13 @@ in {
 
   home.packages = with pkgs; [
     bws
-    beckon
+    # beckon: chuyen sang Homebrew 17/08/2026. Ly do khong phai so thich —
+    # macOS gan quyen Accessibility/Input Monitoring theo DUONG DAN file, va
+    # duong dan nix store doi moi lan bump, nen moi lan cap nhat la mat quyen.
+    # Homebrew khong sua duoc dieu do (Cellar cung mang so phien ban), nhung
+    # `brew upgrade` + `brew services` la mot buoc, con o day la sua flake.lock
+    # roi darwin-rebuild. Ban chat chi het khi binary duoc ky Developer ID.
+    #   brew install xom11/tap/beckon && brew services start beckon
     # Truoc 16/08/2026 binary nay den tu module dotbrave (`home.packages =
     # [cfg.package]` cua module upstream). Module da go, nen phai khai o day --
     # neu khong thi `dotbrave` bien mat khoi PATH va het ap tay duoc.
@@ -64,7 +70,10 @@ in {
     };
     programs = {
       agenix.enable = true;
-      beckon-serve.enable = true;
+      # Tat cung luc chuyen sang Homebrew: formula tu ship launch agent
+      # (`service do`), nen de bat o day la hai agent cung dang ky mot chord —
+      # `RegisterEventHotKey` trao cho ai dang ky TRUOC, ban thu hai im lang.
+      beckon-serve.enable = false;
       btop.enable = true;
       git.enable = true;
       herdr.enable = true;
