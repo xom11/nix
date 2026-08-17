@@ -35,11 +35,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786944131,
-        "narHash": "sha256-ikgET/g8+6n3bdgqgqdFaX9QEWIRTYbzwsYhMiK+e2Y=",
+        "lastModified": 1786945155,
+        "narHash": "sha256-esCk1ZJwVOO51Z6A3rrejiYp1djKLSRXksS2znquwmU=",
         "owner": "xom11",
         "repo": "beckon",
-        "rev": "ba2a7f3e0d8cba8ffc1347af4fe73c1f53153831",
+        "rev": "7dacf93363fce7dbb74c989fc7eb4878e84e4756",
         "type": "github"
       },
       "original": {
