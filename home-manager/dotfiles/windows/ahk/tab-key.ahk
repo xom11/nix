@@ -5,6 +5,10 @@ tabkey := "^#+"
 Hotkey(tabkey "t", ShowTime)
 Hotkey(tabkey "p", ShowBattery)
 Hotkey(tabkey "r", ReloadConfig)
+; Giu may thuc ma van cho tat man hinh. ToggleCaffeine nam trong caffeine.ahk --
+; doi ung cua Caffeine.spoon ben macOS, cung phim Tab+c, nhung nguoc y nghia:
+; ban macOS giu MAN HINH sang, ban nay co y de man hinh tat. Ly do o dau file do.
+Hotkey(tabkey "c", ToggleCaffeine)
 ; Doi che do go - Tab+Q=Trung, Tab+W=Viet, Tab+E=English.
 ; SwitchMode nam trong switch-language.ahk, goi `tongue` de gat CA layout lan
 ; VKey. Truoc day cho nay goi thang SetInputLang, tuc chi doi duoc layout --
