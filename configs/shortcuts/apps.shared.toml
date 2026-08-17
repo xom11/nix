@@ -1,188 +1,85 @@
- # Phim tat focus-or-launch — MOT file cho CA BA target (Linux, macOS, Windows).
+# Phim tat focus-or-launch — MOT file cho ca ba OS.
 #
-# Gop 16/08/2026 tu apps.{linux,macos,windows}.toml. Do truoc khi gop, tren
-# macmini va rog: 12/21 chord DA giong het ca ba file; 4 khac gia tri; 5 tuong
-# la thieu. Ba trong nam cai "thieu" hoa ra khong thieu — `Apps`, `DeepSeek`,
-# `Telegram` resolve tren ca hai OS do duoc; ba file lech nhau vi lich su chu
-# khong vi may.
-#
-# Cai lam viec gop kha thi la CHUOI UNG VIEN (beckon >= 0.9.6):
+# Cu phap chuoi ung vien (beckon >= 0.9.6):
 #   "A || B || C"  — thu trai sang phai, cai dau tien HANH DONG duoc thi thang.
-# Mot ung vien truot khong phai loi: no chi bo qua bac do va di tiep.
+#   Mot ung vien truot khong phai loi; no chi bo qua bac do va di tiep.
 #
-# ── DOC LUC NAO, BOI AI ──────────────────────────────────────────────────
-#   Linux    ba generator (sway/hyprland/gnome) doc luc NIX EVAL roi sinh
-#            binding compositor. beckon KHONG bao gio doc file nay o day.
-#            => Sua file la PHAI switch.
-#   macOS    `beckon serve` (launchd com.xom11.beckon-serve) doc luc CHAY va
-#            watch file. => Sua la ap dung trong ~1-2 s, khong rebuild.
-#   Windows  `beckon serve` (task \BeckonServe) doc luc CHAY. Windows KHONG
-#            do nix quan — module.ps1 doc thang duong dan repo nay.
+# Doc luc nao, boi ai:
+#   Linux    generator doc luc NIX EVAL roi sinh binding compositor
+#            => sua file la PHAI `nixos-rebuild switch`.
+#   macOS    `beckon serve` doc luc CHAY va watch file => ~1-2 s, khong rebuild.
+#   Windows  `beckon serve` doc luc CHAY. Khong do nix quan.
 #
-# Cap giu = ctrl+super+alt (kanata sinh; super = Cmd tren mac, phim Win tren
+# Cap giu = ctrl+super+alt (kanata sinh; super = Cmd tren mac, Win tren
 # Linux/Windows). File nay khong can biet Cap la gi.
 #
-# ── THU TU TRONG CHUOI KHONG TUY TIEN ────────────────────────────────────
-# Do lai 17/08/2026 tren ca ba may, beckon 0.9.6, median of 9, bang
-# `beckon <id-khong-ton-tai>` nen khong launch gi.
+# THU TU UNG VIEN: dat ten cua WINDOWS truoc, roi mac, Linux cuoi — tru khi
+# ten do khop nham o OS khac, luc do tinh DUNG thang toc do. Ly do: mot ung
+# vien truot phai quet catalog, gia ~463 ms tren Windows / ~79 ms macOS /
+# ~3 ms Linux; nhung bac truot THU HAI tro di thi gan nhu mien phi, nen chuoi
+# dai khong ton tien — chi ung vien DAU la dang ke. (Do 17/08/2026 tren ca ba
+# may; so chi tiet trong `git log` cua file nay.)
 #
-# Ban cu cua khoi nay gop HAI chi phi rat khac nhau lam mot ("mot bac truot
-# phai quet catalog... macOS ~400 ms"). Tach ra thi loi khuyen DAO CHIEU:
-#
-#                        macmini    rog       a14
-#   san process           22 ms     2 ms      38 ms
-#   BAC TRUOT DAU        ~79 ms    ~3 ms    ~463 ms   <- quet catalog, tra 1 lan
-#   moi bac truot THEM    ~5 ms    ~2.7 ms  ~1-2 ms   <- gan nhu mien phi
-#
-# => CHUOI DAI KHONG TON TIEN. Catalog chi bi quet MOT lan cho ca chuoi, nen
-#    them ung vien thu 4, thu 5 gan nhu khong mat gi.
-# => Chi bac truot DAU moi dat, va WINDOWS dat nhat — gap ~6 lan macOS,
-#    KHONG phai nguoc lai nhu ban cu ghi.
-# => Quy tac moi: dat ten cua WINDOWS len truoc, roi mac, Linux xuong cuoi.
-#    TRU khi ten do khop nham o OS khac — luc do tinh DUNG thang toc do
-#    (xem dong `space`, la dong duy nhat roi vao ngoai le nay).
-#
-# Canh bao ve con so a14, doc truoc khi trich: do trong SESSION 0 qua SSH,
-# khong co desktop. Toast van duoc goi (notify.rs chi im khi stderr LA
-# terminal, va qua SSH thi khong phai), nhung do khong thay no ton thoi gian
-# — stderr ra FILE 482 ms vs ra pipeline 504 ms, bang nhau. Nghia la ~463 ms
-# la SAN chu chua chac la gia cuoi: neu toast that su bat va chi chet nhanh vi
-# khong co desktop de ve, thi session 1 se dat hon. Muon chot phai do qua
-# scheduled task trong session 1.
-# Cac HIEU SO thi vung bat ke dieu do, vi toast/scan la hang so bi tru di.
-#
-# Validate: `beckon check <file nay>`. CI lap glob `apps.*.toml`, va ten file
-# nay khop — `apps.toml` thi KHONG khop, CI se im lang khong kiem gi.
+# Validate: `beckon check <file nay> --resolve`. CI lap glob `apps.*.toml` —
+# ten `apps.toml` thi KHONG khop va CI se im lang khong kiem gi.
 
 # ── Cap + phim ──────────────────────────────────────────────────────────
-# kitty PHAI dung truoc "Terminal", va khong phai vi toc do: tren macOS
-# "Terminal" exact-match NHAM Terminal.app cua Apple (do 08/08/2026). kitty co
-# tren mac va Linux nen bac 2 chi duoc dung toi tren Windows, dung y muon.
-#
-# DAY LA DONG DUY NHAT KHONG DAO DUOC (do 17/08/2026), va no la ngoai le cua
-# quy tac Windows-len-truoc o tren. Ten Windows dung la "Terminal" — do tren
-# a14: "Windows Terminal" MISS, "Terminal" hit exact. Dat "Terminal" truoc thi
-# macOS mo nham Terminal.app: hong ve tinh DUNG, khong phai cham.
-# Hau qua chap nhan co y: Windows tra bac truot dau (~463 ms) o dong nay, moi
-# lan bam. Do la CAI GIA CUA MOT DONG, khong phai cua chuoi `||` noi chung.
-#
-# AUMID khong cuu duoc: `Microsoft.WindowsTerminal_8wekyb3d8bbwe!App` la ten
-# canonical cua no tren a14, nhung CLAUDE.md ghi tier AUMID VAN phai quet full
-# catalog — chi tier "display name exact" moi re. Dat AUMID len truoc thi doi
-# mot bac truot lay mot bac truot. CHUA DO truc tiep, chi suy tu CLAUDE.md.
+
+# NGOAI LE cua quy tac tren, va la dong duy nhat: ten Windows dung la
+# "Terminal" ("Windows Terminal" khong resolve o do), nhung dat truoc thi macOS
+# mo nham Terminal.app cua Apple. Windows chiu mot bac truot o day, co y.
 "ctrl+super+alt+space" = "kitty || Terminal"
 
-# DAO 17/08/2026. Ban cu la "Brave Browser || Brave", dua tren gia dinh macOS
-# dat nhat. Do lai: "Brave Browser" MISS tren a14, nen Windows phai quet full
-# catalog (~463 ms) roi moi truot sang "Brave". Dat "Brave" truoc thi ca ba
-# may khop o ung vien DAU:
-#   a14      "Brave" exact (Start Menu display name)      -> tiet kiem ~463 ms
-#   macmini  "Brave" substring -> Brave Browser (dung app)
-#   rog      "Brave" substring -> Brave Web Browser (dung app)
-# Gia phai tra: macOS tut tu exact xuong substring, tuc mot app cai sau co ten
-# chua "Brave" co the gianh mat. "Brave Browser" giu lai lam ung vien 2 de
-# neu dieu do xay ra thi con duong lui.
-#
-# GIA CUA TIER THAP, do 17/08/2026 bang `check --resolve` tren file mot dong
-# (khong launch gi, nen do duoc ma khong lam roi desktop):
-#
-#                          macmini    rog
-#   san process             24 ms     6 ms
-#   exact tier              37 ms    15 ms
-#   substring tier          43 ms     9 ms   <- rog: trong nhieu, khong phan biet
-#   MISS (quet het)        127 ms     7 ms
-#
-# => substring chi dat hon exact ~6 ms tren macOS, va ca hai deu rat xa MISS
-#    (~103 ms). Tren rog khong do duoc khac biet. Tren a14 "Brave" la EXACT
-#    (Start Menu display name) nen o do khong co gia substring nao ca.
-# => Va "Brave || Brave Browser" do ra 43 ms, DUNG BANG "Brave" mot minh: ung
-#    vien 2 khong bao gio chay khi cai dau da khop. Nen no mien phi, va bo no
-#    di cung khong nhanh hon — no thuan tuy la duong lui neu tier substring
-#    bi app khac gianh.
-#
-# Luu y ve phep do nay: `check --resolve` khong di dung duong hot path (tren
-# Windows hot path dung `resolve_lazy` voi ba lop toi uu). No dung de so gia
-# TUONG DOI giua cac tier, khong phai de doc gia tuyet doi cua mot lan bam.
-#
-# HAZARD RIENG CUA ROG, va thu tu KHONG sua duoc no: rog co HAI entry cung
-# Name="Brave Web Browser" — `brave-browser` (nix) va `com.brave.Browser`.
-# Alphabet quyet dinh cai nao thang, khong phai nguoi dung (`beckon check
-# --resolve` bao dung cho nay). Ca hai deu mo Brave nen hau qua nhe, nhung
-# viet ten exact cung KHONG go duoc vi chung TRUNG TEN — chi id moi phan biet
-# duoc, va id thi chi dung tren rog. De nguyen, co ghi lai.
+# "Brave" khop o ca ba may ("Brave Browser" khong resolve tren Windows lan
+# rog). Doi lai macOS tut xuong khop-chua-chu, nen "Brave Browser" giu lai lam
+# duong lui — ung vien 2 khong bao gio chay khi cai dau da khop, nen mien phi.
+# rog co HAI entry trung Name="Brave Web Browser"; alphabet quyet dinh cai nao
+# thang va ten exact khong go duoc. Hau qua nhe: ca hai deu mo Brave.
 "ctrl+super+alt+b" = "Brave || Brave Browser"
 
 "ctrl+super+alt+c" = "Claude"
 "ctrl+super+alt+d" = "Discord"
 
-# Ba ten, ba OS, khong ten nao chung: File Explorer (win) / Finder (mac) /
-# Files (Linux). Tren rog cai tra loi "Files" la NEMO (`nemo` -> Name=Files),
-# khong phai Nautilus — do 17/08/2026, sua lai ghi chu cu. "Nautilus" KHONG
-# resolve, do tren rog 16/08/2026.
-#
-# DAO 17/08/2026 theo quy tac Windows-dat-nhat. An toan vi "File Explorer"
-# MISS o ca macmini lan rog (do truc tiep), nen khong the khop nham o dau:
-#   a14      "File Explorer" exact, khop ngay        -> tiet kiem ~463 ms
-#   macmini  truot 1 bac (~79 ms) roi "Finder" khop
-#   rog      truot 2 bac (~6 ms)  roi "Files" khop
+# Ba ten cho ba OS. Tren rog cai tra loi "Files" la nemo, khong phai Nautilus.
 "ctrl+super+alt+f" = "File Explorer || Finder || Files"
 
 "ctrl+super+alt+g" = "Google Gemini"
 "ctrl+super+alt+h" = "Facebook"
 
-# Ca ba deu la PWA Brave, ten giong nhau. Tren rog hai dong nay tung chet vi
-# .desktop mang URL lam Name — do la ly do co ung vien URL o day.
+# PWA Brave: tren rog .desktop mang URL lam Name, nen ten hien thi mot minh
+# chet o do — do la ly do co ung vien URL.
 "ctrl+super+alt+j" = "Tao Monitor || https://tao.lenamkhanh.xyz/"
 "ctrl+super+alt+k" = "Google Keep || https://keep.google.com/"
 
 "ctrl+super+alt+m" = "Messenger"
 "ctrl+super+alt+n" = "Notion"
 
-# "Settings" khop "System Settings" tren mac bang substring — co y, va la ly do
-# `check --resolve` bao dong nay "long" chu khong phai loi.
+# Khop "System Settings" tren mac bang chua-chu — co y. `check --resolve` bao
+# dong nay "long" chu khong phai loi.
 "ctrl+super+alt+s" = "Settings"
 
-# "Telegram" exact tren CA BA (do 16/08/2026). PWA "Telegram Web" cua Linux
-# khong con can nhac toi — dung no thi Windows hong am tham.
 "ctrl+super+alt+t" = "Telegram"
-
 "ctrl+super+alt+y" = "YouTube"
 
-# CHI CO tren Linux + Windows. macOS khong cai Zalo, nen phim nay chet o do va
-# `check --resolve` se bao do mot dong tren mac. Chap nhan co y khi gop.
+# Chi co tren Linux + Windows; chet tren mac, chap nhan co y.
 "ctrl+super+alt+z" = "Zalo"
 
 # ── Cap + Shift + phim ──────────────────────────────────────────────────
 #
-# ┌─ RANG BUOC RIENG WINDOWS: chord OFFICE KEY ─────────────────────────────┐
-# │ Windows giu san RegisterHotKey cho Ctrl+Win+Alt+Shift + 10 phim:        │
-# │   D OneDrive  L LinkedIn  N OneNote  O Outlook  P PowerPoint            │
-# │   T Teams     W Word      X Excel    Y Yammer   Space emoji picker      │
-# │ Dat binding vao do thi `beckon serve` KHONG dang ky duoc va Windows tu   │
-# │ mo app/web cua no. CHUOI UNG VIEN KHONG CUU DUOC — day la xung dot       │
-# │ CHORD, khong phai ten app.                                              │
-# │ CHI ap dung cho lop Cap+Shift; lop Cap tran dung thoai mai ca 26 chu.    │
-# └──────────────────────────────────────────────────────────────────────────┘
-#
+# RANG BUOC RIENG WINDOWS — chord Office key. Windows giu san RegisterHotKey
+# cho Ctrl+Win+Alt+Shift + 10 phim: D L N O P T W X Y va Space. Dat binding
+# vao do thi `beckon serve` khong dang ky duoc va Windows tu mo app cua no.
+# Chuoi ung vien KHONG cuu duoc — day la xung dot CHORD, khong phai ten app.
+# Chi ap dung cho lop Cap+Shift; lop Cap tran dung thoai mai ca 26 chu.
+
 "ctrl+super+alt+shift+a" = "Apps"
-# `shift+b` da bo 17/08/2026 (quyet dinh cua chu may): no tro cung mot app voi
-# `b` o lop Cap tran, tuc hai phim tat cho mot viec. Chu `b` o lop nay gio con
-# trong, dung duoc cho binding khac.
 "ctrl+super+alt+shift+c" = "Google Chrome"
 
-# XUNG DOT OFFICE KEY: `d` = OneDrive tren Windows, nen dong nay dang ky
-# THAT BAI o do va `beckon serve` se ghi mot dong loi moi lan khoi dong.
-# Chay dung tren mac va Linux. Muon dung ca ba: doi sang mot chu NGOAI bo muoi
-# phim tren — `e`, `q`, `r`, `u` deu con trong o lop nay. Chua doi vi do la
-# doi phim tat quen tay, thuoc quyet dinh cua chu may.
+# XUNG DOT Office key: `d` = OneDrive tren Windows, nen dong nay dang ky THAT
+# BAI o do. Chay dung tren mac va Linux. `e`, `q`, `r`, `u` con trong o lop nay.
 "ctrl+super+alt+shift+d" = "DeepSeek"
 
-# PWA Brave, cung ho voi `j` va `k`: tren rog .desktop mang URL lam Name
-# (Name=https://mail.google.com/), nen "Gmail" mot minh chet o do. Do
-# 16/08/2026 — dong nay bi bo sot o ban gop dau va `check --resolve` tren rog
-# la thu bat duoc.
 "ctrl+super+alt+shift+m" = "Gmail || https://mail.google.com/"
 
-# CHI CO tren macOS. Chet tren Linux va Windows — chap nhan co y khi gop, cung
-# ly do voi `z` o tren.
+# Chi co tren macOS.
 "ctrl+super+alt+shift+v" = "VMware Fusion"
