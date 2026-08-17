@@ -1,4 +1,4 @@
-# Phim tat focus-or-launch — MOT file cho CA BA target (Linux, macOS, Windows).
+ # Phim tat focus-or-launch — MOT file cho CA BA target (Linux, macOS, Windows).
 #
 # Gop 16/08/2026 tu apps.{linux,macos,windows}.toml. Do truoc khi gop, tren
 # macmini va rog: 12/21 chord DA giong het ca ba file; 4 khac gia tri; 5 tuong
@@ -83,6 +83,27 @@
 # chua "Brave" co the gianh mat. "Brave Browser" giu lai lam ung vien 2 de
 # neu dieu do xay ra thi con duong lui.
 #
+# GIA CUA TIER THAP, do 17/08/2026 bang `check --resolve` tren file mot dong
+# (khong launch gi, nen do duoc ma khong lam roi desktop):
+#
+#                          macmini    rog
+#   san process             24 ms     6 ms
+#   exact tier              37 ms    15 ms
+#   substring tier          43 ms     9 ms   <- rog: trong nhieu, khong phan biet
+#   MISS (quet het)        127 ms     7 ms
+#
+# => substring chi dat hon exact ~6 ms tren macOS, va ca hai deu rat xa MISS
+#    (~103 ms). Tren rog khong do duoc khac biet. Tren a14 "Brave" la EXACT
+#    (Start Menu display name) nen o do khong co gia substring nao ca.
+# => Va "Brave || Brave Browser" do ra 43 ms, DUNG BANG "Brave" mot minh: ung
+#    vien 2 khong bao gio chay khi cai dau da khop. Nen no mien phi, va bo no
+#    di cung khong nhanh hon — no thuan tuy la duong lui neu tier substring
+#    bi app khac gianh.
+#
+# Luu y ve phep do nay: `check --resolve` khong di dung duong hot path (tren
+# Windows hot path dung `resolve_lazy` voi ba lop toi uu). No dung de so gia
+# TUONG DOI giua cac tier, khong phai de doc gia tuyet doi cua mot lan bam.
+#
 # HAZARD RIENG CUA ROG, va thu tu KHONG sua duoc no: rog co HAI entry cung
 # Name="Brave Web Browser" — `brave-browser` (nix) va `com.brave.Browser`.
 # Alphabet quyet dinh cai nao thang, khong phai nguoi dung (`beckon check
@@ -144,8 +165,9 @@
 # └──────────────────────────────────────────────────────────────────────────┘
 #
 "ctrl+super+alt+shift+a" = "Apps"
-# Dao cung ly do voi dong `b` o tren.
-"ctrl+super+alt+shift+b" = "Brave || Brave Browser"
+# `shift+b` da bo 17/08/2026 (quyet dinh cua chu may): no tro cung mot app voi
+# `b` o lop Cap tran, tuc hai phim tat cho mot viec. Chu `b` o lop nay gio con
+# trong, dung duoc cho binding khac.
 "ctrl+super+alt+shift+c" = "Google Chrome"
 
 # XUNG DOT OFFICE KEY: `d` = OneDrive tren Windows, nen dong nay dang ky
