@@ -21,11 +21,12 @@ in
     # out-of-band -- but then mind that ~/.local/bin precedes the nix profile in
     # PATH, so a leftover binary there silently shadows this one.
     # There used to be a herdr-clip-recv script here, the receiving half of the
-    # Windows screenshot bridge (sending half: dotfiles/windows, pwsh
-    # ps1.d/herdr-clip.ps1 + ahk/herdr-clip.ahk). It is gone on purpose: the
-    # receiving side is now a shell one-liner inlined into the ssh command, so
-    # this host -- and any host reachable by ssh, nix-managed or not -- needs
-    # nothing installed, no service and no rebuild to accept an image.
+    # Windows screenshot bridge. Both halves have since left: the sender is
+    # dotfiles/windows (pwsh ps1.d/ferry.ps1 + ahk/ferry.ahk) and the receiver is
+    # a shell one-liner inlined into the ssh command, so this host -- and any host
+    # reachable by ssh, nix-managed or not -- needs nothing installed, no service
+    # and no rebuild to accept an image. The feature dropped "herdr" from its name
+    # for the same reason: it never touches a Herdr server.
     home.packages = [pkgs.herdr];
 
     # Symlink individual files, not ~/.config/herdr: that directory is also where

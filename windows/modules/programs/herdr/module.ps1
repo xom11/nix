@@ -21,8 +21,10 @@
 # this platform -- they only matter between two ends that can actually attach.
 #
 # The one thing that shape loses is pasting a screenshot into an agent, since the local
-# clipboard never reaches the server. Tab+v fills that hole by hand: ahk\herdr-clip.ahk ->
-# pwsh\ps1.d\herdr-clip.ps1 -> herdr-clip-recv on the mac.
+# clipboard never reaches the server. Tab+v fills that hole by hand: ahk\ferry.ahk ->
+# pwsh\ps1.d\ferry.ps1, which ssh's the image across and types the path back here. It
+# needs nothing installed on the far end and nothing to do with herdr -- it works the
+# same into tmux or a plain shell -- which is why it is not named after herdr.
 #
 # Upstream publishes no ARM64 Windows build: install.ps1 maps Arm64 to windows-x86_64 and says
 # so out loud ("installing the x86_64 build under Windows emulation"). On a14 herdr therefore

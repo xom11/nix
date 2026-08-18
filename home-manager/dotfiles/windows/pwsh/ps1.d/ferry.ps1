@@ -1,22 +1,22 @@
-# Send-ClipImage -- copy the Windows clipboard image to whichever machine this
+# Send-FerryImage -- copy the Windows clipboard image to whichever machine this
 # box is currently ssh'd into, and hand back the path it landed on. The caller
-# (herdr-clip.ahk) types that path into the focused window here.
+# (ferry.ahk) types that path into the focused window here.
 #
-# It says Herdr everywhere because that is where it came from, but nothing in
-# this file needs Herdr now. Delivering by typing on THIS side, rather than by
-# asking a Herdr server to type into a pane on the far side, is what removed the
-# only guess left in the design -- see herdr-clip.ahk for that story. It works
-# the same into tmux, a plain shell or an editor.
+# It was called herdr-clip until it stopped having anything to do with Herdr.
+# Nothing here talks to a Herdr server, nothing is installed on the far side, and
+# it works the same into tmux, a plain ssh shell or an editor -- so it is named
+# for what it does: carry one thing across to the other side.
 #
-# The gap this fills: `herdr --remote` already bridges a local clipboard image
-# into the remote session -- and it ships on macOS and Linux (rog runs
-# `herdr --remote macmini` today) -- but not on Windows ("Native Windows
-# `herdr --remote` is not part of the beta"), and its clipboard-image reader is
-# not wired there either. What works from Windows is `ssh <host>` and then
-# `herdr` on that side, which leaves a screenshot taken here with no route in.
+# The gap it fills is still Herdr-shaped, because that is where the need came
+# from: `herdr --remote` already bridges a local clipboard image into a remote
+# session, and it ships on macOS and Linux (rog runs `herdr --remote macmini`
+# today) but not on Windows ("Native Windows `herdr --remote` is not part of the
+# beta"), where its clipboard-image reader is not wired either. What works from
+# Windows is `ssh <host>` and then whatever multiplexer you like on that side,
+# which leaves a screenshot taken here with no route in.
 #
 # This MUST run in the interactive desktop session, which is why the hotkey in
-# herdr-clip.ahk exists rather than a shell function you call over ssh. Measured
+# ferry.ahk exists rather than a shell function you call over ssh. Measured
 # on a14: a process started by sshd reports SessionId 0 while explorer.exe sits
 # in SessionId 1, and the two window stations own separate clipboards -- writing
 # a marker string from the ssh session and reading it back returns that session's
@@ -44,14 +44,14 @@
 
 # Options that consume the following token. Getting this list wrong is how a
 # config path becomes a hostname.
-$script:HerdrSshTakesArg = 'BbcDEeFIiJLlmOopQRSWw'
+$script:FerrySshTakesArg = 'BbcDEeFIiJLlmOopQRSWw'
 
-function Write-ClipImageLog {
+function Write-FerryLog {
     param([string]$Message)
     # Same shape as ahk-main.log: a hotkey that fails silently needs somewhere to
     # have said why, since nothing here has a console attached.
     $line = '{0}  {1}' -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Message
-    try { Add-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'herdr-clip.log') -Value $line } catch { }
+    try { Add-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'ferry.log') -Value $line } catch { }
 }
 
 function Split-CommandLine {
@@ -111,12 +111,12 @@ function Get-SshTargetFromCommandLine {
             $body = $tok.Substring(1)
             $inlineValue = $false
             for ($k = 0; $k -lt $body.Length; $k++) {
-                if ($script:HerdrSshTakesArg.Contains($body[$k])) {
+                if ($script:FerrySshTakesArg.Contains($body[$k])) {
                     if ($k -lt $body.Length - 1) { $inlineValue = $true }
                     break
                 }
             }
-            if (-not $inlineValue -and $script:HerdrSshTakesArg.Contains($body[$body.Length - 1])) {
+            if (-not $inlineValue -and $script:FerrySshTakesArg.Contains($body[$body.Length - 1])) {
                 $i += 2
             } else {
                 $i += 1
@@ -130,7 +130,7 @@ function Get-SshTargetFromCommandLine {
     return $null
 }
 
-function Resolve-HerdrTarget {
+function Resolve-FerryTarget {
     [CmdletBinding()]
     param()
     # Filtering on Name is what keeps ssh-agent, scp and sftp out; grepping the
@@ -159,22 +159,27 @@ function Resolve-HerdrTarget {
     return @($unique)
 }
 
-function Save-ClipImageLocally {
+function Save-FerryImageLocally {
     param([byte[]]$Bytes)
-    # Written before anything can fail. Whatever else goes wrong -- no ssh
-    # session, host asleep, Herdr dead -- the screenshot is never lost, because
-    # by then the clipboard has usually moved on.
-    $dir = Join-Path $env:USERPROFILE 'Pictures\herdr-clip'
+    # Written before anything can fail, so that "no ssh session open" or "host
+    # asleep" never costs the screenshot -- by then the clipboard has usually
+    # moved on. It is scratch, not an archive: a screenshot gets pasted once and
+    # is dead weight after that, so this lives in %TEMP% and not in Pictures,
+    # where it would quietly pile up somewhere the user actually keeps things.
+    $dir = Join-Path $env:TEMP 'ferry'
     if (-not (Test-Path -LiteralPath $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
     $path = Join-Path $dir ('{0}.png' -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
     [IO.File]::WriteAllBytes($path, $Bytes)
+    # A day is already generous for something whose whole life is "press the key,
+    # paste it, done"; the only reason it outlives the send at all is the
+    # several-hosts menu, which re-reads this file a few seconds later.
     Get-ChildItem -LiteralPath $dir -Filter '*.png' -ErrorAction SilentlyContinue |
-        Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-7) } |
+        Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-1) } |
         Remove-Item -Force -ErrorAction SilentlyContinue
     return $path
 }
 
-function Get-ClipImageBytes {
+function Get-FerryImageBytes {
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -AssemblyName System.Drawing
 
@@ -225,18 +230,18 @@ function Get-ClipImageBytes {
     return $null
 }
 
-function Write-ClipImageResult {
+function Write-FerryResult {
     param([hashtable]$Fields)
     # The hotkey reads this instead of scraping stdout: AHK's RunWait only hands
     # back an integer, and an integer cannot carry the path that has to be typed.
-    $path = Join-Path $env:LOCALAPPDATA 'herdr-clip.last'
+    $path = Join-Path $env:LOCALAPPDATA 'ferry.last'
     $lines = foreach ($k in 'status', 'target', 'path', 'saved', 'candidates') {
         if ($Fields.ContainsKey($k)) { "$k=$($Fields[$k])" }
     }
     try { Set-Content -LiteralPath $path -Value $lines -Encoding utf8 } catch { }
 }
 
-function Send-ClipImage {
+function Send-FerryImage {
     [CmdletBinding()]
     param(
         # Omit to read it off the running ssh.exe processes.
@@ -250,21 +255,21 @@ function Send-ClipImage {
 
     if ($FromSaved) {
         if (-not (Test-Path -LiteralPath $FromSaved)) {
-            Write-ClipImageLog "saved file is gone: $FromSaved"
-            Write-ClipImageResult @{ status = 'noimage' }
+            Write-FerryLog "saved file is gone: $FromSaved"
+            Write-FerryResult @{ status = 'noimage' }
             return
         }
         $bytes = [IO.File]::ReadAllBytes($FromSaved)
         $saved = $FromSaved
     } else {
-        $bytes = Get-ClipImageBytes
+        $bytes = Get-FerryImageBytes
         if (-not $bytes) {
-            Write-ClipImageLog 'clipboard holds no image'
-            Write-ClipImageResult @{ status = 'noimage' }
+            Write-FerryLog 'clipboard holds no image'
+            Write-FerryResult @{ status = 'noimage' }
             Write-Warning 'clipboard holds no image'
             return
         }
-        $saved = Save-ClipImageLocally $bytes
+        $saved = Save-FerryImageLocally $bytes
     }
 
     if (-not $Target) {
@@ -274,17 +279,17 @@ function Send-ClipImage {
         # its first CHARACTER -- "macmini" became "m" and ssh failed with
         # "Could not resolve hostname m". Printing the value with -join hid it;
         # only the type was ever wrong.
-        $found = @(Resolve-HerdrTarget)
+        $found = @(Resolve-FerryTarget)
         if ($found.Count -eq 0) {
             # No fallback host. A default is precisely how an image ends up typed
             # into a session on a machine the user is not looking at.
-            Write-ClipImageLog "no ssh session open; image kept at $saved"
-            Write-ClipImageResult @{ status = 'notarget'; saved = $saved }
+            Write-FerryLog "no ssh session open; image kept at $saved"
+            Write-FerryResult @{ status = 'notarget'; saved = $saved }
             return
         }
         if ($found.Count -gt 1) {
-            Write-ClipImageLog "several ssh sessions: $($found -join ', ')"
-            Write-ClipImageResult @{ status = 'multi'; saved = $saved; candidates = ($found -join ',') }
+            Write-FerryLog "several ssh sessions: $($found -join ', ')"
+            Write-FerryResult @{ status = 'multi'; saved = $saved; candidates = ($found -join ',') }
             return
         }
         # Select-Object rather than [0], for the same reason: on a bare string
@@ -297,8 +302,8 @@ function Send-ClipImage {
     # The target is concatenated into a command line further up the stack, so it
     # is validated rather than trusted, even though it came from a local process.
     if ($Target -notmatch '^[A-Za-z0-9._@-]+$') {
-        Write-ClipImageLog "refusing odd target: $Target"
-        Write-ClipImageResult @{ status = 'sshfail'; target = $Target; saved = $saved }
+        Write-FerryLog "refusing odd target: $Target"
+        Write-FerryResult @{ status = 'sshfail'; target = $Target; saved = $saved }
         return
     }
 
@@ -313,9 +318,9 @@ function Send-ClipImage {
     # shell that does not speak ${VAR:-default} -- fish, say -- since ssh hands
     # this to the login shell first.
     $remoteScript =
-        'd=${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip; mkdir -p "$d"; ' +
+        'd=${XDG_CACHE_HOME:-$HOME/.cache}/ferry; mkdir -p "$d"; ' +
         'f=$d/$(date +%Y%m%d-%H%M%S)-$$.png; base64 -d > "$f" || exit 1; ' +
-        'find "$d" -name "*.png" -type f -mtime +7 -delete 2>/dev/null; ' +
+        'find "$d" -name "*.png" -type f -mtime +1 -delete 2>/dev/null; ' +
         'wc -c < "$f"; echo "$f"'
 
     # [Diagnostics.Process] rather than Start-Process, for two reasons that both
@@ -358,8 +363,8 @@ function Send-ClipImage {
         $proc.WaitForExit()
         $code = $proc.ExitCode
     } catch {
-        Write-ClipImageLog "ssh $Target could not start: $($_.Exception.Message)"
-        Write-ClipImageResult @{ status = 'sshfail'; target = $Target; saved = $saved }
+        Write-FerryLog "ssh $Target could not start: $($_.Exception.Message)"
+        Write-FerryResult @{ status = 'sshfail'; target = $Target; saved = $saved }
         return
     }
 
@@ -369,9 +374,9 @@ function Send-ClipImage {
     $remote = $output | Where-Object { $_ -match '\.png$' } | Select-Object -Last 1
 
     if ($code -ne 0) {
-        Write-ClipImageLog "ssh $Target exited ${code}: $errors"
-        Write-ClipImageResult @{ status = 'recvfail'; target = $Target; saved = $saved; path = $remote }
-        Write-Error "herdr-clip: $Target refused the image (exit $code); see $env:LOCALAPPDATA\herdr-clip.log"
+        Write-FerryLog "ssh $Target exited ${code}: $errors"
+        Write-FerryResult @{ status = 'recvfail'; target = $Target; saved = $saved; path = $remote }
+        Write-Error "ferry: $Target refused the image (exit $code); see $env:LOCALAPPDATA\ferry.log"
         return
     }
 
@@ -380,36 +385,36 @@ function Send-ClipImage {
     # the length gives it away.
     $reported = $output | Where-Object { $_ -match '^\s*\d+\s*$' } | Select-Object -Last 1
     if ($reported -and ([int]$reported.Trim() -ne $bytes.Length)) {
-        Write-ClipImageLog "size mismatch on ${Target}: sent $($bytes.Length), landed $reported"
-        Write-ClipImageResult @{ status = 'recvfail'; target = $Target; saved = $saved; path = $remote }
-        Write-Error "herdr-clip: $Target received $reported of $($bytes.Length) bytes"
+        Write-FerryLog "size mismatch on ${Target}: sent $($bytes.Length), landed $reported"
+        Write-FerryResult @{ status = 'recvfail'; target = $Target; saved = $saved; path = $remote }
+        Write-Error "ferry: $Target received $reported of $($bytes.Length) bytes"
         return
     }
 
     if (-not $remote) {
-        Write-ClipImageLog "no path came back from ${Target}: $($output -join ' | ')"
-        Write-ClipImageResult @{ status = 'recvfail'; target = $Target; saved = $saved }
-        Write-Error "herdr-clip: $Target returned no path"
+        Write-FerryLog "no path came back from ${Target}: $($output -join ' | ')"
+        Write-FerryResult @{ status = 'recvfail'; target = $Target; saved = $saved }
+        Write-Error "ferry: $Target returned no path"
         return
     }
 
     # ${Target} braced on purpose: a bare `$Target:` parses as a scope qualifier
     # (like $env:) and is a syntax error, not a variable followed by a colon.
-    Write-ClipImageLog "sent $($bytes.Length) bytes to ${Target}: $remote"
-    Write-ClipImageResult @{ status = 'ok'; target = $Target; path = $remote; saved = $saved }
+    Write-FerryLog "sent $($bytes.Length) bytes to ${Target}: $remote"
+    Write-FerryResult @{ status = 'ok'; target = $Target; path = $remote; saved = $saved }
     return $remote
 }
 
-function Invoke-HerdrClipHotkey {
-    # Entry point for herdr-clip.ahk. Exists so the hotkey has one thing to call
-    # and a stable set of exit codes; the detail always goes to herdr-clip.last.
+function Invoke-FerryHotkey {
+    # Entry point for ferry.ahk. Exists so the hotkey has one thing to call
+    # and a stable set of exit codes; the detail always goes to ferry.last.
     [CmdletBinding()]
     param([string]$Target, [string]$FromSaved)
 
-    $null = Send-ClipImage -Target $Target -FromSaved $FromSaved
+    $null = Send-FerryImage -Target $Target -FromSaved $FromSaved
     $status = 'recvfail'
     try {
-        $last = Get-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'herdr-clip.last') -ErrorAction Stop
+        $last = Get-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'ferry.last') -ErrorAction Stop
         $line = $last | Where-Object { $_ -like 'status=*' } | Select-Object -First 1
         if ($line) { $status = $line.Substring(7) }
     } catch { }

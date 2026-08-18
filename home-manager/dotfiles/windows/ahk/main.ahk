@@ -35,7 +35,7 @@ LogLine("startup  pid=" . DllCall("GetCurrentProcessId"))
 ; Focus-or-launch: beckon serve (task \BeckonServe), du lieu configs/shortcuts/apps.shared.toml — sua la an ngay.
 #Include evkey-monitor.ahk
 #Include caffeine.ahk
-#Include herdr-clip.ahk
+#Include ferry.ahk
 #Include power-manager.ahk
 #Include switch-language.ahk
 #Include window-manager.ahk

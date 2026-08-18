@@ -9,9 +9,9 @@ Hotkey(tabkey "r", ReloadConfig)
 ; doi ung cua Caffeine.spoon ben macOS, cung phim Tab+c, nhung nguoc y nghia:
 ; ban macOS giu MAN HINH sang, ban nay co y de man hinh tat. Ly do o dau file do.
 Hotkey(tabkey "c", ToggleCaffeine)
-; Anh trong clipboard -> pane Claude dang focus ben macmini. SendClipImage nam
-; trong herdr-clip.ahk; ly do phai di duong vong nam o dau file do.
-Hotkey(tabkey "v", SendClipImage)
+; Anh trong clipboard -> may dang ssh vao, roi go duong dan ra ngay tai con tro.
+; FerryImage nam trong ferry.ahk; ly do phai di duong vong nam o dau file do.
+Hotkey(tabkey "v", FerryImage)
 ; Doi che do go - Tab+Q=Trung, Tab+W=Viet, Tab+E=English.
 ; SwitchMode nam trong switch-language.ahk, goi `tongue` de gat CA layout lan
 ; VKey. Truoc day cho nay goi thang SetInputLang, tuc chi doi duoc layout --
