@@ -66,17 +66,47 @@ RunHerdrClip(target := "", fromSaved := "") {
             ; dong dinh danh cua herdr-clip-recv ton tai.
             where := (last.Has("title") && last["title"] != "") ? last["title"] : last.Get("pane", "?")
             who := last.Get("agent", "")
-            note := (who != "") ? ("  [" . who . "]") : ""
-            TrayTip "-> " . where . note, "Herdr clip: " . last.Get("target", "?"), 1
+            note := (who != "") ? ("   [" . who . "]") : ""
+            ShowClipPopup("-> " . last.Get("target", "?"), where . note, "98c379")
         case 1:
-            TrayTip "Clipboard khong co anh", "Herdr clip", 2
+            ShowClipPopup("Clipboard khong co anh", "chup bang Tab+s roi bam lai", "e5c07b")
         case 2:
-            TrayTip "Khong co phien ssh nao dang mo`nAnh giu o " . last.Get("saved", "?"), "Herdr clip", 3
+            ShowClipPopup("Khong co phien ssh nao dang mo", "anh giu o " . last.Get("saved", "?"), "e06c75")
         case 3:
             AskHerdrTarget(last)
         default:
-            TrayTip "That bai -- xem %LOCALAPPDATA%\herdr-clip.log`nAnh giu o " . last.Get("saved", "?"), "Herdr clip", 3
+            ShowClipPopup("That bai", "xem herdr-clip.log -- anh giu o " . last.Get("saved", "?"), "e06c75")
     }
+}
+
+; Vi sao khong dung TrayTip: no gan voi icon khay, va Windows co quyen khong hien.
+; Do tren a14 -- mot lan gui THANH CONG hoan toan (herdr-clip.last ghi status=ok,
+; dung pane, dung title) ma nguoi dung khong thay gi ca. Icon bi day vao overflow,
+; hoac Win11 tu bat do-not-disturb khi co app toan man hinh, la du de nuot no.
+; Mot phan hoi khong bao gio den thi bang khong co phan hoi.
+;
+; Ban sao co chu y cua ShowPopup ben lib/ui.ahk, khac dung mot cho: tu tat bang
+; SetTimer chu khong doi phim. ShowPopup dung InputHook("L1 T3"), tuc NUOT mot
+; phim -- chap nhan duoc khi xem gio, nhung o day nguoi dung vua dan anh xong va
+; se go cau hoi ngay sau do, mat mot ky tu dau la khong duoc.
+ShowClipPopup(mainText, subText, accentColor) {
+    ui := Gui("+AlwaysOnTop -Caption +ToolWindow +E0x08000000")
+    ui.BackColor := "21252b"
+    ui.MarginX := 20, ui.MarginY := 16
+
+    ui.SetFont("s15 w700 c" . accentColor, "Segoe UI Variable Display")
+    ui.AddText("w560", mainText)
+
+    ui.SetFont("s11 w400 cabb2bf", "Segoe UI Variable Text")
+    ui.AddText("w560", subText)
+
+    ; NoActivate: dang go dở thi khong duoc cuop focus.
+    ui.Show("NoActivate")
+    SetTimer(() => TryDestroy(ui), -2600)
+}
+
+TryDestroy(ui) {
+    try ui.Destroy()
 }
 
 ; Nhieu phien ssh cung mo thi khong doan: hien menu ngay tai con tro, va CHI liet
@@ -90,19 +120,26 @@ AskHerdrTarget(last) {
         return
     }
 
-    chosen := ""
     m := Menu()
     for host in cands {
         if (host != "")
-            m.Add(host, (name, *) => chosen := name)
+            m.Add(host, ChooseTarget)
     }
     m.Show()
-    m.Delete()
+    return
 
-    if (chosen != "")
-        RunHerdrClip(chosen, saved)
-    else
-        TrayTip "Khong chon dich -- anh giu o " . saved, "Herdr clip", 2
+    ; Viec gui nam TRONG callback, khong phai o dong sau m.Show(). Menu tra dieu
+    ; khien ve roi moi chay callback tren mot thread khac, nen doc mot bien
+    ; "da chon chua" ngay sau Show() la cuoc vao thu tu khong ai bao dam -- rat de
+    ; ra: bam chon xong ma khong co gi xay ra. Ham long nay bat duoc `saved` cua
+    ; chinh lan goi nay, nen khong can bien chia se nao het.
+    ;
+    ; Vi cung ly do do, khong co toast "khong chon dich": phan biet "vua thoat
+    ; menu" voi "vua chon xong" doi hoi dung thu tu do. Anh da nam tren dia va
+    ; herdr-clip.log da ghi 'several ssh sessions', the la du.
+    ChooseTarget(name, *) {
+        RunHerdrClip(name, saved)
+    }
 }
 
 ; herdr-clip.ps1 ghi ket qua ra day thay vi stdout: RunWait chi tra ve mot so
