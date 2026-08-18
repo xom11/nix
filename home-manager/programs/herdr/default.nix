@@ -20,25 +20,13 @@ in
     # Anyone who wants the self-updater back drops this line and reinstalls
     # out-of-band -- but then mind that ~/.local/bin precedes the nix profile in
     # PATH, so a leftover binary there silently shadows this one.
-    home.packages = [
-      pkgs.herdr
-
-      # Receiving half of the Windows screenshot bridge; the sending half lives in
-      # dotfiles/windows (pwsh ps1.d/herdr-clip.ps1 + ahk/herdr-clip.ahk).
-      #
-      # It no longer needs herdr or jq: the path is typed on the Windows side now,
-      # into the window that is actually focused there, so nothing on this end
-      # talks to a Herdr server. Kept in this module anyway because this is where
-      # the feature is documented and every host that wants it already enables
-      # herdr -- but the script itself would work on a box with no herdr at all.
-      # runtimeInputs pins base64/od/find to the GNU flavours it was written
-      # against rather than whatever PATH offers on darwin.
-      (pkgs.writeShellApplication {
-        name = "herdr-clip-recv";
-        runtimeInputs = [pkgs.coreutils pkgs.findutils];
-        text = builtins.readFile ./herdr-clip-recv;
-      })
-    ];
+    # There used to be a herdr-clip-recv script here, the receiving half of the
+    # Windows screenshot bridge (sending half: dotfiles/windows, pwsh
+    # ps1.d/herdr-clip.ps1 + ahk/herdr-clip.ahk). It is gone on purpose: the
+    # receiving side is now a shell one-liner inlined into the ssh command, so
+    # this host -- and any host reachable by ssh, nix-managed or not -- needs
+    # nothing installed, no service and no rebuild to accept an image.
+    home.packages = [pkgs.herdr];
 
     # Symlink individual files, not ~/.config/herdr: that directory is also where
     # the running server keeps herdr.sock, session.json and its logs.

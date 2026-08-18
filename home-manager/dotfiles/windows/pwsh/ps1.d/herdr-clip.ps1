@@ -245,10 +245,7 @@ function Send-ClipImage {
         # when it has to ask which host first -- the image is saved before the
         # menu appears, so the second pass must not re-read a clipboard that may
         # have changed in the meantime.
-        [string]$FromSaved,
-        # Overridable so this can be exercised before the receiving host has
-        # rebuilt: `-RecvCommand 'bash ~/.nix/home-manager/programs/herdr/herdr-clip-recv'`.
-        [string]$RecvCommand = 'herdr-clip-recv'
+        [string]$FromSaved
     )
 
     if ($FromSaved) {
@@ -305,48 +302,87 @@ function Send-ClipImage {
         return
     }
 
-    # `$base64 | ssh ...` is the obvious way to write this and it hangs forever:
-    # PowerShell writes the string but never closes the native command's stdin, so
-    # `base64 -d` on the far side waits on an EOF that never comes (measured -- it
-    # left a blocked reader on macmini and a stuck ssh here). Redirecting from a
-    # file gives a real EOF; the same round trip then takes ~500 ms.
-    $stdin = [IO.Path]::GetTempFileName()
-    $stdout = [IO.Path]::GetTempFileName()
-    $stderr = [IO.Path]::GetTempFileName()
+    # THIS is the receiver -- there is nothing installed on the far side. It used
+    # to be a nix-packaged script, which meant every host had to be rebuilt before
+    # it could take an image, and a machine not managed by nix could never take
+    # one. Inline, any box reachable by ssh works, macmini included: it needs no
+    # service, no daemon and no config for this to work.
+    #
+    # Verified on macmini (macOS, /usr/bin/base64) and rog (Linux, GNU coreutils):
+    # both accept `base64 -d`. The `sh -c` wrapper is insurance against a login
+    # shell that does not speak ${VAR:-default} -- fish, say -- since ssh hands
+    # this to the login shell first.
+    $remoteScript =
+        'd=${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip; mkdir -p "$d"; ' +
+        'f=$d/$(date +%Y%m%d-%H%M%S)-$$.png; base64 -d > "$f" || exit 1; ' +
+        'find "$d" -name "*.png" -type f -mtime +7 -delete 2>/dev/null; ' +
+        'wc -c < "$f"; echo "$f"'
 
-    # ASCII, and written with .NET rather than Out-File, so no BOM and no console
-    # codepage can get into a string that is by definition plain ASCII.
-    [IO.File]::WriteAllText($stdin, [Convert]::ToBase64String($bytes), [Text.Encoding]::ASCII)
+    # [Diagnostics.Process] rather than Start-Process, for two reasons that both
+    # bite:
+    #  - Start-Process DROPS quote characters inside an argument. Measured: the
+    #    array form with a quoted element produced no output at all, while
+    #    ArgumentList here keeps them. The remote script is one quoted argument,
+    #    so this is the difference between working and not.
+    #  - stdin is a stream we can close. `$base64 | ssh ...` hangs forever because
+    #    PowerShell never closes a native command's stdin, so `base64 -d` on the
+    #    far side waits on an EOF that never comes (measured -- it left a blocked
+    #    reader on macmini and a stuck ssh here). Closing the stream IS the EOF,
+    #    and it costs no temp file: the screenshot never touches %TEMP%.
+    #
+    # ConnectTimeout is not optional: the hotkey blocks on RunWait, and a sleeping
+    # host measured 75 s before ssh gave up on its own.
+    $psi = [Diagnostics.ProcessStartInfo]::new('ssh')
+    foreach ($a in @('-o', 'BatchMode=yes', '-o', 'ConnectTimeout=5', $Target, "sh -c '$remoteScript'")) {
+        $psi.ArgumentList.Add($a)
+    }
+    $psi.RedirectStandardInput = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.UseShellExecute = $false
+    # Base64 is ASCII; pinning the encoding keeps a console codepage from putting
+    # a BOM or a replacement character into it.
+    $psi.StandardInputEncoding = [Text.Encoding]::ASCII
 
-    # ConnectTimeout is not optional here: the hotkey blocks on RunWait, and a
-    # sleeping host measured 75 s before ssh gave up on its own.
-    # Start-Process drops quote characters inside an argument, so the remote
-    # command must survive being word-split -- which it does, because ssh joins
-    # its arguments with spaces and the remote shell re-parses them.
-    $sshArgs = @('-o', 'BatchMode=yes', '-o', 'ConnectTimeout=5', $Target, $RecvCommand)
-
+    $code = 1
+    $output = @()
+    $errors = ''
     try {
-        $proc = Start-Process ssh -ArgumentList $sshArgs `
-            -RedirectStandardInput $stdin -RedirectStandardOutput $stdout -RedirectStandardError $stderr `
-            -NoNewWindow -Wait -PassThru
+        $proc = [Diagnostics.Process]::Start($psi)
+        # Safe to write it all before reading: the remote answers with two short
+        # lines, so its output cannot fill the pipe while we are still writing.
+        $proc.StandardInput.Write([Convert]::ToBase64String($bytes))
+        $proc.StandardInput.Close()
+        $output = @($proc.StandardOutput.ReadToEnd() -split "`r?`n" | Where-Object { $_ -ne '' })
+        $errors = $proc.StandardError.ReadToEnd()
+        $proc.WaitForExit()
         $code = $proc.ExitCode
-        $output = @(Get-Content -LiteralPath $stdout)
-        $errors = (Get-Content -LiteralPath $stderr -Raw)
-    } finally {
-        # The temp file holds the screenshot; do not leave it in %TEMP%.
-        Remove-Item -LiteralPath $stdin, $stdout, $stderr -Force -ErrorAction SilentlyContinue
+    } catch {
+        Write-ClipImageLog "ssh $Target could not start: $($_.Exception.Message)"
+        Write-ClipImageResult @{ status = 'sshfail'; target = $Target; saved = $saved }
+        return
     }
 
-    # The path is the receiver's LAST line by contract, and the match is
-    # case-insensitive, so take the last hit rather than the first: an ssh config
-    # with a `Match exec` block prints its own noise on this platform, and that
-    # noise would otherwise become the return value.
+    # Take the LAST line ending in .png rather than the first: an ssh config with
+    # a `Match exec` block prints its own noise on Windows, and that noise would
+    # otherwise become the return value.
     $remote = $output | Where-Object { $_ -match '\.png$' } | Select-Object -Last 1
 
     if ($code -ne 0) {
         Write-ClipImageLog "ssh $Target exited ${code}: $errors"
         Write-ClipImageResult @{ status = 'recvfail'; target = $Target; saved = $saved; path = $remote }
         Write-Error "herdr-clip: $Target refused the image (exit $code); see $env:LOCALAPPDATA\herdr-clip.log"
+        return
+    }
+
+    # The far side reports the size it wrote. Comparing it beats the old 8-byte
+    # PNG signature check: a truncated transfer keeps a valid signature and only
+    # the length gives it away.
+    $reported = $output | Where-Object { $_ -match '^\s*\d+\s*$' } | Select-Object -Last 1
+    if ($reported -and ([int]$reported.Trim() -ne $bytes.Length)) {
+        Write-ClipImageLog "size mismatch on ${Target}: sent $($bytes.Length), landed $reported"
+        Write-ClipImageResult @{ status = 'recvfail'; target = $Target; saved = $saved; path = $remote }
+        Write-Error "herdr-clip: $Target received $reported of $($bytes.Length) bytes"
         return
     }
 
