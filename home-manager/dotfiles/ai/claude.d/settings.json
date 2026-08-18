@@ -17,6 +17,15 @@
         ]
       },
       {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/herdr-peer-name.py",
+            "timeout": 10
+          }
+        ]
+      },
+      {
         "matcher": "*",
         "hooks": [
           {

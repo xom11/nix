@@ -218,6 +218,15 @@ prompt_new_tab_name = false
 
 # Background notification popup delivery
 agent_panel_sort = "spaces"
+
+# Hang tren cua moi agent la ten phien Claude Code chu khong phai workspace + tab:
+# ten phien da chua ten thu muc roi ("ninjaverse-06"), va no chinh la dia chi ma
+# ListAgents in ra va SendMessage nhan. Token $session do hook herdr-peer-name.sh trong
+# claude.d bao len qua `pane report-metadata`. Chi doi rieng claude; agent kind
+# khac khong bao token nay nen giu bo hang mac dinh.
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", {token = "$session", bold = true, dim = false}], ["agent"]]
+
 [ui.toast]
 # off = disable pop-up notifications
 # herdr = show in-app toasts
