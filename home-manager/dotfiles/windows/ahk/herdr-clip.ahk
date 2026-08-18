@@ -2,10 +2,14 @@
 
 ; --- === Herdr clip ===
 ;
-; Chup man hinh o day, bam Tab+v, duong dan anh hien ra trong pane dang focus cua
-; phien herdr tren may ban DANG ssh vao. Noi phim o tab-key.ahk (Tab+v), doi phim
-; thi sua ben do. Di lien voi Tab+s ngay ben canh -- Tab+s la Win+Shift+S, tuc
-; chinh cai keo cat man hinh dat anh vao clipboard; Tab+v la buoc dua no di.
+; Chup man hinh o day, bam Tab+v: anh duoc chep sang may ban dang ssh vao, roi
+; duong dan cua no duoc GO ra ngay tai cho con tro dang nhap nhay. Noi phim o
+; tab-key.ahk (Tab+v), doi phim thi sua ben do. Di lien voi Tab+s ngay ben canh --
+; Tab+s la Win+Shift+S, tuc chinh cai keo cat man hinh dat anh vao clipboard;
+; Tab+v la buoc dua no di.
+;
+; Vi go ra o day chu khong phai nho dau kia go ho, no chay duoc trong bat cu thu
+; gi dang nhan phim: herdr, tmux, shell tran, editor. Ly do day du o DeliverPath().
 ;
 ; Vi sao khong xai san cua herdr: `herdr --remote` CO bac anh clipboard tu may
 ; local sang phien remote, va no co that tren macOS lan Linux (rog dang chay
@@ -21,18 +25,21 @@
 ; desktop. Phim tat chay trong session desktop -- do la ca ly do file nay ton tai.
 ;
 ; DICH KHONG CON LA HANG SO. Truoc day file nay ghi cung "macmini", nen ssh vao
-; may khac roi bam Tab+v la anh bay ve macmini va roi vao pane cua mot phien
-; khong ai dang nhin -- ma toast van bao thanh cong, vi no in lai chinh bien dau
-; vao. Gio dich duoc doc tu argv cua cac tien trinh ssh.exe dang song (xem
-; Resolve-HerdrTarget ben herdr-clip.ps1), va toast chi in nhung gi DAU KIA
-; tra ve. Mot dich thi gui thang; nhieu dich thi hien menu; khong co dich nao thi
-; TU CHOI, giu anh lai, khong doan.
+; may khac roi bam Tab+v la anh bay ve macmini, ma thong bao van noi thanh cong
+; vi no in lai chinh bien dau vao. Gio dich duoc doc tu argv cua cac tien trinh
+; ssh.exe dang song trong session desktop (xem Resolve-HerdrTarget ben
+; herdr-clip.ps1). Mot dich thi gui thang; nhieu dich thi hien menu chi gom host
+; dang that su mo; khong co dich nao thi TU CHOI, giu anh lai, khong doan.
 
 SendClipImage(*) {
     RunHerdrClip()
 }
 
 RunHerdrClip(target := "", fromSaved := "") {
+    ; Ghi lai cua so dang focus TRUOC khi di, de con doi chieu luc ve. Xem
+    ; DeliverPath() ben duoi.
+    hwnd := WinExist("A")
+
     ps1 := EnvGet("USERPROFILE") . "\Documents\PowerShell\ps1.d\herdr-clip.ps1"
     if !FileExist(ps1) {
         TrayTip "Khong thay herdr-clip.ps1 -- chay apply.ps1", "Herdr clip", 3
@@ -62,12 +69,7 @@ RunHerdrClip(target := "", fromSaved := "") {
     ; 0 ok / 1 clipboard rong / 2 khong co phien ssh / 3 nhieu phien / con lai: hong
     switch code {
         case 0:
-            ; In THU DAU KIA TRA VE, khong in lai bien dau vao -- day la ca ly do
-            ; dong dinh danh cua herdr-clip-recv ton tai.
-            where := (last.Has("title") && last["title"] != "") ? last["title"] : last.Get("pane", "?")
-            who := last.Get("agent", "")
-            note := (who != "") ? ("   [" . who . "]") : ""
-            ShowClipPopup("-> " . last.Get("target", "?"), where . note, "98c379")
+            DeliverPath(last.Get("path", ""), last.Get("target", "?"), hwnd)
         case 1:
             ShowClipPopup("Clipboard khong co anh", "chup bang Tab+s roi bam lai", "e5c07b")
         case 2:
@@ -77,6 +79,42 @@ RunHerdrClip(target := "", fromSaved := "") {
         default:
             ShowClipPopup("That bai", "xem herdr-clip.log -- anh giu o " . last.Get("saved", "?"), "e06c75")
     }
+}
+
+; Khau giao: go duong dan vao cua so dang focus O DAY.
+;
+; Ban dau viec nay do dau kia lam -- `herdr pane send-text <pane>` -- va no keo
+; theo cau hoi "pane nao", cau hoi khong co cau tra loi dung: pane `focused` duy
+; nhat cua server thuoc ve client nao vua co focus, nen tren may chay hai phien
+; herdr no tro vao pane nguoi dung khong he nhin. Chinh tai lieu skill cua herdr
+; ghi "Do not rely on another client's focused pane."
+;
+; Go o day thi cau hoi bien mat: phim di vao cua so dang focus, ma cua so dang
+; focus CHINH LA terminal ban dang ssh. Doi lai la no chay duoc ca ngoai herdr --
+; tmux, shell tran, editor -- va dau kia khong con can herdr, jq hay mot server
+; nao dang chay.
+;
+; Doi lai nua: go mu. Vong di ve mat mot hai giay, du de Alt-Tab sang Chrome, va
+; luc do duong dan se duoc go vao Chrome. Nen so sanh hwnd luc bam voi hwnd luc
+; ve: con dung cua so thi go, doi roi thi KHONG go gi ca, dat vao clipboard va
+; noi ro. Khong bao gio go nham cho, va cung khong mat gi.
+DeliverPath(path, target, hwnd) {
+    if (path = "") {
+        ShowClipPopup("Gui xong nhung khong nhan duoc duong dan", "xem herdr-clip.log", "e5c07b")
+        return
+    }
+
+    if (hwnd && WinActive("ahk_id " . hwnd)) {
+        ; Dau cach o cuoi, khong co Enter: anh chi la ve de, cau hoi sau no van la
+        ; thu nguoi dung go tiep.
+        SendText(path . " ")
+        SplitPath(path, &name)
+        ShowClipPopup("-> " . target, name, "98c379")
+        return
+    }
+
+    A_Clipboard := path
+    ShowClipPopup("Cua so da doi -- khong go mu", "duong dan da vao clipboard: " . path, "61afef")
 }
 
 ; Vi sao khong dung TrayTip: no gan voi icon khay, va Windows co quyen khong hien.

@@ -1,6 +1,12 @@
-# Send-ClipImage -- push the Windows clipboard image into a Herdr session on
-# whichever machine this box is currently ssh'd into, so an agent running there
-# can read it.
+# Send-ClipImage -- copy the Windows clipboard image to whichever machine this
+# box is currently ssh'd into, and hand back the path it landed on. The caller
+# (herdr-clip.ahk) types that path into the focused window here.
+#
+# It says Herdr everywhere because that is where it came from, but nothing in
+# this file needs Herdr now. Delivering by typing on THIS side, rather than by
+# asking a Herdr server to type into a pane on the far side, is what removed the
+# only guess left in the design -- see herdr-clip.ahk for that story. It works
+# the same into tmux, a plain shell or an editor.
 #
 # The gap this fills: `herdr --remote` already bridges a local clipboard image
 # into the remote session -- and it ships on macOS and Linux (rog runs
@@ -222,9 +228,9 @@ function Get-ClipImageBytes {
 function Write-ClipImageResult {
     param([hashtable]$Fields)
     # The hotkey reads this instead of scraping stdout: AHK's RunWait only hands
-    # back an integer, and an integer cannot say which pane took the image.
+    # back an integer, and an integer cannot carry the path that has to be typed.
     $path = Join-Path $env:LOCALAPPDATA 'herdr-clip.last'
-    $lines = foreach ($k in 'status', 'target', 'pane', 'agent', 'title', 'path', 'saved', 'candidates') {
+    $lines = foreach ($k in 'status', 'target', 'path', 'saved', 'candidates') {
         if ($Fields.ContainsKey($k)) { "$k=$($Fields[$k])" }
     }
     try { Set-Content -LiteralPath $path -Value $lines -Encoding utf8 } catch { }
@@ -235,8 +241,6 @@ function Send-ClipImage {
     param(
         # Omit to read it off the running ssh.exe processes.
         [string]$Target,
-        # Explicit pane on the far side; otherwise the receiver uses the focused one.
-        [string]$Pane,
         # Send a file already on disk instead of the clipboard. Used by the hotkey
         # when it has to ask which host first -- the image is saved before the
         # menu appears, so the second pass must not re-read a clipboard that may
@@ -320,7 +324,6 @@ function Send-ClipImage {
     # command must survive being word-split -- which it does, because ssh joins
     # its arguments with spaces and the remote shell re-parses them.
     $sshArgs = @('-o', 'BatchMode=yes', '-o', 'ConnectTimeout=5', $Target, $RecvCommand)
-    if ($Pane) { $sshArgs += @('--pane', $Pane) }
 
     try {
         $proc = Start-Process ssh -ArgumentList $sshArgs `
@@ -335,15 +338,10 @@ function Send-ClipImage {
     }
 
     # The path is the receiver's LAST line by contract, and the match is
-    # case-insensitive, so take the last hit rather than the first -- a pane
-    # titled "export .PNG" would otherwise win.
+    # case-insensitive, so take the last hit rather than the first: an ssh config
+    # with a `Match exec` block prints its own noise on this platform, and that
+    # noise would otherwise become the return value.
     $remote = $output | Where-Object { $_ -match '\.png$' } | Select-Object -Last 1
-    $ident = $output | Where-Object { $_ -match '^herdr-clip-recv: pane=' } | Select-Object -Last 1
-
-    $pane = ''; $agent = ''; $title = ''
-    if ($ident -match '^herdr-clip-recv: pane=(\S+) agent=(\S+) title=(.*)$') {
-        $pane = $Matches[1]; $agent = $Matches[2]; $title = $Matches[3]
-    }
 
     if ($code -ne 0) {
         Write-ClipImageLog "ssh $Target exited ${code}: $errors"
@@ -359,13 +357,10 @@ function Send-ClipImage {
         return
     }
 
-    # ${agent} braced on purpose: a bare `$agent:` parses as a scope qualifier
+    # ${Target} braced on purpose: a bare `$Target:` parses as a scope qualifier
     # (like $env:) and is a syntax error, not a variable followed by a colon.
-    Write-ClipImageLog "sent $($bytes.Length) bytes to ${Target} pane=$pane agent=${agent}: $remote"
-    Write-ClipImageResult @{
-        status = 'ok'; target = $Target; pane = $pane; agent = $agent
-        title  = $title; path = $remote; saved = $saved
-    }
+    Write-ClipImageLog "sent $($bytes.Length) bytes to ${Target}: $remote"
+    Write-ClipImageResult @{ status = 'ok'; target = $Target; path = $remote; saved = $saved }
     return $remote
 }
 
@@ -373,9 +368,9 @@ function Invoke-HerdrClipHotkey {
     # Entry point for herdr-clip.ahk. Exists so the hotkey has one thing to call
     # and a stable set of exit codes; the detail always goes to herdr-clip.last.
     [CmdletBinding()]
-    param([string]$Target, [string]$Pane, [string]$FromSaved)
+    param([string]$Target, [string]$FromSaved)
 
-    $null = Send-ClipImage -Target $Target -Pane $Pane -FromSaved $FromSaved
+    $null = Send-ClipImage -Target $Target -FromSaved $FromSaved
     $status = 'recvfail'
     try {
         $last = Get-Content -LiteralPath (Join-Path $env:LOCALAPPDATA 'herdr-clip.last') -ErrorAction Stop

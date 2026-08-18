@@ -1,85 +1,51 @@
-# herdr-clip-recv -- take a base64 PNG on stdin and hand it to a Herdr pane as a
-# file path. The other half is
+# herdr-clip-recv -- take a base64 PNG on stdin, save it, print where it went.
+# That is the whole job. The other half is
 # home-manager/dotfiles/windows/pwsh/ps1.d/herdr-clip.ps1.
 #
-# Herdr already solves this, but only in the direction that does not exist on
-# Windows: under `herdr --remote` the local client reads the clipboard image,
-# copies it to a temp file on the server and pastes that path. That flag ships on
-# macOS and Linux (verified: rog runs `herdr --remote macmini` today) but not on
-# Windows ("Native Windows `herdr --remote` is not part of the beta"), and its
-# clipboard-image reader is not wired there either. From a Windows box the only
-# working shape is `ssh <host>` + `herdr` on this side -- and a screenshot taken
-# over there has no way in at all. This rebuilds that one bridge by hand.
+# The name still says herdr because that is where this came from, but nothing
+# here needs Herdr any more, and that is the point of the current shape. It used
+# to end with `herdr pane send-text <pane> "<path> "`, which meant guessing WHICH
+# pane -- and guessing wrong: the server's single focused pane belongs to
+# whichever client last had focus, which on a machine running two Herdr sessions
+# was a pane the user was not looking at. Herdr's own skill file says it: "Do not
+# rely on another client's focused pane."
 #
-# Base64 on stdin rather than scp followed by a second ssh:
+# The typing now happens on the Windows side, into whatever window is focused
+# there -- which is by definition the terminal the user is looking at. So the
+# question "which pane" no longer exists, and this script no longer needs the
+# herdr binary, jq, or a Herdr server at all. It works the same into tmux, a
+# plain ssh shell, an editor, or nothing at all.
+#
+# Why base64 on stdin rather than scp:
 #   - One connection. Windows OpenSSH has no ControlMaster, so a second ssh call
 #     pays another full handshake over Tailscale.
 #   - PowerShell re-encodes binary through a native-command pipe (it converts to
 #     text via $OutputEncoding), which corrupts PNG bytes. Base64 is ASCII and
 #     comes through untouched.
 #
-# The path is typed WITHOUT Enter and with a trailing space: the image is only
-# the attachment, the question after it is still the user's to write.
-#
-# OUTPUT CONTRACT -- the sender parses this, do not reorder:
-#   herdr-clip-recv: pane=<id> agent=<name>/<status> title=<terminal title>
-#   <absolute path to the png>
-# The path is always the LAST line. The sender matches lines ending in .png and
-# takes the last one, so a pane whose title ends in ".png" cannot hijack it.
-#
-# The identification line exists because of a real failure: the sender used to
-# print its own -Target back at the user, so the toast said "sent to macmini"
-# whether or not that was where the image landed. A report is only worth anything
-# if it comes from the far end.
+# OUTPUT CONTRACT: the absolute path, alone, on the last line of stdout. The
+# sender matches lines ending in .png and takes the last one.
 #
 # No shebang on purpose -- writeShellApplication supplies one and adds
 # `set -euo pipefail`. Run it as `bash herdr-clip-recv` to test before a rebuild.
 
-pane=""
-list_only=""
+case "${1:-}" in
+    -h | --help)
+        cat <<'EOF'
+usage: herdr-clip-recv < base64-encoded-png
 
-while [ $# -gt 0 ]; do
-    case "$1" in
-        --pane)
-            pane="${2:-}"
-            shift 2
-            ;;
-        --list)
-            list_only=1
-            shift
-            ;;
-        -h | --help)
-            cat <<'EOF'
-usage: herdr-clip-recv [--pane ID] < base64-encoded-png
-       herdr-clip-recv --list
-
-Saves the image under ${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip and types its
-path into a Herdr pane -- the one named by --pane, else the focused one. Prints
-an identification line and then the path. --list enumerates agent panes without
-reading stdin, for a sender that wants to offer a menu. Sent from Windows by
-Send-ClipImage (Tab+v).
+Saves the image under ${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip and prints its
+absolute path. Sent from Windows by Send-ClipImage (Tab+v), which then types the
+path into the focused window there.
 EOF
-            exit 0
-            ;;
-        *)
-            echo "herdr-clip-recv: unknown argument: $1" >&2
-            exit 2
-            ;;
-    esac
-done
-
-# Every read of the pane list goes through this. `|| true` matters: under
-# `set -euo pipefail` a dead Herdr server would otherwise kill the script here,
-# which is exactly when the caller most needs to be told where its image went.
-panes() {
-    herdr pane list 2>/dev/null || true
-}
-
-if [ -n "$list_only" ]; then
-    panes | jq -r '.result.panes[] | select(.agent != null)
-        | "candidate: \(.pane_id) \(.agent)/\(.agent_status) \(.terminal_title_stripped // "")"'
-    exit 0
-fi
+        exit 0
+        ;;
+    '') ;;
+    *)
+        echo "herdr-clip-recv: unknown argument: $1" >&2
+        exit 2
+        ;;
+esac
 
 dir="${XDG_CACHE_HOME:-$HOME/.cache}/herdr-clip"
 mkdir -p "$dir"
@@ -101,37 +67,6 @@ if [ "$magic" != "89504e470d0a1a0a" ]; then
     echo "herdr-clip-recv: decoded data is not a PNG" >&2
     exit 1
 fi
-
-snapshot=$(panes)
-
-if [ -z "$pane" ]; then
-    pane=$(printf '%s' "$snapshot" | jq -r 'first(.result.panes[] | select(.focused) | .pane_id) // empty' 2>/dev/null || true)
-fi
-
-if [ -z "$pane" ]; then
-    # The image is kept, never discarded: by the time anyone reads this the
-    # sending machine has already moved on from that clipboard. Print the path on
-    # stdout so the caller can still report it, and the candidates on stderr.
-    echo "$out"
-    echo "herdr-clip-recv: no focused pane, image kept at $out" >&2
-    printf '%s' "$snapshot" | jq -r '.result.panes[] | select(.agent != null)
-        | "candidate: \(.pane_id) \(.agent)/\(.agent_status) \(.terminal_title_stripped // "")"' >&2 2>/dev/null || true
-    exit 3
-fi
-
-if ! herdr pane send-text "$pane" "$out " >/dev/null 2>&1; then
-    echo "$out"
-    echo "herdr-clip-recv: send-text to $pane failed, image kept at $out" >&2
-    exit 4
-fi
-
-# Read back from the same snapshot rather than trusting the caller's idea of the
-# pane: this line is the only evidence the user gets about WHERE the image went,
-# and a pane id alone tells them nothing.
-printf '%s' "$snapshot" | jq -r --arg p "$pane" '
-    (.result.panes[] | select(.pane_id == $p))
-    | "herdr-clip-recv: pane=\(.pane_id) agent=\(.agent // "none")/\(.agent_status // "unknown") title=\(.terminal_title_stripped // "")"
-' 2>/dev/null || echo "herdr-clip-recv: pane=$pane agent=unknown/unknown title="
 
 # A week outlives any screenshot's usefulness, and every file here is a copy of
 # something the sending machine had first.

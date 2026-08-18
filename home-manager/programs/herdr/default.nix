@@ -24,13 +24,18 @@ in
       pkgs.herdr
 
       # Receiving half of the Windows screenshot bridge; the sending half lives in
-      # dotfiles/windows (pwsh ps1.d/herdr-clip.ps1 + ahk/herdr-clip.ahk). Kept
-      # here rather than in scripts/bin so it lands exactly where herdr is
-      # enabled, and runtimeInputs pins base64/od/find to the GNU flavours the
-      # script was written against instead of whatever PATH offers on darwin.
+      # dotfiles/windows (pwsh ps1.d/herdr-clip.ps1 + ahk/herdr-clip.ahk).
+      #
+      # It no longer needs herdr or jq: the path is typed on the Windows side now,
+      # into the window that is actually focused there, so nothing on this end
+      # talks to a Herdr server. Kept in this module anyway because this is where
+      # the feature is documented and every host that wants it already enables
+      # herdr -- but the script itself would work on a box with no herdr at all.
+      # runtimeInputs pins base64/od/find to the GNU flavours it was written
+      # against rather than whatever PATH offers on darwin.
       (pkgs.writeShellApplication {
         name = "herdr-clip-recv";
-        runtimeInputs = [pkgs.herdr pkgs.jq pkgs.coreutils pkgs.findutils];
+        runtimeInputs = [pkgs.coreutils pkgs.findutils];
         text = builtins.readFile ./herdr-clip-recv;
       })
     ];
