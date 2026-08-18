@@ -267,7 +267,13 @@ function Send-ClipImage {
     }
 
     if (-not $Target) {
-        $found = Resolve-HerdrTarget
+        # @() around the call, not just inside the function: PowerShell unrolls a
+        # returned array, so a single match comes back as a bare string. A string
+        # still answers .Count = 1, so every guard here passed and $found[0] took
+        # its first CHARACTER -- "macmini" became "m" and ssh failed with
+        # "Could not resolve hostname m". Printing the value with -join hid it;
+        # only the type was ever wrong.
+        $found = @(Resolve-HerdrTarget)
         if ($found.Count -eq 0) {
             # No fallback host. A default is precisely how an image ends up typed
             # into a session on a machine the user is not looking at.
@@ -280,7 +286,11 @@ function Send-ClipImage {
             Write-ClipImageResult @{ status = 'multi'; saved = $saved; candidates = ($found -join ',') }
             return
         }
-        $Target = $found[0]
+        # Select-Object rather than [0], for the same reason: on a bare string
+        # (which is what an unrolled single-element return looks like) indexing
+        # yields a character while Select-Object yields the whole string. Two
+        # defenses because only one of them is visible at the call site.
+        $Target = $found | Select-Object -First 1
     }
 
     # The target is concatenated into a command line further up the stack, so it
