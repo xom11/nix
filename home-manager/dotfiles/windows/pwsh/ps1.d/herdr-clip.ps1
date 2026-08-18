@@ -129,7 +129,16 @@ function Resolve-HerdrTarget {
     param()
     # Filtering on Name is what keeps ssh-agent, scp and sftp out; grepping the
     # string "ssh" would catch all three.
-    $procs = @(Get-CimInstance Win32_Process -Filter "Name='ssh.exe'" -ErrorAction SilentlyContinue)
+    #
+    # And only this logon session's ssh, which is not paranoia: verifying this
+    # function over ssh left an ssh.exe of its own in Session 0, and it showed up
+    # as a candidate for a hotkey pressed on the desktop in Session 1. Anything
+    # sshd spawns -- an agent doing remote work, a scheduled task -- would do the
+    # same. The question the hotkey asks is "where is the terminal in front of
+    # me connected", and that terminal is always in the caller's own session.
+    $session = (Get-Process -Id $PID).SessionId
+    $procs = @(Get-CimInstance Win32_Process -Filter "Name='ssh.exe'" -ErrorAction SilentlyContinue |
+        Where-Object { $_.SessionId -eq $session })
     $targets = foreach ($p in $procs) {
         $t = Get-SshTargetFromCommandLine $p.CommandLine
         if ($t) { $t }
