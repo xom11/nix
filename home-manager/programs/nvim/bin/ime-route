@@ -103,9 +103,29 @@ leaf_set() {
 
 # IP client theo tien trinh bridge cua herdr -- nguon tin dung khi DANG o trong
 # mot pane herdr. Rong = khong co client tu xa nao attach.
+# Cac bridge dang song, TRE NHAT truoc: "<giay da chay> <pid>" moi dong.
+# `etimes` KHONG co tren macOS va im lang tra nham cot (da thu), nen phai doi
+# `etime` (dd-hh:mm:ss | hh:mm:ss | mm:ss) ra giay bang tay.
+bridges() {
+  ps -eo pid,etime,args | awk '
+    function secs(e,  n, a, d) {
+      d = 0
+      if (e ~ /-/) { split(e, a, "-"); d = a[1]; e = a[2] }
+      n = split(e, a, ":")
+      return (n == 3) ? ((d * 24 + a[1]) * 60 + a[2]) * 60 + a[3] : (d * 24 * 60 + a[1]) * 60 + a[2]
+    }
+    /[r]emote-client-bridge/ { print secs($2), $1 }
+  ' | sort -n
+}
+
+# Nhieu client cung attach vao MOT herdr server la chuyen co that (rog va airm3
+# cung luc), va herdr khong noi pane nao thuoc client nao -- `herdr api snapshot`
+# khong co mot khoa client/remote/host/origin nao (da tim ky). Nen day la
+# HEURISTIC co y va co the sai: nguoi VUA attach la nguoi nhieu kha nang dang go.
+# `where` in ra so luong de cho mo ho do nhin thay duoc thay vi am tham.
 bridge_client_ip() {
   local pid
-  pid=$(ps -eo pid,args | awk '/[r]emote-client-bridge/ { print $1; exit }')
+  pid=$(bridges | head -1 | awk '{ print $2 }')
   [ -n "$pid" ] || return 1
   # `ps -E` in ca environ sau argv. SSH_CONNECTION la
   # "<client-ip> <client-port> <server-ip> <server-port>", nen tach theo khoang
@@ -151,7 +171,9 @@ if [ -n "${IME_ROUTE_LEAF:-}" ]; then
   via="leaf (ep cuc bo)"
 elif [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
   ip=$(bridge_client_ip) || ip=""
+  n_bridges=$(bridges | grep -c . || true)
   via="herdr bridge"
+  [ "${n_bridges:-0}" -gt 1 ] && via="herdr bridge (${n_bridges} client dang attach -- chon cai tre nhat)"
   [ -n "$ip" ] && target=$(ssh_host_for "$ip")
 else
   ip=$(own_client_ip) || ip=""
@@ -222,7 +244,14 @@ where)
   if [ -n "$target" ]; then
     echo "remote: $target (ban phim o do, theo $via)"
   else
-    echo "local: $(have tongue && echo tongue || { have fcitx5-remote && echo fcitx5-remote || echo 'KHONG CO CONG CU'; })${via:+ ($via)}"
+    tool=$(have tongue && echo tongue || { have fcitx5-remote && echo fcitx5-remote || echo "KHONG CO CONG CU"; })
+    if [ -n "${IME_ROUTE_LEAF:-}" ]; then
+      echo "local: $tool (leaf -- may goi da quyet dinh)"
+    else
+      # Noi ro DA HOI GI roi khong thay -- "local" mot minh khong phan biet duoc
+      # "khong co client tu xa" voi "co ma tra loi sai".
+      echo "local: $tool (khong co client tu xa; da hoi: $via)"
+    fi
   fi
   ;;
 
