@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   # ASUS ROG Strix G531GT — Optimus.
   #
@@ -90,6 +90,25 @@
   #     by-path, vi ten do co san dau `:`
   #   - `session_open_if_kms()` MO thang duong dan -> symlink duoc di theo
   environment.sessionVariables.WLR_DRM_DEVICES = "/dev/dri/nvidia-card";
+
+  # Va MOT LAN NUA cho greeter, vi dong tren KHONG voi toi day.
+  #
+  # `environment.sessionVariables` di qua PAM (`/etc/pam/environment`) va
+  # `/etc/profile` -- ca hai deu thuoc duong DANG NHAP CUA NGUOI DUNG. Mot
+  # systemd system service khong doc duong nao trong so do. Ma greetd chinh
+  # la mot system service, chay truoc khi co bat ky ai dang nhap.
+  #
+  # Va no CO quan trong: ReGreet chay ben trong `cage`, ma cage cung la
+  # wlroots. Khong co bien nay thi cage chon GPU theo `boot_vga` -- tuc Intel,
+  # dung cai benh da sua cho ca ba compositor o tren. Trieu chung se la man
+  # dang nhap nhay sang MAN LAPTOP thay vi man 4K ngoai, hoac len dung cho
+  # nhung qua duong chep cheo GPU.
+  #
+  # mkIf theo `services.greetd.enable`: khong co no thi khoi nay se DE RA mot
+  # unit greetd rong tren host dung GDM.
+  systemd.services.greetd = lib.mkIf config.services.greetd.enable {
+    environment.WLR_DRM_DEVICES = "/dev/dri/nvidia-card";
+  };
 
   hardware.nvidia = {
     modesetting.enable = true;
