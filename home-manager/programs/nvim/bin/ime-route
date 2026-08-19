@@ -91,6 +91,15 @@ remote() { # $@ = tham so cho fcitx5-remote o dau kia
     'DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus fcitx5-remote '"$*"
 }
 
+# Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
+#   : > /tmp/ime-route.log
+# Bat theo su ton tai cua file chu khong theo bien moi truong la co chu dich --
+# argv cua backend duoc ghim luc `setup()`, nen khong the them bien cho mot nvim
+# dang chay; nhung script nay thi duoc doc lai o MOI loi goi, nen tao file la
+# lam mot phien dang mo bat dau ghi ngay. Xoa file la tat.
+LOG=${IME_ROUTE_LOG:-/tmp/ime-route.log}
+log() { [ -f "$LOG" ] && printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$PPID" "${via:-?}->${target:-local}" "$*" >>"$LOG"; }
+
 case "${1:-}" in
 get)
   if [ -n "$target" ]; then
@@ -99,14 +108,15 @@ get)
     # `-n` can mot input context dang focus; khong co thi no in RONG va van
     # thoat 0. Tra `unknown` thay vi de rong: rong bi sanitize loai voi ly do
     # "empty output", con `unknown` la tin hieu co nghia trong hop dong.
-    "") echo unknown ;;
-    "$EN_IM") echo en ;;
+    "") echo unknown; log "get -> unknown (rong)" ;;
+    "$EN_IM") echo en; log "get -> en" ;;
     # Group cua rog chi co hai muc, nen "khong phai tieng Anh" = bo go tieng
     # Viet dang bat. May nao co nhieu hon thi dat IME_ROUTE_VI_IM cho dung.
-    *) echo vi ;;
+    *) echo vi; log "get -> vi (im=$im)" ;;
     esac
   else
     # Y het preset `tongue` cua tongue.nvim: goi tran de doc, tham so de dat.
+    log "get (cuc bo)"
     tongue
   fi
   ;;
@@ -119,8 +129,8 @@ set)
   }
   if [ -n "$target" ]; then
     case "$mode" in
-    en) remote -s "$EN_IM" >/dev/null ;;
-    vi) remote -s "$VI_IM" >/dev/null ;;
+    en) log "set en"; remote -s "$EN_IM" >/dev/null ;;
+    vi) log "set vi"; remote -s "$VI_IM" >/dev/null ;;
     # zh khong ton tai phia fcitx5. Chi toi duoc day khi nguoi dung tung o che
     # do zh luc ngoi truoc macmini roi attach tu xa; bao that bai de plugin
     # kiem chung lai bang mot lan doc thay vi im lang khong lam gi.
@@ -130,6 +140,7 @@ set)
       ;;
     esac
   else
+    log "set $mode (cuc bo)"
     tongue "$mode" >/dev/null
   fi
   ;;
