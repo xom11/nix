@@ -52,8 +52,12 @@ settings.blocklistPattern = new RegExp(
 // Default search engine
 settings.defaultSearchEngine = "gg";
 
-// Do not auto-focus the first result in omnibar (allows Enter to search raw input)
-settings.autoFocusResults = false;
+// Không có `settings.autoFocusResults` — tên đó không tồn tại trong Surfingkeys
+// 1.18.0 (grep cả bundle: 0 kết quả), nên dòng cũ đặt nó = false chỉ là code chết.
+// Tên thật là `focusFirstCandidate`, mà mặc định đã là false rồi nên `t` vốn đã
+// không auto-focus. Riêng omnibar <Space><Space> thì không tắt được bằng settings:
+// handler UserURLs tự khai `focusFirstCandidate: true`, và điều kiện là
+// `conf.focusFirstCandidate || handler.focusFirstCandidate` — OR nên handler thắng.
 
 /***********************
 SECTION: KEY MAPPINGS
@@ -195,7 +199,35 @@ SITES.forEach(({ key, title, url }) =>
   mapkey(`<Space>${key}`, title, () => toggleFocusUrl(url)),
 );
 
-// Lối vào thứ hai cho cùng danh sách: gõ tên thay vì nhớ phím
+// Lối vào thứ hai cho cùng danh sách: gõ tên thay vì nhớ phím.
+//
+// Chọn một mục ở đây phải hành xử y như bấm phím tắt, mà omnibar không cho ghi đè
+// onEnter: handler "UserURLs" đã đăng ký sẵn trong extension, `addHandler` chỉ gắn
+// onEnter mặc định (`openFocused`) cho handler CHƯA có, và nó sống trong iframe
+// pages/frontend.html — file này với không tới. Mặc định đó luôn ra tab mới, kể cả
+// khi trang đã mở sẵn (background `openLink` không hề tra tab trùng).
+//
+// Đường vòng: `openFocused` đọc `li.uid`, thấy ký tự đầu là "T" thì gọi
+// focusTab({windowId, tabId}) thay vì openLink; còn `createURLItem` gắn thẳng `uid`
+// (và `type`, nếu là emoji 2 ký tự thì nó thành icon) từ object ta truyền vào. Nên
+// chỉ cần tra tab TRƯỚC khi mở omnibar rồi dán uid vào mục nào đang mở sẵn.
+//
+// Khác toggleFocusUrl đúng một điểm, cố ý: chọn đúng trang đang xem thì focusTab
+// vào chính nó, tức không làm gì — thay vì quay về tab trước.
 mapkey("<Space><Space>", "Open saved site", () =>
-  Front.openOmnibar({ type: "UserURLs", extra: SITES }),
+  RUNTIME("getTabs", { queryInfo: {} }, ({ tabs }) => {
+    const open = Array.isArray(tabs) ? tabs : [];
+
+    Front.openOmnibar({
+      type: "UserURLs",
+      extra: SITES.map((site) => {
+        const matches = urlMatcher(site.url);
+        const tab = open.find(({ url }) => url && matches(url));
+
+        return tab?.id != null
+          ? { ...site, type: "🔖", uid: `T${tab.windowId}:${tab.id}` }
+          : site;
+      }),
+    });
+  }),
 );
