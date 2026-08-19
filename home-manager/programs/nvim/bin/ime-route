@@ -118,21 +118,37 @@ bridges() {
   ' | sort -n
 }
 
-# Nhieu client cung attach vao MOT herdr server la chuyen co that (rog va airm3
-# cung luc), va herdr khong noi pane nao thuoc client nao -- `herdr api snapshot`
-# khong co mot khoa client/remote/host/origin nao (da tim ky). Nen day la
-# HEURISTIC co y va co the sai: nguoi VUA attach la nguoi nhieu kha nang dang go.
-# `where` in ra so luong de cho mo ho do nhin thay duoc thay vi am tham.
-bridge_client_ip() {
-  local pid
-  pid=$(bridges | head -1 | awk '{ print $2 }')
-  [ -n "$pid" ] || return 1
-  # `ps -E` in ca environ sau argv. SSH_CONNECTION la
-  # "<client-ip> <client-port> <server-ip> <server-port>", nen tach theo khoang
-  # trang thi truong ngay sau dau `=` chinh la IP client.
-  ps -E -p "$pid" -o command= 2>/dev/null |
+# IP client cua mot tien trinh bridge. `ps -E` in ca environ sau argv, va
+# SSH_CONNECTION la "<client-ip> <client-port> <server-ip> <server-port>", nen
+# tach theo khoang trang thi truong ngay sau dau `=` chinh la IP client.
+bridge_ip() {
+  ps -E -p "$1" -o command= 2>/dev/null |
     tr ' ' '\n' |
     awk -F= '$1 == "SSH_CONNECTION" { print $2; exit }'
+}
+
+# Ten Host cua MOI client dang attach, tre nhat truoc, moi ten mot dong.
+#
+# Nhieu client cung attach vao MOT herdr server la chuyen co that -- rog va
+# airm3 cung luc, do 20/08/2026 -- va herdr khong noi pane nao thuoc client nao
+# (`herdr api snapshot` khong co mot khoa client/remote/host/origin nao, da tim
+# ky). Truoc day o day la mot heuristic "chon cai tre nhat", tuc mot lan DOAN.
+#
+# Khong can doan: `set` di toi TAT CA. Nguoi dung chi go o mot may, nhung ta
+# khong biet may nao -- dat ca hai thi may HO DANG GO chac chan dung, con may
+# kia doi trang thai trong luc khong ai go o do, vo hai. Doan sai thi ngc lai:
+# may ho dang go khong doi gi ca, dung cai loi da duoc bao cao.
+#
+# `get` van doc tu cai tre nhat: `set` giu chung dong bo nen doc cai nao cung
+# the, va mot lan doc thi re hon N lan.
+bridge_hosts() {
+  local secs pid ip host
+  bridges | while read -r secs pid; do
+    ip=$(bridge_ip "$pid")
+    [ -n "$ip" ] || continue
+    host=$(ssh_host_for "$ip")
+    [ -n "$host" ] && printf '%s\n' "$host"
+  done | awk 'NF && !seen[$0]++'
 }
 
 # IP client theo SSH_CONNECTION cua CHINH phien nay.
@@ -165,28 +181,34 @@ ssh_host_for() {
 # Con lai mot ca chua phu: tmux/screen ngoai herdr de lai hoa thach y het, nhung
 # chung khong co tien trinh "bridge" nao de hoi, nen khong co nguon tin nao dung
 # hon. `where` in ro no theo nguon nao de con chan doan duoc.
-target=""
+target=""   # dich de DOC (tre nhat)
+targets=""  # moi dich de DAT, moi ten mot dong
 via=""
 if [ -n "${IME_ROUTE_LEAF:-}" ]; then
   via="leaf (ep cuc bo)"
 elif [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
-  ip=$(bridge_client_ip) || ip=""
-  n_bridges=$(bridges | grep -c . || true)
+  targets=$(bridge_hosts)
+  target=$(printf '%s' "$targets" | head -1)
+  n=$(printf '%s' "$targets" | grep -c . || true)
   via="herdr bridge"
-  [ "${n_bridges:-0}" -gt 1 ] && via="herdr bridge (${n_bridges} client dang attach -- chon cai tre nhat)"
-  [ -n "$ip" ] && target=$(ssh_host_for "$ip")
+  [ "${n:-0}" -gt 1 ] && via="herdr bridge ($n client: $(printf '%s' "$targets" | tr '\n' ' ' | sed 's/ $//'))"
 else
   ip=$(own_client_ip) || ip=""
   via="SSH_CONNECTION cua phien"
   [ -n "$ip" ] && target=$(ssh_host_for "$ip")
+  targets=$target
 fi
 
 # $1 = get|set, $2 = token (da kiem la mot trong en|vi|zh o duoi). Ngoac KEP o
 # day la co y: `$1`/`$2` phai no ben NAY, con `~` phai giu nguyen de shell dau
 # kia no -- trong ngoac kep, bash khong lam tilde expansion.
-remote() {
-  ssh -o BatchMode=yes -o ConnectTimeout=3 "$target" \
-    "IME_ROUTE_LEAF=1 $LEAF_PATH $1${2:+ $2}"
+# `-n` (stdin tu /dev/null) khong phai trang tri: vong lap `set` doc danh sach
+# dich tu stdin, ma ssh MAC DINH doc stdin -- no nuot not cac dong con lai va
+# vong lap chi chay dung mot lan. Do 20/08/2026: `set en` chi toi airm3, rog
+# dung im, va khong co mot thong bao loi nao.
+remote() { # $1 = host, $2 = get|set, $3 = token
+  ssh -n -o BatchMode=yes -o ConnectTimeout=3 "$1" \
+    "IME_ROUTE_LEAF=1 $LEAF_PATH $2${3:+ $3}"
 }
 
 # Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
@@ -206,7 +228,7 @@ case "${1:-}" in
 get)
   if [ -n "$target" ]; then
     # Dau kia da chuan hoa roi, nen o day khong dien giai gi them.
-    tok=$(remote get) || {
+    tok=$(remote "$target" get) || {
       log "get -> SSH TRUOT"
       exit 1
     }
@@ -231,9 +253,22 @@ set)
     exit 2
     ;;
   esac
-  if [ -n "$target" ]; then
-    log "set $mode"
-    remote set "$mode" >/dev/null || exit $?
+  if [ -n "$targets" ]; then
+    # Toi TAT CA client dang attach. Thanh cong neu it nhat mot cai an -- mot
+    # may ngu khong duoc lam hong lan chuyen o may nguoi ta dang go.
+    rc=1
+    while read -r h; do
+      [ -n "$h" ] || continue
+      if remote "$h" set "$mode" >/dev/null 2>&1; then
+        rc=0
+        log "set $mode -> $h"
+      else
+        log "set $mode -> $h TRUOT"
+      fi
+    done <<EOF
+$targets
+EOF
+    exit "$rc"
   else
     log "set $mode"
     leaf_set "$mode" || exit $?
