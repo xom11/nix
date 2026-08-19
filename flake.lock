@@ -727,11 +727,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786503527,
-        "narHash": "sha256-+BDU9Wu0HSNHXbxIuCE9WSj7ZjSEpn/CG/OknvoLGP8=",
+        "lastModified": 1787123556,
+        "narHash": "sha256-VpxbnNDpzO6vSQ4+lpClDxrQ4tBzqhmDH892HZPkqXg=",
         "owner": "xom11",
         "repo": "tongue",
-        "rev": "ed5948834803b0965726cf1a19c63216b63b4620",
+        "rev": "ab4f9be257fd4433f8dc5fc8cba71a9ebf386461",
         "type": "github"
       },
       "original": {
