@@ -53,12 +53,28 @@ fcitx5() { DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/u
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# Do cong cu TRONG PHAM VI nen tang, khong probe theo ten lenh tran: tren
+# crates.io co mot `tongue` la chuong trinh HOAN TOAN KHAC, va repo nay co tien
+# su binary cu o `~/.local/bin` che ban nix. Hom nay khong may nao co ca hai
+# (do: rog khong co tongue, airm3 khong co fcitx5-remote) nen THU TU probe khong
+# phai cau hoi -- cai quan trong la khong goi nham mot chuong trinh trung ten
+# voi argv `vi`.
+leaf_tool() {
+  case $(uname -s) in
+  Darwin) have tongue && { echo tongue; return 0; } ;;
+  Linux) have fcitx5-remote && { echo fcitx5-remote; return 0; } ;;
+  esac
+  return 1
+}
+
 leaf_get() {
-  if have tongue; then
+  case $(leaf_tool) in
+  tongue)
     # Y het preset `tongue` cua tongue.nvim: goi tran de doc. No tu in en|vi|zh
     # hoac `unknown`, nen khong can chuan hoa gi them.
     tongue
-  elif have fcitx5-remote; then
+    ;;
+  fcitx5-remote)
     local im
     im=$(fcitx5 -n 2>/dev/null)
     case "$im" in
@@ -71,16 +87,22 @@ leaf_get() {
     # Viet dang bat. May nao co nhieu hon thi dat IME_ROUTE_VI_IM cho dung.
     *) echo vi ;;
     esac
-  else
-    echo "ime-route: $(hostname -s) khong co tongue lan fcitx5-remote" >&2
+    ;;
+  *)
+    echo "ime-route: $(hostname -s) khong co cong cu bo go nao" >&2
     return 1
-  fi
+    ;;
+  esac
 }
 
 leaf_set() {
-  if have tongue; then
+  case $(leaf_tool) in
+  tongue)
+    # Khong doc lai o day, va do la co y: `tongue bogus` da thoat 2 kem thong
+    # bao (do tren airm3). Them mot lan doc chi la chi phi khong mua gi.
     tongue "$1" >/dev/null
-  elif have fcitx5-remote; then
+    ;;
+  fcitx5-remote)
     local name
     case "$1" in
     en) name=$EN_IM ;;
@@ -93,10 +115,20 @@ leaf_set() {
       ;;
     esac
     fcitx5 -s "$name" >/dev/null
-  else
-    echo "ime-route: $(hostname -s) khong co tongue lan fcitx5-remote" >&2
+    # `-s <ten khong ton tai>` THOAT 0 va khong doi gi -- do tren rog: truoc
+    # `lotus`, `-s khongcothat` cho rc=0 khong in gi, sau van `lotus`. Khong co
+    # API nao liet ke IM kha dung (`-q` chi tra ten GROUP), nen doc lai la cach
+    # DUY NHAT biet lenh co an hay khong.
+    [ "$(fcitx5 -n 2>/dev/null)" = "$name" ] || {
+      echo "ime-route: dat '$name' khong an tren $(hostname -s)" >&2
+      return 3
+    }
+    ;;
+  *)
+    echo "ime-route: $(hostname -s) khong co cong cu bo go nao" >&2
     return 1
-  fi
+    ;;
+  esac
 }
 
 # -------------------------------------------------------------- vai ROUTER ---
@@ -114,17 +146,37 @@ bridges() {
       n = split(e, a, ":")
       return (n == 3) ? ((d * 24 + a[1]) * 60 + a[2]) * 60 + a[3] : (d * 24 * 60 + a[1]) * 60 + a[2]
     }
-    /[r]emote-client-bridge/ { print secs($2), $1 }
+    # Neo vao tien trinh herdr THAT, khong khop chuoi con trong argv bat ky:
+    # mot tien trinh thu ba mang chuoi nay se lot matcher long. Da tai hien
+    # 20/08/2026: matcher long ra 3 ung vien, matcher chat ra dung 2 bridge that.
+    # Ke mao danh thuong la mot pane herdr, tuc no MANG SSH_CONNECTION HOA THACH
+    # -- khop nham khong chi chon sai tien trinh ma dung lai dung con bug hoa
+    # thach ma ca script nay sinh ra de giet. Meo `[r]` chi chong awk tu khop
+    # chinh no, KHONG chong tien trinh thu ba.
+    $NF == "remote-client-bridge" && $(NF - 1) ~ /(^|\/)herdr$/ { print secs($2), $1 }
   ' | sort -n
 }
 
 # IP client cua mot tien trinh bridge. `ps -E` in ca environ sau argv, va
 # SSH_CONNECTION la "<client-ip> <client-port> <server-ip> <server-port>", nen
 # tach theo khoang trang thi truong ngay sau dau `=` chinh la IP client.
+# Duong doc environ khac nhau theo he dieu hanh va KHONG suy duoc tu nhau:
+# `ps -E` la co phap BSD; tren Linux (procps-ng 4.0.6) no thoat 1 voi
+# "error: unsupported SysV option" -- do tren rog 20/08/2026. Truoc day stderr do
+# bi `2>/dev/null` nuot, nen ham tra RONG va router IM LANG tu coi minh la leaf:
+# dung con bug script nay sinh ra de sua, chi doi chieu.
+#
+# Hai duong tra ve HAI HINH DANG khac nhau, da do ca hai:
+#   Darwin: `ps -E` noi environ vao sau argv bang KHOANG TRANG, nen tach theo
+#           khoang trang xong thi gia tri chi con dung IP.
+#   Linux:  /proc/<pid>/environ tach bang NUL, nen gia tri con NGUYEN ca bon
+#           truong "<ip> <port> <ip> <port>".
+# Vi vay phai chuan hoa o cuoi bang `{ print $1 }` thay vi tin vao mot trong hai.
 bridge_ip() {
-  ps -E -p "$1" -o command= 2>/dev/null |
-    tr ' ' '\n' |
-    awk -F= '$1 == "SSH_CONNECTION" { print $2; exit }'
+  case $(uname -s) in
+  Darwin) ps -E -p "$1" -o command= 2>/dev/null | tr ' ' '\n' ;;
+  *) tr '\0' '\n' <"/proc/$1/environ" 2>/dev/null ;;
+  esac | awk -F= '$1 == "SSH_CONNECTION" { print $2; exit }' | awk '{ print $1 }'
 }
 
 # Ten Host cua MOI client dang attach, tre nhat truoc, moi ten mot dong.
@@ -181,6 +233,27 @@ ssh_host_for() {
 # Con lai mot ca chua phu: tmux/screen ngoai herdr de lai hoa thach y het, nhung
 # chung khong co tien trinh "bridge" nao de hoi, nen khong co nguon tin nao dung
 # hon. `where` in ro no theo nguon nao de con chan doan duoc.
+# Verb `leaf-*` ep vai LEAF, va no thay cho bien moi truong vi DUY NHAT mot ly
+# do: HUONG HONG. Mat bien -> may kia thay SSH_CONNECTION tro nguoc ve day roi
+# ssh lai -> lap vo han (do 20/08/2026: ca rog lan airm3 deu in `remote: macmini`).
+# Gap verb la khong biet -> `*)` -> exit 64, dung ngay. Fail-open doi thanh
+# fail-closed.
+#
+# Van doc IME_ROUTE_LEAF: mot ROUTER ban cu goi mot LEAF ban moi thi con dung
+# bien do. Nho vay trien khai duoc theo BAT KY thu tu nao giua cac may -- va
+# lech ban giua cac may la co that, khong phai gia dinh.
+cmd=${1:-}
+case "$cmd" in
+leaf-get)
+  cmd=get
+  IME_ROUTE_LEAF=1
+  ;;
+leaf-set)
+  cmd=set
+  IME_ROUTE_LEAF=1
+  ;;
+esac
+
 target=""   # dich de DOC (tre nhat)
 targets=""  # moi dich de DAT, moi ten mot dong
 via=""
@@ -195,7 +268,14 @@ elif [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
 else
   ip=$(own_client_ip) || ip=""
   via="SSH_CONNECTION cua phien"
-  [ -n "$ip" ] && target=$(ssh_host_for "$ip")
+  if [ -n "$ip" ]; then
+    target=$(ssh_host_for "$ip")
+    # "Co IP ma khong tra ra ten Host" la trang thai THU BA, khong duoc gop vao
+    # "khong co client": mot ben nghia la ban phim o ngay day, ben kia nghia la
+    # ban phim o noi ta khong biet duong toi. Gop lai thi ca thu hai lang le lai
+    # nham may.
+    [ -n "$target" ] || via="SSH_CONNECTION cua phien (client $ip KHONG co Host trong ~/.ssh/config)"
+  fi
   targets=$target
 fi
 
@@ -206,9 +286,28 @@ fi
 # dich tu stdin, ma ssh MAC DINH doc stdin -- no nuot not cac dong con lai va
 # vong lap chi chay dung mot lan. Do 20/08/2026: `set en` chi toi airm3, rog
 # dung im, va khong co mot thong bao loi nao.
+# tongue.nvim goi backend qua `vim.system(...)` voi mot deadline, ma deadline do
+# giet SCRIPT chu khong giet ssh chau. Do 20/08/2026: ban goi truc tiep bi kill
+# de lai `ssh ... PPID=1` mo coi; ban chay-nen + trap de lai 0.
+#
+# KHONG dung `exec ssh`: nhanh `set` fan-out toi NHIEU dich trong mot vong lap
+# nen exec se giet vong lap ngay sau dich dau, con nhanh `get` con phai goi log()
+# sau khi doc token. `wait` thi bi trap ngat duoc; mot lenh foreground thi khong
+# -- bash hoan trap lai den khi no chay xong.
+kid=""
+trap '[ -n "$kid" ] && kill -TERM "$kid" 2>/dev/null; exit 143' TERM INT
+
+# `-n` (stdin tu /dev/null): vong lap `set` doc danh sach dich tu stdin, ma ssh
+# MAC DINH doc stdin -- no nuot not cac dong con lai va vong lap chay dung mot
+# lan. Do: `set en` chi toi airm3, rog dung im, khong mot thong bao loi nao.
+#
+# ServerAliveInterval vi ConnectTimeout chi gac giai doan CONNECT, khong gac luc
+# lenh dang chay o dau kia.
 remote() { # $1 = host, $2 = get|set, $3 = token
-  ssh -n -o BatchMode=yes -o ConnectTimeout=3 "$1" \
-    "IME_ROUTE_LEAF=1 $LEAF_PATH $2${3:+ $3}"
+  ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 -o ServerAliveCountMax=3 "$1" \
+    "$LEAF_PATH leaf-$2${3:+ $3}" &
+  kid=$!
+  wait "$kid"
 }
 
 # Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
@@ -224,16 +323,29 @@ LOG=${IME_ROUTE_LOG:-/tmp/ime-route.log}
 # roi coi la that bai. Do 20/08/2026: dau kia in `vi` va rc=1.
 log() { [ -f "$LOG" ] || return 0; printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$PPID" "${via:-?}->${target:-local}" "$*" >>"$LOG"; }
 
-case "${1:-}" in
+case "$cmd" in
 get)
-  if [ -n "$target" ]; then
+  if [ -n "$targets" ]; then
+    # Thu lan luot, tre nhat truoc. Mot client khong tra loi duoc (may ngu, hoac
+    # may Windows khong chay noi script bash) khong duoc lam hong ca lan doc.
     # Dau kia da chuan hoa roi, nen o day khong dien giai gi them.
-    tok=$(remote "$target" get) || {
-      log "get -> SSH TRUOT"
+    tok=""
+    while read -r h; do
+      [ -n "$h" ] || continue
+      tok=$(remote "$h" get) && [ -n "$tok" ] && {
+        log "get <- $h: $tok"
+        break
+      }
+      log "get <- $h TRUOT"
+      tok=""
+    done <<EOF
+$targets
+EOF
+    [ -n "$tok" ] || {
+      log "get -> moi dich deu TRUOT"
       exit 1
     }
     printf '%s\n' "$tok"
-    log "get -> ${tok:-<rong>}"
   else
     out=$(leaf_get) || exit 1
     printf '%s\n' "$out"
