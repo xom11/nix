@@ -174,7 +174,7 @@
       "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "tongue.nvim": {
-      "rev": "e12fdad61cd0d104a905b39779e7d48979c73ff4",
+      "rev": "ba2a494e45f69ed6c328a7dc82700392ac037389",
       "src": "https://github.com/xom11/tongue.nvim"
     },
     "transparent.nvim": {

@@ -48,6 +48,19 @@
 -- được tongue.nvim thiết kế sẵn (hợp đồng 4 khoá), không phải lớp vá vòng.
 -- `repoPath` luôn là `$HOME/.nix` (bất biến của repo này), nên đường dẫn viết
 -- thẳng được; thiếu file thì rơi về hành vi cũ thay vì tắt hẳn plugin.
+--
+-- Từ tongue.nvim 1.3.0 (`:help tongue-backend-env`) upstream nêu HAI lối cho
+-- backend phụ thuộc môi trường: script tự định tuyến, hoặc gọi lại `setup()`
+-- mỗi khi câu trả lời đổi. Ở đây chọn lối thứ nhất, và lý do là tính ĐÚNG chứ
+-- không phải tiện: `ime-route` chuẩn hoá về `en|vi|zh`, nên token đã nhớ vẫn
+-- có nghĩa khi máy đổi. Lối `setup()` phải QUÊN layout đã nhớ mỗi lần gọi —
+-- đúng với backend nói tiếng bản địa (`keyboard-us` của rog vô nghĩa trên
+-- macmini), nhưng ở đây là mất trí nhớ không cần thiết.
+--
+-- Cái giá đã đo: phần phát hiện tốn 34 ms mỗi lời gọi (`ime-route get` đầy đủ
+-- 84 ms, `tongue` cục bộ 33 ms). Đổi sang lối `setup()` sẽ dời 34 ms đó sang
+-- mỗi lần FocusGained thay vì mỗi lời gọi. Chưa đáng: đường bất đồng bộ không
+-- ai chờ, và đổi lấy nó là một autocmd nữa cộng nguy cơ quên layout sai lúc.
 local route = vim.fn.expand("~/.nix/home-manager/programs/nvim/bin/ime-route")
 local backend = nil
 if vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1 then
