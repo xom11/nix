@@ -31,7 +31,10 @@
     };
     environments = {
       fonts.enable = true;
-      gnome.enable = true;
+      # gnome.enable BO 19/08/2026 cung luc bo desktop GNOME o tang NixOS
+      # (configuration.nix). Module do chi sinh dconf keybinding + goi
+      # extension cua GNOME Shell, nen khong con phien GNOME thi no la cau
+      # hinh chet: van build, van ghi dconf, khong ai doc.
       hyprland.enable = true;
       i18n.enable = true;
       # Bat 14/08/2026 de thu. Bo phim la MAC DINH cua niri chu khong dich tu

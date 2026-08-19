@@ -51,15 +51,29 @@
   modules.nixos.services = {
     environments = {
       enable = true;
-      # GNOME o lai lam luoi an toan: cau hinh sway/hyprland/niri hong cung
-      # khong khoa duoc nguoi dung khoi may. Bon muc nay = bon session o GDM.
+      # GNOME DA BO HAN 19/08/2026, cung luc doi GDM -> greetd + ReGreet.
+      #
+      # Truoc do GNOME o lai lam luoi an toan (cau hinh sway/hyprland/niri
+      # hong thi van co desktop de vao). Bo di la CO Y chon: loi thoat con
+      # lai la TTY va SSH — khong co desktop, nhung ve mat cuu ho thi TTY con
+      # chac hon GDM, vi no khong phu thuoc GPU lan compositor nao ca.
+      #
+      # LUU Y khi doc lai: bo "gnome" khoi day KHONG con dong nghia voi mat
+      # man dang nhap. Hai truc da tach (xem environments/default.nix) —
+      # `types` chon co session nao, `displayManager` chon ai ve man dang
+      # nhap. Truoc 19/08/2026 chung dinh nhau va bo "gnome" la mat ca hai.
       #
       # "niri" them 14/08/2026 de THU (scrollable-tiling). Xem
       # nixos/services/environments/niri.nix: module nixpkgs cua no CO Y dat
-      # `defaultSession = "niri"`, va file do phai chan lai — neu khong,
-      # autoLogin cua nixos/base se dua may vao thang niri va GNOME het lam
-      # luoi an toan.
-      types = ["gnome" "sway" "hyprland" "niri"];
+      # `defaultSession = "niri"`, va file do phai chan lai. Ly do cu la
+      # "khong thi autoLogin dua thang vao niri"; autoLogin nay da tat (xem
+      # dm-regreet.nix) nen ly do do het hieu luc, nhung cai chan van nen giu:
+      # `defaultSession` con quyet dinh muc duoc chon san o ReGreet.
+      types = ["sway" "hyprland" "niri"];
+
+      # greetd (daemon, khong co giao dien) + ReGreet (phan ve giao dien,
+      # chay trong cage). Xem dm-regreet.nix.
+      displayManager = "regreet";
     };
     # dotbrave KHONG con o tang nao cua rebuild nua (16/08/2026) -- ATTIC.md,
     # `attic/dotbrave-modules-2026-08-16`. brave.toml van trong repo va binary
