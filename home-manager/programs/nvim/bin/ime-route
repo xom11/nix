@@ -28,8 +28,9 @@ set -uo pipefail
 EN_IM=${IME_ROUTE_EN_IM:-keyboard-us}
 VI_IM=${IME_ROUTE_VI_IM:-lotus}
 
-# IP cua client dang attach, hoac that bai neu ban phim o ngay may nay.
-client_ip() {
+# IP client theo tien trinh bridge cua herdr -- nguon tin dung khi DANG o trong
+# mot pane herdr. Rong = khong co client tu xa nao attach.
+bridge_client_ip() {
   local pid
   pid=$(ps -eo pid,args | awk '/[r]emote-client-bridge/ { print $1; exit }')
   [ -n "$pid" ] || return 1
@@ -41,6 +42,13 @@ client_ip() {
     awk -F= '$1 == "SSH_CONNECTION" { print $2; exit }'
 }
 
+# IP client theo SSH_CONNECTION cua CHINH phien nay.
+own_client_ip() {
+  [ -n "${SSH_CONNECTION:-}" ] || return 1
+  set -- $SSH_CONNECTION
+  printf '%s\n' "$1"
+}
+
 # Ten Host trong ~/.ssh/config co HostName trung IP nay. Doc lai tu do thay vi
 # giu mot bang IP rieng o day -- ssh config da la nguon chan ly cho viec nay.
 ssh_host_for() {
@@ -50,11 +58,33 @@ ssh_host_for() {
   ' ~/.ssh/config
 }
 
-# Rong = lai bo go cua chinh may nay bang `tongue`.
+# Hoi ai la CO Y, khong phai thu lan luot: hai nguon tin nay mau thuan nhau
+# thuong xuyen, va chon nham thi im lang.
+#
+#   trong pane herdr -> HOI BRIDGE. SSH_CONNECTION o day la hoa thach cua luc
+#     herdr server khoi dong, con nguyen ca khi nguoi dung ngoi ngay truoc may.
+#     Khong co bridge nghia la dang attach cuc bo => ban phim o day.
+#   ngoai herdr -> DUNG SSH_CONNECTION CUA CHINH MINH. Day moi la phien that su
+#     dang cho nguoi ta go. Hoi bridge o day la sai: mot herdr client cua ai do
+#     dang attach khong lien quan gi toi phien ssh nay.
+#
+# Cai gia cua viec hoi nham: `ssh macmini` roi mo nvim se lai bo go cua macmini
+# trong khi ban phim o may vua ssh den -- dung cai loi ma script nay sinh ra de
+# sua. Do 19/08/2026.
+#
+# Con lai mot ca chua phu: tmux/screen ngoai herdr cung de lai hoa thach y het,
+# nhung chung khong co tien trinh "bridge" nao de hoi, nen khong co nguon tin
+# nao dung hon. `where` in ro no theo nguon nao de con chan doan duoc.
 target=""
-if ip=$(client_ip) && [ -n "$ip" ]; then
-  target=$(ssh_host_for "$ip")
+via=""
+if [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
+  ip=$(bridge_client_ip) || ip=""
+  via="herdr bridge"
+else
+  ip=$(own_client_ip) || ip=""
+  via="SSH_CONNECTION cua phien"
 fi
+[ -n "$ip" ] && target=$(ssh_host_for "$ip")
 
 remote() { # $@ = tham so cho fcitx5-remote o dau kia
   ssh -o BatchMode=yes -o ConnectTimeout=3 "$target" \
@@ -106,7 +136,7 @@ set)
 
 where)
   if [ -n "$target" ]; then
-    echo "remote: $target (ban phim o do)"
+    echo "remote: $target (ban phim o do, theo $via)"
   else
     echo "local: tongue"
   fi
