@@ -36,9 +36,35 @@
   # "Found 1 GPUs / Registered gpu /dev/dri/card1", roi NVIDIA vao sau bang
   # "udev: new udev add event for card0" va chi con duoc lam GPU phu.
   #
-  # `boot.kernelModules` chu khong phai `boot.initrd.kernelModules`: chi can
-  # som hon GDM (7.95s), ma systemd-modules-load chay tu ~1-2s la du. Nap
-  # trong initrd la cach manh tay hon, de danh neu cach nay chua du.
+  # `boot.kernelModules` chu khong phai `boot.initrd.kernelModules`.
+  #
+  # LY DO GHI O DAY TUNG SAI, sua 19/08/2026 sau khi do lan boot dau tien.
+  # Cho nay tung viet "chi can som hon GDM (7.95s), ma systemd-modules-load
+  # chay tu ~1-2s la du". Ca con so lan co che deu sai. Do that:
+  #
+  #   systemd-modules-load  bat dau 5.06s -> XONG 10.19s  (chen nvidia ~4 giay)
+  #   nvidia-drm Initialized              10.09s
+  #   greetd active                       11.19s
+  #
+  # Tuc module KHONG he duoc nap som hon truoc: no van xong quanh 10s, y het
+  # hoi con de udev nap. Thu that su cuu la RANG BUOC THU TU, khong phai thoi
+  # gian -- va do la mot dam bao manh hon han:
+  #
+  #   systemd-modules-load.service -> sysinit.target -> basic.target -> greetd
+  #
+  # Da kiem tung mat xich: `greetd.service` co `After=basic.target
+  # sysinit.target`, va `sysinit.target` co `After=systemd-modules-load.service`.
+  # Ma insmod la dong bo -- "Initialized nvidia-drm" (10.09s) in ra TRUOC khi
+  # modules-load bao xong (10.19s). Nen luc greetd khoi dong, card NVIDIA chac
+  # chan da san sang.
+  #
+  # Doi lai, hoi con de udev nap thi khong co rang buoc nao het: udev nap bat
+  # dong bo, khong lien he thu tu gi voi display-manager. Do dung la cuoc dua
+  # da lam Hyprland chon nham GPU. Nen thay doi nay bien mot cuoc dua thanh
+  # mot phu thuoc -- chu khong phai lam cho no "kip hon".
+  #
+  # `boot.initrd.kernelModules` la cach manh tay hon (nvidia co mat tu initrd),
+  # de danh neu ngay nao can DRM san sang som hon nua, vi du cho plymouth.
   boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
   # Ten on dinh, KHONG chua dau hai cham, tro toi card NVIDIA.
