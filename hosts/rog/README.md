@@ -1,4 +1,4 @@
-# rog — ASUS ROG Strix G531GT (NixOS · GNOME + sway + hyprland)
+# rog — ASUS ROG Strix G531GT (NixOS · GNOME + sway + hyprland + niri)
 
 i5-9300H · 8 GB RAM · NVMe 476,9 GiB · UHD 630 + GTX 1650 Mobile (Optimus, PRIME offload).
 
@@ -14,19 +14,21 @@ Rebuild (shell alias: `update`):
 sudo nixos-rebuild switch --impure --flake ~/.nix#rog
 ```
 
-## Ba session, chọn ở GDM
+## Bốn session, chọn ở GDM
 
-Máy này cài **ba** môi trường; chọn bằng nút bánh răng ở màn đăng nhập GDM.
+Máy này cài **bốn** môi trường; chọn bằng nút bánh răng ở màn đăng nhập GDM.
+Không có phiên X11 nào — `share/xsessions` rỗng.
 
 | Session | Config | Áp dụng thay đổi phím |
 |---|---|---|
 | GNOME | dconf, sinh lúc eval | `nixos-rebuild switch` |
 | sway | `home-manager/environments/sway/sway.d` | switch, rồi `Tab+r` |
 | hyprland | `home-manager/environments/hyprland/hypr.d` | switch, rồi `Tab+r` |
+| niri | `home-manager/environments/niri/niri.d` | — chưa nối phím launcher (cố ý) |
 
-GNOME cố ý ở lại làm lưới an toàn: cấu hình sway/hyprland hỏng cũng không khoá
-được người dùng khỏi máy. Phím tắt launcher của cả ba đến từ **một** file
-`configs/shortcuts/apps.linux.toml`.
+GNOME cố ý ở lại làm lưới an toàn: cấu hình sway/hyprland/niri hỏng cũng không
+khoá được người dùng khỏi máy. Phím tắt launcher của GNOME/sway/hyprland đến từ
+**một** file `configs/shortcuts/apps.shared.toml`; niri chưa được nối vào.
 
 Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không phải reboot.
 

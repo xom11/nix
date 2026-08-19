@@ -26,7 +26,11 @@ in {
   # Luc do `types = ["sway"]` khong khop module nao, nen no do "khong co desktop
   # nao ca" chu khong phai "sway thieu GNOME".
   #
-  # `alsa.support32Bit` CO Y khong nam o day, xem i3wm.nix.
+  # `alsa.support32Bit` da di theo i3wm.nix khi module do bi go (19/08/2026,
+  # ATTIC.md). No CO Y khong nam o day: tren x86_64 no KHONG phai no-op, dat o
+  # day se keo mot closure pipewire i686 len moi host co DE. Khong host nao con
+  # bat "i3wm" luc go nen viec go la trung tinh ve hanh vi.
+  # Host nao that su can app 32-bit thi dat thang o configuration.nix cua no.
   config = lib.mkIf cfg.enable {
     services.pulseaudio.enable = false;
     security.rtkit.enable = true;
