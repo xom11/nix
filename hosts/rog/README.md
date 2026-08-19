@@ -38,8 +38,8 @@ Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không 
 | p2 | `disk-main-root` | 459,9G | `/` (ext4) |
 | p3 | `disk-main-swap` | 16G | swap + hibernate (`resumeDevice`) |
 
-Toàn bộ ổ. Giống `hosts/x1g6/disko.nix`, chỉ khác ESP 1G thay vì 512M — di sản
-từ thời chia đôi ổ với Windows, không đáng thu hẹp lại.
+Toàn bộ ổ. ESP 1G thay vì 512M như thường lệ — di sản từ thời chia đôi ổ với
+Windows, không đáng thu hẹp lại.
 
 ## Windows đã bỏ hẳn (14/08/2026)
 

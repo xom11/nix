@@ -7,7 +7,7 @@
 }:
 # Tang ao hoa cho guest full-VM. KHAC voi `virtualisation.docker` o
 # nixos/services/default.nix: docker bat vo dieu kien cho moi host NixOS, con
-# module nay la opt-in — x1g6 va vm khong can no.
+# module nay la opt-in — vm khong can no.
 mkModule config ./. {
   virtualisation.libvirtd = {
     enable = true;

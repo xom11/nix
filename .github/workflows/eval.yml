@@ -1,7 +1,7 @@
 name: Eval
 
 # Every flake output must still evaluate. This is the gate that was missing
-# when desktop/x1g6/vm rotted: renaming a module in home-manager/ silently
+# when desktop/vm rotted: renaming a module in home-manager/ silently
 # breaks any host that has not been rebuilt since, and nothing catches it.
 #
 # `nix flake check` is not usable here -- lib/mkConfigs.nix reads
@@ -65,9 +65,6 @@ jobs:
 
       - name: nixosConfigurations
         run: |
-          echo "::group::nixos/x1g6"
-          nix eval --impure --system x86_64-linux ".#nixosConfigurations.x1g6.config.system.build.toplevel.drvPath"
-          echo "::endgroup::"
           echo "::group::nixos/vm"
           nix eval --impure --system aarch64-linux ".#nixosConfigurations.vm.config.system.build.toplevel.drvPath"
           echo "::endgroup::"

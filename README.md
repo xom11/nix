@@ -21,7 +21,7 @@ Per-host commands live in each `hosts/<device>/README.md`.
 | Platform | Device | Rebuild Command |
 |----------|--------|-----------------|
 | macOS (nix-darwin) | `macmini`, `airm3` | `sudo darwin-rebuild switch --impure --flake ~/.nix#<device>` |
-| NixOS | `x1g6`, `vm`, `rog` | `sudo nixos-rebuild switch --impure --flake ~/.nix#<device>` |
+| NixOS | `vm`, `rog` | `sudo nixos-rebuild switch --impure --flake ~/.nix#<device>` |
 | Linux (home-manager) | `server`, `desktop`, `minimal` | `home-manager switch --impure -b backup --flake ~/.nix#<device>` |
 | Linux (system-manager) | `desktop` | `sudo nix run 'github:numtide/system-manager' -- switch --flake ~/.nix#<device>` |
 | Windows | — | PowerShell scripts + symlinks (no Nix) |
@@ -36,7 +36,6 @@ lib/                     # mkDarwin, mkNixos, mkHomeManager, mkSystemManager
 hosts/{device}/          # Per-device configuration.nix and/or home.nix
 ├── macmini/             # Apple Mac Mini (M-series)
 ├── airm3/               # MacBook Air M3
-├── x1g6/                # ThinkPad X1 Carbon Gen 6 (NixOS + i3wm)
 ├── vm/                  # VMware Fusion VM (NixOS, aarch64)
 ├── rog/                 # ASUS ROG Strix G531GT (NixOS + GNOME, dual-boot Windows)
 ├── server/              # Headless Linux server

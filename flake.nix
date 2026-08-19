@@ -132,7 +132,6 @@
         airm3 = lib.mkDarwin { device = "airm3"; };
       };
       nixosConfigurations = {
-        x1g6 = lib.mkNixos { device = "x1g6"; };
         vm = lib.mkNixos { device = "vm"; };
         rog = lib.mkNixos { device = "rog"; };
       };

@@ -6,9 +6,9 @@
 #   root   ~459.9G ext4   /        <- an het o, tru 16G cuoi
 #   swap   16G     8200            <- >= RAM (8G) nen hibernate duoc
 #
-# Gio giong het hosts/x1g6/disko.nix, chi khac ESP 1G thay vi 512M: kich thuoc
-# do la di san tu thoi con chia cho Windows Boot Manager, va khong dang thu hep
-# lai vi phai xoa/tao lai phan vung dau o.
+# ESP 1G thay vi 512M nhu moi khi: kich thuoc do la di san tu thoi con chia
+# cho Windows Boot Manager, va khong dang thu hep lai vi phai xoa/tao lai phan
+# vung dau o.
 #
 # `end = "-16G"` cho root + `size = "100%"` cho swap: disko day phan vung
 # `100%` xuong cuoi cung, nen thu tu vat ly ra dung ESP -> root -> swap ma

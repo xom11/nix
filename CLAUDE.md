@@ -111,7 +111,6 @@ sudo darwin-rebuild switch --impure --flake ~/.nix#macmini
 sudo darwin-rebuild switch --impure --flake ~/.nix#airm3
 
 # NixOS
-sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
 sudo nixos-rebuild switch --impure --flake ~/.nix#vm
 sudo nixos-rebuild switch --impure --flake ~/.nix#rog
 
@@ -178,7 +177,7 @@ công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản 
 |---|---|---|---|
 | [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `serve` đọc `configs/shortcuts/apps.shared.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
 | [`dotbrave`](https://github.com/xom11/dotbrave) | quản Brave bằng một file TOML | flake input + overlay → `pkgs.dotbrave` trong `home.packages`. **Không còn module Nix nào** (gỡ 16/08/2026) — chạy tay, xem mục "dotbrave: config trong repo, apply hoàn toàn bằng tay" bên dưới | `~/Documents/dev/dotbrave` |
-| [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (x1g6/vm cố ý không có) | `~/Documents/dev/tongue` |
+| [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (các host Linux cố ý không có) | `~/Documents/dev/tongue` |
 | [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
 | [`nix-apt`](https://github.com/xom11/nix-apt) | apt khai báo trên Debian/Ubuntu | flake input → `homeManagerModules.default` (nối trong `lib/mkConfigs.nix`), dùng qua `services.nix-apt` | chưa clone |
 
@@ -382,7 +381,7 @@ Bốn điều đã đo trên máy (09/08/2026), cả bốn đều im lặng khi 
 | Builder | Outputs |
 |---|---|
 | `lib.mkDarwin` | `darwinConfigurations.{macmini,airm3}` |
-| `lib.mkNixos` | `nixosConfigurations.{x1g6,vm,rog}` |
+| `lib.mkNixos` | `nixosConfigurations.{vm,rog}` |
 | `lib.mkHomeManager` | `homeConfigurations.{server,desktop,minimal}` |
 | `lib.mkSystemManager` | `systemConfigs.<system>.{desktop}` — keyed by system (`aarch64-linux`, `x86_64-linux`) |
 

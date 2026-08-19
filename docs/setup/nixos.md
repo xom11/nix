@@ -3,8 +3,8 @@
 ## Rebuild
 
 ```bash
-sudo nixos-rebuild switch --impure --flake ~/.nix#x1g6
 sudo nixos-rebuild switch --impure --flake ~/.nix#vm
+sudo nixos-rebuild switch --impure --flake ~/.nix#rog
 ```
 
 ## Fresh install (Disko)
@@ -14,8 +14,8 @@ installer ISO. The per-host script clones the repo to `/tmp/nix` and applies
 that host's `disko.nix`:
 
 ```bash
-# x1g6 — ThinkPad X1 Carbon Gen 6
-curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/x1g6/install.sh | bash
+# rog — ASUS ROG Strix G531GT
+curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/rog/install.sh | bash
 
 # vm
 curl -fsSL https://raw.githubusercontent.com/xom11/nix/main/hosts/vm/install.sh | bash
@@ -25,6 +25,6 @@ Or, if the repo is already cloned:
 
 ```bash
 sudo nix --extra-experimental-features 'nix-command flakes' \
-  run github:nix-community/disko -- --mode disko ~/.nix/hosts/x1g6/disko.nix
-sudo nixos-install --impure --flake ~/.nix#x1g6
+  run github:nix-community/disko -- --mode disko ~/.nix/hosts/rog/disko.nix
+sudo nixos-install --impure --flake ~/.nix#rog
 ```

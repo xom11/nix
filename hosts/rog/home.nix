@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
-  # Theo khuon hosts/x1g6/home.nix — host nay truoc day chay home-manager
-  # standalone tren Ubuntu, tu 14/08/2026 la NixOS that.
+  # Host nay truoc day chay home-manager standalone tren Ubuntu, tu 14/08/2026
+  # la NixOS that.
   #
   # LD_LIBRARY_PATH da BO. No co mat vi ban Ubuntu: binary tai ngoai nixpkgs
   # (micromamba/conda) khong tu tim thay libstdc++. Ca micromamba lan module

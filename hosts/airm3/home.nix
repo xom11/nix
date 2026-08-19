@@ -17,7 +17,7 @@
     # con buoc `brew install` tay nao. Con `brew services start beckon` thi
     # van phai chay MOT LAN tren may moi.
     #
-    # Input `beckon` trong flake.nix VAN PHAI GIU: rog/vm/x1g6 con dung
+    # Input `beckon` trong flake.nix VAN PHAI GIU: rog/vm con dung
     # pkgs.beckon, va gnome dung beckon-gnome-extension.
     pkgs.tongue
   ];
