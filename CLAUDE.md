@@ -280,7 +280,7 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | Windows — beckon | manifest trong **repo thứ ba** `xom11/scoop-bucket`; khai báo ở `pkg.toml`, và version bị ghim theo **commit của bucket** trong `pkg.lock` | release beckon → sửa manifest bên scoop-bucket → `dotpkg update` → **commit diff của `pkg.lock`**. `scoop update` một mình không đủ nữa: dotpkg sẽ kéo ngược về đúng commit đã ghim |
 | Windows — dotbrave | chuỗi `dotbrave==<ver>` trong `windows/modules/programs/dotbrave/module.ps1` | publish PyPI → sửa tay chuỗi đó (cố ý ghim: script chạy Administrator và ghi HKLM policy) |
 | Windows — tongue | `%USERPROFILE%\.local\bin\tongue.exe`, cài **ngoài luồng** — `apply.ps1` lẫn scoop đều không cài | copy tay binary mới lên máy |
-| nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock |
+| nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock. **Rồi checkout tay trên từng máy khác** — xem dưới |
 | GNOME | extension `beckon@xom11.github.io` cài tay trên máy (Wayland: Mutter chặn focus từ ngoài) | cài lại tay; nhớ `disable-user-extensions = false` |
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
 | Windows — dotpkg (bản thân binary) | `pkg.lock`, y như mọi gói scoop khác: nó **tự khai báo chính nó** và đến từ bucket `xom11` | phát hành → sửa manifest bên scoop-bucket → `dotpkg update` → commit lock. **Rồi `scoop update dotpkg` bằng tay**, vì nó không tự nâng được chính nó (xem dưới) |
@@ -297,6 +297,22 @@ Windows chết lặng. Đã xảy ra 19/08/2026 với cú pháp `||`: `flake.loc
 `scoop update` bằng tay. **Ba con số, ba ngả, `git status` sạch trơn** — và
 `dotpkg apply` lúc đó sẽ kéo LÙI máy về 0.9.2 chứ không cứu. Khi một máy Windows
 hành xử sai, so đủ ba chỗ trước khi đoán bất cứ điều gì khác.
+
+**`nvim-pack-lock.json` KHÔNG phải một kênh triển khai — đã đo 19/08/2026.**
+Sửa rev trong lock rồi `git pull` trên máy khác thì plugin ở đó **đứng nguyên**:
+`vim.pack.add` đọc lock lúc **cài**, còn một checkout đã có thì nó để yên. Và
+`vim.pack.update()` chỉ *tải về* rồi đợi `:write` trong buffer xác nhận, mà
+buffer đó không với tới được từ headless — `wall` trả `true` và không làm gì.
+Nên bump lock xong, mỗi máy vẫn phải:
+
+```sh
+P=~/.local/share/nvim/site/pack/core/opt/<plugin>
+git -C $P fetch origin && git -C $P checkout <rev>
+```
+
+hoặc mở nvim tương tác, `:lua vim.pack.update()` rồi `:write`. Triệu chứng khi
+quên: `git status` sạch, lock đúng rev mới, mà máy vẫn chạy code cũ — cùng hình
+dạng với ba-ngả-lệch của beckon ở trên.
 
 Quy tắc đó rộng hơn TOML: nó áp cho **mọi** thay đổi beckon mà repo này gọi
 tới, kể cả bề mặt CLI. beckon 0.6.0 đổi cờ thành subcommand (`--serve` →
