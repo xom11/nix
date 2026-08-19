@@ -1,8 +1,16 @@
 # Phim tat focus-or-launch — MOT file cho ca ba OS.
 #
-# Cu phap chuoi ung vien (beckon >= 0.9.6):
+# Cu phap chuoi ung vien (beckon >= 0.9.7):
 #   "A || B || C"  — thu trai sang phai, cai dau tien HANH DONG duoc thi thang.
 #   Mot ung vien truot khong phai loi; no chi bo qua bac do va di tiep.
+#
+# San 0.9.7 la CHINH XAC, dung lam tron xuong 0.9.6. Tinh nang vao o commit
+# aaf62aa luc 16:30 ngay 16/08/2026, con tag v0.9.6 ra luc 11:56 CUNG NGAY —
+# truoc 4 tieng ruoi. Ban cu KHONG bao loi: no doc ca chuoi "kitty || Terminal"
+# lam MOT ten app, dang ky hotkey van thanh cong, roi im lang khong resolve
+# duoc. Dau hieu duy nhat nam trong serve.log:
+#   failed to launch `kitty || Terminal`: no installed Windows app matches
+# a14 dung o 0.9.6 va mat 6 phim tat vi dung con so o dong tren (19/08/2026).
 #
 # Doc luc nao, boi ai:
 #   Linux    generator doc luc NIX EVAL roi sinh binding compositor
