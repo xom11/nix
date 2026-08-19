@@ -209,8 +209,8 @@ SITES.forEach(({ key, title, url }) =>
 //
 // Đường vòng: `openFocused` đọc `li.uid`, thấy ký tự đầu là "T" thì gọi
 // focusTab({windowId, tabId}) thay vì openLink; còn `createURLItem` gắn thẳng `uid`
-// (và `type`, nếu là emoji 2 ký tự thì nó thành icon) từ object ta truyền vào. Nên
-// chỉ cần tra tab TRƯỚC khi mở omnibar rồi dán uid vào mục nào đang mở sẵn.
+// từ object ta truyền vào. Nên chỉ cần tra tab TRƯỚC khi mở omnibar rồi dán uid
+// vào mục nào đang mở sẵn.
 //
 // Khác toggleFocusUrl đúng một điểm, cố ý: chọn đúng trang đang xem thì focusTab
 // vào chính nó, tức không làm gì — thay vì quay về tab trước.
@@ -225,7 +225,7 @@ mapkey("<Space><Space>", "Open saved site", () =>
         const tab = open.find(({ url }) => url && matches(url));
 
         return tab?.id != null
-          ? { ...site, type: "🔖", uid: `T${tab.windowId}:${tab.id}` }
+          ? { ...site, uid: `T${tab.windowId}:${tab.id}` }
           : site;
       }),
     });
