@@ -57,9 +57,39 @@
   # ve truoc khi so sanh, nen no phan giai ve dung devnode that.
   #
   # Bus ID lay tu `prime` ben duoi, cung mot gia tri da do tren may.
+  #
+  # CAN CA HAI node, vi ba compositor doi hai thu khac nhau:
+  #   nvidia-card   -> card node   (Hyprland qua AQ_DRM_DEVICES, sway qua
+  #                                 WLR_DRM_DEVICES)
+  #   nvidia-render -> render node (niri qua `debug { render-drm-device }`)
+  # Do 19/08/2026: renderD128 = i915, renderD129 = nvidia. Cung la so vo tinh
+  # nhu card node, nen cung phai di qua symlink.
   services.udev.extraRules = ''
     SUBSYSTEM=="drm", KERNEL=="card[0-9]*", SUBSYSTEMS=="pci", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-card"
+    SUBSYSTEM=="drm", KERNEL=="renderD[0-9]*", SUBSYSTEMS=="pci", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-render"
   '';
+
+  # Doi ung cua AQ_DRM_DEVICES, nhung cho sway (wlroots 1.12).
+  #
+  # Khac Hyprland o cho KHONG dat duoc trong config: `env` cua hyprland chay
+  # trong chinh tien trinh compositor, con sway khong co khoa nao tuong duong
+  # cho bien cua CHINH NO -- `exec` chi lo tien trinh con, ma luc do backend DRM
+  # da chon GPU xong roi. Nen phai dat tu ben ngoai, truoc khi GDM goi sway.
+  #
+  # `environment.sessionVariables` co toi duoc phien do hoa do GDM khoi dong:
+  # da co tien le tren chinh host nay -- `NIXOS_OZONE_WL = "1"` trong
+  # configuration.nix, va no da duoc do la co an (PWA cua Brave doi hanh vi).
+  #
+  # Bien nay chi wlroots doc. mutter (GNOME) bo qua, aquamarine (Hyprland) doc
+  # AQ_DRM_DEVICES chu khong doc bien nay, smithay (niri) khong co bien env nao
+  # cho viec nay ca -- do bang cach quet chuoi trong binary niri 26.04, chi thay
+  # NIRI_CONFIG / NIRI_SOCKET / SMITHAY_USE_LEGACY.
+  #
+  # Nguon wlroots (backend/session/session.c) xac nhan hai diem, y het aquamarine:
+  #   - tach danh sach bang `strtok_r(NULL, ":", &save)` -> KHONG dung duoc ten
+  #     by-path, vi ten do co san dau `:`
+  #   - `session_open_if_kms()` MO thang duong dan -> symlink duoc di theo
+  environment.sessionVariables.WLR_DRM_DEVICES = "/dev/dri/nvidia-card";
 
   hardware.nvidia = {
     modesetting.enable = true;

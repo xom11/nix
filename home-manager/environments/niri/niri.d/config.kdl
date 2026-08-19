@@ -309,3 +309,32 @@ binds {
 
     Mod+Shift+P { power-off-monitors; }
 }
+
+// =============================================================================
+// GPU render -- cung mot benh da sua cho Hyprland ngay 19/08/2026, xem
+// hosts/rog/nvidia.nix va hypr.d/hyprland.conf.
+//
+// HDMI cua rog noi vao NVIDIA, con Intel chi giu eDP-1 (da tat). Nhung ca
+// wlroots lan smithay deu chon GPU chinh theo `boot_vga`, ma do tren may:
+//   0000:00:02.0 (Intel)  boot_vga=1
+//   0000:01:00.0 (NVIDIA) boot_vga=0
+// nen mac dinh niri se ve tren Intel roi chep sang NVIDIA de xuat hinh -- dung
+// duong da lam Hyprland giat chuot.
+//
+// niri KHONG co bien moi truong cho viec nay (quet chuoi trong binary 26.04:
+// chi co NIRI_CONFIG / NIRI_SOCKET / SMITHAY_USE_LEGACY), nen phai khai o day.
+// Va no nhan RENDER node chu khong phai card node -- khac AQ_DRM_DEVICES cua
+// Hyprland va WLR_DRM_DEVICES cua sway, ca hai deu nhan card node.
+//
+// `/dev/dri/nvidia-render` la symlink do udev sinh (hosts/rog/nvidia.nix).
+// Dung ten do chu khong dung `/dev/dri/renderD129`: so do la vo tinh.
+//
+// CANH BAO: `debug` la bac API thap nhat cua niri -- wiki ghi ro no "khong
+// duoc bao ve boi chinh sach breaking change" va "co the doi hoac ngung chay
+// bat cu luc nao". Neu mot ban niri moi lam phien khong len, day la cho dau
+// tien can xem. CHUA AI VAO PHIEN NIRI TREN MAY NAY, nen dong duoi day chua
+// duoc kiem tren thuc te -- khac hai session kia.
+// =============================================================================
+debug {
+    render-drm-device "/dev/dri/nvidia-render"
+}
