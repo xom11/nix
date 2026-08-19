@@ -712,7 +712,7 @@ ra khỏi Nix hẳn (mục trên) nên giờ **chỉ còn chỗ này** trong rep
 | Windows | `beckon serve` LÚC CHẠY, tự watch file | không gì cả — ăn trong ~1-2 s | task `\BeckonServe` + `\BeckonServeWatchdog` (`windows/modules/services/beckon-serve{,-watchdog}`) | `%LOCALAPPDATA%\beckon\serve.log` |
 | GNOME | `builtins.fromTOML` LÚC EVAL | **`nixos-rebuild switch`** | dconf `custom-keybindings` (`home-manager/environments/gnome/launch-app.nix`) | — |
 | sway | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`swaymsg reload`) | `~/.config/sway-nix/launch-app.conf` | — |
-| hyprland | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`hyprctl reload`) | `~/.config/hypr-nix/launch-app.lua` (kèm bản `.conf` dự phòng) | — |
+| hyprland | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`hyprctl reload`) | `~/.config/hypr-nix/launch-app.lua` | — |
 
 mac/Windows: sửa file là đủ, watcher tự đọc lại, không switch không rebuild gì
 cả — file hỏng thì beckon giữ nguyên bảng cũ và báo qua notification/toast,
@@ -790,11 +790,11 @@ Từ Hyprland 0.55 hyprlang bị khai tử; config chính là
 Lua** — bằng chứng đo được: `hyprctl binds -j` cho `handler` = `__lua` ở cả 80
 binding.
 
-`home-manager/environments/hyprland/hypr.d/` hiện mang **cả hai cây** (`.lua` và
-`.conf`), và đó là chủ đích: Hyprland chỉ lùi về `.conf` khi **không thấy**
-`hyprland.lua`, nên đổi tên đúng một file là quay về nguyên trạng. Xoá cây
-`.conf` (và nửa `conf` trong `launch-app.nix`) khi nào đã đăng nhập lại một
-phiên thật và checklist ở `hosts/rog/README.md` xanh hết.
+Cây `.conf` đã **xoá hẳn** 20/08/2026, sau khi một phiên đăng nhập thật xanh
+hết checklist. Hệ quả: không còn gì để lùi về, nên đổi tên `hyprland.lua`
+không phải đường thoát mà là cái bẫy — không thấy file config nào thì Hyprland
+tự **sinh ra một stub ngay trong repo**. Muốn đọc lại bản hyprlang thì lấy từ
+git: `git log --diff-filter=D -- '*/hypr.d/**/*.conf'`.
 
 **Đây là API khác hẳn, không phải đổi cú pháp.** Ba chỗ đổi HÀNH VI, cả ba đều
 im lặng khi dịch máy móc — đọc từ nguồn v0.56.2 rồi đo lại trên máy:
@@ -816,6 +816,19 @@ im lặng khi dịch máy móc — đọc từ nguồn v0.56.2 rồi đo lại t
 Hai thứ giữ nguyên: `hyprctl reload` là lệnh riêng nên không bị đổi cú pháp, và
 `hyprctl reload full-reset` thì dựng lại config manager từ đầu — đó chính là
 cách bật cây Lua cho một phiên **đang chạy** mà không phải đăng xuất.
+
+**Và cái giá đắt nhất của đợt này không nằm trong repo.** `beckon` lái Hyprland
+bằng đúng ba lệnh `dispatch` đó, nên bản cũ làm **mọi phím tắt launcher chết**
+ngay khi config thành Lua — mỗi lần bấm chỉ để lại một dòng stderr. **Sàn là
+beckon 0.9.21**; nó hỏi compositor một lần mỗi tiến trình xem đang nói phương
+ngữ nào, nên máy còn `hyprland.conf` vẫn chạy như cũ. Sửa ở thượng nguồn
+(`xom11/beckon`) chứ không vá vòng, đúng luật ở mục "Công cụ tách repo riêng".
+
+Bài học rộng hơn, và nó không chỉ về beckon: **`hyprctl dispatch` là một bề
+mặt CÔNG KHAI.** Trước khi đổi config sang Lua, hãy đếm xem còn ai khác gọi nó
+— không chỉ file config. Ở đây có ba nơi: `swayidle` (trong `system.lua`),
+đường ống `rofi` xác nhận thoát phiên, và beckon. Hai cái đầu nhìn thấy trong
+repo, cái thứ ba thì không, và đúng nó là cái làm hỏng.
 
 Biến `$mod/$alt/$tab` thành module `hypr.d/vars.lua`: `local` của Lua không
 xuyên qua biên giới file, nên biến dùng chung phải đi qua `require`.

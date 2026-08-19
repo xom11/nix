@@ -32,48 +32,42 @@ khoá được người dùng khỏi máy. Phím tắt launcher của GNOME/sway
 
 Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không phải reboot.
 
-## hyprland: config đã chuyển sang Lua (còn một bước kiểm)
+## hyprland: config là Lua, không còn hyprlang
 
-`hypr.d/` mang **cả hai cây** — `hyprland.lua` (đang chạy) và `hyprland.conf`
-(đường lui). Hyprland chỉ lùi về `.conf` khi không thấy `hyprland.lua`, nên đổi
-tên đúng một file là quay về nguyên trạng. Bối cảnh và ba cái bẫy của API mới
-nằm ở `CLAUDE.md`, mục "Hyprland trên rog".
+`hypr.d/` chỉ còn `.lua`; cây `.conf` đã xoá 20/08/2026 sau khi một phiên đăng
+nhập thật xanh hết checklist dưới đây. Bối cảnh và ba cái bẫy của API mới nằm ở
+`CLAUDE.md`, mục "Hyprland trên rog".
 
-Đã kiểm được **không cần đăng xuất**, bằng `hyprctl reload full-reset` (lệnh này
-dựng lại config manager từ đầu nên nó chọn lại `.lua`), đo 20/08/2026:
+**Sàn beckon là 0.9.21.** Bản cũ hơn lái compositor bằng `dispatch exec …` —
+phương ngữ hyprlang — nên trên config Lua **mọi phím tắt launcher chết**, và
+dấu hiệu duy nhất là một dòng stderr mỗi lần bấm. Đây là lỗi của công cụ, đã
+sửa ở thượng nguồn (`xom11/beckon` v0.9.21) rồi bump `flake.lock`.
+
+Đo 20/08/2026 trên một phiên đăng nhập thật:
 
 | Kiểm | Kết quả |
 |---|---|
-| `Hyprland --verify-config` | `config ok`, thoát 0 — và **đỏ thật** khi cố ý làm hỏng (thoát 1) |
+| `grep '\[cfg\]' <log>` | `Using lua config found at ~/.config/hypr/hyprland.lua` |
+| `Hyprland --verify-config` | `config ok`, thoát 0 — và **đỏ thật** khi cố ý làm hỏng (thoát 1, kèm `file:dòng`, kể cả trong file được `require`) |
 | `hyprctl binds -j \| grep -c modmask` | 80 (đúng bằng bản `.conf`) |
-| `hyprctl binds -j` → `handler` | `__lua` ở cả 80 → đang chạy bản Lua thật |
+| `hyprctl binds -j` → `handler` | `__lua` ở cả 80 |
 | binding theo submap | 69 gốc + 11 `resize` |
 | `hyprctl configerrors` | rỗng |
 | `hyprctl monitors all` | HDMI-A-1 bật, eDP-1 `disabled: true` |
 | `/sys/class/drm/card1-eDP-1/enabled` | `disabled` |
+| `Explicit device list` trong log | `/dev/dri/nvidia-card:/dev/dri/intel-card`, `card0 becomes primary` — tức `hl.env` kịp trước backend DRM |
 | `grep -c 'cursor blit failed'` | 0 |
+| exec-once (mako, swaybg, swayidle, kanshi, fcitx5) | cả 5 đang chạy |
+| `beckon check apps.shared.toml` | `ok: 20 shortcuts`; focus/launch/chuỗi `\|\|` đều chạy |
 
-**Còn thiếu, và chỉ một phiên đăng nhập THẬT mới kiểm được:** `full-reset` không
-bắn lại `hyprland.start` nên `exec-once` chưa chạy qua đường Lua lần nào, và
-`hl.env("AQ_DRM_DEVICES", ...)` cũng chưa được đọc bởi một backend DRM mới. Sau
-lần đăng xuất/đăng nhập tới, chạy nốt:
+**`grep -c 'forcing linear'` là 3, không phải 0** — cả 3 nằm ở dòng 296–304 của
+686, tức lúc modeset HDMI-A-1 khi khởi động, và con số này giống hệt phiên
+trước khi chuyển sang Lua. Triệu chứng thật của lỗi GPU cũ là `cursor blit
+failed` (85.848 lần), và nó bằng 0.
 
-```sh
-L=/run/user/1000/hypr/$HYPRLAND_INSTANCE_SIGNATURE/hyprland.log
-grep -a '\[cfg\]' $L                       # phải nói "Using lua config found at ..."
-grep -ac 'cursor blit failed' $L           # phải = 0
-grep -aE 'Explicit device|becomes primary' $L   # card0 = NVIDIA primary
-hyprctl binds -j | grep -c modmask         # phải = 80
-pgrep -a mako; pgrep -a swaybg; pgrep -a swayidle; pgrep -a kanshi; pgrep -a fcitx5
-```
-
-Thử tay: `Super+Alt+L` (swaylock), `Super+R` (submap resize, và thoát được bằng
-`Return`/`Escape`/`Super+R`), `Print`, `Tab+W`/`Tab+E` (bộ gõ), `Alt+V`
-(cliphist), `$mod+1..4`, vài phím `Cap+<x>`, và mở một cửa sổ mới xem nó có nhảy
-sang workspace trống không.
-
-Xanh hết thì mới xoá cây `.conf` (`hypr.d/hyprland.conf`, `hypr.d/conf.d/*.conf`
-và nửa `conf` trong `launch-app.nix`).
+**Đếm tiến trình phải dùng `ps -eo args`**, không phải `pgrep -x`: nixpkgs bọc
+binary thành `.NAME-wrapped`, nên `pgrep -x mako` trả 0 trong khi mako đang
+chạy — đã dính đúng bẫy này khi chạy checklist trên.
 
 ## Bố cục ổ
 

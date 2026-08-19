@@ -6,8 +6,13 @@
 -- Tu Hyprland 0.55 hyprlang bi khai tu, config chinh la
 -- `$XDG_CONFIG_HOME/hypr/hyprland.lua`. Hyprland tim Lua TRUOC, khong thay moi
 -- lui ve `.conf` (src/config/ConfigManager.cpp, `Jeremy::getMainConfigPath`).
--- Nghia la CHUNG NAO FILE NAY CON TON TAI thi moi file `.conf` canh no deu bi
--- bo qua hoan toan — do cung la duong lui: doi ten file nay la ve nguyen trang.
+--
+-- Cay `.conf` cu da XOA HAN 20/08/2026, sau khi mot phien dang nhap that xanh
+-- het checklist o hosts/rog/README.md. Hau qua can nho: khong con gi de lui ve
+-- nua, nen doi ten file nay KHONG con la duong thoat ma la mot cai bay —
+-- khong thay file config nao ca thi Hyprland tu SINH RA mot stub, ngay tai
+-- duong dan trong repo (xem muc cuoi file). Muon xem lai ban hyprlang thi lay
+-- tu git: `git log --diff-filter=D -- '*/hypr.d/**/*.conf'`.
 --
 -- Day KHONG phai doi cu phap, ma la mot API khac han. Vai cho khac ve HANH VI
 -- chu khong chi ve chinh ta, ghi ngay tai cho dung no:
