@@ -90,9 +90,18 @@
   #   nvidia-render -> render node (niri qua `debug { render-drm-device }`)
   # Do 19/08/2026: renderD128 = i915, renderD129 = nvidia. Cung la so vo tinh
   # nhu card node, nen cung phai di qua symlink.
+  #
+  # `intel-card` them 19/08/2026, sau khi phat hien mot tac dung phu: khi
+  # AQ_DRM_DEVICES chi liet ke card NVIDIA thi Hyprland KHONG THAY eDP-1 nua
+  # (no nam tren card Intel), nen dong `monitor = eDP-1, disable` trong
+  # hyprland.conf thanh DONG CHET -- khong the tat mot man hinh minh khong
+  # quan. Trieu chung: man laptop cu sang, hien console text.
+  # Do: `card1-eDP-1 enabled=enabled dpms=On` trong khi `hyprctl monitors all`
+  # chi liet ke HDMI-A-1.
   services.udev.extraRules = ''
     SUBSYSTEM=="drm", KERNEL=="card[0-9]*", SUBSYSTEMS=="pci", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-card"
     SUBSYSTEM=="drm", KERNEL=="renderD[0-9]*", SUBSYSTEMS=="pci", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-render"
+    SUBSYSTEM=="drm", KERNEL=="card[0-9]*", SUBSYSTEMS=="pci", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-card"
   '';
 
   # Doi ung cua AQ_DRM_DEVICES, nhung cho sway (wlroots 1.12).

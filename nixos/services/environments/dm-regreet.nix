@@ -26,6 +26,17 @@ in {
   config = lib.mkIf (cfg.enable && cfg.displayManager == "regreet") {
     services.displayManager.regreet.enable = true;
 
+    # Dark mode. `application_prefer_dark_theme` la khoa CHINH THUC cua ReGreet
+    # cho viec nay (regreet.sample.toml cua upstream), va no di CUNG
+    # `theme_name = "Adwaita"` chu khong thay bang "Adwaita-dark": GTK4 tu chon
+    # bien the toi cua theme khi co co nay. Module NixOS da dat san theme_name
+    # tu `regreet.theme.name`, o day chi ghep them mot khoa nen hai ben merge
+    # binh thuong.
+    #
+    # Neu sau nay muon them anh nen thi ReGreet co `[background] path` + `fit`,
+    # va mot dong chao o `[appearance] greeting_msg`.
+    services.displayManager.regreet.settings.GTK.application_prefer_dark_theme = true;
+
     # BAT BUOC, va la thu se noi doi neu quen.
     #
     # `nixos/base` bat `services.displayManager.autoLogin` cho MOI host NixOS.
