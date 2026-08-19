@@ -47,7 +47,37 @@
 -- Backend khai tường minh thắng guard đó (`pick()`: "wins outright, including
 -- over SSH"). Chỉ khai khi binary có thật: `pkgs.tongue` chỉ có trên darwin, nên
 -- host Linux vẫn đi auto-detect và tự chọn fcitx5-remote.
-local backend = (vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1) and "tongue" or nil
+--
+-- Nhưng "máy chạy nvim" và "máy giữ bàn phím" KHÔNG luôn là một. Với
+-- `herdr --remote macmini`, nvim chạy trên macmini còn người dùng gõ ở rog, và
+-- fcitx5 của rog biến phím thành tiếng Việt TRƯỚC khi byte đi qua SSH — nên
+-- `tongue` ở đây đổi input source của macmini mà không ai thấy. Đo 19/08/2026:
+-- nvim trên macmini nhảy `vi→en→vi` đủ bốn bước trong khi rog đứng im ở
+-- `keyboard-us` suốt; focus event thì tới đủ, chỉ đích đến là sai máy.
+--
+-- `bin/ime-route` chuẩn hoá hai thế giới (`tongue` và `fcitx5-remote`) về chung
+-- bảng từ vựng `en|vi|zh` rồi định tuyến sang đúng máy — đây là điểm mở rộng
+-- được tongue.nvim thiết kế sẵn (hợp đồng 4 khoá), không phải lớp vá vòng.
+-- `repoPath` luôn là `$HOME/.nix` (bất biến của repo này), nên đường dẫn viết
+-- thẳng được; thiếu file thì rơi về hành vi cũ thay vì tắt hẳn plugin.
+local route = vim.fn.expand("~/.nix/home-manager/programs/nvim/bin/ime-route")
+local backend = nil
+if vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1 then
+	if vim.fn.executable(route) == 1 then
+		backend = {
+			english = "en",
+			get = { route, "get" },
+			set = { route, "set" },
+			-- Cả hai nhánh đều nói `unknown` khi không đọc được trạng thái:
+			-- `tongue` khi live state không khớp mode nào, ime-route khi
+			-- `fcitx5-remote -n` trả rỗng vì không có input context nào focus.
+			unknown = "unknown",
+			tokens = { "en", "vi", "zh" },
+		}
+	else
+		backend = "tongue"
+	end
+end
 
 -- `restore_on_unfocus` (tongue.nvim 1.2.0, mặc định TẮT ở thượng nguồn) trả bộ
 -- gõ lại khi nvim thôi là nơi đang gõ. Bật ở đây vì trên máy này nvim gần như
