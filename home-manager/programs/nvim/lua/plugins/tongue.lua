@@ -33,8 +33,9 @@
 -- tên đúng ca này là cách duy nhất guard bắn nhầm.
 --
 -- Backend khai tường minh thắng guard đó (`pick()`: "wins outright, including
--- over SSH"). Chỉ khai khi binary có thật: `pkgs.tongue` chỉ có trên darwin, nên
--- host Linux vẫn đi auto-detect và tự chọn fcitx5-remote.
+-- over SSH"). Trước 20/08/2026 chỗ này gác theo `has("mac")` nên host Linux đi
+-- auto-detect; giờ gác theo `ime-route` (xem ngay trên dòng khai `backend`), nên
+-- rog cũng khai tường minh và cũng thắng guard đó.
 --
 -- Nhưng "máy chạy nvim" và "máy giữ bàn phím" KHÔNG luôn là một. Với
 -- `herdr --remote macmini`, nvim chạy trên macmini còn người dùng gõ ở rog, và
@@ -62,22 +63,26 @@
 -- mỗi lần FocusGained thay vì mỗi lời gọi. Chưa đáng: đường bất đồng bộ không
 -- ai chờ, và đổi lấy nó là một autocmd nữa cộng nguy cơ quên layout sai lúc.
 local route = vim.fn.expand("~/.nix/home-manager/programs/nvim/bin/ime-route")
+-- Gác theo sự tồn tại của `ime-route`, KHÔNG theo `has("mac")`. Chính script đó
+-- mới là thứ biết máy này có công cụ gì (`tongue` trên macOS, `fcitx5-remote`
+-- trên Linux). Gác theo OS thì trên rog cả hai vế đều sai — rog không có
+-- `tongue` — nên backend về nil, guard SSH của plugin bắn, và nó nằm im mà
+-- không có tín hiệu nào báo. Đúng khuôn "đo A rồi kết luận cho B" mà CLAUDE.md
+-- cấm.
 local backend = nil
-if vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1 then
-	if vim.fn.executable(route) == 1 then
-		backend = {
-			english = "en",
-			get = { route, "get" },
-			set = { route, "set" },
-			-- Cả hai nhánh đều nói `unknown` khi không đọc được trạng thái:
-			-- `tongue` khi live state không khớp mode nào, ime-route khi
-			-- `fcitx5-remote -n` trả rỗng vì không có input context nào focus.
-			unknown = "unknown",
-			tokens = { "en", "vi", "zh" },
-		}
-	else
-		backend = "tongue"
-	end
+if vim.fn.executable(route) == 1 then
+	backend = {
+		english = "en",
+		get = { route, "get" },
+		set = { route, "set" },
+		-- Cả hai nhánh đều nói `unknown` khi không đọc được trạng thái:
+		-- `tongue` khi live state không khớp mode nào, ime-route khi
+		-- `fcitx5-remote -n` trả rỗng vì không có input context nào focus.
+		unknown = "unknown",
+		tokens = { "en", "vi", "zh" },
+	}
+elseif vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1 then
+	backend = "tongue"
 end
 
 -- `restore_on_unfocus` (tongue.nvim 1.2.0, mặc định TẮT ở thượng nguồn) trả bộ
