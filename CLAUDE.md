@@ -176,7 +176,7 @@ công cụ còn được dùng ở chỗ khác (Windows, máy khác), và bản 
 
 | Công cụ | Là gì | Đường vào repo này | Clone làm việc |
 |---|---|---|---|
-| [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `serve` đọc `configs/shortcuts/apps.*.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
+| [`beckon`](https://github.com/xom11/beckon) | focus-or-launch app switcher (mac/Win/Linux) | flake input + overlay → `pkgs.beckon`; `serve` đọc `configs/shortcuts/apps.shared.toml`; module `home-manager/programs/beckon-serve` | `~/Documents/dev/beckon` |
 | [`dotbrave`](https://github.com/xom11/dotbrave) | quản Brave bằng một file TOML | flake input + overlay → `pkgs.dotbrave` trong `home.packages`. **Không còn module Nix nào** (gỡ 16/08/2026) — chạy tay, xem mục "dotbrave: config trong repo, apply hoàn toàn bằng tay" bên dưới | `~/Documents/dev/dotbrave` |
 | [`tongue`](https://github.com/xom11/tongue) | chuyển chế độ gõ vi/en/zh, lái cả layout OS lẫn bộ gõ ngoài | flake input + overlay → `pkgs.tongue`, **chỉ có trên darwin** (x1g6/vm cố ý không có) | `~/Documents/dev/tongue` |
 | [`tongue.nvim`](https://github.com/xom11/tongue.nvim) | ép tiếng Anh ở Normal mode | `vim.pack.add` trong `home-manager/programs/nvim/lua/plugins/tongue.lua`, rev ghim ở `nvim-pack-lock.json` | `~/Documents/dev/tongue.nvim` |
@@ -287,9 +287,17 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | Windows — dotpkg (bản thân binary) | `pkg.lock`, y như mọi gói scoop khác: nó **tự khai báo chính nó** và đến từ bucket `xom11` | phát hành → sửa manifest bên scoop-bucket → `dotpkg update` → commit lock. **Rồi `scoop update dotpkg` bằng tay**, vì nó không tự nâng được chính nó (xem dưới) |
 | Windows — các gói dotpkg cài | `home-manager/dotfiles/windows/dotpkg/pkg.lock`, **có commit** | `dotpkg update` trong thư mục đó, rồi commit diff của lock |
 
-Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp file `apps.*.toml`, phải
+Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp `apps.shared.toml`, phải
 bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon check`
 của CI chạy bằng binary cũ và đỏ (hoặc tệ hơn: xanh giả theo chiều ngược lại).
+
+**Và `flake.lock` chỉ lo được máy Nix.** Cú pháp mới còn phải tới a14 qua
+`pkg.lock`, kênh hoàn toàn khác — bump một cái mà quên cái kia thì mac xanh còn
+Windows chết lặng. Đã xảy ra 19/08/2026 với cú pháp `||`: `flake.lock` ở 0.9.8
+(đủ), `pkg.lock` còn ghim 0.9.2, và binary thật trên a14 lại là 0.9.6 vì ai đó
+`scoop update` bằng tay. **Ba con số, ba ngả, `git status` sạch trơn** — và
+`dotpkg apply` lúc đó sẽ kéo LÙI máy về 0.9.2 chứ không cứu. Khi một máy Windows
+hành xử sai, so đủ ba chỗ trước khi đoán bất cứ điều gì khác.
 
 Quy tắc đó rộng hơn TOML: nó áp cho **mọi** thay đổi beckon mà repo này gọi
 tới, kể cả bề mặt CLI. beckon 0.6.0 đổi cờ thành subcommand (`--serve` →
@@ -505,7 +513,7 @@ home-manager/
 overlays/            # local packages -- hien TRONG. Co che readDir van chay, nen
                      #   them mot thu muc goi vao day la no tu vao overlays.default
 hosts/{device}/      # per-device configuration.nix and/or home.nix
-configs/             # non-Nix: kanata layouts, shortcuts (apps.*.toml)
+configs/             # non-Nix: kanata layouts, shortcuts (apps.shared.toml)
 windows/             # live parallel PowerShell config; reuses the shared dotfiles
                      #   under home-manager/dotfiles via links.ps1. Not orphaned.
 ```
@@ -625,7 +633,7 @@ nguyên giá trị khi chạy tay:
   thái nội bộ của Brave nói một đằng, tầng tích hợp OS nói một nẻo, và không
   có tín hiệu nào ở đầu ra báo chuyện thứ hai.
 
-  Bốn trong năm cái có phím tắt trong `configs/shortcuts/apps.linux.toml`
+  Bốn trong năm cái có phím tắt trong `configs/shortcuts/apps.shared.toml`
   (`Cap+y`, `Cap+c`, `Cap+k`, `Cap+Shift+m`), nên đây không phải chuyện thẩm mỹ.
 
   **Trước khi chạy `[pwa]`, sao lưu:**
@@ -643,30 +651,40 @@ nguyên giá trị khi chạy tay:
 máy Mac báo đỏ giả `path '/…/home/<user>/.nix/…/brave.toml' does not exist`.
 Gỡ module là gỡ luôn chỗ đọc đó, nên **kiểm chéo rog từ Mac lại chạy được**.
 
-### Phím tắt focus-or-launch: beckon serve + TOML per-target
+### Phím tắt focus-or-launch: beckon serve + MỘT file TOML chung
 
-`configs/shortcuts/apps.{macos,windows,linux}.toml` — ba file. macOS và Windows
-mỗi target một file; **Linux thì một file chung `apps.linux.toml` cho cả GNOME,
-sway và hyprland** (gộp 14/08/2026), vì ba session đó chạy trên cùng một máy nên
-`beckon installed` trả về cùng một danh sách. Format phẳng: mỗi dòng là một
-shortcut trọn vẹn, `"tổ_hợp_phím" = "tên app"` — không còn lớp override/resolve
-nào len vào giữa như hệ cũ. `Cap` giữ = `ctrl+super+alt` (macOS: super=Cmd;
-Windows/Linux: super=phím Win), do kanata sinh ra — bản thân ba file này không
-biết `Cap` là gì.
+`configs/shortcuts/apps.shared.toml` — **MỘT file cho cả ba OS** (gộp
+17/08/2026; trước đó là `apps.{macos,windows,linux}.toml`, và trước nữa là ba
+file với `apps.linux.toml` dùng chung cho GNOME/sway/hyprland). Format phẳng:
+mỗi dòng là một shortcut trọn vẹn, `"tổ_hợp_phím" = "tên app"` — không còn lớp
+override/resolve nào len vào giữa như hệ cũ. `Cap` giữ = `ctrl+super+alt`
+(macOS: super=Cmd; Windows/Linux: super=phím Win), do kanata sinh ra — bản thân
+file này không biết `Cap` là gì.
 
-Tên app phải khớp **CHÍNH XÁC** chuỗi `beckon installed` in ra trên đúng target đó:
-khớp chính xác ~57 ms; trượt xuống quét toàn catalog ~400 ms mỗi lần bấm
-phím. Ba file KHÔNG đồng bộ tên với nhau — mac dùng `"kitty"` chạy thẳng,
-Windows phải là `"Terminal"` (`"kitty"` không resolve trên Windows); mac dùng
-`"Telegram"` (app native, exact match), linux dùng `"Telegram Web"`
-(PWA — Cap+t từng hỏng âm thầm trên Windows vì lẫn hai tên này). Copy nguyên
-một dòng từ file target này sang file target khác là cách chắc chắn hỏng.
+**Một file gánh được ba OS là nhờ cú pháp chuỗi ứng viên `"A || B || C"`**: thử
+trái sang phải, cái đầu tiên HÀNH ĐỘNG được thì thắng, một ứng viên trượt không
+phải lỗi. Nên `"kitty || Terminal"` là kitty trên mac, Windows Terminal trên
+a14, cùng một dòng.
 
-Engine là `beckon` ở cả năm nơi, nhưng file được ĐỌC ở hai thời điểm khác
-nhau tuỳ cặp target — đây từng là cùng hình dạng với bẫy dotbrave, nhưng
-dotbrave đã ra khỏi Nix hẳn (mục trên) nên giờ **chỉ còn chỗ này** trong repo
-mang nó. Rộng hơn bản dotbrave cũ vì chia theo cặp target chứ không phải hai
-bảng trong một file:
+**Sàn là beckon 0.9.7, và đây là chỗ đã cắn một lần.** Bản cũ hơn KHÔNG báo lỗi
+cú pháp — nó đọc cả chuỗi thành MỘT tên app, `RegisterHotKey` vẫn thành công
+nên tray icon bình thường và dòng "19 of 20 registered" vẫn đẹp, rồi chết lặng
+ở bước resolve. Dấu hiệu duy nhất nằm trong `serve.log`:
+`failed to launch 'kitty || Terminal': no installed app matches`. a14 đứng ở
+0.9.6 và mất sáu phím tắt đúng kiểu đó (19/08/2026) — chi tiết trong header của
+chính file TOML.
+
+Tên app phải khớp **CHÍNH XÁC** chuỗi `beckon installed` in ra trên đúng máy đó:
+khớp chính xác ~57 ms; trượt xuống quét toàn catalog ~463 ms trên Windows /
+~79 ms macOS / ~3 ms Linux. Nhưng bậc trượt **thứ hai trở đi gần như miễn phí**,
+nên chuỗi dài không tốn tiền — chỉ ứng viên ĐẦU là đáng kể. Hệ quả: **đặt tên
+của Windows trước**, rồi mac, Linux cuối. Ngoại lệ duy nhất là `Cap+Space`, nơi
+`"Terminal"` đặt trước sẽ làm macOS mở nhầm Terminal.app của Apple — Windows
+chịu một bậc trượt ở đó, cố ý.
+
+Engine là `beckon` ở cả năm nơi, nhưng file được ĐỌC ở hai thời điểm khác nhau
+tuỳ nền tảng — đây từng là cùng hình dạng với bẫy dotbrave, nhưng dotbrave đã
+ra khỏi Nix hẳn (mục trên) nên giờ **chỉ còn chỗ này** trong repo mang nó:
 
 | Nền tảng | Đọc bằng | Sửa file rồi áp dụng bằng | Agent/task | Log |
 |---|---|---|---|---|
@@ -685,17 +703,39 @@ sau switch vì home-manager không tự gọi `swaymsg reload`/`hyprctl reload`.
 Binding sway/hyprland chỉ là `exec beckon "<app>"` TRẦN — không
 `sway-beckon.sh`, không workspace-per-app (quyết định 09/08/2026); workspace
 logic là việc riêng của sway/hypr config, beckon không biết gì về workspace.
+**niri cố ý CHƯA nối vào** dù cũng chạy trên rog — xem chú thích trong
+`home-manager/environments/niri/default.nix`; đừng tưởng là bỏ sót. (Chú thích
+đó lại trỏ tiếp sang một `README` không tồn tại — lý do thật chưa được ghi ở
+đâu cả.)
+
+**Đường dẫn config mà `beckon serve` đọc thì mỗi OS một kiểu, và đừng suy từ
+máy này sang máy kia:**
+
+- **macOS** — `~/.config/beckon/apps.toml` là `mkOutOfStoreSymlink` trỏ về
+  `apps.shared.toml`, khai ở `home-manager/base/macos/default.nix`. Đây là
+  đường dẫn mặc định beckon tìm, và nó **có chủ đích** — đừng xoá. (Lý do phải
+  là out-of-store symlink chứ không phải `source = ../../configs/...`: beckon
+  từ 0.8.0 ghi ngược vào chính file này, nên bản trong store read-only sẽ vỡ.)
+- **Windows** — KHÔNG có link nào. Scheduled task truyền đường dẫn repo tường
+  minh (`beckon serve <repo>\configs\shortcuts\apps.shared.toml`), và
+  `serve`/`check` đều bắt buộc tham số `<CONFIG>`, không có đường lui mặc
+  định. Nên một `~/.config/beckon/apps.toml` xuất hiện trên máy Windows là
+  **rác** — bản mặc định beckon tự đẻ ra, không ai đọc. Đã xoá một cái như thế
+  trên a14 (19/08/2026); nó chứa 3 shortcut lạ và `keyboard.caps = false`.
+- **Linux** — không liên quan: nix đọc file lúc eval rồi sinh binding, không
+  có tiến trình nào đọc TOML lúc chạy.
 
 CI: job `shortcuts` trong `.github/workflows/eval.yml` chạy `beckon check`
-trên cả ba file, nhưng bằng ĐÚNG rev `beckon` đã ghim trong `flake.lock`
+qua glob `apps.*.toml` (nay khớp đúng một file), nhưng bằng ĐÚNG rev `beckon`
+đã ghim trong `flake.lock`
 (đọc qua `nix eval --raw --impure` ngay trong step) — CI kiểm cùng một binary
 mà các host sẽ deploy, không phải bản mới nhất thượng nguồn của beckon.
 
 **Từ beckon 0.8.0, luồng này chạy CẢ HAI CHIỀU.** Bản đó mọc thêm cửa sổ
 Settings, và `crates/beckon-core/src/config_write.rs` **ghi ngược** lựa chọn vào
-chính file `apps.*.toml` — đo trên a14 12/08/2026, hai dòng `keyboard.caps` và
-`keyboard.caps_tap` tự xuất hiện trong `configs/shortcuts/apps.windows.toml` mà
-không ai sửa file. Nghĩa là file này giờ cùng hạng với `pi.d/settings.json` và
+chính file `apps.shared.toml` — đo trên a14 12/08/2026, hai dòng
+`keyboard.caps` và `keyboard.caps_tap` tự xuất hiện trong file đó mà không ai
+sửa. Nghĩa là file này giờ cùng hạng với `pi.d/settings.json` và
 `nvim-pack-lock.json`: **một chương trình đang chạy có thể làm bẩn working tree
 bất cứ lúc nào.** Hệ quả cụ thể: `git pull --ff-only` trên a14 sẽ bị chặn, và
 `git status` bẩn không có nghĩa là ai đó quên commit. Trước khi kết luận "có
@@ -705,7 +745,7 @@ Ba bẫy kế thừa từ đợt dọn 09/08/2026, đáng nhớ vì không có g
 phạm:
 
 - `,` `.` `/` đã thuộc về `window-manager.ahk` (snap trái/phải/max, CÙNG tổ
-  hợp `Cap`) — đừng thêm ba phím này vào `apps.windows.toml`.
+  hợp `Cap`) — đừng thêm ba phím này vào `apps.shared.toml`.
 - Log "N shortcuts registered" từ beckon v0.4.1 đếm số đăng ký THÀNH CÔNG
   ("X of N ... (M failed)" khi có phím trượt, kèm đúng một toast tổng hợp).
   Trên binary cũ hơn (< 0.4.1) con số đó là số dòng parse — đừng tin một mình
