@@ -174,7 +174,11 @@ remote() {
 # dang chay; nhung script nay thi duoc doc lai o MOI loi goi, nen tao file la
 # lam mot phien dang mo bat dau ghi ngay. Xoa file la tat.
 LOG=${IME_ROUTE_LOG:-/tmp/ime-route.log}
-log() { [ -f "$LOG" ] && printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$PPID" "${via:-?}->${target:-local}" "$*" >>"$LOG"; }
+# `|| return 0` chu khong `&&`: khi khong co file log thi `[ -f ]` sai, va mot
+# `&&` doan mach lam HAM tra ve 1. `log` la lenh cuoi cua nhanh `get`, nen ca
+# script thoat 1 du da in dung token -- va phia goi qua ssh doc dung ma thoat do
+# roi coi la that bai. Do 20/08/2026: dau kia in `vi` va rc=1.
+log() { [ -f "$LOG" ] || return 0; printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$PPID" "${via:-?}->${target:-local}" "$*" >>"$LOG"; }
 
 case "${1:-}" in
 get)
