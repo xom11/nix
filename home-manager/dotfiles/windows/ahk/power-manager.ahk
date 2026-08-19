@@ -45,12 +45,28 @@
 ; Timeout la de khong bao gio ket cung: mot phim ket (kanata giu modifier chang
 ; han) thi sau 3 s van tat man hinh -- xau nhat la quay ve dung hanh vi cu chu
 ; khong tu choi ngu.
+;
+; VA BAN PHIM KHONG PHAI NGUON DUY NHAT -- do tiep cung ngay, ngay sau khi ban
+; tren an. Cho nha phim xong thi mot phien ngu duoc 5 phut 06 giay (16:23:11 ->
+; 16:28:18), lan dau trong bay ngay mot phien do phim tat kich ma o lai. Nhung
+; lan bam ke tiep, lan co GAP NAP, lai bat ra sau 934 ms voi ly do "Input
+; Touchpad" -- van dung cai cua so chan co dinh do, chi doi thiet bi. Tay voi
+; qua chieu nghi de ha nap la cham touchpad.
+;
+; Nen cho them: con tro phai DUNG YEN mot khoang truoc khi tat man hinh. Doi
+; tuong that su can tranh la cu cham thoang qua luc voi tay, va no sinh ra
+; chuyen dong -- moi lan doi toa do la dat lai dong ho. Ngon tay dat im khong
+; nhuc nhich thi cach nay KHONG thay; neu con bat ra vi touchpad nua thi phai
+; chuyen huong sang bat su kien nap dong, dung doan them.
 SleepWaitAllKeysUpMs := 3000
+SleepPointerQuietMs := 600
+SleepPointerWaitMs := 6000
 SleepSettleMs := 250
 
 WaitAllKeysUp(timeoutMs) {
     static keys := ["LWin", "RWin", "LAlt", "RAlt", "LCtrl", "RCtrl"
-                  , "LShift", "RShift", "s"]
+                  , "LShift", "RShift", "s"
+                  , "LButton", "RButton", "MButton"]
     deadline := A_TickCount + timeoutMs
     loop {
         anyDown := false
@@ -68,9 +84,32 @@ WaitAllKeysUp(timeoutMs) {
     }
 }
 
+; Tra ve true khi con tro da dung yen du quietMs, false khi het timeoutMs ma van
+; con nhuc nhich -- ca hai truong hop deu di tiep, y het WaitAllKeysUp.
+WaitPointerStill(quietMs, timeoutMs) {
+    deadline := A_TickCount + timeoutMs
+    MouseGetPos(&lastX, &lastY)
+    stillSince := A_TickCount
+    loop {
+        Sleep(20)
+        MouseGetPos(&x, &y)
+        if (x != lastX || y != lastY) {
+            lastX := x
+            lastY := y
+            stillSince := A_TickCount
+        }
+        if (A_TickCount - stillSince >= quietMs)
+            return true
+        if (A_TickCount > deadline)
+            return false
+    }
+}
+
 #!s:: {
-    global SleepWaitAllKeysUpMs, SleepSettleMs
+    global SleepWaitAllKeysUpMs, SleepPointerQuietMs, SleepPointerWaitMs
+    global SleepSettleMs
     WaitAllKeysUp(SleepWaitAllKeysUpMs)
+    WaitPointerStill(SleepPointerQuietMs, SleepPointerWaitMs)
     Sleep(SleepSettleMs)
     SendMessage(0x0112, 0xF170, 2, , "Program Manager")
 }
