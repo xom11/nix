@@ -2,24 +2,36 @@
 #
 # ime-route -- lai bo go o MAY NAO DANG GIU BAN PHIM, khong phai may nao chay nvim.
 #
-# Voi `herdr --remote macmini`, nvim chay tren macmini con ban phim o rog: fcitx5
-# tren rog bien phim thanh tieng Viet TRUOC khi byte di qua SSH. tongue.nvim chi
-# lai duoc bo go cua may no dang chay, nen khong co script nay no doi input source
-# cua macmini -- dung y thiet ke, sai may. Do 19/08/2026: nvim tren macmini nhay
-# vi->en->vi du thu, rog dung im o keyboard-us suot.
+# Voi `herdr --remote <may>`, nvim chay o mot may con ban phim o may khac: bo go
+# cua may CO BAN PHIM bien phim thanh tieng Viet TRUOC khi byte di qua SSH.
+# tongue.nvim chi lai duoc bo go cua may no dang chay, nen khong co script nay no
+# doi input source cua may sai -- dung y thiet ke, sai may. Do 19/08/2026: nvim
+# tren macmini nhay vi->en->vi du thu, rog dung im o keyboard-us suot.
 #
 # Script nay la mot backend cua tongue.nvim (hop dong 4 khoa), khong phai mot lop
-# va vong: no chuan hoa hai the gioi ve chung mot bang tu vung en/vi/zh roi dinh
-# tuyen sang dung may.
+# va vong: no chuan hoa moi may ve chung mot bang tu vung en/vi/zh roi dinh tuyen.
 #
 #   ime-route get           -> in en | vi | zh | unknown
 #   ime-route set <token>   -> dat che do do
 #   ime-route where         -> in dich dang dung (de go roi / checkhealth)
 #
-# Ban phim o dau: tien trinh `herdr remote-client-bridge` chi ton tai khi co
-# client tu xa dang attach, va SSH_CONNECTION cua CHINH NO ghi IP client HIEN TAI.
-# Dung nham SSH_CONNECTION thua ke trong pane la sai: bien do la hoa thach cua
-# luc herdr server khoi dong, con nguyen ca khi nguoi dung ngoi ngay truoc may.
+# KIEN TRUC: mot script, hai vai.
+#
+#   LEAF  -- tra loi ve CHINH may dang chay no, bang cong cu may do co: `tongue`
+#            tren macOS, `fcitx5-remote` tren Linux. Day la noi duy nhat biet
+#            ten bo go that (`lotus`, `keyboard-us`, input source cua macOS).
+#   ROUTER-- khong tu tra loi, ma `ssh` sang may giu ban phim va goi CHINH NO o
+#            do voi IME_ROUTE_LEAF=1.
+#
+# Vi sao goi lai chinh no thay vi hardcode lenh cua dau kia: ban dau nhanh remote
+# hardcode `fcitx5-remote`, nen ban phim o mot may macOS la hong
+# (`command not found: fcitx5-remote`, do 20/08/2026 voi client airm3). May kia
+# la may duy nhat biet no co gi.
+#
+# IME_ROUTE_LEAF=1 la BAT BUOC, khong phai toi uu: mot phien ssh den lam
+# SSH_CONNECTION cua may dich tro NGUOC ve may goi, nen khong co co thi no ssh
+# tra lai va nay vo han. Do 20/08/2026: `ssh airm3 ime-route where` tu macmini
+# in ra `remote: macmini`.
 
 set -uo pipefail
 
@@ -27,6 +39,67 @@ set -uo pipefail
 # ghi de bang bien moi truong thay vi sua file.
 EN_IM=${IME_ROUTE_EN_IM:-keyboard-us}
 VI_IM=${IME_ROUTE_VI_IM:-lotus}
+
+# Duong dan cua chinh script nay tren may dau kia. `repoPath` luon la $HOME/.nix
+# (bat bien cua repo), va `~` duoc shell CUA DAU KIA no ra -- ten user khac nhau
+# giua cac may (kln / lenamkhanh) nen khong duoc viet cung.
+LEAF_PATH='~/.nix/home-manager/programs/nvim/bin/ime-route'
+
+# ---------------------------------------------------------------- vai LEAF ---
+
+# fcitx5-remote qua ssh khong co DBUS_SESSION_BUS_ADDRESS san, va thieu no thi no
+# im lang khong lam gi. Chi dat khi CHUA co, de phien do thi thang.
+fcitx5() { DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/$(id -u)/bus} fcitx5-remote "$@"; }
+
+have() { command -v "$1" >/dev/null 2>&1; }
+
+leaf_get() {
+  if have tongue; then
+    # Y het preset `tongue` cua tongue.nvim: goi tran de doc. No tu in en|vi|zh
+    # hoac `unknown`, nen khong can chuan hoa gi them.
+    tongue
+  elif have fcitx5-remote; then
+    local im
+    im=$(fcitx5 -n 2>/dev/null)
+    case "$im" in
+    # `-n` can mot input context dang focus; khong co thi no in RONG va van
+    # thoat 0. Tra `unknown` thay vi de rong: rong bi sanitize cua plugin loai
+    # voi ly do "empty output", con `unknown` la tin hieu co nghia trong hop dong.
+    "") echo unknown ;;
+    "$EN_IM") echo en ;;
+    # Group cua rog chi co hai muc, nen "khong phai tieng Anh" = bo go tieng
+    # Viet dang bat. May nao co nhieu hon thi dat IME_ROUTE_VI_IM cho dung.
+    *) echo vi ;;
+    esac
+  else
+    echo "ime-route: $(hostname -s) khong co tongue lan fcitx5-remote" >&2
+    return 1
+  fi
+}
+
+leaf_set() {
+  if have tongue; then
+    tongue "$1" >/dev/null
+  elif have fcitx5-remote; then
+    local name
+    case "$1" in
+    en) name=$EN_IM ;;
+    vi) name=$VI_IM ;;
+    # fcitx5 ben nay khong co tieng Trung. Bao that bai de plugin kiem chung
+    # bang mot lan doc thay vi im lang khong lam gi.
+    *)
+      echo "ime-route: '$1' khong co tren $(hostname -s)" >&2
+      return 3
+      ;;
+    esac
+    fcitx5 -s "$name" >/dev/null
+  else
+    echo "ime-route: $(hostname -s) khong co tongue lan fcitx5-remote" >&2
+    return 1
+  fi
+}
+
+# -------------------------------------------------------------- vai ROUTER ---
 
 # IP client theo tien trinh bridge cua herdr -- nguon tin dung khi DANG o trong
 # mot pane herdr. Rong = khong co client tu xa nao attach.
@@ -58,37 +131,40 @@ ssh_host_for() {
   ' ~/.ssh/config
 }
 
-# Hoi ai la CO Y, khong phai thu lan luot: hai nguon tin nay mau thuan nhau
+# Hoi ai la CO Y, khong phai thu lan luot: cac nguon tin nay mau thuan nhau
 # thuong xuyen, va chon nham thi im lang.
 #
+#   IME_ROUTE_LEAF -> khong hoi ai. May goi da quyet dinh roi; hoi tiep la nay
+#     nguoc ve chinh no.
 #   trong pane herdr -> HOI BRIDGE. SSH_CONNECTION o day la hoa thach cua luc
 #     herdr server khoi dong, con nguyen ca khi nguoi dung ngoi ngay truoc may.
 #     Khong co bridge nghia la dang attach cuc bo => ban phim o day.
 #   ngoai herdr -> DUNG SSH_CONNECTION CUA CHINH MINH. Day moi la phien that su
-#     dang cho nguoi ta go. Hoi bridge o day la sai: mot herdr client cua ai do
-#     dang attach khong lien quan gi toi phien ssh nay.
+#     dang cho nguoi ta go.
 #
-# Cai gia cua viec hoi nham: `ssh macmini` roi mo nvim se lai bo go cua macmini
-# trong khi ban phim o may vua ssh den -- dung cai loi ma script nay sinh ra de
-# sua. Do 19/08/2026.
-#
-# Con lai mot ca chua phu: tmux/screen ngoai herdr cung de lai hoa thach y het,
-# nhung chung khong co tien trinh "bridge" nao de hoi, nen khong co nguon tin
-# nao dung hon. `where` in ro no theo nguon nao de con chan doan duoc.
+# Con lai mot ca chua phu: tmux/screen ngoai herdr de lai hoa thach y het, nhung
+# chung khong co tien trinh "bridge" nao de hoi, nen khong co nguon tin nao dung
+# hon. `where` in ro no theo nguon nao de con chan doan duoc.
 target=""
 via=""
-if [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
+if [ -n "${IME_ROUTE_LEAF:-}" ]; then
+  via="leaf (ep cuc bo)"
+elif [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
   ip=$(bridge_client_ip) || ip=""
   via="herdr bridge"
+  [ -n "$ip" ] && target=$(ssh_host_for "$ip")
 else
   ip=$(own_client_ip) || ip=""
   via="SSH_CONNECTION cua phien"
+  [ -n "$ip" ] && target=$(ssh_host_for "$ip")
 fi
-[ -n "$ip" ] && target=$(ssh_host_for "$ip")
 
-remote() { # $@ = tham so cho fcitx5-remote o dau kia
+# $1 = get|set, $2 = token (da kiem la mot trong en|vi|zh o duoi). Ngoac KEP o
+# day la co y: `$1`/`$2` phai no ben NAY, con `~` phai giu nguyen de shell dau
+# kia no -- trong ngoac kep, bash khong lam tilde expansion.
+remote() {
   ssh -o BatchMode=yes -o ConnectTimeout=3 "$target" \
-    'DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus fcitx5-remote '"$*"
+    "IME_ROUTE_LEAF=1 $LEAF_PATH $1${2:+ $2}"
 }
 
 # Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
@@ -103,45 +179,38 @@ log() { [ -f "$LOG" ] && printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$P
 case "${1:-}" in
 get)
   if [ -n "$target" ]; then
-    im=$(remote -n) || exit 1
-    case "$im" in
-    # `-n` can mot input context dang focus; khong co thi no in RONG va van
-    # thoat 0. Tra `unknown` thay vi de rong: rong bi sanitize loai voi ly do
-    # "empty output", con `unknown` la tin hieu co nghia trong hop dong.
-    "") echo unknown; log "get -> unknown (rong)" ;;
-    "$EN_IM") echo en; log "get -> en" ;;
-    # Group cua rog chi co hai muc, nen "khong phai tieng Anh" = bo go tieng
-    # Viet dang bat. May nao co nhieu hon thi dat IME_ROUTE_VI_IM cho dung.
-    *) echo vi; log "get -> vi (im=$im)" ;;
-    esac
+    # Dau kia da chuan hoa roi, nen o day khong dien giai gi them.
+    tok=$(remote get) || {
+      log "get -> SSH TRUOT"
+      exit 1
+    }
+    printf '%s\n' "$tok"
+    log "get -> ${tok:-<rong>}"
   else
-    # Y het preset `tongue` cua tongue.nvim: goi tran de doc, tham so de dat.
-    log "get (cuc bo)"
-    tongue
+    out=$(leaf_get) || exit 1
+    printf '%s\n' "$out"
+    log "get -> ${out:-<rong>}"
   fi
   ;;
 
 set)
   mode=${2:-}
-  [ -n "$mode" ] || {
-    echo "ime-route: set can mot token (en|vi|zh)" >&2
+  case "$mode" in
+  en | vi | zh) ;;
+  # Chan tai day chu khong day sang ssh: token den tu plugin nen luon sach, va
+  # mot danh sach trang o cho nay la thu giu cho chuoi lenh ssh khong bao gio
+  # mang mot thu khong luong truoc duoc.
+  *)
+    echo "ime-route: set can mot token (en|vi|zh), nhan duoc '${mode}'" >&2
     exit 2
-  }
+    ;;
+  esac
   if [ -n "$target" ]; then
-    case "$mode" in
-    en) log "set en"; remote -s "$EN_IM" >/dev/null ;;
-    vi) log "set vi"; remote -s "$VI_IM" >/dev/null ;;
-    # zh khong ton tai phia fcitx5. Chi toi duoc day khi nguoi dung tung o che
-    # do zh luc ngoi truoc macmini roi attach tu xa; bao that bai de plugin
-    # kiem chung lai bang mot lan doc thay vi im lang khong lam gi.
-    *)
-      echo "ime-route: '$mode' khong co o $target" >&2
-      exit 3
-      ;;
-    esac
+    log "set $mode"
+    remote set "$mode" >/dev/null || exit $?
   else
-    log "set $mode (cuc bo)"
-    tongue "$mode" >/dev/null
+    log "set $mode"
+    leaf_set "$mode" || exit $?
   fi
   ;;
 
@@ -149,7 +218,7 @@ where)
   if [ -n "$target" ]; then
     echo "remote: $target (ban phim o do, theo $via)"
   else
-    echo "local: tongue"
+    echo "local: $(have tongue && echo tongue || { have fcitx5-remote && echo fcitx5-remote || echo 'KHONG CO CONG CU'; })${via:+ ($via)}"
   fi
   ;;
 
