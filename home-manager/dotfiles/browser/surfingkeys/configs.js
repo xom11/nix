@@ -161,6 +161,7 @@ const SITES = [
   ["gm", "https://mail.google.com/"                        ],
   ["ht", "https://hoctotbachkhoa.com/"                     ],
   ["nd", "https://app.netdata.cloud/"                      ],
+  ["ex", "https://excalidraw.com/"                      ],
 ].map(([key, url, title]) => ({ key, url, title: title ?? titleFromUrl(url) }));
 
 SITES.forEach(({ key, title, url }) =>
