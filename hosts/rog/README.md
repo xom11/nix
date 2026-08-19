@@ -32,6 +32,49 @@ khoá được người dùng khỏi máy. Phím tắt launcher của GNOME/sway
 
 Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không phải reboot.
 
+## hyprland: config đã chuyển sang Lua (còn một bước kiểm)
+
+`hypr.d/` mang **cả hai cây** — `hyprland.lua` (đang chạy) và `hyprland.conf`
+(đường lui). Hyprland chỉ lùi về `.conf` khi không thấy `hyprland.lua`, nên đổi
+tên đúng một file là quay về nguyên trạng. Bối cảnh và ba cái bẫy của API mới
+nằm ở `CLAUDE.md`, mục "Hyprland trên rog".
+
+Đã kiểm được **không cần đăng xuất**, bằng `hyprctl reload full-reset` (lệnh này
+dựng lại config manager từ đầu nên nó chọn lại `.lua`), đo 20/08/2026:
+
+| Kiểm | Kết quả |
+|---|---|
+| `Hyprland --verify-config` | `config ok`, thoát 0 — và **đỏ thật** khi cố ý làm hỏng (thoát 1) |
+| `hyprctl binds -j \| grep -c modmask` | 80 (đúng bằng bản `.conf`) |
+| `hyprctl binds -j` → `handler` | `__lua` ở cả 80 → đang chạy bản Lua thật |
+| binding theo submap | 69 gốc + 11 `resize` |
+| `hyprctl configerrors` | rỗng |
+| `hyprctl monitors all` | HDMI-A-1 bật, eDP-1 `disabled: true` |
+| `/sys/class/drm/card1-eDP-1/enabled` | `disabled` |
+| `grep -c 'cursor blit failed'` | 0 |
+
+**Còn thiếu, và chỉ một phiên đăng nhập THẬT mới kiểm được:** `full-reset` không
+bắn lại `hyprland.start` nên `exec-once` chưa chạy qua đường Lua lần nào, và
+`hl.env("AQ_DRM_DEVICES", ...)` cũng chưa được đọc bởi một backend DRM mới. Sau
+lần đăng xuất/đăng nhập tới, chạy nốt:
+
+```sh
+L=/run/user/1000/hypr/$HYPRLAND_INSTANCE_SIGNATURE/hyprland.log
+grep -a '\[cfg\]' $L                       # phải nói "Using lua config found at ..."
+grep -ac 'cursor blit failed' $L           # phải = 0
+grep -aE 'Explicit device|becomes primary' $L   # card0 = NVIDIA primary
+hyprctl binds -j | grep -c modmask         # phải = 80
+pgrep -a mako; pgrep -a swaybg; pgrep -a swayidle; pgrep -a kanshi; pgrep -a fcitx5
+```
+
+Thử tay: `Super+Alt+L` (swaylock), `Super+R` (submap resize, và thoát được bằng
+`Return`/`Escape`/`Super+R`), `Print`, `Tab+W`/`Tab+E` (bộ gõ), `Alt+V`
+(cliphist), `$mod+1..4`, vài phím `Cap+<x>`, và mở một cửa sổ mới xem nó có nhảy
+sang workspace trống không.
+
+Xanh hết thì mới xoá cây `.conf` (`hypr.d/hyprland.conf`, `hypr.d/conf.d/*.conf`
+và nửa `conf` trong `launch-app.nix`).
+
 ## Bố cục ổ
 
 | # | Phân vùng | Kích thước | Dùng cho |

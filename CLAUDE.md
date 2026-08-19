@@ -156,7 +156,12 @@ chéo. Cả ba đã làm hai phiên làm việc độc lập cùng kết luận 
   đọc config nên chết ở `Could not open target tty`, và bản sạch với bản hỏng cho
   output y hệt. Phải `WLR_BACKENDS=headless WLR_LIBINPUT_NO_DEVICES=1 sway --validate`,
   và **mã thoát luôn 0 kể cả khi hỏng** → phải đọc output. `Hyprland --verify-config`
-  thì ngược lại: chạy thẳng qua SSH, in `config ok`, và có đi theo `source`.
+  thì ngược lại: chạy thẳng qua SSH, in `config ok`, và có đi theo `source` lẫn
+  `require`. Nhưng **mã thoát của nó chỉ nói thật ở nhánh Lua** — đo trên rog
+  20/08/2026: config Lua hỏng (sai tên khoá, hay lỗi cú pháp trong một file được
+  `require`) → thoát **1** kèm đúng `file:dòng`; còn `.conf` hỏng (ép qua
+  `HYPRLAND_CONFIG=<file>`) thì vẫn in `config ok` và thoát **0**. Vẫn phải đọc
+  output, đừng chỉ nhìn `$?`.
 
 Hệ quả rộng hơn, đúng cho cả `nix eval`: khi viết một kết luận dạng *"A thế nào thì
 B cũng thế"* mà chỉ đo A — dừng lại và đo B. Riêng repo này đã dính ba lần, và cả
@@ -707,7 +712,7 @@ ra khỏi Nix hẳn (mục trên) nên giờ **chỉ còn chỗ này** trong rep
 | Windows | `beckon serve` LÚC CHẠY, tự watch file | không gì cả — ăn trong ~1-2 s | task `\BeckonServe` + `\BeckonServeWatchdog` (`windows/modules/services/beckon-serve{,-watchdog}`) | `%LOCALAPPDATA%\beckon\serve.log` |
 | GNOME | `builtins.fromTOML` LÚC EVAL | **`nixos-rebuild switch`** | dconf `custom-keybindings` (`home-manager/environments/gnome/launch-app.nix`) | — |
 | sway | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`swaymsg reload`) | `~/.config/sway-nix/launch-app.conf` | — |
-| hyprland | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`hyprctl reload`) | `~/.config/hypr-nix/launch-app.conf` | — |
+| hyprland | `builtins.fromTOML` LÚC EVAL | **switch** + `Tab+r` (`hyprctl reload`) | `~/.config/hypr-nix/launch-app.lua` (kèm bản `.conf` dự phòng) | — |
 
 mac/Windows: sửa file là đủ, watcher tự đọc lại, không switch không rebuild gì
 cả — file hỏng thì beckon giữ nguyên bảng cũ và báo qua notification/toast,
@@ -777,6 +782,47 @@ file), `LaunchApp.spoon`, `launch-app.ahk`,
 launch-app`). Plan và spec của đợt migration nằm trong
 `docs/superpowers/plans/` và `docs/superpowers/specs/` (cả hai đã gitignore,
 không lên web public).
+
+### Hyprland trên rog: config đã là Lua, hyprlang chỉ còn làm đường lui
+
+Từ Hyprland 0.55 hyprlang bị khai tử; config chính là
+`$XDG_CONFIG_HOME/hypr/hyprland.lua`. rog chạy 0.56.2 và **đang thật sự đọc bản
+Lua** — bằng chứng đo được: `hyprctl binds -j` cho `handler` = `__lua` ở cả 80
+binding.
+
+`home-manager/environments/hyprland/hypr.d/` hiện mang **cả hai cây** (`.lua` và
+`.conf`), và đó là chủ đích: Hyprland chỉ lùi về `.conf` khi **không thấy**
+`hyprland.lua`, nên đổi tên đúng một file là quay về nguyên trạng. Xoá cây
+`.conf` (và nửa `conf` trong `launch-app.nix`) khi nào đã đăng nhập lại một
+phiên thật và checklist ở `hosts/rog/README.md` xanh hết.
+
+**Đây là API khác hẳn, không phải đổi cú pháp.** Ba chỗ đổi HÀNH VI, cả ba đều
+im lặng khi dịch máy móc — đọc từ nguồn v0.56.2 rồi đo lại trên máy:
+
+- **`hyprctl dispatch <X>` giờ được bọc thành `return hl.dispatch(<X>)` rồi eval
+  bằng Lua** (`HyprCtl.cpp`, `dispatchRequest`). Nên `hyprctl dispatch dpms off`
+  trả về `')' expected near 'on'` chứ không làm gì. Bản đúng là
+  `hyprctl dispatch "hl.dsp.dpms{action=[[off]]}"`. Nguy hiểm vì hai lời gọi như
+  thế **nằm trong chuỗi shell** — một trong tham số `swayidle`, một trong đường
+  ống `rofi` — nên không có bộ kiểm config nào nhìn thấy. Chuỗi Lua bên trong
+  phải là long-bracket `[[...]]`: nháy đơn đóng sớm tham số của swayidle, nháy
+  kép đóng sớm lớp shell.
+- **`hyprctl keyword` không còn chạy** ("keyword can't work with non-legacy
+  parsers. Use eval."). Cách tắt autoreload trước khi đụng file trong repo giờ là
+  `hyprctl eval 'hl.config({ misc = { disable_autoreload = true } })'`.
+- **Tên khoá config đổi `-` thành `_`** (`luaConfigValueName` đổi `:`→`.` và
+  `-`→`_`), nên `tap-to-click` thành `tap_to_click`.
+
+Hai thứ giữ nguyên: `hyprctl reload` là lệnh riêng nên không bị đổi cú pháp, và
+`hyprctl reload full-reset` thì dựng lại config manager từ đầu — đó chính là
+cách bật cây Lua cho một phiên **đang chạy** mà không phải đăng xuất.
+
+Biến `$mod/$alt/$tab` thành module `hypr.d/vars.lua`: `local` của Lua không
+xuyên qua biên giới file, nên biến dùng chung phải đi qua `require`.
+`require("vars")` giải được nhờ `package.path` mà Hyprland tự đặt =
+`<thư mục chứa config chính>/?.lua`. Còn `source = .../conf.d/*.conf` thành
+`require("~/.config/hypr/conf.d/*.lua")` — glob chỉ chạy khi đường dẫn **tường
+minh** (`~/`, `/`, `./`, `../`) và vẫn lỗi khi khớp 0 file, y như hyprlang.
 
 ### Secrets (agenix)
 

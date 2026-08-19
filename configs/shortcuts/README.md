@@ -73,14 +73,14 @@ bi lech nhu file README cu:
 - Lop Tab (`Tab` giu lam modifier): macOS o
   `home-manager/dotfiles/macos/hammerspoon/MySpoons/Tab.spoon/init.lua`,
   sway o `home-manager/environments/sway/sway.d/conf.d/tab.conf`, hyprland o
-  `home-manager/environments/hyprland/hypr.d/conf.d/tab.conf`, Windows o
+  `home-manager/environments/hyprland/hypr.d/conf.d/tab.lua`, Windows o
   `home-manager/dotfiles/windows/ahk/tab-key.ahk`.
 - Phim quan ly nguon (khoa man/ngu/tat may/khoi dong lai/dang xuat):
   macOS o
   `home-manager/dotfiles/macos/hammerspoon/MySpoons/PowerManager.spoon/init.lua`,
   sway o `home-manager/environments/sway/sway.d/conf.d/system.conf` (muc
   "Power Keybindings"), hyprland o
-  `home-manager/environments/hyprland/hypr.d/conf.d/system.conf`, Windows o
+  `home-manager/environments/hyprland/hypr.d/conf.d/system.lua`, Windows o
   `home-manager/dotfiles/windows/ahk/power-manager.ahk`, GNOME dung
   keybinding co san cua desktop, khai o
   `home-manager/environments/gnome/shortcuts.nix`.

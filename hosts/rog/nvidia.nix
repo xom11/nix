@@ -3,7 +3,7 @@
   # ASUS ROG Strix G531GT — Optimus.
   #
   # CANH BAO, do 19/08/2026: cong HDMI cua may nay noi vao NVIDIA, khong phai
-  # Intel. Man LG UltraFine 4K — man hinh DUY NHAT dang dung, vi hyprland.conf
+  # Intel. Man LG UltraFine 4K — man hinh DUY NHAT dang dung, vi hyprland.lua
   # tat han eDP-1 — nam o `card0-HDMI-A-1`, tuc card NVIDIA. Cho nen dung doc
   # `prime.offload` ben duoi thanh "Intel day man hinh": no chi dung cho tam
   # eDP gan lien, thu khong con ai bat.
@@ -17,8 +17,8 @@
 
   # =========================================================================
   # Hai muc duoi day cung phuc vu mot viec: cho phien Wayland render TREN
-  # NVIDIA, card dang cam man hinh. Xem `env = AQ_DRM_DEVICES` trong
-  # home-manager/environments/hyprland/hypr.d/hyprland.conf — day la nua he
+  # NVIDIA, card dang cam man hinh. Xem `hl.env("AQ_DRM_DEVICES", ...)` trong
+  # home-manager/environments/hyprland/hypr.d/hyprland.lua — day la nua he
   # thong cua no, thieu mot trong hai la nua kia vo nghia.
   # =========================================================================
 
@@ -93,9 +93,9 @@
   #
   # `intel-card` them 19/08/2026, sau khi phat hien mot tac dung phu: khi
   # AQ_DRM_DEVICES chi liet ke card NVIDIA thi Hyprland KHONG THAY eDP-1 nua
-  # (no nam tren card Intel), nen dong `monitor = eDP-1, disable` trong
-  # hyprland.conf thanh DONG CHET -- khong the tat mot man hinh minh khong
-  # quan. Trieu chung: man laptop cu sang, hien console text.
+  # (no nam tren card Intel), nen dong `hl.monitor({ output = "eDP-1",
+  # disabled = true })` trong hyprland.lua thanh DONG CHET -- khong the tat mot
+  # man hinh minh khong quan. Trieu chung: man laptop cu sang, hien console text.
   # Do: `card1-eDP-1 enabled=enabled dpms=On` trong khi `hyprctl monitors all`
   # chi liet ke HDMI-A-1.
   services.udev.extraRules = ''

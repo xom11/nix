@@ -3,8 +3,9 @@
 # new-workspace.sh
 # Moves every newly-opened tiling window to the lowest-numbered empty workspace.
 #
-# This is the sway counterpart of the hyprland one-liner in
-# hypr.d/conf.d/windowrules.conf (`match:class .*, ..., workspace emptym`).
+# This is the sway counterpart of the hyprland rule in
+# hypr.d/conf.d/windowrules.lua (`match = { class = ".*", float = false }`,
+# `workspace = "emptym"`).
 # Sway has no equivalent: `for_window [...] move container to workspace` only
 # takes a STATIC target (`number N`, `next`, `prev`, `back_and_forth`), and
 # `next` means the next workspace that already EXISTS -- it never creates one.
