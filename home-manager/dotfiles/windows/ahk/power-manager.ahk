@@ -23,7 +23,57 @@
 ; 1 nen on, service o session 0 thi khong.
 ;
 ;   0x0112 = WM_SYSCOMMAND, 0xF170 = SC_MONITORPOWER, lParam 2 = tat han.
-#!s::SendMessage(0x0112, 0xF170, 2, , "Program Manager")
+;
+; PHAI cho nha het phim TRUOC khi tat man hinh, va day khong phai lam dep.
+; Do tren a14 19/08/2026: SendMessage thang thi may VAO modern standby that
+; (Kernel-Power 506 co ban), roi bi da ra sau ~0.85 s voi ly do "Input Keyboard".
+; Bay ngay nhat ky co dung sau phien kieu do, khoang cach 506->507 lan luot
+; 832, 834, 835, 852, 861, 867 ms -- sau lan, bon ngay khac nhau, lech ca thay
+; 35 ms. Nguoi thi khong nha phim deu den vay; do la mot moc CO DINH cua he
+; thong: Windows chan input mot khoang sau khi vao standby, input den trong
+; khoang do bi treo lai roi ban ra dung luc het chan.
+;
+; Doi chieu de chac: moi phien vao ngu bang HET GIO NHAN ROI (`Video Idle
+; Timeout`, thay trong `powercfg /sleepstudy /xml`) deu O LAI -- 22 phut, 72
+; phut, mot phien 24 tieng. Chi phien do phim tat kich moi bat ra o ~0.85 s.
+; Khac nhau duy nhat giua hai duong la luc tat man hinh co phim dang giu hay
+; khong.
+;
+; Nen cho toi khi khong con phim nao xuong roi moi tat man hinh: khong con su
+; kien ban phim nao sau moc vao standby thi khong co gi de danh thuc.
+;
+; Timeout la de khong bao gio ket cung: mot phim ket (kanata giu modifier chang
+; han) thi sau 3 s van tat man hinh -- xau nhat la quay ve dung hanh vi cu chu
+; khong tu choi ngu.
+SleepWaitAllKeysUpMs := 3000
+SleepSettleMs := 250
+
+WaitAllKeysUp(timeoutMs) {
+    static keys := ["LWin", "RWin", "LAlt", "RAlt", "LCtrl", "RCtrl"
+                  , "LShift", "RShift", "s"]
+    deadline := A_TickCount + timeoutMs
+    loop {
+        anyDown := false
+        for k in keys {
+            if GetKeyState(k, "P") {
+                anyDown := true
+                break
+            }
+        }
+        if (!anyDown)
+            return true
+        if (A_TickCount > deadline)
+            return false
+        Sleep(20)
+    }
+}
+
+#!s:: {
+    global SleepWaitAllKeysUpMs, SleepSettleMs
+    WaitAllKeysUp(SleepWaitAllKeysUpMs)
+    Sleep(SleepSettleMs)
+    SendMessage(0x0112, 0xF170, 2, , "Program Manager")
+}
 
 ; Lock out 
 +#!L:: {
