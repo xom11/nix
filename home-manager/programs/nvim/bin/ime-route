@@ -155,14 +155,20 @@ bridges() {
       n = split(e, a, ":")
       return (n == 3) ? ((d * 24 + a[1]) * 60 + a[2]) * 60 + a[3] : (d * 24 * 60 + a[1]) * 60 + a[2]
     }
-    # Neo vao tien trinh herdr THAT, khong khop chuoi con trong argv bat ky:
-    # mot tien trinh thu ba mang chuoi nay se lot matcher long. Da tai hien
-    # 20/08/2026: matcher long ra 3 ung vien, matcher chat ra dung 2 bridge that.
-    # Ke mao danh thuong la mot pane herdr, tuc no MANG SSH_CONNECTION HOA THACH
-    # -- khop nham khong chi chon sai tien trinh ma dung lai dung con bug hoa
-    # thach ma ca script nay sinh ra de giet. Meo `[r]` chi chong awk tu khop
-    # chinh no, KHONG chong tien trinh thu ba.
-    $NF == "remote-client-bridge" && $(NF - 1) ~ /(^|\/)herdr$/ { print secs($2), $1 }
+    # Neo vao TOAN BO argv, khong phai vao hai token cuoi. Hai vong that bai
+    # da do, moi cai chat hon cai truoc:
+    #   `/[r]emote-client-bridge/` -- khop chuoi con trong argv BAT KY; mot
+    #     tien trinh thu ba mang chuoi nay lot ngay (tai hien: long 4 ung vien).
+    #   `$NF/$(NF-1)` -- van khop `ssh ... -T macmini exec .../herdr
+    #     remote-client-bridge`, tuc lenh ssh DI RA cua mot may dang lam
+    #     CLIENT. Do tren rog 20/08/2026: no khop pid 20570, va CHI thoat nan
+    #     vi environ cua ssh do doc ra rong. Neu herdr o do duoc khoi dong tu
+    #     mot phien ssh thi ssh ay MANG hoa thach, va may se dinh tuyen ve
+    #     dung may sai -- con bug ma ca script nay sinh ra de giet.
+    # Bridge THAT la mot tien trinh herdr voi dung mot tham so, nen NF==4 voi
+    # `ps -eo pid,etime,args`. Do ca hai dau: macmini (server) NF=4 $3=.../herdr;
+    # rog (client) NF=16 $3=ssh.
+    NF == 4 && $4 == "remote-client-bridge" && $3 ~ /(^|\/)herdr$/ { print secs($2), $1 }
   ' | sort -n
 }
 
