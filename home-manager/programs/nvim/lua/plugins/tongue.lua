@@ -53,8 +53,21 @@ if vim.fn.executable(route) == 1 then
 --
 -- Only helps a LOCAL nvim there: over SSH, Windows puts the session in session 0
 -- and `tongue.exe` refuses with "khong voi toi duoc desktop tuong tac" -- VKey
--- lives in session 1. No ssh-based path can drive it, which is also why
--- `ime-route` cannot route to a14.
+-- lives in session 1.
+--
+-- A scheduled task with `-LogonType Interactive` DOES cross that wall: measured
+-- on a14 20/08/2026 at 376-401 ms, 5/5 -- but only with `-MultipleInstances
+-- Parallel` (the IgnoreNew default silently drops a start while the previous
+-- instance runs; one call never ran for 40 s) and `-AllowStartIfOnBatteries`
+-- (without it the task sits at State=Queued forever, LastTaskResult=0).
+--
+-- Not used, and the reason is the WIRE, not the session hop: leaving Insert
+-- costs TWO sequential backend calls (this plugin sets `observe` on the way out,
+-- which skips the fast path), and one ssh leg to a14 is 452 ms multiplexed /
+-- 829 ms not. That is ~1.7 s per <Esc> against a 150-400 ms window. So
+-- `ime-route` refuses such a host BY NAME before opening the connection
+-- (`SKIP_HOSTS`, escape hatch `IME_ROUTE_SKIP=`), and `ime-route where` says so
+-- in full. Switch modes on a14 itself with Cap+Q/W/E.
 elseif vim.fn.executable("tongue") == 1 then
 	backend = "tongue"
 end

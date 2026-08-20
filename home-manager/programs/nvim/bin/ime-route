@@ -234,6 +234,34 @@ ssh_host_for() {
   ' ~/.ssh/config
 }
 
+# May KHONG lai duoc bo go qua ssh -- loc TRUOC khi mo ket noi.
+#
+# Windows: sshd la SERVICE nen shell no sinh ra nam o SESSION 0, con bo go
+# (VKey) song o SESSION 1. `tongue.exe` lai VKey bang PostMessage(FindWindow) va
+# doc trang thai qua shared memory `Local\VKeySharedState`; ca hai deu la tai
+# nguyen THEO SESSION nen tu session 0 khong voi toi. Do 20/08/2026 tren a14:
+# `ssh a14 tongue` tu choi kem chan doan, con `im-select 0804` thi THOAT 0, IN
+# RONG va layout cua session 1 khong doi -- bao thanh cong ma khong lam gi.
+#
+# Task Scheduler VUOT DUOC buc tuong do (`-LogonType Interactive`: do 5/5 o
+# 376-401 ms voi `-MultipleInstances Parallel`; mac dinh IgnoreNew am tham bo
+# lenh start nen co mot lan rot 40 s). Khong dung, va ly do la DUONG TRUYEN chu
+# khong phai buoc nhay session: moi lan roi Insert ton HAI loi goi backend tuan
+# tu (plugin dat `observe` tren duong ra nen bo nhanh nhanh), va mot luot ssh
+# sang a14 ton 452 ms co ControlMaster / 829 ms khong co. Tuc ~1.7 s cho mot lan
+# bam Esc, trong khi cua so can bao ve la 150-400 ms -- lech mot bac do lon.
+#
+# Loc theo TEN chu khong probe: probe chinh la cai dat. `-` chu khong `:-` de
+# `IME_ROUTE_SKIP=` tat han duoc bo loc; voi `:-` thi chuoi rong roi ve mac dinh
+# va cai cong tat nay im lang khong lam gi.
+SKIP_HOSTS=${IME_ROUTE_SKIP-a14 rog-win}
+
+routable() {
+  local h
+  for h in $SKIP_HOSTS; do [ "$1" = "$h" ] && return 1; done
+  return 0
+}
+
 # Hoi ai la CO Y, khong phai thu lan luot: cac nguon tin nay mau thuan nhau
 # thuong xuyen, va chon nham thi im lang.
 #
@@ -269,17 +297,32 @@ leaf-set)
   ;;
 esac
 
-target=""   # dich de DOC (tre nhat)
-targets=""  # moi dich de DAT, moi ten mot dong
+target=""    # dich de DOC (tre nhat)
+targets=""   # moi dich de DAT, moi ten mot dong
+skipped=""   # client dang attach nhung KHONG lai duoc -- chi de chan doan
+no_route=""  # co client, ma khong cai nao lai duoc -> KHONG duoc lui ve leaf
 via=""
 if [ -n "${IME_ROUTE_LEAF:-}" ]; then
   via="leaf (ep cuc bo)"
 elif [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
-  targets=$(bridge_hosts)
+  seen=$(bridge_hosts)
+  targets=$(printf '%s\n' "$seen" | while read -r h; do
+    [ -n "$h" ] && routable "$h" && printf '%s\n' "$h"
+  done)
+  skipped=$(printf '%s\n' "$seen" | while read -r h; do
+    [ -n "$h" ] && ! routable "$h" && printf '%s\n' "$h"
+  done | tr '\n' ' ' | sed 's/ $//')
   target=$(printf '%s' "$targets" | head -1)
   n=$(printf '%s' "$targets" | grep -c . || true)
   via="herdr bridge"
   [ "${n:-0}" -gt 1 ] && via="herdr bridge ($n client: $(printf '%s' "$targets" | tr '\n' ' ' | sed 's/ $//'))"
+  [ -n "$skipped" ] && via="$via [bo qua: $skipped]"
+  # Co client ma khong cai nao lai duoc thi KHONG duoc roi xuong nhanh leaf.
+  # `targets` rong o day KHAC HAN `targets` rong vi khong co bridge nao: ben kia
+  # nghia la dang attach cuc bo (ban phim o ngay day), ben nay nghia la ban phim
+  # o mot may ta khong toi duoc. Gop lai thi leaf_set se doi bo go cua MAY NAY --
+  # dung con bug ca script nay sinh ra de giet.
+  [ -n "$seen" ] && [ -z "$targets" ] && no_route=1
 else
   ip=$(own_client_ip) || ip=""
   via="SSH_CONNECTION cua phien"
@@ -290,6 +333,14 @@ else
     # ban phim o noi ta khong biet duong toi. Gop lai thi ca thu hai lang le lai
     # nham may.
     [ -n "$target" ] || via="SSH_CONNECTION cua phien (client $ip KHONG co Host trong ~/.ssh/config)"
+    # Cung mot luat cho duong ssh truc tiep: nguoi ta ssh tu a14 vao macmini roi
+    # mo nvim, khong qua herdr.
+    if [ -n "$target" ] && ! routable "$target"; then
+      skipped=$target
+      target=""
+      no_route=1
+      via="$via [bo qua: $skipped]"
+    fi
   fi
   targets=$target
 fi
@@ -350,7 +401,15 @@ log() { [ -f "$LOG" ] || return 0; printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%
 
 case "$cmd" in
 get)
-  if [ -n "$targets" ]; then
+  if [ -n "$no_route" ]; then
+    # `unknown` chu khong phai loi, va do la lua chon RE HON. Hop dong coi
+    # `unknown` la "khong biet may dang o dau" nen plugin se KHONG nho no de
+    # khoi phuc -- dung y muon. Bao loi thay vi the thi backend goi them mot lan
+    # `get` kiem chung roi canh bao 30 s mot lan: ba loi goi va mot dong nhac
+    # nho, cho mot su that khong doi duoc.
+    echo unknown
+    log "get -> KHONG DINH TUYEN DUOC (client: $skipped)"
+  elif [ -n "$targets" ]; then
     # Thu lan luot, tre nhat truoc. Mot client khong tra loi duoc (may ngu, hoac
     # may Windows khong chay noi script bash) khong duoc lam hong ca lan doc.
     # Dau kia da chuan hoa roi, nen o day khong dien giai gi them.
@@ -399,7 +458,14 @@ set)
     exit 2
     ;;
   esac
-  if [ -n "$targets" ]; then
+  if [ -n "$no_route" ]; then
+    # Im lang va thoat 0. Bat ky chu nao tren stdout cung bi coi la "noisy" roi
+    # keo them mot `get`, con rc khac 0 cung the -- ca hai deu tra tien cho mot
+    # viec khong the lam duoc. Day la mot lan im lang CO CHU DICH, va no chi
+    # chap nhan duoc vi dieu kien nay VINH VIEN va NOI RA duoc: `where` in ly do
+    # day du, log ghi tung lan. Yen luc chay, on ao luc soi.
+    log "set $mode -> KHONG DINH TUYEN DUOC (client: $skipped)"
+  elif [ -n "$targets" ]; then
     # Toi TAT CA client dang attach. Thanh cong neu it nhat mot cai an -- mot
     # may ngu khong duoc lam hong lan chuyen o may nguoi ta dang go.
     rc=1
@@ -422,7 +488,15 @@ EOF
   ;;
 
 where)
-  if [ -n "$target" ]; then
+  if [ -n "$no_route" ]; then
+    # In ra LY DO chu khong chi in trang thai: mot dong "local" se lam nguoi doc
+    # tuong khong co client nao, trong khi that ra co ma khong toi duoc.
+    echo "KHONG DINH TUYEN DUOC: client dang attach la '$skipped' (Windows)."
+    echo "  ssh vao Windows roi xuong SESSION 0; VKey song o SESSION 1, ma"
+    echo "  PostMessage/FindWindow lan Local\\... deu la tai nguyen theo session."
+    echo "  => get tra 'unknown', set khong lam gi. Doi che do o may do bang Cap+Q/W/E."
+    echo "  Ep thu: IME_ROUTE_SKIP= ime-route where"
+  elif [ -n "$target" ]; then
     echo "remote: $target (ban phim o do, theo $via)"
   else
     tool=$(have tongue && echo tongue || { have fcitx5-remote && echo fcitx5-remote || echo "KHONG CO CONG CU"; })
