@@ -45,6 +45,16 @@ VI_IM=${IME_ROUTE_VI_IM:-lotus}
 # giua cac may (kln / lenamkhanh) nen khong duoc viet cung.
 LEAF_PATH='~/.nix/home-manager/programs/nvim/bin/ime-route'
 
+# Mot lan `uname` cho ca script. `leaf_tool` va `bridge_ip` truoc day moi cai hoi
+# lai, va moi fork o day nam tren duong nong: khoi phat hien tuyen chay cho CA
+# `get` LAN `set`, tuc hai lan moi lan bam Esc.
+OS=$(uname -s)
+
+# Thu muc tam RIENG cua user. Tren macOS $TMPDIR la 0700 duoi /var/folders, con
+# /tmp la 1777 dung chung -- va macOS khong co fs.protected_symlinks. Ca file
+# nhat ky lan cache deu dung day.
+TMP=${TMPDIR:-/tmp}
+
 # ---------------------------------------------------------------- vai LEAF ---
 
 # fcitx5-remote qua ssh khong co DBUS_SESSION_BUS_ADDRESS san, va thieu no thi no
@@ -60,7 +70,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 # phai cau hoi -- cai quan trong la khong goi nham mot chuong trinh trung ten
 # voi argv `vi`.
 leaf_tool() {
-  case $(uname -s) in
+  case $OS in
   Darwin) have tongue && { echo tongue; return 0; } ;;
   Linux) have fcitx5-remote && { echo fcitx5-remote; return 0; } ;;
   esac
@@ -188,7 +198,7 @@ bridges() {
 #           truong "<ip> <port> <ip> <port>".
 # Vi vay phai chuan hoa o cuoi bang `{ print $1 }` thay vi tin vao mot trong hai.
 bridge_ip() {
-  case $(uname -s) in
+  case $OS in
   Darwin) ps -E -p "$1" -o command= 2>/dev/null | tr ' ' '\n' ;;
   *) tr '\0' '\n' <"/proc/$1/environ" 2>/dev/null ;;
   esac | awk -F= '$1 == "SSH_CONNECTION" { print $2; exit }' | awk '{ print $1 }'
@@ -216,6 +226,55 @@ bridge_hosts() {
     host=$(ssh_host_for "$ip")
     [ -n "$host" ] && printf '%s\n' "$host"
   done | awk 'NF && !seen[$0]++'
+}
+
+# Cai tren tra loi mot cau ve TRANG THAI MAY, khong ve phien goi -- va no ton
+# 45 ms (do tren macmini: `ps -eo pid,etime,args` quet 799 tien trinh mat 24 ms,
+# `bridge_ip` va `ssh_host_for` moi bridge them 5 ms nua). Moi lan bam Esc thi
+# tongue.nvim goi backend HAI lan tuan tu, nen cai gia do tra hai lan cho cung
+# mot cau tra loi.
+#
+# TTL rat ngan la co y: no chi de gop hai lan goi cua CUNG mot lan bam phim, chu
+# khong phai de nho lau. Bridge doi theo phut/gio, nen 2 giay khong the lech --
+# va neu co lech thi `set` fan-out toi ca danh sach cu, tuc cung lam mot viec vo
+# hai o may khong ai go.
+#
+# Chi cache nhanh herdr. Nhanh SSH_CONNECTION la thuoc tinh CUA PHIEN, khong phai
+# cua may, nen cache no la tron lan cac phien khac nhau.
+CACHE_TTL=${IME_ROUTE_CACHE_TTL:-2}
+CACHE=$TMP/ime-route.bridges.$(id -u)
+
+mtime() { case $OS in Darwin) stat -f %m "$1" ;; *) stat -c %Y "$1" ;; esac 2>/dev/null; }
+
+bridge_hosts_cached() {
+  local now age mt
+  # `-O` (do minh so huu) va `! -L` (khong phai symlink): cache nam trong $TMPDIR
+  # 0700 nen day la dai phong thu thu hai, khong phai thu nhat.
+  if [ "$CACHE_TTL" -gt 0 ] 2>/dev/null && [ -f "$CACHE" ] && [ -O "$CACHE" ] && [ ! -L "$CACHE" ]; then
+    now=$(date +%s)
+    # Cache co the bien mat GIUA `[ -f ]` va `mtime` -- luc do `mtime` in ra rong,
+    # va `$((now - ))` la loi cu phap so hoc khien `age` khong duoc gan, roi
+    # `set -u` giet ca script o dong sau. Duong nay chay moi lan bam Esc nen mot
+    # ca hiem van se gap. Rong -> coi nhu cu.
+    mt=$(mtime "$CACHE")
+    [ -n "$mt" ] || mt=0
+    age=$((now - mt))
+    if [ "$age" -ge 0 ] && [ "$age" -lt "$CACHE_TTL" ]; then
+      cat "$CACHE"
+      return 0
+    fi
+  fi
+  local out
+  out=$(bridge_hosts)
+  # Ghi qua file tam roi `mv`: mot lan goi song song khong bao gio doc phai file
+  # viet do dang. `mv` trong cung filesystem la nguyen tu.
+  if [ "$CACHE_TTL" -gt 0 ] 2>/dev/null; then
+    local tmpc
+    tmpc=$(mktemp "$CACHE.XXXXXX" 2>/dev/null) &&
+      printf '%s\n' "$out" >"$tmpc" 2>/dev/null &&
+      mv -f "$tmpc" "$CACHE" 2>/dev/null || rm -f "$tmpc" 2>/dev/null
+  fi
+  printf '%s\n' "$out"
 }
 
 # IP client theo SSH_CONNECTION cua CHINH phien nay.
@@ -251,9 +310,13 @@ ssh_host_for() {
 #
 # Moi lan roi Insert ton HAI loi goi backend TUAN TU (plugin dat `observe` tren
 # duong ra nen bo nhanh nhanh), va mot luot ssh sang a14 ton 452 ms co
-# ControlMaster / 829 ms khong co. Buoc qua pipe thi gan nhu mien phi, nhung hai
-# luot ssh van la ~900 ms cho mot lan bam Esc, trong khi cua so can bao ve la
-# 150-400 ms. Van lech mot bac do lon.
+# ControlMaster / 829 ms khong co. Buoc qua pipe thi gan nhu mien phi -- do
+# 20/08/2026: `ssh a14 tongue status` tron ven 416 ms khi agent da song, tuc gan
+# bang dung mot chang ssh tran. Nhung hai luot ssh van la ~900 ms cho mot lan bam
+# Esc, trong khi cua so can bao ve la 150-400 ms. Van lech mot bac do lon.
+#
+# Fan-out song song ben duoi KHONG cuu duoc ca nay: no gop cac dich cua CUNG mot
+# lenh, con `get` roi `set` thi van noi tiep nhau.
 #
 # Nen `tongue agent` mua TAM VOI (`ssh a14 tongue vi` cho script va tu dong hoa)
 # chu khong mua toc do, va dong SKIP_HOSTS nay o lai.
@@ -304,6 +367,28 @@ leaf-set)
   ;;
 esac
 
+# Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
+#   : > "${TMPDIR:-/tmp}/ime-route.log"
+# Bat theo su ton tai cua file chu khong theo bien moi truong la co chu dich --
+# argv cua backend duoc ghim luc `setup()`, nen khong the them bien cho mot nvim
+# dang chay; nhung script nay thi duoc doc lai o MOI loi goi, nen tao file la
+# lam mot phien dang mo bat dau ghi ngay. Xoa file la tat.
+#
+# $TMPDIR chu khong phai /tmp: tren macOS /tmp la /private/tmp mode 1777 dung
+# chung, va macOS khong co fs.protected_symlinks. Voi ten co dinh o do thi mot uid
+# khac vua BAT duoc nhat ky cua nguoi khac (chi can tao file) vua doc duoc no --
+# ma nhat ky ghi moi lan bam Esc mot dong, tuc mot oracle hoat dong/idle kha min,
+# kem ten client dang attach. $TMPDIR tren macOS la 0700 duoi /var/folders.
+LOG=${IME_ROUTE_LOG:-$TMP/ime-route.log}
+
+# Chi ghi vao file CUA MINH va khong theo symlink -- dai phong thu thu hai sau
+# $TMPDIR, vi `IME_ROUTE_LOG` van tro ra cho khac duoc.
+log_enabled() { [ -f "$LOG" ] && [ -O "$LOG" ] && [ ! -L "$LOG" ]; }
+
+# Co phai luot chay nay se DUNG toi chuoi chan doan khong? Chi khi do moi bo tien
+# tinh `skipped`/`n`/`via` day du -- xem khoi phat hien tuyen ben duoi.
+diagnosing() { [ "$cmd" = where ] || log_enabled; }
+
 target=""    # dich de DOC (tre nhat)
 targets=""   # moi dich de DAT, moi ten mot dong
 skipped=""   # client dang attach nhung KHONG lai duoc -- chi de chan doan
@@ -312,18 +397,25 @@ via=""
 if [ -n "${IME_ROUTE_LEAF:-}" ]; then
   via="leaf (ep cuc bo)"
 elif [ -n "${HERDR_PANE_ID:-}${HERDR_ENV:-}" ]; then
-  seen=$(bridge_hosts)
+  seen=$(bridge_hosts_cached)
   targets=$(printf '%s\n' "$seen" | while read -r h; do
     [ -n "$h" ] && routable "$h" && printf '%s\n' "$h"
   done)
-  skipped=$(printf '%s\n' "$seen" | while read -r h; do
-    [ -n "$h" ] && ! routable "$h" && printf '%s\n' "$h"
-  done | tr '\n' ' ' | sed 's/ $//')
   target=$(printf '%s' "$targets" | head -1)
-  n=$(printf '%s' "$targets" | grep -c . || true)
-  via="herdr bridge"
-  [ "${n:-0}" -gt 1 ] && via="herdr bridge ($n client: $(printf '%s' "$targets" | tr '\n' ' ' | sed 's/ $//'))"
-  [ -n "$skipped" ] && via="$via [bo qua: $skipped]"
+  # `skipped`, `n` va `via` chi nuoi CHUOI CHAN DOAN: `where`, va `log()` -- ma
+  # `log()` thoat ngay khi khong co file nhat ky. Tinh chung vo dieu kien la ~4 ms
+  # moi lan goi cho mot chuoi bi vut. Duong quyet dinh chi can `seen` va `targets`.
+  if diagnosing; then
+    skipped=$(printf '%s\n' "$seen" | while read -r h; do
+      [ -n "$h" ] && ! routable "$h" && printf '%s\n' "$h"
+    done | tr '\n' ' ' | sed 's/ $//')
+    n=$(printf '%s' "$targets" | grep -c . || true)
+    via="herdr bridge"
+    [ "${n:-0}" -gt 1 ] && via="herdr bridge ($n client: $(printf '%s' "$targets" | tr '\n' ' ' | sed 's/ $//'))"
+    [ -n "$skipped" ] && via="$via [bo qua: $skipped]"
+  else
+    via="herdr bridge"
+  fi
   # Co client ma khong cai nao lai duoc thi KHONG duoc roi xuong nhanh leaf.
   # `targets` rong o day KHAC HAN `targets` rong vi khong co bridge nao: ben kia
   # nghia la dang attach cuc bo (ban phim o ngay day), ben nay nghia la ban phim
@@ -378,7 +470,10 @@ fi
 # toi duoc no.
 kid=""
 tmpout=""
-trap '[ -n "$kid" ] && kill -TERM "$kid" 2>/dev/null; [ -n "$tmpout" ] && rm -f "$tmpout"; exit 143' TERM INT
+# `$kid` KHONG duoc ngoac kep: nhanh `set` fan-out song song nen no giu NHIEU pid
+# cach nhau bang khoang trang, va can word-splitting de `kill` nhan du danh sach.
+# shellcheck disable=SC2086
+trap '[ -n "$kid" ] && kill -TERM $kid 2>/dev/null; [ -n "$tmpout" ] && rm -f "$tmpout"; exit 143' TERM INT
 
 # `-n` (stdin tu /dev/null): vong lap `set` doc danh sach dich tu stdin, ma ssh
 # MAC DINH doc stdin -- no nuot not cac dong con lai va vong lap chay dung mot
@@ -387,24 +482,17 @@ trap '[ -n "$kid" ] && kill -TERM "$kid" 2>/dev/null; [ -n "$tmpout" ] && rm -f 
 # ServerAliveInterval vi ConnectTimeout chi gac giai doan CONNECT, khong gac luc
 # lenh dang chay o dau kia.
 remote() { # $1 = host, $2 = get|set, $3 = token
-  ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 -o ServerAliveCountMax=3 "$1" \
+  ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 -o ServerAliveCountMax=3 -- "$1" \
     "$LEAF_PATH leaf-$2${3:+ $3}" &
   kid=$!
   wait "$kid"
 }
 
-# Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
-#   : > /tmp/ime-route.log
-# Bat theo su ton tai cua file chu khong theo bien moi truong la co chu dich --
-# argv cua backend duoc ghim luc `setup()`, nen khong the them bien cho mot nvim
-# dang chay; nhung script nay thi duoc doc lai o MOI loi goi, nen tao file la
-# lam mot phien dang mo bat dau ghi ngay. Xoa file la tat.
-LOG=${IME_ROUTE_LOG:-/tmp/ime-route.log}
 # `|| return 0` chu khong `&&`: khi khong co file log thi `[ -f ]` sai, va mot
 # `&&` doan mach lam HAM tra ve 1. `log` la lenh cuoi cua nhanh `get`, nen ca
 # script thoat 1 du da in dung token -- va phia goi qua ssh doc dung ma thoat do
 # roi coi la that bai. Do 20/08/2026: dau kia in `vi` va rc=1.
-log() { [ -f "$LOG" ] || return 0; printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$PPID" "${via:-?}->${target:-local}" "$*" >>"$LOG"; }
+log() { log_enabled || return 0; printf '%s pid=%-6s %-22s %s\n' "$(date +%H:%M:%S)" "$PPID" "${via:-?}->${target:-local}" "$*" >>"$LOG"; }
 
 case "$cmd" in
 get)
@@ -475,17 +563,42 @@ set)
   elif [ -n "$targets" ]; then
     # Toi TAT CA client dang attach. Thanh cong neu it nhat mot cai an -- mot
     # may ngu khong duoc lam hong lan chuyen o may nguoi ta dang go.
+    # SONG SONG, khong tuan tu. Vong cu chan o `wait` sau moi dich nen chi phi la
+    # TONG cac chang chu khong phai chang dai nhat: do tren macmini 20/08/2026 voi
+    # hai client, airm3 94 ms + rog 71 ms = 165 ms thay vi 94 ms.
+    #
+    # Nang hon ca so ms: chang DAU treo qua deadline 2000 ms cua nvim thi trap
+    # ban SIGTERM va dich THU HAI khong bao gio duoc thu -- vi pham dung bat bien
+    # "mot may ngu khong duoc lam hong lan chuyen o may nguoi ta dang go" ghi ngay
+    # ben tren. Bridge oi (laptop Modern Standby, ControlMaster thanh xac) la ca
+    # co that chu khong phai gia thuyet.
+    #
+    # Van `&` + `wait` chu khong `exec ssh`: ly do o chu thich cua `remote` --
+    # trap phai ngat duoc. `kid` nay giu NHIEU pid, nen trap ban ca danh sach.
     rc=1
+    jobs_list=""
     while read -r h; do
       [ -n "$h" ] || continue
-      if remote "$h" set "$mode" >/dev/null 2>&1; then
+      ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 \
+        -o ServerAliveCountMax=3 -- "$h" "$LEAF_PATH leaf-set $mode" >/dev/null 2>&1 &
+      jobs_list="$jobs_list$!:$h
+"
+      kid="$kid $!"
+    done <<EOF
+$targets
+EOF
+    # `wait` phai chay o shell CHINH (no chi biet job cua chinh no), nen doc bang
+    # here-doc chu khong pipe -- pipe se day vong lap vao subshell.
+    while IFS=: read -r p h; do
+      [ -n "$p" ] || continue
+      if wait "$p"; then
         rc=0
         log "set $mode -> $h"
       else
         log "set $mode -> $h TRUOT"
       fi
     done <<EOF
-$targets
+$jobs_list
 EOF
     exit "$rc"
   else
