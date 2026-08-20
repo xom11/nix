@@ -97,10 +97,12 @@ Match originalhost macmini,rog,airm3,a14 exec "uname -a | grep -qv Android"
 # VI SAO MOT ALIAS chu khong phai `Match ... exec`, ca hai deu da DO tren may:
 #
 #   * `Match originalhost macmini !exec "uname"` -- dung ve logic (uname co tren
-#     Unix, vang tren PATH cua cmd.exe) nhung tren OpenSSH_for_Windows_9.5 no lam
-#     `ssh -G macmini` TREO han, khong in mot dong nao, va RemoteForward khong he
-#     duoc ap trong phien binh thuong. Hai trieu chung, cung mot ket luan: khong
-#     dung duoc.
+#     Unix, vang tren PATH cua cmd.exe) nhung tren OpenSSH_for_Windows_9.5 thi
+#     `ssh -G macmini` mat HON HAI PHUT roi thoat 0 ma khong in mot dong nao, va
+#     RemoteForward khong he duoc ap trong phien binh thuong. (Khong phai treo
+#     vinh vien -- mot lan chay nen den cung cho rc=0; do la khac biet ve chan
+#     doan chu khong ve ket luan.) `ssh macmini` thuong thi VAN nhanh, nen trieu
+#     chung duy nhat la tunnel lang le khong co.
 #   * `Match ... exec "ver"` (builtin cua cmd) thi chay, nhung tren may Unix shell
 #     in `command not found` ra stderr cho MOI lan ssh vao macmini -- ke ca scp,
 #     git, rsync.
