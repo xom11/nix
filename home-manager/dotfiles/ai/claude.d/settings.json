@@ -89,8 +89,8 @@
     }
   },
   "viewMode": "default",
-  "effortLevel": "xhigh",
   "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
   "tui": "fullscreen",
   "prefersReducedMotion": true,
   "skipDangerousModePermissionPrompt": true,
