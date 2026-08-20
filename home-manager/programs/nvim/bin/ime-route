@@ -294,8 +294,18 @@ fi
 # nen exec se giet vong lap ngay sau dich dau, con nhanh `get` con phai goi log()
 # sau khi doc token. `wait` thi bi trap ngat duoc; mot lenh foreground thi khong
 # -- bash hoan trap lai den khi no chay xong.
+# `vim.system` gui SIGTERM khi het deadline -- DA DO bang mot script mo trap va
+# ghi ra file: `got=TERM`. Nen trap la dung cong cu; cai bay nam cho khac.
+#
+# BAY: `tok=$(remote ...)` chay remote trong mot SUBSHELL. SIGTERM chi toi tien
+# trinh con TRUC TIEP cua nvim (script nay), khong toi subshell, nen ssh trong
+# do song sot du trap co dung. Do 20/08/2026 truoc khi sua: con 2 ssh sau khi
+# nvim thoat (go trap thi 3). Vi vay duong `get` ghi ra FILE TAM thay vi dung
+# command substitution -- ssh thanh con truc tiep cua shell CHINH, va trap voi
+# toi duoc no.
 kid=""
-trap '[ -n "$kid" ] && kill -TERM "$kid" 2>/dev/null; exit 143' TERM INT
+tmpout=""
+trap '[ -n "$kid" ] && kill -TERM "$kid" 2>/dev/null; [ -n "$tmpout" ] && rm -f "$tmpout"; exit 143' TERM INT
 
 # `-n` (stdin tu /dev/null): vong lap `set` doc danh sach dich tu stdin, ma ssh
 # MAC DINH doc stdin -- no nuot not cac dong con lai va vong lap chay dung mot
@@ -330,17 +340,26 @@ get)
     # may Windows khong chay noi script bash) khong duoc lam hong ca lan doc.
     # Dau kia da chuan hoa roi, nen o day khong dien giai gi them.
     tok=""
+    tmpout=$(mktemp) || exit 1
     while read -r h; do
       [ -n "$h" ] || continue
-      tok=$(remote "$h" get) && [ -n "$tok" ] && {
-        log "get <- $h: $tok"
-        break
-      }
+      # KHONG `$(remote ...)`: xem chu thich o trap. Ghi ra file roi doc bang
+      # `$(<file)` -- builtin, khong fork -- de ssh la con truc tiep cua shell nay.
+      if remote "$h" get >"$tmpout" 2>/dev/null; then
+        tok=$(<"$tmpout")
+        tok=${tok%%[$'\n']*}
+        [ -n "$tok" ] && {
+          log "get <- $h: $tok"
+          break
+        }
+      fi
       log "get <- $h TRUOT"
       tok=""
     done <<EOF
 $targets
 EOF
+    rm -f "$tmpout"
+    tmpout=""
     [ -n "$tok" ] || {
       log "get -> moi dich deu TRUOT"
       exit 1
