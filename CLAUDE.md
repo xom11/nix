@@ -160,10 +160,10 @@ nix eval --impure                        .#darwinConfigurations.macmini.system.d
 
 `nix fmt` (alejandra) and `nix develop` (alejandra, nixd, deadnix, statix) are wired up.
 
-## Kiểm trên chính máy đó — ba cách nói dối quen thuộc
+## Kiểm trên chính máy đó — bốn cách nói dối quen thuộc
 
-Ba thứ dưới đây đều trả lời **sai mà nghe hợp lý**, nên không ai nghĩ tới việc kiểm
-chéo. Cả ba đã làm hai phiên làm việc độc lập cùng kết luận ngược trong một buổi.
+Bốn thứ dưới đây đều trả lời **sai mà nghe hợp lý**, nên không ai nghĩ tới việc kiểm
+chéo. Cả bốn đã làm hai phiên làm việc độc lập cùng kết luận ngược trong một buổi.
 
 - **Đừng kết luận "tiến trình X không chạy" bằng `pgrep -x` / `ps -eo comm`.**
   nixpkgs bọc binary thành `.NAME-wrapped`, mà `comm` cắt ở **15 ký tự** →
@@ -184,11 +184,51 @@ chéo. Cả ba đã làm hai phiên làm việc độc lập cùng kết luận 
   `require`) → thoát **1** kèm đúng `file:dòng`; còn `.conf` hỏng (ép qua
   `HYPRLAND_CONFIG=<file>`) thì vẫn in `config ok` và thoát **0**. Vẫn phải đọc
   output, đừng chỉ nhìn `$?`.
+- **Trên Windows, `Get-Item`/`Get-ChildItem` báo `Length = 0` cho MỌI symlink** —
+  mà gần như mọi dotfile ở đây là symlink về repo. Đo 20/08/2026:
+  `Documents\PowerShell\Microsoft.PowerShell_profile.ps1` ra 0 B, còn
+  `[IO.File]::ReadAllBytes(...)` ra 4545 B / 99 dòng. Không có lỗi nào được in.
+  Một phiên đã kết luận "profile rỗng mà vẫn tốn 175 ms" từ đúng chỗ này rồi đi
+  tìm overhead bí ẩn không tồn tại. Dùng `ReadAllBytes` hoặc `Get-Content`, và
+  `(Get-Item x -Force).LinkType` để biết mình đang nhìn symlink.
 
 Hệ quả rộng hơn, đúng cho cả `nix eval`: khi viết một kết luận dạng *"A thế nào thì
 B cũng thế"* mà chỉ đo A — dừng lại và đo B. Riêng repo này đã dính ba lần, và cả
 ba đều là hai thứ **cùng một họ** (32-bit→64-bit, GNOME→stack khác, Hyprland→sway),
 tức đúng chỗ cảm giác "chắc giống nhau" mạnh nhất.
+
+## `ssh a14` chậm: mỗi lệnh trả một lần khởi động PowerShell
+
+Đo 20/08/2026 từ macmini, a14 **cắm sạc** và rảnh: một lệnh qua mux tốn **364 ms
+= 300 ms shell + 64 ms** transport/sshd. rog tốn 62 ms **tổng**. Tức phần ssh và
+mạng của a14 **ngang rog**, handshake cũng ngang (222 vs 202 ms) — toàn bộ chênh
+lệch nằm ở shell. Đừng đi tìm nguyên nhân ở Tailscale, cipher, hay `sshd_config`;
+đã loại hết bằng đo đạc, và mọi binary trên đường đi đều ARM64 native.
+
+`HKLM\SOFTWARE\OpenSSH` đặt `DefaultShell = pwsh.exe` với `DefaultShellCommandOption
+= -c`, **không** có `-NoProfile`. Nên mỗi lệnh từ xa — kể cả subsystem sftp sau
+`scp` — nạp đủ profile: 293 ms, so với 166 ms nếu `-NoProfile` và 10 ms cho `cmd`.
+
+Ba điều rút ra, cả ba đều im lặng khi vi phạm:
+
+- **Đừng gọi `ssh a14 "pwsh …"` hay `ssh a14 "powershell …"`.** DefaultShell ĐÃ
+  là pwsh, nên cách đó sinh **hai** tiến trình pwsh và `-NoProfile` chỉ áp cho cái
+  bên trong — cái ngoài vẫn nạp đủ profile. Đo trên payload thật: 680 → 435 ms.
+  Truyền script dài bằng `ssh a14 "iex ([Text.Encoding]::Unicode.GetString(
+  [Convert]::FromBase64String('<b64>')))"` (base64 UTF-16LE), một tiến trình.
+- **Ghi kèm trạng thái nguồn vào mọi số đo trên a14, hoặc đừng ghi số nào.**
+  `Minimum processor state` là AC 48% / DC **0%**, nên chạy pin thì CPU nằm ở
+  710–1670 MHz và một tiến trình ngắn kết thúc trước khi governor kịp tăng tần số.
+  Cùng phép đo: 364 ms khi cắm sạc, **984 ms** khi pin. Kiểm bằng
+  `(Get-CimInstance Win32_Processor).CurrentClockSpeed`.
+- **`DefaultShellCommandOption = "-NoProfile -c"` là BẤT KHẢ THI, không phải rủi
+  ro.** sshd nhét cả chuỗi vào **một** ô argv, pwsh nhận nó làm một token và thoát
+  **64**. Và đừng đổi `DefaultShell`: profile chính là thứ nạp secrets, `update`
+  và alias cho mọi lệnh từ xa — `windows/tests/update.Tests.ps1` gác đúng điều đó.
+
+Bẫy phụ khi gửi script sang: `pwsh … -Command -` đọc từ stdin **cắt giữa chừng**
+khi script có function kèm scriptblock nhiều dòng, không báo lỗi. Dùng
+`-EncodedCommand`.
 
 ## Công cụ tách repo riêng (org `xom11`) — sửa ở thượng nguồn
 

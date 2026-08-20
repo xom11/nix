@@ -25,11 +25,16 @@ Host a14
   # Ghep kenh duoc, du la Windows -- ControlMaster la tinh nang PHIA CLIENT: socket
   # nam tren may nay, sshd dau kia chi thay mot ket noi nhieu channel. Canh bao o
   # khoi Match ben duoi noi ve viec chay ssh TU Windows, khong phai den Windows.
-  # Do 20/08/2026 tu macmini: 829 ms khong mux -> 452 ms co mux (median 6 mau).
+  # Do 20/08/2026 tu macmini, may CAM SAC: 586 ms khong mux -> 364 ms co mux.
+  # Ghi kem trang thai nguon vi no doi ket qua gap doi: dung phep do co mux do,
+  # luc a14 chay pin (CPU tut ve 710/2956 MHz) cho 984 ms.
   #
   # Nhung day la laptop Modern Standby: no ngu thi master thanh xac, va luot sau
-  # TREO o mux socket thay vi truot nhanh. `Host` dung truoc `Match` nen hai dong
-  # nay thang ControlPersist 8h o duoi -- 8 tieng qua dai cho mot may hay ngu.
+  # TREO o mux socket thay vi truot nhanh. 8 tieng qua dai cho mot may hay ngu.
+  #
+  # Dong duoi thang ControlPersist 8h o khoi Match chi vi ssh lay GIA TRI DAU TIEN
+  # doc duoc, va khoi nay dung TRUOC trong file -- khong phai vi `Host` hon `Match`.
+  # Nen doi cho hai khoi cung am tham day a14 len 8h, y het nhu xoa dong nay.
   ControlPersist 10m
   ServerAliveInterval 30
   ServerAliveCountMax 3
