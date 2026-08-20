@@ -38,6 +38,16 @@ if vim.fn.executable(route) == 1 then
 		english = "en",
 		get = { route, "get" },
 		set = { route, "set" },
+		-- One ssh leg instead of two on the way out of Insert. Measured to rog
+		-- 20/08/2026: 115 ms against 198 ms for `get` then `set`. The win is far
+		-- bigger toward a Windows keyboard, where a leg costs 656 ms -- 293 ms of
+		-- it PowerShell starting -- so `<Esc>` drops from 1318 ms to ~656 ms.
+		--
+		-- Safe to declare before every machine has it: a target still running an
+		-- older `ime-route` exits non-zero on `leaf-exchange`, and the script
+		-- falls back to get+set for that host. Costs a third leg there until it
+		-- pulls; never drops the switch.
+		exchange = { route, "exchange" },
 		-- Both branches say `unknown` when state is unreadable: `tongue` when
 		-- live state matches no mode, ime-route when `fcitx5-remote -n` returns
 		-- empty because nothing holds an input context.
