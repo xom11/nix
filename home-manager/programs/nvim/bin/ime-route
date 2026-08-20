@@ -83,9 +83,18 @@ leaf_get() {
     # voi ly do "empty output", con `unknown` la tin hieu co nghia trong hop dong.
     "") echo unknown ;;
     "$EN_IM") echo en ;;
-    # Group cua rog chi co hai muc, nen "khong phai tieng Anh" = bo go tieng
-    # Viet dang bat. May nao co nhieu hon thi dat IME_ROUTE_VI_IM cho dung.
-    *) echo vi ;;
+    "$VI_IM") echo vi ;;
+    # Mot IM THU BA khong duoc doan thanh `vi`. Truoc 20/08/2026 o day la
+    # `*) echo vi`, dung CHI VI group cua rog vua van co dung hai muc. Da tai
+    # hien tren may: them `keyboard-fr` vao group roi chuyen sang no -> bao `vi`
+    # -> plugin ghi nho "tieng Viet" -> khoi phuc bang cach bat `lotus`, tuc am
+    # tham da nguoi dung tu tieng Phap sang tieng Viet.
+    #
+    # `unknown` la cau tra loi dung: bang tu vung en|vi|zh khong co ten cho no,
+    # va hop dong cua plugin coi `unknown` la "khong biet may dang o dau" nen no
+    # se KHONG nho de khoi phuc. Cai gia: roi nvim thi khong duoc tra ve tieng
+    # Phap. Doi lay viec khong bi da sang mot ngon ngu khac -- ro rang hon.
+    *) echo unknown ;;
     esac
     ;;
   *)
