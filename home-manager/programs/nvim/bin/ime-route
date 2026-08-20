@@ -179,6 +179,20 @@ bridges() {
     # `ps -eo pid,etime,args`. Do ca hai dau: macmini (server) NF=4 $3=.../herdr;
     # rog (client) NF=16 $3=ssh.
     NF == 4 && $4 == "remote-client-bridge" && $3 ~ /(^|\/)herdr$/ { print secs($2), $1 }
+
+    # Duong THU HAI, va tren Windows la duong DUY NHAT: nguoi dung `ssh macmini`
+    # roi go `herdr` -- attach thuong, khong sinh bridge nao. `herdr --remote`
+    # khong co tren Windows, nen truoc dong nay a14 KHONG BAO GIO duoc dat ten:
+    # `bridges` rong -> `targets` rong -> router im lang lai bo go cua CHINH
+    # macmini, dung con bug ca script sinh ra de giet. Do 20/08/2026: mot phien
+    # a14 dang mo ma `ime-route where` van in `remote: rog`.
+    #
+    # Ba hinh dang attach, lay tu `herdr --help`; allowlist chu khong blocklist
+    # vi moi subcommand khac (`api`, `config`, `workspace`, ...) cung chay trong
+    # phien ssh va cung mang SSH_CONNECTION -- mot blocklist se de lot chung.
+    NF == 3 && $3 ~ /(^|\/)herdr$/                              { print secs($2), $1 }
+    NF == 5 && $4 == "--session" && $3 ~ /(^|\/)herdr$/         { print secs($2), $1 }
+    NF == 6 && $4 == "session" && $5 == "attach" && $3 ~ /(^|\/)herdr$/ { print secs($2), $1 }
   ' | sort -n
 }
 
@@ -309,11 +323,16 @@ ssh_host_for() {
 # Van BO QUA a14, va gio ly do la DUONG TRUYEN chu khong phai buc tuong.
 #
 # Moi lan roi Insert ton HAI loi goi backend TUAN TU (plugin dat `observe` tren
-# duong ra nen bo nhanh nhanh), va mot luot ssh sang a14 ton 452 ms co
-# ControlMaster / 829 ms khong co. Buoc qua pipe thi gan nhu mien phi -- do
-# 20/08/2026: `ssh a14 tongue status` tron ven 416 ms khi agent da song, tuc gan
-# bang dung mot chang ssh tran. Nhung hai luot ssh van la ~900 ms cho mot lan bam
+# duong ra nen bo nhanh nhanh), va mot luot ssh sang a14 ton 364-587 ms co
+# ControlMaster / 586 ms khong co. Buoc qua pipe thi gan nhu mien phi -- do
+# 20/08/2026: `ssh a14 tongue status` tron ven 656 ms, tuc phan cua tongue va
+# ca cau pipe chi ~69 ms. Nhung hai luot van la ~870-1320 ms cho mot lan bam
 # Esc, trong khi cua so can bao ve la 150-400 ms. Van lech mot bac do lon.
+#
+# Khoang 364-587 ms KHONG phai nhieu do: a14 dat `Minimum processor state` =
+# AC 48% / DC 0%, nen xung nhip tut ve 710-1670 MHz luc ranh va mot tien trinh
+# ngan ket thuc truoc khi governor kip keo len. Ghi kem trang thai nguon vao
+# moi so do o day, hoac dung ghi so nao ca.
 #
 # Fan-out song song ben duoi KHONG cuu duoc ca nay: no gop cac dich cua CUNG mot
 # lenh, con `get` roi `set` thi van noi tiep nhau.
@@ -323,12 +342,21 @@ ssh_host_for() {
 # 430 ms, con `ssh a14 tongue status` tron ven 495 ms -- tuc phan cua tongue va
 # ca cau pipe chi ~65 ms, 13%. De doi chieu: `ssh rog true` het 45 ms.
 #
-# Thu phao that su la shell dang nhap. `DefaultShell` cua sshd tren a14 dang la
-# `pwsh.exe`, va do TAI CHO tren may do (median 9 lan): `cmd /c exit` 12 ms,
-# `powershell -NoProfile` 133 ms, `pwsh -NoProfile` 225 ms. Doi DefaultShell sang
-# cmd.exe co the cat ~200 ms moi luot ssh -- nhung no cham MOI thu dang ssh vao
-# a14 (script PowerShell doc thang vao `$env:`, cu phap `;`, ...), nen day la
-# quyet dinh cua chu may chu khong phai mot toi uu cua ime-route.
+# Thu phao that su la shell dang nhap, va no chiem 82% mot luot. `DefaultShell`
+# cua sshd tren a14 la `pwsh.exe` voi `DefaultShellCommandOption = -c` -- KHONG
+# co `-NoProfile`, nen moi lenh tu xa nap du profile. Do TAI CHO khi cam sac,
+# median 9 lan: `cmd /c exit` 10 ms, `powershell -NoProfile` 105 ms,
+# `pwsh -NoProfile` 169 ms, `pwsh` CO profile 293 ms. Ngan sach mot luot 364 ms
+# = 293 shell + 64 transport + ~7 con lai; 64 ms do bang rog (62 ms TONG), tuc
+# phan ssh va mang cua a14 khong he cham -- chi shell cham.
+#
+# Doi DefaultShell sang cmd.exe cat ~283 ms moi luot va dua vao trong cua so,
+# khong mot dong code. Nhung profile chinh la thu nap secrets, `update` va alias
+# cho MOI lenh tu xa lan `scp`/`sftp` (windows/tests/update.Tests.ps1 gac dieu
+# do), nen day la quyet dinh cua chu may chu khong phai mot toi uu cua ime-route.
+# Duong lui re hon -- them `-NoProfile` vao `DefaultShellCommandOption` -- la
+# BAT KHA THI, khong phai chua thu: sshd nhet ca chuoi vao MOT o argv, pwsh nhan
+# no lam mot token va thoat 64.
 #
 # Nen `tongue agent` mua TAM VOI (`ssh a14 tongue vi` cho script va tu dong hoa)
 # chu khong mua toc do, va dong SKIP_HOSTS nay o lai.
