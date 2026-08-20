@@ -4,50 +4,60 @@
         param($Ctx)
         $taskName = 'TongueAgent'
 
-        # `.local\bin` deliberately, not a scoop shim: tongue on Windows is installed
-        # out of band (see CLAUDE.md, "Windows — tongue"), and that directory precedes
-        # scoop on PATH here anyway.
+        # `.local\bin` deliberately, not a scoop shim: tongue on Windows is installed by
+        # hand (see CLAUDE.md, "Windows — tongue"), and that directory precedes scoop on
+        # PATH here anyway.
         $exe = Join-Path $env:USERPROFILE '.local\bin\tongue.exe'
         if (-not (Test-Path $exe)) {
             Write-Warn "tongue.exe not found at $exe"
             return
         }
-        # The agent subcommand only exists from the named-pipe build onward. An older
-        # binary would take `agent` as an unknown subcommand, exit 2 immediately, and
-        # the task would sit at State=Ready looking perfectly healthy -- so check the
-        # surface rather than trusting the path.
+        # Version gate, same shape as the dotpkg 0.2.0 one and for the same reason: the
+        # install channel here is a manual copy, so "old binary, new module" is the
+        # DEFAULT state rather than an exception. An older tongue takes `agent` as an
+        # unknown subcommand and exits 2 at once -- the task would then sit at
+        # State=Ready looking perfectly healthy.
         if (-not (& $exe --help 2>&1 | Select-String -SimpleMatch 'agent' -Quiet)) {
             Write-Warn 'tongue.exe has no `agent` subcommand -- copy a newer build to .local\bin'
             return
         }
 
-        # Why this task exists at all: Windows OpenSSH is a service, so the shell it
-        # spawns lands in SESSION 0. Both mechanisms tongue drives VKey with are
-        # per-session -- window station (FindWindow) and the `Local\` namespace
-        # (OpenFileMapping) -- so `ssh a14 tongue vi` cannot reach the user's VKey and
-        # refuses outright. `\\.\pipe\` is NOT per-session, so an agent living in the
-        # desktop session is the bridge, and every session-0 call forwards into it.
+        # Why this task exists: Windows OpenSSH is a service, so the shell it spawns lands
+        # in SESSION 0. Both mechanisms tongue drives VKey with are per-session -- window
+        # station (FindWindow) and the `Local\` namespace (OpenFileMapping) -- so
+        # `ssh a14 tongue vi` cannot reach the user's VKey. `\\.\pipe\` is NOT per-session,
+        # so an agent in the desktop session bridges it and session-0 calls forward in.
         #
-        # Measured on a14 20/08/2026: without the agent, `ssh a14 tongue` errors; with
-        # it, 6/6 reads return a token and `tongue en`/`tongue vi` change VKey for real.
+        # ONE task, NO watchdog, and that is a decision. beckon/kanata/main.ahk must be
+        # resident because they serve every keypress; tongue-over-ssh is request/response,
+        # a few times a day, driven by a human. The healthy path IS the normal path: the
+        # client runs `schtasks /run` itself when it finds no pipe, and the agent exits
+        # after ten idle minutes. Copying beckon's five-minute watchdog here would be a
+        # permanent polling loop for something almost nobody calls.
         #
-        # This buys reach, NOT speed: one ssh leg to this box costs 452 ms multiplexed
-        # / 829 ms not. Do not wire it into anything latency-sensitive -- tongue.nvim
-        # deliberately does not route here, see ime-route's SKIP_HOSTS.
+        # `conhost --headless`: a `-LogonType Interactive` task running a console exe gets
+        # a console from Windows BEFORE main() runs, and with Windows Terminal as default
+        # that console arrives as a NEW TAB indistinguishable from one you opened. Closing
+        # it kills the agent. Measured and written up at services/beckon-serve; the same
+        # trap applies verbatim here. Point at the real exe, not a shim.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        $action    = New-ScheduledTaskAction -Execute $exe -Argument 'agent'
+        $action    = New-ScheduledTaskAction -Execute 'conhost.exe' -Argument "--headless `"$exe`" agent"
+        # Exactly ONE trigger: Test-ScheduledTaskMatch checks Triggers.Count -ne 1, so a
+        # trigger-less task would be silently re-registered on every apply run. A logon
+        # trigger is harmless anyway -- the agent starts, then idles out.
         $trigger   = New-ScheduledTaskTrigger -AtLogon
-        # LogonType Interactive is the whole point: a task in session 0 would be on the
-        # wrong side of the very wall this bridges.
+        # RunLevel Limited, NOT Highest: an elevated agent creates the pipe with a High
+        # integrity label, and a Medium-IL client in session 0 then loses write access to
+        # a pipe its own user owns. Same reason VKey is pinned Limited.
         $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
-        # Two flags that fail SILENTLY when missing, both measured on this machine:
+        # Three flags, all of which fail SILENTLY when missing, all measured here:
         #   -AllowStartIfOnBatteries : without it the task sits at State=Queued forever
-        #     with LastTaskResult=0, no error anywhere. This is a laptop.
-        #   -MultipleInstances Parallel : the IgnoreNew default drops a start that
-        #     overlaps a running instance, silently -- one call never ran for 40 s.
-        #     It matters less for a long-lived agent than for an on-demand task, but a
-        #     restart racing the old instance is exactly when you need it.
-        # ExecutionTimeLimit 0 because the agent is meant to outlive the logon session.
+        #     with LastTaskResult=0 and no error anywhere. This is a laptop.
+        #   -MultipleInstances Parallel : the IgnoreNew default drops a start that overlaps
+        #     a running instance -- one call never ran for 40 s. With lazy start the client
+        #     issues `schtasks /run` while an exiting agent may still be alive, which is
+        #     exactly the overlap this covers.
+        #   -ExecutionTimeLimit 0 : the PT72H default would kill a healthy agent.
         $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
             -StartWhenAvailable -MultipleInstances Parallel -ExecutionTimeLimit 0
 
@@ -61,5 +71,8 @@
         Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger `
             -Principal $principal -Settings $settings -Force | Out-Null
         Write-OK "scheduled task: $taskName"
+
+        # Upgrading tongue.exe: the agent HOLDS the file open, and Windows will not let you
+        # overwrite a running .exe. Disable the task, stop the process, copy, re-enable.
     }
 }
