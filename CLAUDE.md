@@ -282,7 +282,7 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | Kênh | Ghim ở đâu | Bump bằng |
 |---|---|---|
 | Máy Nix (mac/NixOS/HM) | `flake.lock` | `nix flake update beckon` (input theo nhánh mặc định, không ghim tag) rồi rebuild |
-| Windows — beckon | manifest trong **repo thứ ba** `xom11/scoop-bucket`; khai báo ở `pkg.toml`, và version bị ghim theo **commit của bucket** trong `pkg.lock` | release beckon → sửa manifest bên scoop-bucket → `dotpkg update` → **commit diff của `pkg.lock`**. `scoop update` một mình không đủ nữa: dotpkg sẽ kéo ngược về đúng commit đã ghim |
+| Windows — beckon | manifest trong **repo thứ ba** `xom11/scoop-bucket`; khai báo ở `pkg.toml`, và version bị ghim theo **commit của bucket** trong `pkg.lock` | release beckon → (manifest scoop-bucket **tự bump**, `release.yml` gọi `bump-packagers.yml`; đo 20/08/2026: commit bucket xuất hiện ~4 phút sau khi đẩy tag) → `dotpkg update beckon` → **commit diff của `pkg.lock`**. `scoop update` một mình không đủ nữa: dotpkg sẽ kéo ngược về đúng commit đã ghim |
 | Windows — dotbrave | chuỗi `dotbrave==<ver>` trong `windows/modules/programs/dotbrave/module.ps1` | publish PyPI → sửa tay chuỗi đó (cố ý ghim: script chạy Administrator và ghi HKLM policy) |
 | Windows — tongue | `%USERPROFILE%\.local\bin\tongue.exe`, cài **ngoài luồng** — `apply.ps1` lẫn scoop đều không cài | copy tay binary mới lên máy |
 | nvim plugin | rev trong `nvim-pack-lock.json` (symlink out-of-store, `vim.pack` GHI thẳng vào working tree) | update plugin trong nvim → commit diff của lock. **Rồi checkout tay trên từng máy khác** — xem dưới |
@@ -290,6 +290,36 @@ lỗi còn a14 vẫn lỗi y nguyên — không phải bug thứ hai, mà là k�
 | CI job `shortcuts` | rev đọc lại **từ `flake.lock`** trong `.github/workflows/eval.yml` | theo flake.lock |
 | Windows — dotpkg (bản thân binary) | `pkg.lock`, y như mọi gói scoop khác: nó **tự khai báo chính nó** và đến từ bucket `xom11` | phát hành → sửa manifest bên scoop-bucket → `dotpkg update` → commit lock. **Rồi `scoop update dotpkg` bằng tay**, vì nó không tự nâng được chính nó (xem dưới) |
 | Windows — các gói dotpkg cài | `home-manager/dotfiles/windows/dotpkg/pkg.lock`, **có commit** | `dotpkg update` trong thư mục đó, rồi commit diff của lock |
+
+**`dotpkg update` nhận tên gói làm đối số vị trí, và nên dùng.** `dotpkg update`
+trần ghi lại **mọi** pin trong `pkg.lock`, nên một lần bump beckon dễ kéo theo
+cả chục gói không ai yêu cầu vào cùng một commit. `dotpkg update beckon` chỉ
+đụng đúng entry đó.
+
+**`dotpkg apply` thì KHÔNG có bộ lọc gói** — nó luôn hoà cả máy. Muốn nhìn
+trước thì `--prepare`: nó chuẩn bị rồi dừng, không đổi gì. Hai điều đo được khi
+chạy qua SSH (20/08/2026, a14):
+
+- `beckon` và `python` báo `running -- stop it first`, và **không hiện trong kế
+  hoạch** khi còn chạy — nên "0 change(s)" ở đây nghĩa là *chưa nhìn thấy*, chứ
+  không phải *không có gì để làm*. Dừng beckon xong, kế hoạch mới hiện
+  `0.9.20 -> 0.9.21 (upgrade, arm64)`.
+- `actionlint`, `antigravity`, `zellij` báo `cannot read manifest.json: The path
+  cannot be traversed because it contains an untrusted mount point (os error
+  448)` — đúng cái Redirection Guard mà `module.ps1` đã cảnh báo. Qua SSH ba gói
+  đó **luôn** bị bỏ qua.
+
+Cộng lại: **`dotpkg apply` qua SSH thoát 1 là bình thường ở máy này**, vì bốn
+gói bị bỏ qua vì hai lý do trên. Đọc dòng `done` để biết cái mình cần có chạy
+hay không, đừng đọc mã thoát.
+
+Thứ tự khi nâng beckon trên Windows (bản rút gọn của mục "Cap binary+plist"):
+`Disable-ScheduledTask` cả `BeckonServe` lẫn `BeckonServeWatchdog` →
+`Get-Process beckon | Stop-Process -Force` → `dotpkg apply` → `Enable` +
+`Start-ScheduledTask`. **Không cần đăng ký lại task** cho một lần bump version
+đơn thuần: task gọi `scoop\shims\beckon.exe serve <config> --log <file>`, mà
+đường dẫn shim lẫn cú pháp đều không đổi — bước đăng ký lại trong mục kia là để
+xử lý đợt 0.6.0 đổi cờ thành subcommand.
 
 Hệ quả của dòng cuối: nếu bản sửa beckon đổi cú pháp `apps.shared.toml`, phải
 bump `flake.lock` **cùng commit** với file TOML mới — không thì `beckon check`
