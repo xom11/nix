@@ -1,28 +1,26 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-; Nhat ky vong doi cua script.
+; Script lifecycle log.
 ;
-; Script chet thi duoc hoi sinh trong vong 5 phut -- va moi lan hoi sinh lai bung
-; TrayTip "Startup" ben duoi. Nghia la toast tu nhien hien ra giua chung khong
-; phai loi cua watchdog: no la dau hieu script vua chet.
+; A dead script is revived within 5 minutes, and each revival fires the "Startup"
+; toast below -- so a toast appearing out of nowhere is not a watchdog bug, it is
+; the sign the script just died.
 ;
-; Viec hoi sinh do task AHKWatchdog lam (chay launch-ahk.ahk voi --if-missing moi
-; 5 phut), KHONG phai task AHKrunning -- AHKrunning chi con dung mot logon trigger.
-; Truoc 30/07/2026 nhip lap do nam trong AHKrunning that, nhung no ngung bao ve
-; duoc bat cu thu gi ngay khi Reload() thay the tien trinh ma Task Scheduler dang
-; theo doi; ly do day du nam trong windows\modules\services\ahk-watchdog.
+; The revival is AHKWatchdog's job, not AHKrunning, which now only has a logon
+; trigger: a Reload() replaces the process Task Scheduler was watching, so a loop
+; living there stopped protecting anything.
 ;
-; Task Scheduler chi ghi lai exit code, ma exit code 0 gop chung ca "bi instance
-; khac thay the", "Reload()", "loi runtime" lan "thoat tu menu tray". Khong tach
-; duoc bang exit code, nen phai tu ghi ExitReason.
+; Task Scheduler records only an exit code, and 0 covers "replaced by another
+; instance", "Reload()", "runtime error" and "quit from the tray menu" alike --
+; hence writing ExitReason here.
 LogFile() => EnvGet("LOCALAPPDATA") . "\ahk-main.log"
 
 LogLine(msg) {
     try FileAppend(FormatTime(, "yyyy-MM-dd HH:mm:ss") . "  " . msg . "`n", LogFile(), "UTF-8")
 }
 
-; Tra ve gia tri that se HUY viec thoat -- phai tra ve 0.
+; A truthy return CANCELS the exit -- must return 0.
 OnExitLog(reason, code) {
     LogLine("exit     reason=" . reason . " code=" . code)
     return 0
@@ -32,7 +30,8 @@ OnExit(OnExitLog)
 LogLine("startup  pid=" . DllCall("GetCurrentProcessId"))
 
 #Include lib/ui.ahk
-; Focus-or-launch: beckon serve (task \BeckonServe), du lieu configs/shortcuts/apps.shared.toml — sua la an ngay.
+; Focus-or-launch is beckon serve (task \BeckonServe), reading
+; configs/shortcuts/apps.shared.toml -- edits apply immediately.
 #Include evkey-monitor.ahk
 #Include caffeine.ahk
 #Include ferry.ahk

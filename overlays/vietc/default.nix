@@ -1,13 +1,13 @@
-# Viet+ (vietc) — bo go tieng Viet kieu "direct input" cho Linux.
+# Viet+ (vietc) -- a direct-input Vietnamese IME for Linux.
 #
-# Khac moi bo go khac trong repo nay o CHO DUNG TANG NAO: fcitx5-lotus la client
-# cua khung IME, nen trong terminal no buoc phai dung preedit (gach chan) — kitty
-# khong co surrounding text de IME sua lui tai cho. vietc khong di qua IBus/Fcitx
-# ma phat thang phim that, giong Go Nhanh tren macOS (CGEventTap) va VKey tren
-# Windows (WH_KEYBOARD_LL + SendInput). Do la ly do duy nhat de dong goi no.
+# It differs from the others here in WHICH LAYER it sits at: fcitx5-lotus is an IME
+# framework client, so in a terminal it must fall back to preedit (underlining),
+# since kitty offers no surrounding text. vietc bypasses IBus/Fcitx and injects real
+# keys, like GoNhanh on macOS and VKey on Windows. That is the only reason to
+# package it.
 #
-# Upstream KHONG commit Cargo.lock, nen lock nam canh file nay va duoc noi vao
-# luc build. Bump rev thi phai sinh lai lock: `cargo generate-lockfile`.
+# Upstream does not commit Cargo.lock, so the lock lives beside this file and is
+# wired in at build time. Bumping rev means regenerating it.
 {
   lib,
   rustPlatform,
@@ -21,7 +21,7 @@
 }:
 rustPlatform.buildRustPackage {
   pname = "vietc";
-  # Upstream chua tag ban nao; version lay tu daemon/Cargo.toml + ngay commit.
+  # Upstream has no tags; version from daemon/Cargo.toml plus the commit date.
   version = "0.1.8-unstable-2026-07-13";
 
   src = fetchFromGitHub {
@@ -41,21 +41,19 @@ rustPlatform.buildRustPackage {
     makeWrapper
   ];
 
-  # dbus: crate `dbus` link libdbus that. libxkbcommon: crate `xkbcommon` link
-  # that va binary ghi SONAME libxkbcommon.so.0.
+  # Both are real links: the `dbus` and `xkbcommon` crates link the C libraries.
   buildInputs = [
     dbus
     libxkbcommon
   ];
 
-  # Test nay spawn xclip/wl-copy that, khong co trong sandbox nen luon truot.
-  # Ba test con lai cua daemon (ke ca vni_simple_word_grabbed) van chay.
+  # This test spawns a real xclip/wl-copy, absent in the sandbox. The daemon's
+  # other three still run.
   checkFlags = ["--skip=clipboard_read_write"];
 
-  # libX11/libXtst KHONG duoc link luc build — `protocol/src/x11_{capture,inject}.rs`
-  # goi dlopen("libX11.so.6") va dlopen("libXtst.so.6") luc chay. Tren NixOS khong
-  # co /usr/lib nen dlopen se truot va vietc lang le rot xuong duong khac (hoac
-  # chet), vi vay phai bom LD_LIBRARY_PATH vao wrapper.
+  # libX11/libXtst are NOT linked at build time -- the X11 backends dlopen them at
+  # runtime. NixOS has no /usr/lib, so that dlopen fails and vietc silently falls
+  # back or dies; hence LD_LIBRARY_PATH in the wrapper.
   postInstall = ''
     for bin in $out/bin/*; do
       wrapProgram "$bin" \

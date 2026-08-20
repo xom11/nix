@@ -4,34 +4,30 @@
   device,
   ...
 }: let
-  # `hw.model` của từng máy darwin trong repo.
+  # `hw.model` per darwin host, checked because the `networking` block below names
+  # the machine after `device` -- the name typed after `#`. Get it wrong and the
+  # machine is both renamed and given another host's config, with no warning.
   #
-  # Bảng này tồn tại vì ba dòng `networking` bên dưới đặt tên máy theo `device` --
-  # tức là theo cái tên bạn gõ sau `#`. Gõ nhầm host thì máy vừa bị đổi tên vừa
-  # nhận cấu hình của máy khác, và không có gì báo.
+  # Worse, the `update` alias is generated from `device` too, so one mistake
+  # rewrites the alias to the wrong host and every later `update` keeps it. It
+  # never heals on its own. This has happened: macmini ran `#airm3` and answered
+  # to `airm3` until someone noticed.
   #
-  # Tệ hơn: alias `update` (home-manager/base/macos) cũng sinh ra từ `device`, nên
-  # một lần nhầm sẽ viết lại alias thành host sai, và mọi `update` sau đó giữ
-  # nguyên cái sai. Nó không bao giờ tự khỏi.
-  #
-  # Đã xảy ra thật: macmini từng chạy `#airm3` và mang tên `airm3` cho tới khi bị
-  # phát hiện, vì `hostname` là thứ duy nhất người ta nhìn để biết mình đang ở máy nào.
-  #
-  # Máy chưa có trong bảng thì bỏ qua kiểm -- thêm một dòng khi biết `hw.model`
-  # của nó (`sysctl -n hw.model`).
+  # A machine not listed here skips the check; add a line once `sysctl -n hw.model`
+  # is known.
   expectedModels = {
     macmini = "Mac16,10";
     airm3 = "Mac15,13";
   };
   expected = expectedModels.${device} or null;
 
-  # Tra ngược để báo lỗi nói được luôn lệnh đúng, thay vì chỉ nói là sai.
+  # Reverse lookup so the error can name the right command, not just the mistake.
   reverseCase =
     lib.concatStringsSep "\n"
     (lib.mapAttrsToList (host: model: "      ${model}) right=${host} ;;") expectedModels);
 in {
-  # Chạy trong system.checks, tức là trước MỌI thứ khác trong activate (đặt tên
-  # máy mãi tận cuối). Trượt ở đây thì chưa có gì bị đụng tới.
+  # In system.checks, so it runs before everything else in activation (renaming
+  # happens near the end). Failing here means nothing has been touched yet.
   system.checks.text = lib.optionalString (expected != null) ''
     actualModel=$(sysctl -n hw.model)
     if [ "$actualModel" != "${expected}" ]; then

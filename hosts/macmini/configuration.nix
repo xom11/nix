@@ -8,10 +8,9 @@
   ];
   modules.nix-darwin = {
     brew.enable = true;
-    # dotbrave KHONG con o tang nao cua rebuild nua (16/08/2026) -- ATTIC.md,
-    # `attic/dotbrave-modules-2026-08-16`. brave.toml van trong repo va binary
-    # van trong PATH (home.nix), ap bang tay. CON MOT VIEC PHAI LAM TAY tren
-    # may nay: managed plist cu bi ghim schg, xem ATTIC.md.
+    # dotbrave left the rebuild path entirely (see ATTIC.md); brave.toml and the
+    # binary remain and are applied by hand. One manual cleanup is still pending
+    # on this machine: the old managed plist is pinned with schg.
     launchd = {
       kanata.enable = true;
     };

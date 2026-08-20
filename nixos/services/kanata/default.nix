@@ -5,23 +5,19 @@
   mkModule,
   ...
 }: let
-  # CA THU MUC configs/kanata vao store, khong phai rieng mot file: kanata giai
-  # nghia `include` tuong doi voi thu muc cua file cfg, nen defcfg.kbd/main.kbd
-  # phai nam canh kanata_linux.kbd thi moi phan giai duoc.
+  # The WHOLE configs/kanata directory into the store, not one file: kanata
+  # resolves `include` relative to the cfg file's directory, so its siblings must
+  # sit beside it. That is what lets NixOS and Ubuntu share one kanata_linux.kbd --
+  # the nixpkgs module takes `config` as a STRING, written to a lone store file
+  # with no siblings, which is why a separate nixos variant used to be needed.
   #
-  # Nho vay NixOS va Ubuntu (system-manager) doc CHUNG mot kanata_linux.kbd.
-  # Truoc day phai co kanata_nixos.kbd rieng chi vi hai dong `include`: module
-  # nixpkgs nhan `config` la CHUOI, ma chuoi do duoc ghi ra mot file store don
-  # doc — khong co file anh em ben canh nen include chet.
+  # `configFile` overrides every other module option, including the
+  # `linux-continue-if-no-devs-found yes` line the module normally injects; that
+  # now lives in the shared defcfg.kbd, which macOS tolerates (verified by
+  # `--check`).
   #
-  # `configFile` ghi de moi option khac cua module (extraDefCfg, devices...),
-  # ke ca dong `linux-continue-if-no-devs-found yes` ma module von tu chen. Da
-  # bu lai bang cach dua dong do vao defcfg.kbd dung chung — kanata 1.12 chap
-  # nhan key `linux-*` tren macOS (da chay `--check` de xac nhan), nen no khong
-  # lam hong hai nen tang kia.
-  #
-  # Module chi chay `--check` luc build cho file NO TU SINH, khong kiem file
-  # nguoi dung dua vao. Nen tu dung lai buoc do o day, keo mat hang rao.
+  # The module only runs `--check` on files it generates itself, so that step is
+  # repeated here rather than lost.
   configDir = pkgs.runCommand "kanata-config" {} ''
     cp -r ${../../../configs/kanata} $out
     chmod -R u+w $out

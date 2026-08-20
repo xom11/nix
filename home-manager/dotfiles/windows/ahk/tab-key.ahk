@@ -5,17 +5,16 @@ tabkey := "^#+"
 Hotkey(tabkey "t", ShowTime)
 Hotkey(tabkey "p", ShowBattery)
 Hotkey(tabkey "r", ReloadConfig)
-; Giu may thuc ma van cho tat man hinh. ToggleCaffeine nam trong caffeine.ahk --
-; doi ung cua Caffeine.spoon ben macOS, cung phim Tab+c, nhung nguoc y nghia:
-; ban macOS giu MAN HINH sang, ban nay co y de man hinh tat. Ly do o dau file do.
+; Keeps the machine awake while still letting the screen turn off. Same key as
+; macOS's Caffeine.spoon but the OPPOSITE meaning -- that one keeps the SCREEN on.
+; Reasons at the top of caffeine.ahk.
 Hotkey(tabkey "c", ToggleCaffeine)
-; Anh trong clipboard -> may dang ssh vao, roi go duong dan ra ngay tai con tro.
-; FerryImage nam trong ferry.ahk; ly do phai di duong vong nam o dau file do.
+; Clipboard image -> the machine you are ssh'd into, then types the path at the
+; cursor. Why it has to go the long way round is at the top of ferry.ahk.
 Hotkey(tabkey "v", FerryImage)
-; Doi che do go - Tab+Q=Trung, Tab+W=Viet, Tab+E=English.
-; SwitchMode nam trong switch-language.ahk, goi `tongue` de gat CA layout lan
-; VKey. Truoc day cho nay goi thang SetInputLang, tuc chi doi duoc layout --
-; xem comment dau switch-language.ahk.
+; Input mode: Q = Chinese, W = Vietnamese, E = English. SwitchMode calls `tongue`
+; to move BOTH the layout and VKey; this used to call SetInputLang, which reached
+; only the layout.
 Hotkey(tabkey "q", (*) => SwitchMode("zh"))
 Hotkey(tabkey "w", (*) => SwitchMode("vi"))
 Hotkey(tabkey "e", (*) => SwitchMode("en"))

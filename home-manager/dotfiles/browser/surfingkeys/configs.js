@@ -23,9 +23,9 @@ SECTION: SETTINGS
 settings.scrollStepSize = 200;
 settings.defaultSearchEngine = "gg";
 
-// Đừng thêm `settings.autoFocusResults` — tên đó không tồn tại trong 1.18.0.
+// Do not add `settings.autoFocusResults` -- no such setting in 1.18.0.
 
-// Tắt Surfingkeys ở các host này, tự kèm mọi subdomain và mọi cổng. Không cần escape.
+// Hosts where Surfingkeys is off, subdomains and ports included. No escaping needed.
 // prettier-ignore
 const BLOCKLIST_HOSTS = [
   "youtube.com",
@@ -34,9 +34,9 @@ const BLOCKLIST_HOSTS = [
   // "ninjaverse.xyz",
 ];
 
-// Phải là RegExp thật — Surfingkeys vá RegExp.prototype.toJSON để nó qua được
-// sendMessage sang background. Neo `^` + lookahead cho mốc chỉ khớp phần host, không
-// thì "ninjaverse.xyz" ăn cả example.com/?q=ninjaverse.xyz lẫn notninjaverse.xyz.
+// Must be a real RegExp -- Surfingkeys patches RegExp.prototype.toJSON so it survives
+// sendMessage. The anchor and lookahead keep it to the host: without them a domain also
+// matches example.com/?q=<domain> and not<domain>.com.
 const blocklistHostAlt = BLOCKLIST_HOSTS.map((h) =>
   h.replace(/\./g, "\\."),
 ).join("|");
@@ -51,7 +51,7 @@ SECTION: KEY MAPPINGS
 // Passthrough mode
 map("<Ctrl-v>", "<Alt-i>");
 
-// Tab navigation — Ctrl-6 (built-in) nhảy về tab vừa dùng
+// Tab navigation -- built-in Ctrl-6 jumps to the last tab
 map("J", "R");
 map("K", "E");
 map("H", "S");
@@ -62,12 +62,12 @@ map("]b", "F");
 // Close all tabs
 map("gx", "gxx");
 
-// Vẫn dùng được trong insert mode
+// still usable in insert mode
 unmap("<Ctrl-i>");
 
 imap("jk", "<Esc>");
 
-// map("p", "cc");  // mở URL trong clipboard ở tab mới
+// map("p", "cc");  // open the clipboard URL in a new tab
 // imapkey("<Ctrl-u>", "Scroll up half page", () => Normal.scroll("pageUp"));
 // imapkey("<Ctrl-d>", "Scroll down half page", () => Normal.scroll("pageDown"));
 
@@ -75,7 +75,7 @@ imap("jk", "<Esc>");
 SECTION: ALIASES
 ***********************/
 ["w", "s", "g", "e", "b", "y"].forEach((a) => removeSearchAlias(a));
-unmap("on"); // nhường tiền tố cho "ont" bên dưới
+unmap("on"); // frees the prefix for "ont" below
 // prettier-ignore
 [
   ["gg", "google",   "https://www.google.com/search?q="],
@@ -94,8 +94,8 @@ mapkey("ont", "Open newtab", function () {
 /***********************
 SECTION: SHORTCUTS URLS
 ***********************/
-// So khớp theo origin + path chứ không so chuỗi thô: nếu không, mốc
-// "github.com/stars" khớp nhầm cả "github.com/starship/starship".
+// Match on origin + path, not raw string: otherwise "github.com/stars" also matches
+// "github.com/starship/starship".
 function urlMatcher(target) {
   const { origin, pathname } = new URL(target);
   const base = pathname.replace(/\/+$/, "");
@@ -105,15 +105,15 @@ function urlMatcher(target) {
     try {
       parsed = new URL(candidate);
     } catch {
-      return false; // about:blank, chrome://..., tab chưa load xong
+      return false; // about:blank, chrome://..., a tab still loading
     }
     if (parsed.origin !== origin) return false;
-    if (!base) return true; // mốc là cả domain
+    if (!base) return true; // the entry is a whole domain
     return parsed.pathname === base || parsed.pathname.startsWith(`${base}/`);
   };
 }
 
-// Đang ở đó rồi -> quay về tab trước; đã mở đâu đó -> nhảy tới; chưa có -> mở mới.
+// Already there -> go back; open somewhere -> focus it; otherwise -> open it.
 function toggleFocusUrl(url) {
   const matches = urlMatcher(url);
 
@@ -122,7 +122,7 @@ function toggleFocusUrl(url) {
     return;
   }
 
-  // queryInfo rỗng = quét mọi cửa sổ, không riêng cửa sổ hiện tại
+  // empty queryInfo scans every window, not just this one
   RUNTIME("getTabs", { queryInfo: {} }, ({ tabs }) => {
     const tab = Array.isArray(tabs)
       ? tabs.find(({ url: tabUrl }) => tabUrl && matches(tabUrl))
@@ -143,13 +143,12 @@ function titleFromUrl(url) {
   return host.replace(/^www\./, "") + pathname.replace(/\/+$/, "");
 }
 
-// [phím, url, tên hiển thị] — cột thứ ba chỉ khai khi tên suy ra từ URL khó đọc.
+// [key, url, title] -- the third column only when the URL-derived name reads badly.
 //
-// Không phím nào được là tiền tố của phím khác: mapkey() sẽ im lặng bỏ phím dài,
-// hoặc để phím ngắn xoá cả nhánh nếu đăng ký ngược lại — cảnh báo duy nhất ở mức
-// `warn` mà logLevels mặc định chỉ bật `error`. Vì vậy mọi mốc github là "gh" +
-// đúng một ký tự, trang chủ lấy dấu chấm (encodeKeystroke chỉ viết lại nhóm <...>
-// nên dấu chấm là phím thường, chỉ khác là không chữ cái nào đụng vào được).
+// No key may be a prefix of another: mapkey() silently drops the longer one, or lets the
+// shorter erase the branch if registered the other way round, and the only warning is at
+// `warn` level while logLevels defaults to `error`. Hence every github entry is "gh" plus
+// exactly one character, with the homepage taking a dot.
 // prettier-ignore
 const SITES = [
   ["9r", "http://100.127.63.100:20128/dashboard", "9router"],
@@ -168,12 +167,12 @@ SITES.forEach(({ key, title, url }) =>
   mapkey(`<Space>${key}`, title, () => toggleFocusUrl(url)),
 );
 
-// Lối vào thứ hai cho cùng danh sách: gõ tên thay vì nhớ phím.
+// A second way into the same list: type the name instead of the key.
 //
-// Handler "UserURLs" luôn mở tab mới kể cả khi trang đã mở, và onEnter của nó không
-// ghi đè được từ đây. Đường vòng: `openFocused` thấy uid bắt đầu bằng "T" thì gọi
-// focusTab thay vì openLink — nên tra tab TRƯỚC khi mở omnibar rồi dán uid vào mục
-// đang mở. (Chọn đúng trang đang xem thì không làm gì, khác toggleFocusUrl một chút.)
+// The "UserURLs" handler always opens a new tab even when the page is open, and its onEnter
+// cannot be overridden from here. Way around: `openFocused` calls focusTab instead of
+// openLink when a uid starts with "T", so look tabs up BEFORE opening the omnibar and stamp
+// the uid onto entries already open.
 mapkey("<Space><Space>", "Open saved site", () =>
   RUNTIME("getTabs", { queryInfo: {} }, ({ tabs }) => {
     const open = Array.isArray(tabs) ? tabs : [];

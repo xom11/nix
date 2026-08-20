@@ -11,22 +11,16 @@ mkModule config ./. {
     update = "sudo darwin-rebuild switch --impure --flake ~/.nix#${device}";
   };
 
-  # Formula beckon cua Homebrew chay
-  #   beckon serve ~/.config/beckon/apps.toml --log /opt/homebrew/var/log/beckon.log
-  # va duong dan config do HARDCODE trong `service do` cua formula -- khong co
-  # cach nao truyen duong dan khac tu day. Nen tro no ve file that trong repo.
+  # The Homebrew formula HARDCODES `~/.config/beckon/apps.toml` in its service
+  # definition, so this link is the only way to point it at the repo's real file.
   #
-  # Truoc 17/08/2026 ca hai may lam viec nay BANG TAY, va hai ban lam tay lech
-  # nhau: macmini la symlink dung, airm3 la BAN COPY ROI (dung im o 16/08 trong
-  # khi file repo da di tiep) -- tuc brew serve ben do se dang ky bang bang phim
-  # cu ma khong bao gi. Khai o day de khong con hai ban.
+  # Both machines used to do this by hand and drifted: one had a correct symlink,
+  # the other a stale COPY, so its beckon registered an old keymap with no warning.
   #
-  # mkOutOfStoreSymlink chu KHONG phai `source = ../../configs/...`: path literal
-  # copy file vao store roi symlink toi ban READ-ONLY o do, hong hai duong mot
-  # luc. Mot, sua file trong repo se khong an cho toi lan switch sau, mat dung
-  # tinh chat ma "Dotfile linking pattern" trong CLAUDE.md giu. Hai, beckon tu
-  # 0.8.0 GHI NGUOC vao chinh file nay (cua so Settings, config_write.rs) nen no
-  # se dam vao store read-only.
+  # mkOutOfStoreSymlink, NOT `source = ...`: a path literal copies into the store
+  # and links to a READ-ONLY copy, which breaks two things -- edits stop applying
+  # until the next switch, and beckon 0.8.0+ WRITES BACK to this file from its
+  # Settings window, which would fail against the store.
   home.file."${config.xdg.configHome}/beckon/apps.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${repoPath}/configs/shortcuts/apps.shared.toml";
 }

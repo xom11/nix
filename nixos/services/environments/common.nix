@@ -8,29 +8,24 @@
   pathList = ["modules"] ++ (lib.splitString "/" relPath);
   cfg = lib.getAttrFromPath pathList config;
 in {
-  # Am thanh la thu MOI host co DE deu can, khong rieng i3wm. Truoc day khoi nay
-  # nam trong i3wm.nix, nen host nao khong chay i3 thi khong duoc khai gi ca.
+  # Audio belongs to every host with a desktop, not just i3wm, where this used to
+  # live.
   #
-  # DA DO LAI 14/08/2026, va ket qua BAC BO lap luan dau tien o day:
-  #   - `services.pipewire.*` gan nhu la no-op tren moi host hien co. nixpkgs
-  #     `programs.sway` va `programs.hyprland` deu import `wayland-session.nix`,
-  #     file do bat `services.graphical-desktop`, va module do da dat
-  #     `services.pipewire` san. Nen "bo GNOME di la sway/hyprland mat tieng"
-  #     -- ly do cu ghi o day -- LA SAI.
-  #   - Thu that su doi hanh vi la `security.rtkit.enable`: graphical-desktop
-  #     KHONG dat no, chi module GNOME dat (mkDefault). Thieu dong do thi phien
-  #     sway/hyprland tren host khong co GNOME chay pipewire ma khong co
-  #     realtime priority, va no im lang.
+  # Re-measured, and it REFUTED the original reasoning here: `services.pipewire.*`
+  # is nearly a no-op, because nixpkgs' sway and hyprland modules both import
+  # wayland-session.nix, which enables graphical-desktop, which already sets
+  # pipewire. The line that actually changes behaviour is `security.rtkit.enable`,
+  # which graphical-desktop does NOT set -- only the GNOME module does. Without it
+  # a sway/hyprland session on a GNOME-less host runs pipewire with no realtime
+  # priority, silently.
   #
-  # Vi sao ban ghi cu sai: phep do chay o Task 2, TRUOC khi sway.nix ton tai.
-  # Luc do `types = ["sway"]` khong khop module nao, nen no do "khong co desktop
-  # nao ca" chu khong phai "sway thieu GNOME".
+  # The old note was wrong because it was measured before sway.nix existed, when
+  # `types = ["sway"]` matched no module at all -- so it measured "no desktop",
+  # not "sway without GNOME".
   #
-  # `alsa.support32Bit` da di theo i3wm.nix khi module do bi go (19/08/2026,
-  # ATTIC.md). No CO Y khong nam o day: tren x86_64 no KHONG phai no-op, dat o
-  # day se keo mot closure pipewire i686 len moi host co DE. Khong host nao con
-  # bat "i3wm" luc go nen viec go la trung tinh ve hanh vi.
-  # Host nao that su can app 32-bit thi dat thang o configuration.nix cua no.
+  # `alsa.support32Bit` left with i3wm.nix and is deliberately NOT here: on x86_64
+  # it is not a no-op and would pull an i686 pipewire closure onto every desktop
+  # host. Set it in a host's own configuration.nix if 32-bit apps are needed.
   config = lib.mkIf cfg.enable {
     services.pulseaudio.enable = false;
     security.rtkit.enable = true;

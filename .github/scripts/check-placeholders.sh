@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 #
-# Moi truong credential duoi home-manager/dotfiles/ phai la placeholder.
+# Every credential field under home-manager/dotfiles/ must be a placeholder.
 #
-# Ly do lop nay ton tai: hook pre-push doi chieu CHINH XAC voi secret that, nen
-# no mu voi mot key CHUA co trong apikey.zsh. Ca hai vu ro ri o repo nay deu di
-# duong do -- mot key moi, viet thang vao file, trong mot thu muc ma cong cu AI
-# ghi vao (dotfiles/ la dich cua mkOutOfStoreSymlink).
+# This layer exists because the pre-push hook compares EXACTLY against real
+# secrets, so it is blind to a key not yet in apikey.zsh. Both leaks in this repo
+# took that route: a new key written straight into a file, in a directory AI tools
+# write to.
 #
-# Bo .md: la tai lieu, va claude.d/commands/discord.md co y viet
-# `export DISCORD_TOKEN="token"` nhu huong dan -- quet vao la bao gia.
+# .md is excluded: it is documentation, and one command file deliberately shows
+# `export DISCORD_TOKEN="token"` as an example.
 #
-# Chay tay:  ./.github/scripts/check-placeholders.sh
+# Run by hand:  ./.github/scripts/check-placeholders.sh
 
 set -uo pipefail
 
-# Byte-wise, khong phu thuoc locale. awk cua macOS bo cuoc voi
-# "multibyte conversion failure" khi gap UTF-8 duoi locale UTF-8, con mawk va
-# gawk lai xu ly khac nhau. Repo nay day comment tieng Viet, nen day khong phai
-# tinh huong hiem -- va so khop chinh xac von la viec cua byte chu khong phai
-# cua ky tu.
+# Byte-wise and locale-independent: macOS awk aborts with "multibyte conversion
+# failure" on UTF-8 under a UTF-8 locale, and mawk and gawk differ again. Exact
+# matching is a byte question, not a character one, anyway.
 export LC_ALL=C
 
 cd "$(dirname "$0")/../.." || exit 1
@@ -31,20 +29,18 @@ SCOPE="home-manager/dotfiles"
     exit 1
 }
 
-# ---------------------------------------------------------------------------
-# Self-test tren du lieu BIA.
+# Self-test on FABRICATED data.
 #
-# Mot kiem tra khong bao gio bat duoc gi trong y het mot kiem tra dang chan tot.
-# Repo nay da co tien le: .gitignore go sai chinh ta nam do rat lau, van trong
-# nhu dang bao ve, va khong co gi bao. Cac ca duoi day co dinh hoa dung nhung
-# hinh dang da tung lot va nhung hinh dang KHONG duoc bao gia.
-# ---------------------------------------------------------------------------
+# A check that never catches anything looks exactly like a check that is working.
+# This repo has the precedent: a misspelled .gitignore line sat there for a long
+# time looking protective. These cases pin both the shapes that once slipped
+# through and the shapes that must NOT raise a false alarm.
 if [ "${1:-}" = "--self-test" ]; then
     fail=0
 
-    # `gitleaks:allow` o cuoi moi dong: day la fixture BIA, nhung no co hinh dang
-    # cua mot secret that -- do la toan bo muc dich. Khong danh dau thi job
-    # gitleaks se do vi chinh bo test cua lop ben canh.
+    # `gitleaks:allow` per line: these fixtures are fabricated but shaped like
+    # real secrets, which is the point -- unmarked, they would fail the gitleaks
+    # job with this layer's own tests.
     must_flag=$(
         cat <<'EOF'
   "apiKey": "abcdef0123456789",  # gitleaks:allow
@@ -92,7 +88,7 @@ EOF
     exit "$fail"
 fi
 
-# Chi file dang duoc git theo doi: thu chua track thi chua the ro ri.
+# Tracked files only: nothing untracked can have leaked yet.
 files=$(git ls-files -- "$SCOPE" |
     grep -E '\.(json|toml|ya?ml|js|mjs|cjs|ts|lua|py|ps1|nix|sh|conf|rasi)$')
 
@@ -101,8 +97,8 @@ if [ -z "$files" ]; then
     exit 1
 fi
 
-# Duong dan co khoang trang se lam vo phep tach tu ben duoi. Noi thang thay vi
-# lang le kiem thieu file.
+# A path with a space would break the word splitting below. Say so rather than
+# silently checking fewer files.
 if printf '%s\n' "$files" | grep -q '[[:space:]]'; then
     echo "::error::co duong dan chua khoang trang, script nay chua xu ly duoc"
     printf '%s\n' "$files" | grep '[[:space:]]'

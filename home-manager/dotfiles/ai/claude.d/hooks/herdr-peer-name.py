@@ -84,7 +84,7 @@ def live_sessions():
         pid = data.get("pid")
         if not (isinstance(sid, str) and isinstance(name, str) and name):
             continue
-        # File cua phien da chet van nam lai; ten cua no khong con goi duoc nua.
+        # A dead session's file remains; its name is no longer callable.
         if isinstance(pid, int):
             try:
                 os.kill(pid, 0)
@@ -108,8 +108,8 @@ def report(pane, name):
 
 
 def main():
-    # Hook nhan JSON qua stdin. Payload mang session_id cua chinh phien nay --
-    # thu duy nhat noi duoc pane cua minh voi ten khi herdr chua biet gi ve no.
+    # The hook receives JSON on stdin. The payload carries this session's own
+    # session_id -- the only thing linking its pane to a name before herdr knows it.
     payload = ""
     if not sys.stdin.isatty():
         try:
@@ -130,7 +130,7 @@ def main():
 
     labelled = set()
 
-    # Pane cua chinh phien nay -- xem doan PANE CUA CHINH PHIEN NAY o dau file.
+    # This session's own pane -- see the note at the top of the file.
     own_pane = os.environ.get("HERDR_PANE_ID")
     own_sid = hook_input.get("session_id")
     own_name = names.get(own_sid) if isinstance(own_sid, str) else None
@@ -138,8 +138,8 @@ def main():
         report(own_pane, own_name)
         labelled.add(own_pane)
 
-    # Cac pane con lai: quet nhu cu, vua dan cho phien cu vua tu chua neu lan
-    # truoc truot. Chay tay (khong co payload) thi day la duong duy nhat.
+    # The other panes: scan as before, labelling older sessions and self-healing a
+    # previous miss. With no payload (a manual run) this is the only path.
     listing = herdr("agent", "list")
     agents = (listing or {}).get("result", {}).get("agents", [])
 
@@ -150,7 +150,7 @@ def main():
         if not (pane and name) or pane in labelled:
             continue
 
-        # Ten agent do lan chay truoc dat se de len token `agent` cua hang duoi.
+        # A name set by an earlier run would shadow the `agent` token below.
         if agent.get("name"):
             herdr("agent", "rename", pane, "--clear")
 

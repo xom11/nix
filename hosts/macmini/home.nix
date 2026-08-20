@@ -32,18 +32,9 @@ in {
 
   home.packages = with pkgs; [
     bws
-    # beckon: chuyen sang Homebrew 17/08/2026. Ly do khong phai so thich —
-    # macOS gan quyen Accessibility/Input Monitoring theo DUONG DAN file, va
-    # duong dan nix store doi moi lan bump, nen moi lan cap nhat la mat quyen.
-    # Homebrew khong sua duoc dieu do (Cellar cung mang so phien ban), nhung
-    # `brew upgrade` + `brew services` la mot buoc, con o day la sua flake.lock
-    # roi darwin-rebuild. Ban chat chi het khi binary duoc ky Developer ID.
-    # Tu 17/08/2026 formula duoc KHAI BAO o nix-darwin/brew (tap xom11/tap +
-    # brew xom11/tap/beckon) — truoc do may nay cai bang tay nen nam ngoai
-    # khai bao. Chi con `brew services start beckon` la chay tay mot lan.
-    # Truoc 16/08/2026 binary nay den tu module dotbrave (`home.packages =
-    # [cfg.package]` cua module upstream). Module da go, nen phai khai o day --
-    # neu khong thi `dotbrave` bien mat khoi PATH va het ap tay duoc.
+    # dotbrave came from its own module until that was removed; declared here or
+    # the binary leaves PATH and there is no way to apply by hand.
+    # (beckon itself comes from Homebrew -- see nix-darwin/brew for why.)
     dotbrave
     tongue
   ];
@@ -72,9 +63,9 @@ in {
     };
     programs = {
       agenix.enable = true;
-      # Tat cung luc chuyen sang Homebrew: formula tu ship launch agent
-      # (`service do`), nen de bat o day la hai agent cung dang ky mot chord —
-      # `RegisterEventHotKey` trao cho ai dang ky TRUOC, ban thu hai im lang.
+      # Off since beckon moved to Homebrew: the formula ships its own launch
+      # agent, and two agents on one chord means RegisterEventHotKey gives it to
+      # whoever registered FIRST while the second fails silently.
       beckon-serve.enable = false;
       btop.enable = true;
       git.enable = true;

@@ -1,12 +1,13 @@
-# Lop phu, khong phai lop chinh.
+# A secondary layer, not the primary one.
 #
-# gitleaks da quet toan bo lich su repo nay va BO SOT dung key that: luat
-# `generic-api-key` mac dinh bat gia tri bang mot chuoi lien mach, con gia tri o
-# day nam sau chu `Bearer ` co dau cach. Do la ly do lop chinh
-# (.githooks/pre-push) doi chieu chinh xac voi secret that thay vi doan hinh dang.
+# gitleaks scanned this repo's entire history and MISSED the one real key: the
+# default `generic-api-key` rule matches an unbroken run of characters, while that
+# value sat after `Bearer ` with a space. That is why the primary layer
+# (.githooks/pre-push) compares exactly against real secrets instead of guessing
+# at shapes.
 #
-# File nay chi va dung cai lo do, va nhac lai rang may quet theo mau la thu bat
-# duoc HINH DANG CHUA BIET -- viec ma doi chieu chinh xac khong lam duoc.
+# This file patches that specific hole, and stands as the reminder that pattern
+# scanning is what catches UNKNOWN shapes -- which exact comparison cannot.
 
 [extend]
 useDefault = true
@@ -14,13 +15,13 @@ useDefault = true
 [[rules]]
 id = "bearer-token-literal"
 description = "Authorization header mang bearer token viet thang"
-# Dau cach giua `Bearer` va gia tri la toan bo ly do luat nay ton tai.
+# The space between `Bearer` and the value is the whole reason for this rule.
 regex = '''(?i)bearer[ \t]+[A-Za-z0-9._~+/-]{16,}={0,2}'''
 keywords = ["bearer"]
 
 [[rules.allowlists]]
-# Placeholder khong phai secret. `$` va `{` von da nam ngoai lop ky tu o tren nen
-# phan lon truong hop khong khop ngay tu dau; day la lop chan thu hai.
+# Placeholders are not secrets. `$` and `{` are already outside the character
+# class above, so most cases never match; this is the second line of defence.
 regexTarget = "line"
 regexes = [
   '''\$\{?[A-Za-z_]''',
@@ -29,16 +30,14 @@ regexes = [
   '''\$env:''',
 ]
 
-# Ngoai le duy nhat, va co pham vi hep nhat co the.
+# The only exception, scoped as narrowly as possible.
 #
-# Trong keybindings.json cua VS Code, truong ten la `key` va gia tri la mot to
-# hop phim -- `generic-api-key` bat dung cai ten do. Day la bao gia da ton tai
-# rat lau: ban quet lich su thay no o ca ba duong dan cu cua chinh file nay
-# (dotfiles/, GUI/dotfiles/, modules/tools/) qua cac lan doi ten.
+# In VS Code's keybindings.json the field is named `key` and the value is a chord,
+# which `generic-api-key` matches on the name alone. This false positive existed
+# for a long time, across all three former paths of that file.
 #
-# Han o dung mot luat va dung mot ten file. .githooks/pre-push van doi chieu
-# chinh xac tren file nay nhu moi file khac, nen ngoai le o day khong mo ra
-# duong nao cho mot key that.
+# Limited to one rule and one filename. pre-push still compares exactly on this
+# file like any other, so the exception opens no route for a real key.
 [[allowlists]]
 description = "VS Code keybindings: truong ten that su la `key`"
 targetRules = ["generic-api-key"]

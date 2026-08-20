@@ -21,10 +21,9 @@ mkModule config ./. {
     vscode
   ];
 
-  # Khoi nay DANG TAT (enable = false), giu lai lam khung san cho lan can toi.
-  # Hai extension vimium c da bo cung luc go dotfiles/browser/vimiumc
-  # (10/08/2026) -- surfingkeys da thay, va no khong cai qua day: extension tu
-  # tai configs.js bang URL raw tren GitHub, xem dotfiles/browser/surfingkeys.
+  # DISABLED, kept as scaffolding. The vimium-c extensions went with its dotfiles
+  # directory; surfingkeys replaced it and is not installed here -- its extension
+  # fetches configs.js from a raw GitHub URL instead.
   programs.chromium = {
     enable = false;
     package = pkgs.brave;

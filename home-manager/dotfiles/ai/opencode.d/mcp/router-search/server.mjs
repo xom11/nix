@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 
-// MCP server: web_search + web_fetch qua custom router API
-// JSON-RPC 2.0 over stdio — zero dependencies
+// MCP server: web_search + web_fetch through the custom router API.
+// JSON-RPC 2.0 over stdio, zero dependencies.
 
 import { env } from 'node:process';
 
-// ROUTER_ENDPOINT được dùng chung với opencode, nơi nó làm baseURL cho
-// @ai-sdk/openai-compatible nên luôn kèm đuôi /v1. Cắt đuôi rồi tự nối lại,
-// thay vì dựa vào việc router chấp nhận /v1/v1/... (nó có tha, nhưng đó là may).
+// ROUTER_ENDPOINT is shared with opencode, where it is a baseURL and so always
+// ends in /v1. Strip and re-append rather than relying on the router tolerating
+// /v1/v1/... -- it happens to, but that is luck.
 const BASE = (env.ROUTER_ENDPOINT ?? '').replace(/\/+$/, '').replace(/\/v1$/, '');
 const API_KEY = env.ROUTER_KEY ?? env.ROUTER_API_KEY;
 
-// Provider mặc định chọn loại rẻ nhất. Các bí danh "*-combo" để router tự bốc
-// ngẫu nhiên, giá chênh tới 8× cho cùng một truy vấn:
-//   search — serper $0.001 | exa $0.007 | tavily $0.008
-//   fetch  — exa    $0.001 | firecrawl $0.002 | tavily $0.008
+// Default to the cheapest provider. The "*-combo" aliases let the router pick at
+// random, and the spread is up to 8x for the same query:
+//   search -- serper $0.001 | exa $0.007 | tavily $0.008
+//   fetch  -- exa    $0.001 | firecrawl $0.002 | tavily $0.008
 const DEFAULT_SEARCH_PROVIDER = env.ROUTER_SEARCH_PROVIDER ?? 'serper';
 const DEFAULT_FETCH_PROVIDER = env.ROUTER_FETCH_PROVIDER ?? 'exa';
 
-// Trần ký tự cho web_fetch — trang lớn có thể vài trăm KB, đổ hết vào context
-// là phản tác dụng. 0 = không giới hạn.
+// Character ceiling for web_fetch: a large page can be hundreds of KB, and
+// dumping all of it into context defeats the purpose. 0 means unlimited.
 const FETCH_MAX_CHARS = Number(env.ROUTER_FETCH_MAX_CHARS ?? 40000);
 
 if (!BASE) {
@@ -60,9 +60,8 @@ async function post(path, body) {
 }
 
 // ── formatting ───────────────────────────────────────────────────
-// Router trả về rất nhiều field null (score, published_at, favicon_url,
-// metadata, citation, provider_raw). Dump nguyên JSON tốn ~3× context so với
-// text, mà phần thừa không mang thông tin gì.
+// The router returns many null fields. Dumping raw JSON costs about 3x the
+// context of text while carrying no extra information.
 
 function cost(usage) {
   const c = usage?.search_cost_usd ?? usage?.fetch_cost_usd;
@@ -80,7 +79,7 @@ function formatSearch(data) {
     lines.push('', `${i + 1}. ${r.title || '(no title)'}`);
     if (r.url) lines.push(`   ${r.url}`);
     if (r.snippet) lines.push(`   ${r.snippet}`);
-    // Vài provider trả kèm nội dung trang; chỉ đưa vào khi thực sự có.
+    // Some providers include page content; only pass it on when present.
     if (typeof r.content === 'string' && r.content.trim()) {
       lines.push(`   ${r.content.trim().replace(/\s+/g, ' ').slice(0, 500)}`);
     }
@@ -94,8 +93,8 @@ function formatSearch(data) {
   return lines.join('\n');
 }
 
-// Provider fetch nào đã thua trên URL nào, tính trong vòng đời process. Không có
-// nó thì gợi ý leo thang sẽ khuyên thử lại đúng provider vừa thất bại.
+// Which fetch provider failed on which URL, for this process's lifetime. Without
+// it, the escalation hint would suggest retrying the provider that just failed.
 const FETCH_FAILURES = new Map();
 const FETCH_FAILURES_MAX = 200;
 
@@ -107,8 +106,8 @@ const FETCH_PROVIDERS = [
 
 function noteFetchFailure(url, provider) {
   if (!url || !provider) return new Set();
-  // Map giữ thứ tự chèn, nên phần tử đầu là cũ nhất -- đủ để chặn phình bộ nhớ
-  // trong một process chạy dài.
+  // Map preserves insertion order, so the first entry is the oldest -- enough to
+  // bound memory in a long-running process.
   if (!FETCH_FAILURES.has(url) && FETCH_FAILURES.size >= FETCH_FAILURES_MAX) {
     FETCH_FAILURES.delete(FETCH_FAILURES.keys().next().value);
   }
@@ -128,8 +127,8 @@ function formatFetch(data) {
     `${data?.url ?? ''} · ${data?.provider ?? '?'}${cost(data?.usage)} · ${len} ký tự`,
   ].join('\n');
 
-  // Router trả 200 kèm nội dung rỗng khi provider không lấy được trang (domain
-  // chết, bị chặn, trang toàn JS). Nói thẳng ra thay vì trả về khoảng trắng.
+  // The router returns 200 with empty content when a provider cannot fetch the
+  // page (dead domain, blocked, JS-only). Say so rather than returning whitespace.
   if (!body.trim()) {
     const failed = noteFetchFailure(data?.url, data?.provider);
     const left = FETCH_PROVIDERS.filter(([p]) => !failed.has(p));
@@ -216,8 +215,8 @@ async function handleToolsCall(id, params) {
       result = text(formatSearch(data));
     } else if (name === 'web_fetch') {
       const provider = args.provider ?? DEFAULT_FETCH_PROVIDER;
-      // Provider từ chối thẳng (firecrawl 403 với reddit chẳng hạn) cũng là một
-      // lần thua -- không ghi lại thì lần sau vẫn đi gợi ý nó.
+      // An outright refusal (a 403, say) is also a failure -- unrecorded, it would
+      // be suggested again next time.
       const data = await post('/v1/web/fetch', {
         model: provider,
         url: args.url,
@@ -239,8 +238,8 @@ async function handleToolsCall(id, params) {
 
 // ── stdio loop ───────────────────────────────────────────────────
 
-// tools/call là async, nên stdin đóng không có nghĩa là xong việc — phải đợi
-// các request đang bay trả lời hết rồi mới thoát.
+// tools/call is async, so a closed stdin does not mean the work is done -- wait
+// for in-flight requests before exiting.
 let pending = 0;
 let stdinEnded = false;
 

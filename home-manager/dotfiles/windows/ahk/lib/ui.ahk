@@ -17,6 +17,5 @@ ShowPopup(mainText, subText, accentColor) {
     ui.Destroy()
 }
 
-; ShowResult va ShowInput tung o day, phuc vu mot tinh nang "viet lai van ban roi
-; copy" da bo tu lau; den 08/2026 thi khong con cho nao trong repo goi toi nua nen
-; da xoa. Can lai thi lay tu git.
+; ShowResult and ShowInput used to live here for a rewrite-and-copy feature that
+; was dropped; nothing in the repo called them any more. Recover from git if needed.

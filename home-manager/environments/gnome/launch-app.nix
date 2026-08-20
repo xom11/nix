@@ -1,7 +1,7 @@
-# Sinh dconf custom-keybindings tu configs/shortcuts/apps.shared.toml.
-# DOC LUC EVAL (fromTOML): sua file la phai `home-manager switch` — khac han
-# mac/windows (beckon serve doc luc chay). Path literal o day la CO Y:
-# dconf von la san pham cua eval.
+# Generates dconf custom-keybindings from configs/shortcuts/apps.shared.toml.
+# READ AT EVAL, so editing that file needs a switch -- unlike mac/Windows, where
+# beckon serve reads it live. The path literal is deliberate: dconf is an eval
+# product anyway.
 {lib}: let
   data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
 
@@ -11,8 +11,8 @@
     alt = "<Alt>";
     shift = "<Shift>";
   };
-  # "ctrl+super+alt+b" -> "<Ctrl><Super><Alt>b". Modifier la moi token truoc
-  # token cuoi; token cuoi giu nguyen (dconf nhan keysym: b, space, ...).
+  # "ctrl+super+alt+b" -> "<Ctrl><Super><Alt>b". Every token but the last is a
+  # modifier; the last stays as the keysym.
   toBinding = combo: let
     parts = lib.splitString "+" combo;
     n = builtins.length parts;
@@ -27,9 +27,9 @@
     lib.imap0 (i: combo: {
       name = "${base}/custom${toString i}";
       value = {
-        # Chi ung vien DAU, khong ca chuoi: day la ten hien trong
-        # Settings -> Keyboard, va "Beckon kitty || Terminal" doc nhu mot loi
-        # danh may. `command` ben duoi van mang ca chuoi — do moi la thu chay.
+        # First candidate only: this is the label shown in Settings, where the
+        # full chain would read like a typo. `command` below keeps the whole
+        # string -- that is what actually runs.
         name = "Beckon ${lib.strings.trim (lib.head (lib.splitString "||" data.${combo}))}";
         binding = toBinding combo;
         command = ''beckon "${data.${combo}}"'';

@@ -8,14 +8,12 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
-    # Phan dung chung cua MOI phien Wayland. Ton tai vi mot ly do cu the:
-    # sway va hyprland cung chay tren rog, va neu ca hai cung khai
-    # ~/.config/mako/config thi home-manager bao loi dinh nghia trung ngay
-    # luc eval. Tach ra day thay vi de mot module voi tay sang thu muc cua
-    # module kia.
+    # Shared by EVERY Wayland session. It exists because sway and hyprland both run
+    # on rog, and if both declared ~/.config/mako/config home-manager would fail at
+    # eval with a duplicate definition.
     #
-    # Module nay KHONG tu bat theo sway/hyprland: moi host tu liet ke day du,
-    # theo quy uoc "mot host la mot ban kiem ke" cua repo.
+    # Deliberately NOT auto-enabled by sway/hyprland: each host lists everything it
+    # gets, per this repo's one-host-is-one-inventory rule.
     home.file = {
       ".config/mako/config" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/mako.d/config";
@@ -33,17 +31,16 @@ in
       mako
       wl-clipboard
       brightnessctl
-      # `rofi` chu KHONG phai `rofi-wayland`: nixpkgs da gop hai goi, va
-      # `rofi-wayland` gio chi la alias nem loi. Ban o day la rofi 2.0.0,
-      # upstream da nuot fork Wayland.
+      # `rofi`, NOT `rofi-wayland`: nixpkgs merged them and the old name is now an
+      # alias that throws.
       rofi
       grim
       slurp
       swaybg
       swayidle
-      # swaylock TUNG THIEU trong module sway du system.conf goi no o bon cho.
-      # Trieu chung cu: toi gio tu khoa thi khong khoa gi ca, swayidle chay mot
-      # lenh khong ton tai va im lang.
+      # swaylock was once MISSING from the sway module although its config called
+      # it in four places: the screen simply never locked, because swayidle ran a
+      # nonexistent command and said nothing.
       swaylock
       cliphist
       kanshi

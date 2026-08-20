@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 #
-# Giữ trạng thái cục bộ của công cụ AI/dev ra khỏi repo public.
+# Keep local AI/dev tool state out of a public repo.
 #
-# Kiểm hai điều, và điều thứ hai mới là lý do file này tồn tại:
+# Two checks, and the second is why this file exists:
+#   1. Nothing under those directories is tracked by git.
+#   2. .gitignore ACTUALLY matches them.
 #
-#   1. Không file nào dưới các thư mục đó đang được git theo dõi.
-#   2. .gitignore THỰC SỰ khớp với chúng.
+# (1) alone is not enough: a misspelled .gitignore line still sits there looking
+# protective while matching nothing, and git will never tell you. A clean repo
+# today may just mean nobody has created a file there yet.
 #
-# Chỉ kiểm (1) thì không đủ. Một dòng .gitignore gõ sai chính tả vẫn nằm đó, vẫn
-# trông như đang bảo vệ, nhưng không khớp gì cả — và git không có cách nào báo
-# cho bạn biết. Repo sạch hôm nay chỉ vì tình cờ chưa ai tạo file ở đúng chỗ đó.
+# Not hypothetical: `.anitigravitycli/` (one extra `i`) sat in this .gitignore for
+# a long time while `.antigravitycli/` was published. Check (2) catches that
+# before anything is committed.
 #
-# Đây không phải giả thuyết: dòng `.anitigravitycli/` (thừa một chữ `i`) đã nằm
-# trong .gitignore của repo này một thời gian dài, và `.antigravitycli/` bị đẩy
-# lên public suốt thời gian đó. Kiểm (2) bắt được ngay cả khi chưa có gì bị
-# commit, tức là bắt trước khi thiệt hại xảy ra.
-#
-# Chạy tay:  ./.github/scripts/check-tool-state.sh
+# Run by hand:  ./.github/scripts/check-tool-state.sh
 
 set -uo pipefail
 
@@ -42,9 +40,9 @@ for d in "${DIRS[@]}"; do
         if [ "$n" -gt 5 ]; then echo "    ... va $((n - 5)) file nua"; fi
     fi
 
-    # Hỏi bằng một đường dẫn con thay vì hỏi thẳng thư mục: luật dạng `dir/` chỉ
-    # khớp thư mục, và cách này đúng kể cả khi thư mục chưa tồn tại trên đĩa --
-    # trên runner CI vừa checkout thì phần lớn chúng không có.
+    # Ask about a child path rather than the directory: a `dir/` rule only matches
+    # directories, and this works even when the directory does not exist on disk --
+    # on a fresh CI checkout most of them do not.
     if ! git check-ignore -q "$d/.probe"; then
         fail=1
         echo "::error::'$d' KHONG duoc .gitignore khop -- kiem lai chinh ta trong .gitignore"

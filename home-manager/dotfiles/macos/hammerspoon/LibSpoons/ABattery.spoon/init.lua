@@ -1,7 +1,7 @@
 local obj = {}
 obj.name = "ABattery"
 
--- Cấu hình giao diện (giống hệt AClock của bạn)
+-- Appearance, matching AClock
 obj.textFont = "Impact"
 obj.textSize = 135
 obj.textColor = {hex="#2ECC71"} -- Màu xanh lá cho Pin
@@ -10,11 +10,9 @@ obj.height = 230
 obj.showDuration = 4
 obj.hotkey = 'escape'
 
--- local, không phải global: bản cũ khai báo `function getframe(...)` nên nó nằm thẳng
--- trong _G cùng với mọi thứ khác của Hammerspoon.
---
--- Cộng thêm mainRes.x/y thay vì giả định màn hình chính nằm ở gốc toạ độ — không đúng khi
--- màn hình chính được đặt bên phải một màn hình khác trong Displays.
+-- local, not global: the old `function getframe(...)` landed straight in _G.
+-- Adds mainRes.x/y rather than assuming the primary screen sits at the origin, which is
+-- wrong when it is arranged to the right of another display.
 local function getframe(width, height)
     local mainRes = hs.screen.primaryScreen():fullFrame()
     return {
@@ -41,14 +39,12 @@ end
 function obj:update_text()
     local batt = hs.battery.percentage()
 
-    -- Máy để bàn không có pin thì hs.battery.percentage() trả về nan — là number, KHÔNG phải
-    -- nil, nên `if not batt` không bắt được. string.format("%d", nan) ném "number has no
-    -- integer representation" dưới Lua 5.4, và math.floor(nan + 0.5) vẫn là nan nên cũng
-    -- không cứu được: phải chặn trước khi format.
+    -- On a desktop with no battery, percentage() returns nan -- a number, NOT nil, so
+    -- `if not batt` misses it, and string.format("%d", nan) throws under Lua 5.4. Must be
+    -- caught before formatting; math.floor does not help.
     --
-    -- Vì show() gọi update_text() TRƯỚC canvas:show(), lỗi này làm canvas không bao giờ hiện
-    -- và escape không kịp bind — tab+p hỏng hoàn toàn trên macmini, mỗi lần bấm là một cửa sổ
-    -- lỗi đỏ. (Kiểm trên máy: percentage()=nan, isCharging()=nil, powerSource()="AC Power".)
+    -- show() calls update_text() BEFORE canvas:show(), so the throw meant the canvas never
+    -- appeared and escape was never bound -- the hotkey was fully broken on macmini.
     if type(batt) ~= "number" or batt ~= batt then
         self.canvas[1].text = "AC 🔌"
         return
@@ -59,8 +55,8 @@ function obj:update_text()
 end
 
 function obj:show()
-    -- Tính lại khung mỗi lần hiện: init() chỉ chạy một lần lúc load, nên nếu cắm/rút màn hình
-    -- hay đổi độ phân giải sau đó thì toạ độ lưu từ init đã lệch.
+    -- Recomputed on show: init() runs once at load, so coordinates saved there go stale
+    -- when a display is plugged or the resolution changes.
     self.canvas:frame(getframe(self.width, self.height))
     self:update_text()
     self.canvas:show()
@@ -71,8 +67,8 @@ function obj:show()
 end
 
 function obj:hide()
-    -- Gán nil sau khi delete: hide() có thể được gọi hai lần (bấm escape rồi show_timer bắn),
-    -- lần thứ hai sẽ delete lại một hotkey đã bị huỷ.
+    -- nil after delete: hide() can run twice (escape, then the timer), and the second
+    -- would delete an already-destroyed hotkey.
     if self.cancel_hotkey then
         self.cancel_hotkey:delete()
         self.cancel_hotkey = nil

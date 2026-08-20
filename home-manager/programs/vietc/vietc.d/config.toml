@@ -1,19 +1,17 @@
-# Cau hinh Viet+ (vietc). Daemon doc file nay o ~/.config/vietc/config.toml —
-# KHONG phai vietc.toml. Ten `vietc.toml` trong repo upstream chi duoc tim o thu
-# muc hien tai (cwd), nen dat sai ten la config im lang bi bo qua va daemon chay
-# bang mac dinh built-in. Xem daemon/src/config.rs::load().
+# The daemon reads this at ~/.config/vietc/config.toml -- NOT vietc.toml, which is
+# only looked up in the current directory. Get the name wrong and the config is
+# silently ignored in favour of built-in defaults.
 #
-# File nay daemon chi DOC. Thu daemon GHI la ~/.config/vietc/overrides.toml
-# (app_state.rs::save_overrides), va file do co y khong duoc symlink vao repo.
+# Read-only from the daemon's side; what it WRITES is overrides.toml beside it,
+# deliberately not symlinked into the repo.
 
 input_method = "telex"
 toggle_key = "space"
 start_enabled = true
 
-# false = khong EVIOCGRAB ban phim vat ly. Bat buoc phai giu false o day: rog
-# chay kanata, ma kanata da grab ban phim that roi. Duong dung cua vietc tren
-# sway/hyprland la zwp_input_method_v2 (rootless, khong can group input, khong
-# dung gi toi kanata). Chi bat grab = true tren may KHONG co kanata.
+# Must stay false here: kanata already EVIOCGRABs the real keyboard. vietc's
+# correct path on sway/hyprland is zwp_input_method_v2, which is rootless and
+# collides with nothing. Only set true on a machine WITHOUT kanata.
 grab = false
 debug = false
 
@@ -26,9 +24,8 @@ trigger_keys = [
 
 [app_state]
 enabled = true
-# kitty/alacritty/foot/ghostty DA BI BO khoi danh sach nay, khac ban upstream.
-# Upstream coi terminal la app tieng Anh — dung ly do khien ta tim toi vietc
-# (go tieng Viet trong kitty ma khong bi gach chan) thi lai bi tat mac dinh.
+# Terminals were REMOVED from this list, unlike upstream, which treats them as
+# English-only -- disabling by default the very thing vietc was adopted for.
 english_apps = [
     "code",
     "jetbrains",
@@ -45,8 +42,7 @@ vietnamese_apps = [
     "thunderbird",
 ]
 
-# [macros] CO Y de trong. Ban upstream mac dinh co "ko" -> "khong", "dc" ->
-# "duoc"... — vo hai khi chat, nhung day la bo go dung TRONG TERMINAL, noi "ko"
-# va "dc" hay la ten lenh/bien that. Mot macro no giua dong shell thi hong lang
-# le. Muon dung thi them tay tung cai mot.
+# Deliberately empty. Upstream ships abbreviation macros, harmless in chat but
+# this IME runs IN A TERMINAL, where those short strings are real command and
+# variable names -- a macro firing mid-command line breaks it silently.
 [macros]

@@ -9,19 +9,15 @@
   launchApp = import ./launch-app.nix {inherit lib;};
 in
   mkModule config ./. {
-    # CAN environments/wayland bat kem (mako, kanshi, swaylock, goi chung) va
-    # `programs.hyprland` o tang NixOS (binary + session .desktop cho GDM).
-    # Module nay chi lo config.
+    # NEEDS environments/wayland alongside it, plus `programs.hyprland` at the
+    # NixOS layer. This module only owns config.
     home.file = {
       ".config/hypr" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/hypr.d";
       };
-      # Cung ly do nhu sway: ~/.config/hypr la symlink CA THU MUC vao repo, nen
-      # file duoc SINH RA khong the nam trong do.
-      #
-      # Duoi `.lua` la bat buoc: hyprland.lua goi
-      # `require("~/.config/hypr-nix/launch-app")` va Hyprland tu them duoi
-      # (resolveExplicitLuaRequireFile thu BASE, BASE.lua, BASE/init.lua).
+      # ~/.config/hypr is a WHOLE-DIRECTORY symlink into the repo, so a generated
+      # file cannot live there. The `.lua` suffix is required: hyprland.lua
+      # requires it without one and Hyprland appends the extension itself.
       ".config/hypr-nix/launch-app.lua".text = launchApp;
     };
   }

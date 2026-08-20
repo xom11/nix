@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 #
-# Smoke test cho .githooks/pre-push.
+# Smoke test for .githooks/pre-push.
 #
-# Mọi giá trị ở đây là BỊA. Không bao giờ dùng secret thật để kiểm một thứ in ra
-# terminal và chạy trong CI của repo public.
+# Every value here is FABRICATED. Never use a real secret to test something that
+# prints to a terminal and runs in a public repo's CI.
 #
-# Không cần seam nào trong mã hook: đổi $HOME là mọi đường dẫn nguồn secret trỏ
-# vào sandbox. Mỗi ca dựng repo + bare remote riêng nên không ca nào dây sang ca
-# khác.
+# No seam is needed in the hook: changing $HOME redirects every secret source into
+# the sandbox. Each case builds its own repo and bare remote, so none bleeds into
+# another.
 #
-# Chạy tay:  ./.github/scripts/test-prepush.sh
+# Run by hand:  ./.github/scripts/test-prepush.sh
 
 set -u
 
 REPO_ROOT=$(cd -- "$(dirname -- "$0")/../.." && pwd)
 HOOKS="$REPO_ROOT/.githooks"
 
-# Dài hơn ngưỡng MINLEN của hook, không chứa `$`.
+# Longer than the hook's MINLEN, and free of `$`.
 VAL_A='fabricated-alpha-000000000000'
 VAL_B='fabricated-beta-111111111111'
 
@@ -65,7 +65,7 @@ mkrepo() {
     git -C "$R" config core.hooksPath "$HOOKS"
 }
 
-commit() { # $1 = message, đã stage sẵn
+commit() { # $1 = message; caller has staged
     git -C "$R" add -A
     git -C "$R" commit -q -m "$1"
 }
@@ -97,7 +97,7 @@ printf 'token = "%s"\n' "$VAL_A" >"$R/leak.txt"
 commit 'them leak.txt'
 rm -f "$R/leak.txt"
 commit 'xoa leak.txt'
-# diff tổng giờ đã sạch -- đây là chỗ `git diff` sẽ bỏ sót
+# the overall diff is clean now -- this is what `git diff` would miss
 if git -C "$R" diff "origin/main..HEAD" | grep -qF "$VAL_A"; then
     bad 'tiền đề sai: diff tổng vẫn còn giá trị, ca kiểm không chứng minh được gì'
 else
@@ -183,9 +183,8 @@ esac
 
 # --------------------------------------------------------------------------
 echo '# 8  diff có UTF-8 không làm bộ quét chết giữa chừng'
-# Repo này đầy comment tiếng Việt. awk của macOS bỏ cuộc với "multibyte
-# conversion failure" dưới locale UTF-8, và một bộ quét chết giữa chừng thì
-# trông y hệt một repo sạch.
+# macOS awk aborts with "multibyte conversion failure" under a UTF-8 locale, and
+# a scanner that dies mid-run looks exactly like a clean repo.
 mkrepo secrets
 printf 'Đường dẫn tuyệt đối — hàng rào không tự hạ.\n' >"$R/tiengviet.txt"
 commit 'commit goc co dau'
@@ -198,8 +197,8 @@ if [ $? -ne 0 ]; then ok 'vẫn bắt được key nằm cạnh UTF-8'; else bad
 
 # --------------------------------------------------------------------------
 echo '# 9  chỉ dọn dẹp (giá trị chỉ xuất hiện ở dòng bị XOÁ) thì đi qua'
-# Giá trị đã được push từ trước, tức là đã public. Chặn commit gỡ nó đi không
-# bảo vệ thêm gì, chỉ chặn đúng cái commit đang dọn. Hook từng làm thế thật.
+# The value was pushed earlier, so it is already public. Blocking the commit that
+# removes it protects nothing and blocks only the cleanup. The hook once did that.
 mkrepo secrets
 printf 'k = "%s"\n' "$VAL_A" >"$R/leak.txt"
 commit 'commit goc da co key'
@@ -215,7 +214,7 @@ mkrepo secrets
 echo 'x' >"$R/a.txt"
 commit 'commit goc'
 out=$(push origin main)
-# allow-vars của repo thật không chứa biến bịa, nên dựng một .githooks riêng
+# The real allow-vars holds no fabricated variable, so build a private .githooks
 CLONE="$WORK/hooks$n"
 cp -R "$HOOKS" "$CLONE"
 printf '# bia\nFAKE_ALPHA_TOKEN\n' >"$CLONE/allow-vars"
@@ -224,8 +223,8 @@ printf 'a = "%s"\n' "$VAL_A" >"$R/leak.txt"
 commit 'them bien duoc mien tru'
 out=$(push origin main)
 if [ $? -eq 0 ]; then ok 'biến trong allow-vars được bỏ qua'; else bad 'allow-vars không có tác dụng' "$out"; fi
-# ...và biến KHÔNG được liệt kê vẫn phải bị chặn, nếu không thì cơ chế này chỉ là
-# một công tắc tắt hàng rào.
+# ...and an unlisted variable must still be blocked, or the mechanism is just an
+# off switch for the fence.
 printf 'b = "%s"\n' "$VAL_B" >"$R/leak2.txt"
 commit 'them bien khong duoc mien tru'
 out=$(push origin main)

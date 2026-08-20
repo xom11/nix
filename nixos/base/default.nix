@@ -54,28 +54,24 @@
     extraGroups = [
       "networkmanager"
       "wheel"
-      # uinput: can cho che do "Uinput" cua fcitx5-lotus. Lotus co 6 che do
-      # (OFF / Uinput Smooth / Uinput Super Smooth / Uinput Slow / Surrounding
-      # Text / Preedit) va chi nhom Uinput moi go duoc trong TERMINAL ma khong
-      # de lai gach chan -- vi no phat phim that qua /dev/uinput thay vi gui
-      # preedit cho app. Terminal khong co surrounding text, nen moi che do
-      # khac deu buoc phai preedit (do tren rog 14/08/2026, ke ca khi fcitx5
-      # da chay duong Wayland native `protocol: 1` tren Hyprland).
+      # uinput is for fcitx5-lotus's Uinput modes, the only ones that type in a
+      # TERMINAL without underlining: they inject real keys through /dev/uinput
+      # instead of sending preedit, and a terminal has no surrounding text so
+      # every other mode is forced back to preedit.
       #
-      # KHONG dung cham gi toi kanata: kanata EVIOCGRAB de DOC ban phim that,
-      # con lotus chi GHI ra /dev/uinput. Hai chieu nguoc nhau.
+      # Does NOT collide with kanata: kanata EVIOCGRABs to READ the keyboard,
+      # lotus only WRITES to /dev/uinput. Opposite directions.
       #
-      # Nhom chi co hieu luc o PHIEN DANG NHAP MOI. Rebuild xong van phai
-      # logout/login, `id -nG` trong phien cu se noi doi la chua co.
+      # Group membership only applies to a NEW login session -- `id -nG` in the
+      # current one will keep saying it is missing after a rebuild.
       "uinput"
     ];
     initialHashedPassword = "$6$jPRPjdqCcIet/MMB$zUyMpQzb28Oe3D0SdxEk4PwZyoa2iBUfWkonP95rXS3RsI63TQLJOOB3hAZ26YvnNE77Wwoh.vqcmKS540PIu0"; # password is "1"
   };
 
-  # Tao group `uinput` + udev rule cho /dev/uinput. Tren rog no da co san vi
-  # `services.kanata` tu bat, nhung host khong chay kanata thi khong -- va
-  # `extraGroups` tro toi mot group khong ton tai la loi luc activation chu
-  # khong phai luc eval, nen khai o day cho chac.
+  # Creates the `uinput` group and its udev rule. kanata enables this itself, but
+  # a host without kanata would not have it -- and `extraGroups` naming a
+  # nonexistent group fails at activation, not at eval.
   hardware.uinput.enable = true;
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
@@ -107,9 +103,8 @@
 
   hardware.bluetooth.enable = true;
   hardware.graphics.enable = true;
-  # mkDefault: gia tri nay dung cho cac host cai tu lau. Host cai moi phai dat
-  # lai theo dung phien ban luc cai (rog = 26.05) — stateVersion khong phai so
-  # phien ban he thong, no la moc de nixpkgs biet giu hanh vi cu nao cho du
-  # lieu da ton tai tren o.
+  # mkDefault: this value is for the older hosts. A newly installed host must set
+  # its own -- stateVersion is not a system version, it is the marker telling
+  # nixpkgs which legacy behaviour to keep for data already on disk.
   system.stateVersion = lib.mkDefault "24.11";
 }

@@ -13,10 +13,8 @@
     };
     environments = {
       fonts.enable = true;
-      # GNOME thay i3wm de test configs/shortcuts/apps.shared.toml tren duong
-      # GNOME. Day la LUA CHON, khong phai rang buoc: tu nhanh nay,
-      # modules.nixos.services.environments.types la list, mot host duoc bat
-      # nhieu desktop cung luc (xem rog).
+      # GNOME instead of i3wm, to test the shortcuts on the GNOME path. A CHOICE,
+      # not a constraint: `types` is a list, so a host can enable several desktops.
       # i3wm.enable = true;
       gnome.enable = true;
       i18n.enable = true;
@@ -25,10 +23,8 @@
       dev.enable = true;
       lang.enable = true;
       tools.enable = true;
-      # Bo ung dung desktop cua Linux: kitty, brave, vscode, telegram, vlc...
-      # Truoc day KHONG host NixOS nao bat cai nay, nen `kitty` khong duoc cai
-      # du nixos/base dat xdg.terminal-exec mac dinh la kitty.desktop va
-      # i3 conf.d/launch-app.conf binding $mod+Return -> kitty.
+      # The Linux desktop apps. No NixOS host used to enable this, so kitty was
+      # never installed even though nixos/base points xdg.terminal-exec at it.
       nixos.enable = true;
     };
     programs = {
@@ -43,8 +39,8 @@
     };
   };
   home.packages = [
-    # macmini/airm3 co ca beckon + tongue; tren Linux chi co beckon --
-    # overlay tongue khong cung cap aarch64-linux.
+    # The mac hosts get beckon and tongue; Linux gets beckon only, since the
+    # tongue overlay provides no aarch64-linux build.
     pkgs.beckon
     pkgs.bws
   ];

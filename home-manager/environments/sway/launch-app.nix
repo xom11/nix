@@ -1,9 +1,8 @@
-# Sinh binding launcher cho sway tu configs/shortcuts/apps.shared.toml.
-# DOC LUC EVAL — sua file do la phai switch + reload sway.
-# Chi la `exec beckon "<app>"` TRAN (chi dao 09/08/2026): khong
-# sway-beckon.sh, khong workspace-per-app — hanh vi workspace user tu config
-# rieng trong sway.d. File sinh ra o ~/.config/sway-nix/launch-app.conf vi
-# ~/.config/sway la symlink ca thu muc (xem default.nix).
+# Generates sway launcher bindings from configs/shortcuts/apps.shared.toml.
+# READ AT EVAL, so editing that file needs a switch plus a sway reload.
+# Plain `exec beckon "<app>"`: no wrapper script and no workspace-per-app, which
+# is configured separately in sway.d. Emitted into ~/.config/sway-nix/ because
+# ~/.config/sway is a whole-directory symlink.
 {lib}: let
   data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
 
@@ -27,7 +26,7 @@
 in
   ''
     # vim: ft=swayconfig
-    # SINH TU configs/shortcuts/apps.shared.toml — dung sua tay file nay.
+    # GENERATED from configs/shortcuts/apps.shared.toml -- do not edit by hand.
   ''
   + lib.concatStringsSep "\n" lines
   + "\n"

@@ -5,44 +5,36 @@
   mkModule,
   ...
 }:
-# Tang HE THONG cua fcitx5-lotus. Addon fcitx5 thi da co san o
-# home-manager/environments/i18n (`i18n.inputMethod.fcitx5.addons`); module nay
-# CHI them ba thu ma home-manager khong voi toi duoc, va thieu ca ba thi bon che
-# do Uinput cua lotus chet lang le.
+# The SYSTEM half of fcitx5-lotus. The fcitx5 addon itself comes from
+# home-manager/environments/i18n; this adds only what home-manager cannot reach,
+# and without it lotus's four Uinput modes fail silently.
 #
-# Vi sao can: lotus co 6 che do go (bam `` ` `` de mo menu). Bon che do dau —
-# Uinput (Muot/Cham/Sieu muot) va Minecraft — KHONG dung preedit va KHONG dung
-# surrounding text; chung nho mot daemon dac quyen `fcitx5-lotus-server` phat
-# BackSpace that qua /dev/uinput, dung co che cua Go Nhanh tren macOS va VKey
-# tren Windows. Hai che do con lai (`Van ban xung quanh`, `Gach chan`) thi dung
-# duong fcitx5 thong thuong, va trong kitty ca hai deu ra gach chan: kitty la
-# luong byte nen khong cap surrounding text, IME buoc phai quay ve preedit.
+# Those modes use neither preedit nor surrounding text: they rely on a privileged
+# `fcitx5-lotus-server` injecting real BackSpace through /dev/uinput -- the same
+# mechanism GoNhanh uses on macOS and VKey on Windows. The other two modes take
+# the ordinary fcitx5 path, and both underline in kitty, which is a byte stream
+# and supplies no surrounding text, forcing the IME back to preedit.
 #
-# nixpkgs dong goi day du binary + unit + udev rule (da va duong dan sang store)
-# nhung KHONG kem module NixOS, nen mac dinh khong ai nap unit lan rule. Khong
-# co server ⇒ bon che do Uinput im lang khong chay ⇒ chi con duong preedit.
-# Day chinh la trang thai rog truoc 16/08/2026.
+# nixpkgs packages the binary, unit and udev rule but ships no NixOS module, so by
+# default nothing loads them -- which is what rog looked like before 2026-08-16.
 mkModule config ./. {
-  # `uinput_proxy` la user ma unit thuong nguon chay duoi, khong phai user cua
-  # phien. Nhom `input` co san tren NixOS.
+  # `uinput_proxy` is the user the upstream unit runs as, not the session user.
   users.users.uinput_proxy = {
     isSystemUser = true;
     group = "input";
   };
 
-  # 99-lotus.rules: dat /dev/uinput ve 0660 root:input roi setfacl them quyen
-  # rw cho uinput_proxy. Khong co rule nay thi server mo /dev/uinput that bai
-  # va thoat, systemd restart vong tron — trieu chung o phia nguoi dung chi la
-  # "chon che do Uinput nhung van gach chan".
+  # Sets /dev/uinput to 0660 root:input and ACLs rw for uinput_proxy. Without it
+  # the server fails to open the device and exits, systemd restarts in a loop, and
+  # the only user-visible symptom is that Uinput mode still underlines.
   services.udev.packages = [pkgs.fcitx5-lotus];
 
-  # Nap unit template fcitx5-lotus-server@.service tu goi. `systemd.packages`
-  # CHI nap chu KHONG bat: NixOS bo qua `[Install] WantedBy=` cua unit den tu
-  # goi, nen phai noi day tay o duoi.
+  # `systemd.packages` LOADS the unit template but does not ENABLE it: NixOS
+  # ignores `[Install] WantedBy=` from packaged units, hence the wiring below.
   systemd.packages = [pkgs.fcitx5-lotus];
 
-  # Mot instance cho moi nguoi dung. Server can biet user nao de doi chieu voi
-  # tien trinh fcitx5 dang chay (`-u %i`). `username` doc $USER LUC EVAL, nen
-  # kiem tu may khac se thay ten cua may do — tren rog no ra `kln`.
+  # One instance per user: the server needs to know which user to match against
+  # the running fcitx5. `username` reads $USER AT EVAL, so checking from another
+  # machine shows that machine's name.
   systemd.targets.multi-user.wants = ["fcitx5-lotus-server@${username}.service"];
 }

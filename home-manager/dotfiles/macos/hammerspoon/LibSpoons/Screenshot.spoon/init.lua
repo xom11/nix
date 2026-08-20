@@ -1,11 +1,9 @@
 --- === Screenshot ===
 ---
---- Chụp vùng chọn, copy vào clipboard, và đẩy sang các máy khác qua scp.
+--- Capture a region, copy it, and scp it to the other machines.
 ---
---- Trên máy remote, dán vào Claude Code bằng cách gõ: @/tmp/ss.png
---- (dùng cmd+shift+4 thay cho phím này khi cần dán vào app không nhận ảnh, ví dụ Claude CLI.)
----
---- Tách từ Tab.spoon.
+--- On a remote machine, paste into Claude Code by typing: @/tmp/ss.png
+--- Split out of Tab.spoon.
 ---
 --- Usage:
 --- ```lua
@@ -24,20 +22,20 @@ obj.license = "MIT"
 
 --- Screenshot.hosts
 --- Variable
---- Các máy sẽ nhận ảnh. Máy đang chạy tự bị loại khỏi danh sách.
+--- Machines that receive the image. The local one drops itself.
 obj.hosts = { "macmini"}
 
 --- Screenshot.latest
 --- Variable
---- Symlink luôn trỏ về ảnh mới nhất, để đường dẫn @/tmp/ss.png dùng được như một hằng số.
+--- Symlink to the newest capture, so the path works as a constant.
 obj.latest = "/tmp/ss.png"
 
 --- Screenshot.keep
 --- Variable
---- Số ảnh giữ lại trong /tmp. Mỗi lần chụp là một tên mới nên không dọn thì phình mãi.
+--- How many to keep: each capture gets a new name, so this grows without pruning.
 obj.keep = 20
 
--- Tên chứa timestamp cố định độ dài nên sort chuỗi = sort thời gian.
+-- Fixed-width timestamps, so a string sort is a time sort.
 local function prune()
     local files = {}
     local ok = pcall(function()
@@ -56,17 +54,14 @@ local function prune()
     end
 end
 
--- Đẩy ảnh sang các máy khác.
---
--- Dùng hs.task chứ KHÔNG dùng hs.execute. hs.execute là io.popen + f:read("*a"), tức là chờ
--- EOF trên pipe — kể cả khi lệnh có dấu `&`, vì tiến trình nền thừa kế đầu ghi của pipe nên
--- EOF chỉ đến khi nó chết hẳn. ssh không đặt ConnectTimeout, nên một host không với tới được
--- (airm3 mang ra khỏi mạng nhà) treo cả Lua thread của Hammerspoon tới hết TCP timeout, ~75 s
--- mỗi host, tuần tự. Trong lúc đó mọi hotkey — kể cả phím reload để thoát ra — đều chết.
+-- hs.task, NOT hs.execute: the latter is io.popen + read("*a"), which waits for EOF on the
+-- pipe even with a trailing `&`, because the background process inherits the write end. An
+-- unreachable host then freezes Hammerspoon's Lua thread for the full TCP timeout (~75 s
+-- each, sequentially), killing every hotkey including the reload key.
 local function push(path)
     local me = (hs.host.localizedName() or ""):lower()
     for _, host in ipairs(obj.hosts) do
-        if host ~= me then -- không scp lên chính máy đang ngồi
+        if host ~= me then -- never scp to the machine we are sitting at
             hs.task.new("/usr/bin/scp", function(exitCode, _stdout, stderr)
                 if exitCode ~= 0 then
                     local msg = (stderr or ""):gsub("%s+$", "")
@@ -75,8 +70,8 @@ local function push(path)
                     end
                     hs.alert.show("scp " .. host .. ": " .. msg, 3)
                 end
-                -- BatchMode: không bao giờ dừng lại hỏi mật khẩu/passphrase.
-                -- ConnectTimeout: bỏ cuộc sau 5 s thay vì chờ hết TCP timeout.
+                -- BatchMode never stops to ask for a passphrase; ConnectTimeout gives up
+                -- after 5 s instead of waiting out the TCP timeout.
             end, { "-o", "BatchMode=yes", "-o", "ConnectTimeout=5", path, host .. ":" .. obj.latest }):start()
         end
     end
@@ -84,16 +79,15 @@ end
 
 --- Screenshot:capture()
 --- Method
---- Chụp vùng chọn tương tác, rồi copy + đẩy đi nếu user không huỷ.
+--- Interactive region capture, then copy and push unless cancelled.
 function obj:capture()
-    -- Đường dẫn duy nhất mỗi lần chụp. Nếu ghi đè một tên cố định thì khi user bấm Esc huỷ
-    -- vùng chọn, screencapture không ghi gì, mà hs.fs.attributes() vẫn thấy ảnh của lần TRƯỚC
-    -- còn nằm đó — rồi đem ảnh cũ đó vào clipboard và scp sang các máy khác.
+    -- A fresh path per capture. With a fixed name, cancelling writes nothing but the
+    -- PREVIOUS image is still there -- and would be copied and pushed as if it were new.
     local path = "/tmp/ss-" .. os.date("%Y%m%d-%H%M%S") .. ".png"
 
     hs.task.new("/usr/sbin/screencapture", function()
-        -- Không xét exit code: screencapture vẫn thoát 0 khi user huỷ. Bằng chứng duy nhất
-        -- đáng tin là file có xuất hiện ở đường dẫn mới hay không.
+        -- screencapture exits 0 even when cancelled, so the only reliable evidence is
+        -- whether the file appeared.
         if not hs.fs.attributes(path) then
             return
         end

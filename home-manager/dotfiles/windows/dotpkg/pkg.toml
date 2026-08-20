@@ -1,5 +1,5 @@
-# Khai bao goi cho Windows. Ap dung boi windows/modules/packages/dotpkg.
-# CAN dotpkg >= 0.2.0 ([winget.opts]); ly do tung quyet dinh o CLAUDE.md muc "dotpkg".
+# Windows package declarations, applied by windows/modules/packages/dotpkg.
+# NEEDS dotpkg >= 0.2.0 for [winget.opts]; see CLAUDE.md for why.
 
 [scoop]
 buckets  = ["main", "extras", "xom11=https://github.com/xom11/scoop-bucket"]
@@ -9,22 +9,22 @@ packages = [
   "shfmt", "yamlfmt", "stylua", "actionlint", "kanata", "beckon",
   "python", "go", "rustup", "uv", "age",
 
-  # dotpkg khai bao chinh no: pkg.lock ghim no theo commit bucket. Module
-  # bootstrap bang scoop khi PATH trong, nen vong nay khong tu khoa.
-  # No KHONG tu nang cap duoc -- hang rao tien-trinh-dang-chay bat trung chinh
-  # no, nen co ban moi thi `apply` bao held; nang bang `scoop update dotpkg`.
+  # dotpkg declares itself; pkg.lock pins it by bucket commit. The module
+  # bootstraps via scoop when PATH is empty, so this does not deadlock.
+  # It CANNOT upgrade itself -- the running-process guard catches it, so a new
+  # version reports held; upgrade with `scoop update dotpkg`.
   "dotpkg",
 ]
 
 [scoop.opts]
-python = { arch = "64bit" }   # wheel native da build theo ban nay
+python = { arch = "64bit" }   # native wheels are built against this
 rustup = { arch = "keep" }    # post_install giu file, doi arch la mat rustup
-# stylua khong ghim arm64: manifest chi cong bo 64bit, ghim la khong bao gio
-# thoa man duoc. Bucket co arm64 thi them lai.
+# stylua is unpinned on arm64: the manifest only publishes 64bit, so a pin could
+# never be satisfied. Re-add once the bucket carries arm64.
 
-# Chi khai o day thu KHONG tu cap nhat. App tu cap nhat vuot qua pin -> dotpkg
-# tu choi downgrade -> ca run thoat khac 0 -> apply.ps1 do moi lan. Voi chung
-# dung [winget.opts] pin = "none" ben duoi.
+# Only declare things that do NOT self-update here: a self-updater passes the pin,
+# dotpkg refuses to downgrade, and the whole run exits non-zero forever. Use
+# [winget.opts] pin = "none" for those instead.
 [winget]
 packages = [
   "Microsoft.VisualStudioCode", "Obsidian.Obsidian", "Tailscale.Tailscale",
@@ -32,22 +32,22 @@ packages = [
   "Warp.Warp", "ajeetdsouza.zoxide", "DEVCOM.JetBrainsMonoNerdFont",
   "7zip.7zip", "AutoHotkey.AutoHotkey", "gerardog.gsudo", "PhatMT97.VKey",
 ]
-# Co y khong khai: VNGCorp.Zalo (winget download loi 0x80072f05, cai tay),
-# 9PFXXSHC64H3 (Raycast, da bo), Microsoft.PowerShell (chi co MSIX, sshd khong
-# chay duoc app dong goi -- den tu MSI, xem modules/packages/pwsh),
-# JanDeDobbeleer.OhMyPosh (winget bao 30.6.4.0 con chi muc ghi 30.6.4).
+# Deliberately absent: VNGCorp.Zalo (winget download fails 0x80072f05, installed by
+# hand), Raycast (dropped), Microsoft.PowerShell (MSIX only, and sshd cannot run a
+# packaged app -- comes from the MSI instead), OhMyPosh (winget reports 30.6.4.0
+# while the index says 30.6.4).
 
-# Cai neu chua co, khong bao gio quan version. Khong sinh entry pkg.lock.
+# Install if absent, never manage the version. Produces no pkg.lock entry.
 [winget.opts]
 "Brave.Brave"     = { pin = "none" }
 "Vivaldi.Vivaldi" = { pin = "none" }
 "Google.Chrome"   = { pin = "none" }
 "Discord.Discord" = { pin = "none" }
 "Warp.Warp"       = { pin = "none" }
-# VS Code va Obsidian cung tu cap nhat nhung chua troi lan nao; troi thi chuyen
-# sang pin = "none", dung chay update de duoi theo.
+# VS Code and Obsidian self-update too but have not drifted yet; move them to
+# pin = "none" if they do, rather than chasing them with `update`.
 
-# winget khong cho dotpkg biet ten tien trinh, no phai doan tu id. Chi khai
-# nhung id doan truot -- do tren may, khong phai doan lai.
+# winget does not tell dotpkg the process name, so it guesses from the id. Only
+# the ids where that guess misses are listed -- measured, not guessed again.
 [winget.guard]
 "Obsidian.Obsidian" = ["Obsidian"]

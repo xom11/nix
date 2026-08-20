@@ -17,15 +17,13 @@ in {
     enable = lib.mkEnableOption "Enable desktop environment services";
     types = lib.mkOption {
       type = lib.types.listOf (lib.types.enum ["gnome" "kde" "sway" "hyprland" "niri"]);
-      # "i3wm" da bi go 19/08/2026 (ATTIC.md) -- chu may bo han X11, sway thay
-      # cho.
+      # "i3wm" was removed (ATTIC.md) when X11 was dropped for sway.
       #
-      # GHI CHU CU DA SAI, sua 19/08/2026: cho nay tung viet "default la
-      # `gnome` vi no la gia tri MOT phan tu duy nhat tu no dung duoc: no keo
-      # theo GDM". Dieu do dung cho toi khi `displayManager` ben duoi ra doi.
-      # Gio hai truc DOC LAP: `types` chon co nhung SESSION nao, con
-      # `displayManager` chon AI VE MAN DANG NHAP. `types = ["sway"]` mot minh
-      # la hop le, mien la displayManager khac "none".
+      # The old note here claimed `gnome` was the default because it was the only
+      # single value that worked on its own, since it pulled in GDM. That stopped
+      # being true when `displayManager` was split out: the two axes are now
+      # INDEPENDENT -- `types` picks which SESSIONS exist, `displayManager` picks
+      # the login screen -- so `types = ["sway"]` alone is valid.
       default = ["gnome"];
       description = ''
         Danh sach desktop environment / compositor se cai. Moi phan tu la mot
@@ -35,8 +33,8 @@ in {
     };
     displayManager = lib.mkOption {
       type = lib.types.enum ["gdm" "regreet" "none"];
-      # Mac dinh "gdm" de host cu khong doi hanh vi khi truc nay duoc tach ra
-      # (luc do chi co vm, va no dua han vao GDM di kem `types = ["gnome"]`).
+      # Defaults to "gdm" so existing hosts kept their behaviour when this axis
+      # was split out.
       default = "gdm";
       description = ''
         Ai ve man hinh dang nhap. DOC LAP voi `types`: mot display manager liet

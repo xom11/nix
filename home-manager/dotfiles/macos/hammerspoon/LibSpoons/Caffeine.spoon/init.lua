@@ -1,13 +1,11 @@
 --- === Caffeine ===
 ---
---- Giữ màn hình không tự tắt, kèm một chấm cam ở góc trên bên phải để biết đang bật.
+--- Keep the display awake, with an orange dot top-right while it is on.
+--- Split out of Tab.spoon.
 ---
---- Tách từ Tab.spoon.
----
---- Có bản đối ứng bên Windows ở `home-manager/dotfiles/windows/ahk/caffeine.ahk`,
---- cùng phím Tab+c và cùng cái chấm — nhưng **khác nghĩa**, và đừng gộp hai bên lại:
---- bản này giữ MÀN HÌNH sáng (`displayIdle`), bản Windows cố ý chỉ giữ MÁY thức và
---- để màn hình tắt, vì trên a14 hễ ngủ là Tailscale rụng. Lý do đầy đủ ở đầu file đó.
+--- The Windows counterpart (ahk/caffeine.ahk) shares the key and the dot but means something
+--- DIFFERENT -- do not merge them. This keeps the SCREEN on; that one deliberately keeps only
+--- the MACHINE awake, because on a14 sleeping drops Tailscale.
 ---
 --- Usage:
 --- ```lua
@@ -27,10 +25,8 @@ local SIZE, INSET = 16, 8
 local canvas
 local screenWatcher
 
--- Đặt chấm vào góc trên bên phải của màn hình chính.
---
--- Bản trong Tab.spoon tính toạ độ MỘT LẦN lúc load rồi dựng canvas ở đó. Cắm/rút màn hình
--- hoặc đổi độ phân giải sau đó là chấm nằm sai chỗ, thậm chí ra ngoài vùng nhìn thấy được.
+-- Recomputed rather than fixed at load, as Tab.spoon's version was: plugging a display or
+-- changing resolution left the dot misplaced, sometimes off screen.
 local function reposition()
     if not canvas then
         return
@@ -46,19 +42,12 @@ end
 local function build()
     canvas = hs.canvas.new({ x = 0, y = 0, w = SIZE, h = SIZE })
     canvas:level("overlay"):behaviorAsLabels({ "canJoinAllSpaces", "stationary" })
-    -- Một chấm tròn trơn, không chữ. Trước đây là hộp bo góc đỏ kèm ☕; bỏ emoji đi
-    -- vì hai lý do, và lý do thứ hai mới là lý do thật:
+    -- A plain dot, no glyph. Partly because an emoji is a smudge at 16pt, but mainly
+    -- because the Windows side CANNOT draw one -- GDI ignores the COLR/CBDT colour tables
+    -- and falls back to a monochrome glyph -- and the two machines should match.
     --
-    -- 1. chấm trơn đọc nhanh hơn ở cỡ này -- ở 16pt thì emoji chỉ còn là một vệt.
-    -- 2. bản Windows KHÔNG vẽ được emoji: `Gui.AddText` của AHK vẽ bằng GDI, mà GDI
-    --    không đọc bảng màu COLR/CBDT nên ☕ rơi về glyph đơn sắc, ra một vòng tròn
-    --    đen tràn khỏi hộp. Giữ emoji ở đây thì hai máy trông khác hẳn nhau.
-    --
-    -- Toạ độ mặc định của phần tử `circle` là tâm 50%/50%, bán kính 50%, nên nó tự
-    -- vừa khít canvas -- không cần khai báo center/radius.
-    --
-    -- Ghi thẳng red/green/blue thay vì `hex`: giá trị số thì không phụ thuộc vào việc
-    -- hs.drawing.color có phân tích được chuỗi hay không. #ff8c1a.
+    -- A `circle` defaults to centre 50%/50% radius 50%, so it fits the canvas on its own.
+    -- Numeric colour rather than `hex` (#ff8c1a), which does not depend on string parsing.
     canvas:appendElements({
         type = "circle",
         action = "fill",
@@ -69,10 +58,8 @@ end
 
 --- Caffeine:isOn()
 --- Method
---- Hỏi thẳng hệ thống thay vì giữ một biến cờ riêng.
----
---- hs.reload() gỡ mọi sleep prevention (hs/caffeinate.lua ghi rõ), nên một biến cờ nhớ trạng
---- thái qua lần reload sẽ lệch với thực tế. Đọc từ nguồn thì không bao giờ lệch.
+--- Ask the system rather than keeping a flag: hs.reload() drops all sleep prevention, so a
+--- flag that survives the reload would disagree with reality.
 function obj:isOn()
     return hs.caffeinate.get("displayIdle") and true or false
 end
@@ -85,7 +72,7 @@ function obj:set(on)
         build()
     end
     if on then
-        reposition() -- màn hình có thể đã đổi kể từ lần hiện trước
+        reposition() -- the display may have changed since the last show
         canvas:show()
     else
         canvas:hide()
@@ -101,7 +88,7 @@ end
 
 function obj:init()
     build()
-    -- Giữ watcher trên obj: watcher không còn ai tham chiếu sẽ bị garbage-collect và ngừng chạy.
+    -- Keep the watcher on obj: an unreferenced watcher is collected and stops silently.
     screenWatcher = hs.screen.watcher.new(reposition)
     screenWatcher:start()
     obj.screenWatcher = screenWatcher

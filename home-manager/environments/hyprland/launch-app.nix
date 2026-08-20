@@ -1,17 +1,16 @@
-# Sinh binding launcher cho hyprland tu configs/shortcuts/apps.shared.toml.
-# DOC LUC EVAL — sua file do la phai switch + Tab+r (hyprctl reload).
-# Chi la `exec beckon "<app>"` tran, khong workspace logic — hanh vi workspace
-# la viec rieng cua hypr.d. File sinh ra o ~/.config/hypr-nix/ vi ~/.config/hypr
-# la symlink ca thu muc (xem default.nix).
+# Generates hyprland launcher bindings from configs/shortcuts/apps.shared.toml.
+# READ AT EVAL, so editing that file needs a switch plus a reload.
+# Plain `exec beckon "<app>"`, no workspace logic -- that belongs to hypr.d.
+# Emitted into ~/.config/hypr-nix/ because ~/.config/hypr is a whole-directory
+# symlink.
 {lib}: let
   data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
 
   apps = builtins.attrValues data;
 
-  # Ten app duoc nhung NGUYEN VAN vao mot chuoi shell trong nhay kep, roi ca
-  # cum do vao mot chuoi long-bracket cua Lua. Hai ky tu duoi day se lam vo mot
-  # trong hai lop do va khong co gi bao — chan ngay tai eval thay vi de config
-  # im lang hong.
+  # App names are embedded VERBATIM into a double-quoted shell string, which is
+  # itself inside a Lua long-bracket string. These two characters break one layer
+  # or the other with no warning, so reject them at eval.
   badApps = lib.filter (a: lib.hasInfix "]]" a || lib.hasInfix ''"'' a) apps;
 
   modMap = {
@@ -21,9 +20,8 @@
     shift = "SHIFT";
   };
 
-  # "ctrl+super+alt+b" -> "CTRL + SUPER + ALT + b". Modifier la moi token truoc
-  # token cuoi; token cuoi giu nguyen (hl.bind nhan keysym: b, space, ...).
-  # `hl.bind` tach chuoi phim bang DAU CONG, khong phai dau cach nhu hyprlang.
+  # "ctrl+super+alt+b" -> "CTRL + SUPER + ALT + b". Every token but the last is a
+  # modifier; the last stays as the keysym. `hl.bind` splits on PLUS, not spaces.
   toBind = combo: let
     parts = lib.splitString "+" combo;
     n = builtins.length parts;

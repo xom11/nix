@@ -7,24 +7,16 @@
 }: let
   pwd = getPath ./.;
 
-  # Spoon bên thứ ba, lấy từ input hammerspoon-spoons đã ghim rev trong flake.lock.
+  # Third-party spoons from the hammerspoon-spoons input, pinned in flake.lock.
   #
-  # Dùng `source = <đường dẫn store>` chứ KHÔNG dùng mkOutOfStoreSymlink. mkOutOfStoreSymlink
-  # tạo symlink từ một chuỗi thuần nên không sinh reference — trỏ vào store bằng cách đó thì
-  # lần GC sau là mất. Ở đây source là store path thật, home-manager giữ nó làm reference của
-  # generation nên có GC root đàng hoàng. Đổi lại là read-only, đúng ý: đây không phải dotfile
-  # để sửa tay như MySpoons.
+  # `source = <store path>`, NOT mkOutOfStoreSymlink: the latter builds a symlink from a plain
+  # string and creates no reference, so pointing it into the store loses the target at the next
+  # GC. A real store path is held as a generation reference. Read-only in exchange, which is
+  # right -- these are not hand-edited like MySpoons.
   #
-  # Chỉ AClock thực sự đang có consumer (Tab.spoon, tab+t). RecursiveBinder thì
-  # KHÔNG: LaunchApp.spoon TỪNG dùng nó cho lớp Cap+a, nhưng từ khi lớp 2
-  # chuyển sang Cap+Shift (nay là apps.shared.toml qua beckon serve) thì hết; consumer còn lại,
-  # LaunchTerminal.spoon:15 (`hs.loadSpoon("RecursiveBinder")` chạy ngay lúc
-  # load, thiếu là rb.singleKey thành nil), đang bị comment ra ở init.lua
-  # (`-- hs.loadSpoon("LaunchTerminal")`) nên cũng không chạy. Giữ input này là
-  # có chủ đích, không phải vì đang cần: bật lại LaunchTerminal sẽ cần nó ngay,
-  # và gỡ đi bây giờ thì phải nhớ thêm lại sau. AllBrightness từng được nạp
-  # nhưng không bao giờ start(), InputSourceSwitch chỉ phục vụ LanguageSwitcher
-  # (spoon đó nay đã xoá) — bỏ cả hai.
+  # Only AClock has a live consumer (Tab.spoon). RecursiveBinder is kept deliberately rather
+  # than because anything needs it: its one remaining consumer, LaunchTerminal.spoon, is
+  # commented out in init.lua and would need it back immediately if re-enabled.
   thirdPartySpoons = ["RecursiveBinder" "AClock"];
 in
   mkModule config ./. {

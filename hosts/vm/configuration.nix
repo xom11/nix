@@ -14,31 +14,24 @@
     };
   };
 
-  # `virtualisation.vmware.guest` tao mot systemd .mount kieu fuse cho vmblock
-  # (keo-tha + clipboard host<->guest). Unit do chay `mount -t fuse <binary>`,
-  # ma util-linux phai co trinh tro giup `mount.fuse` moi hieu kieu do -- goi
-  # `fuse` khong nam trong closure cua module, nen mount chet voi
-  # "wrong fs type, bad option, bad superblock" va `switch-to-configuration`
-  # tra ve 4 => MOI lan `nixos-rebuild switch` deu bao that bai du da ap xong.
-  #
-  # Goi thang binary thi mount duoc, nen loi nam o trinh tro giup chu khong o
-  # vmblock. Dat `fuse` vao systemPackages de /run/current-system/sw/bin/mount.fuse
-  # ton tai -- do la thu muc `mount` thuc su tra (PATH truyen tay bi bo qua vi
-  # /run/wrappers/bin/mount la setuid nen rua sach moi truong).
+  # `virtualisation.vmware.guest` creates a fuse .mount unit for vmblock, and
+  # `mount -t fuse` needs util-linux's `mount.fuse` helper, which is not in the
+  # module's closure. Without it the mount fails with "wrong fs type" and
+  # switch-to-configuration returns 4, so EVERY rebuild reports failure after
+  # applying successfully. Calling the binary directly works, which is what
+  # pinpoints the helper. `mount` looks it up in /run/current-system/sw/bin --
+  # a hand-passed PATH is ignored, since /run/wrappers/bin/mount is setuid and
+  # scrubs the environment.
   environment.systemPackages = [ pkgs.fuse ];
-  # Bo chuyen tiep DNS cua VMware NAT (192.168.163.2) khong tra loi, du dinh
-  # tuyen ra ngoai van tot (ping 1.1.1.1 chay). Hau qua khong hien nhien:
-  # `gitclonenix` trong home-manager/base clone GitHub LUC ACTIVATION, nen
-  # khong phan giai duoc ten mien => home-manager-<user>.service chet exit 128
-  # => khong dotfile nao duoc tao => i3 boot ra wizard "first configuration".
-  # Dat DNS cung o day de VM tu dung duoc sau moi lan reboot.
+  # The VMware NAT DNS forwarder does not answer, though routing itself is fine.
+  # The consequence is indirect: `gitclonenix` clones GitHub AT ACTIVATION, so a
+  # DNS failure kills home-manager-<user>.service with exit 128, no dotfiles are
+  # written, and i3 boots into its first-run wizard.
   #
-  # PHAI la insertNameservers chu KHONG phai networking.nameservers: cai sau
-  # van de NetworkManager chen DNS tu DHCP (192.168.163.2) len TRUOC, ma
-  # resolver thu tuan tu -- no treo o server hong roi bo cuoc, khong bao gio
-  # toi 1.1.1.1. Trieu chung: resolv.conf trong "co ve dung" (co ca ba dong)
-  # nhung `getent hosts cache.nixos.org` van rong va nixos-rebuild chet vi
-  # "Could not resolve host". insertNameservers chen len dau danh sach.
+  # Must be insertNameservers, NOT networking.nameservers: the latter still lets
+  # NetworkManager put the DHCP server FIRST, and the resolver tries in order --
+  # it stalls on the broken one and gives up before reaching these. The symptom
+  # is a resolv.conf that looks right while `getent hosts` returns nothing.
   networking.networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   # VMware Guest Tools

@@ -9,14 +9,14 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
-    # CAN environments/wayland bat kem: mako, kanshi, swaylock va toan bo goi
-    # Wayland dung chung nam o do. Module nay chi con thu rieng cua sway.
+    # NEEDS environments/wayland alongside it, which holds mako, kanshi, swaylock
+    # and the shared Wayland packages. This module owns only sway's own files.
     home.file = {
       ".config/sway" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sway.d";
       };
-      # File duy nhat trong bo sway duoc SINH RA. No khong the nam trong
-      # ~/.config/sway vi cho do la symlink vao ca thu muc sway.d cua repo.
+      # The only GENERATED file here, and it cannot live in ~/.config/sway because
+      # that is a whole-directory symlink into the repo.
       ".config/sway-nix/launch-app.conf".text =
         import ./launch-app.nix {inherit lib;};
     };

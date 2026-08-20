@@ -1,15 +1,11 @@
 { pkgs, ... }:
 {
-  # Host nay truoc day chay home-manager standalone tren Ubuntu, tu 14/08/2026
-  # la NixOS that.
+  # Standalone home-manager on Ubuntu until 2026-08-14; real NixOS since.
   #
-  # LD_LIBRARY_PATH da BO. No co mat vi ban Ubuntu: binary tai ngoai nixpkgs
-  # (micromamba/conda) khong tu tim thay libstdc++. Ca micromamba lan module
-  # conda deu da go 14/08/2026 nen cai co gay ra bien nay khong con, nhung luat
-  # thi van dung: dat LD_LIBRARY_PATH o muc phien lam viec la phan tac dung —
-  # no ro vao MOI tien trinh con, ke ca binary cua store da co closure dung, va
-  # gay loi symbol kieu rat kho truy. Binary ngoai store thieu thu vien thi va
-  # bang `programs.nix-ld` hoac mot wrapper rieng, dung dat lai bien toan cuc.
+  # LD_LIBRARY_PATH is gone with the Ubuntu era, and should stay gone: setting it
+  # session-wide leaks into EVERY child, including store binaries that already
+  # have the right closure, producing symbol errors that are very hard to trace.
+  # Patch a missing library with `programs.nix-ld` or a wrapper instead.
   imports = [
     ../../home-manager
   ];
@@ -20,26 +16,20 @@
     dotfiles = {
       ai.enable = true;
       terminal.kitty.enable = true;
-      # Bat tu 14/08/2026 cung luc voi sway/hyprland. Ghi chu cu o day noi
-      # "rofi la X11-only, muon dung phai la rofi-wayland" — dieu do DA SAI:
-      # nixpkgs gop hai goi lam mot, `rofi-wayland` gio la alias nem loi
-      # ('rofi-wayland' has been merged into 'rofi'), va `pkgs.rofi` chinh la
-      # rofi 2.0.0 — ban upstream da nuot fork Wayland. sway.d va hypr.d moi
-      # ben goi rofi o 8 cho rieng (drun, combi, window, cliphist, 4 menu
-      # nguon) — ca hai session Wayland tren host nay deu can goi nay.
+      # `rofi-wayland` is now an alias that throws; nixpkgs merged the Wayland
+      # fork into `pkgs.rofi` itself. Both Wayland sessions here call rofi from
+      # eight places each.
       rofi.enable = true;
     };
     environments = {
       fonts.enable = true;
-      # gnome.enable BO 19/08/2026 cung luc bo desktop GNOME o tang NixOS
-      # (configuration.nix). Module do chi sinh dconf keybinding + goi
-      # extension cua GNOME Shell, nen khong con phien GNOME thi no la cau
-      # hinh chet: van build, van ghi dconf, khong ai doc.
+      # gnome dropped 2026-08-19 with the GNOME desktop itself: the module only
+      # writes dconf keybindings and Shell extensions, so with no GNOME session
+      # it still builds and still writes, and nothing reads it.
       hyprland.enable = true;
       i18n.enable = true;
-      # Bat 14/08/2026 de thu. Bo phim la MAC DINH cua niri chu khong dich tu
-      # sway/hyprland, va bo phim launcher (beckon, to hop `Cap`) CHUA duoc noi
-      # vao — xem niri.d/config.kdl.
+      # Trial since 2026-08-14. Keybindings are niri's DEFAULTS, not ported from
+      # sway/hyprland, and the launcher layer is NOT wired in yet.
       niri.enable = true;
       sway.enable = true;
       wayland.enable = true;
@@ -51,14 +41,13 @@
       nixos.enable = true;
     };
     programs = {
-      # agenix BAT tu 14/08/2026 (dao lai quyet dinh cung ngay truoc do). Khoa
-      # cong khai cua may nay da vao programs/ssh/authorized_keys, ma keys.nix
-      # sinh tu chinh file do -- nen rog la recipient agenix, va hai file .age
-      # trong cay da duoc rekey lai cho du 5 nguoi nhan.
+      # This host's public key is in programs/ssh/authorized_keys, which keys.nix
+      # is generated from, so it is an agenix recipient and both .age files were
+      # rekeyed for all five.
       #
-      # Khac macOS: agent giai ma tren Linux la systemd oneshot KHONG co
-      # `Restart=`, nen no khong tu thu lai nhu launchd. Lan switch dau tren mot
-      # may vua co khoa moi, neu secret chua ra thi chay tay `agenix-reload`.
+      # Unlike macOS, the Linux decrypt unit is a systemd oneshot with no
+      # `Restart=`, so it does not retry the way launchd does -- run
+      # `agenix-reload` by hand if secrets are missing after a first switch.
       agenix.enable = true;
       btop.enable = true;
       git.enable = true;
@@ -73,11 +62,10 @@
   home.packages = [
     pkgs.beckon
     pkgs.bws
-    # Truoc 16/08/2026 binary nay den tu module dotbrave (`home.packages =
-    # [cfg.package]` cua module upstream). Module da go, nen phai khai o day --
-    # neu khong thi `dotbrave` bien mat khoi PATH va het ap tay duoc.
+    # Came from the dotbrave module until it was removed; declared here or the
+    # binary leaves PATH and there is no way to apply by hand.
     pkgs.dotbrave
-    # Giu lai tu ban standalone thoi con chay Ubuntu.
+    # Kept from the standalone Ubuntu era.
     pkgs.discordchatexporter-cli
   ];
 }

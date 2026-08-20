@@ -1,10 +1,9 @@
 { pkgs, lib, username, ... }:
 let
-  # Host nay ton tai de tra loi mot cau: tren may la nay, nix va script cai dat
-  # co chay khong? Nen no phai bam theo $HOME THAT cua may dang chay, chu khong
-  # doan theo quy uoc he dieu hanh — may co the la Termux
-  # (/data/data/com.termux/files/home), container, hay mot may cong ty dat home
-  # o cho khac.
+  # This host exists to answer one question: on an unfamiliar machine, do nix and
+  # the install scripts work? So it follows the REAL $HOME rather than guessing by
+  # OS convention -- the machine may be Termux, a container, or a corporate box
+  # with home somewhere else.
   envHome = builtins.getEnv "HOME";
 in
 {
@@ -12,18 +11,17 @@ in
     ../../home-manager
   ];
 
-  # mkForce la BAT BUOC, khong phai cho dep: home-manager/base dat
-  # home.homeDirectory theo he DICH (isDarwin ? /Users/... : /home/...). Hai gia
-  # tri chi trung nhau khi $HOME cua may dang eval khop quy uoc cua he dich, nen
-  # neu khong force thi eval cheo he se chet vi "conflicting definition values".
+  # mkForce is REQUIRED: home-manager/base derives home.homeDirectory from the
+  # TARGET system, and the two agree only when the evaluating machine's $HOME
+  # matches that convention -- otherwise a cross-system eval dies with
+  # "conflicting definition values".
   #
-  # Cu the: CI chay runner Linux ($HOME=/home/runner, $USER=runner) nen hai ben
-  # trung nhau va LUON xanh — tuc CI ve mat cau truc KHONG BAO GIO bat duoc loi
-  # nay. No chi lo ra khi eval `minimal` cho x86_64-linux tu mot may Mac, dung
-  # cach `.github/workflows/eval.yml` khong lam. Do ngay 10/08/2026.
+  # CI never catches this: its Linux runner makes both sides agree, so it is
+  # always green. It only appears when evaluating `minimal` for x86_64-linux from
+  # a Mac, which eval.yml does not do.
   #
-  # Du phong khi $HOME rong (eval trong moi truong khong co bien do): roi ve
-  # dung cong thuc cua base, thay vi de home-manager nhan mot duong dan rong.
+  # The fallback covers an empty $HOME by using base's own formula rather than
+  # handing home-manager an empty path.
   home.homeDirectory = lib.mkForce (
     if envHome != ""
     then envHome

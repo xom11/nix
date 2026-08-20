@@ -7,14 +7,14 @@ Describe 'windows kanata/VKey hook order (evkey-monitor.ahk)' {
     }
 
     It 'is actually loaded by main.ahk' {
-        # Mot monitor khong duoc #Include thi im lang va vo dung.
+        # A monitor that is not #Included is silent and useless.
         $Main | Should Match ([regex]::Escape('#Include evkey-monitor.ahk'))
     }
 
     It 'covers all three moments VKey may re-register its LL hook' {
-        # User-mode khong co API nao liet ke chain WH_KEYBOARD_LL, nen ba thoi diem nay la
-        # tat ca nhung gi ta doan duoc. Bo sot mot cai = thu tu dao am tham.
-        # 1. tien trinh VKey vua len
+        # User-mode has no API to enumerate the WH_KEYBOARD_LL chain, so these three
+        # moments are all we can detect. Missing one means a silent order flip.
+        # 1. the VKey process just started
         $Monitor | Should Match ([regex]::Escape('ProcessExist("VKey.exe")'))
         # 2. mo khoa may
         $Monitor | Should Match '0x02B1'
@@ -25,39 +25,37 @@ Describe 'windows kanata/VKey hook order (evkey-monitor.ahk)' {
     }
 
     It 'registers for session notifications, otherwise unlock never arrives' {
-        # Khong co WTSRegisterSessionNotification thi WM_WTSSESSION_CHANGE khong bao gio
-        # duoc gui toi cua so cua script, va nhanh unlock thanh code chet.
+        # Without WTSRegisterSessionNotification, WM_WTSSESSION_CHANGE never reaches the
+        # script's window and the unlock branch becomes dead code.
         $Monitor | Should Match 'WTSRegisterSessionNotification'
         $Monitor | Should Match 'A_ScriptHwnd'
     }
 
     It 'debounces so wake+unlock do not restart kanata twice' {
-        # Wake va unlock gan nhu luon ban lien nhau, ma moi lan restart kanata la mot nhip
-        # rot phim.
+        # Wake and unlock almost always fire together, and each kanata restart drops keys.
         $Monitor | Should Match '__vk_debounce'
         $Monitor | Should Match 'A_TickCount\s*-\s*__vk_lastRequest'
     }
 
     It 'delays on unlock/resume but not when VKey just appeared' {
-        # Nhanh process: da BIET VKey vua len -> restart ngay.
+        # Process branch: VKey is KNOWN to have just started, so restart immediately.
         $Monitor | Should Match ([regex]::Escape('RequestKanataRestart()'))
-        # Nhanh unlock/resume: VKey co the dang ky lai hook cham hon ta mot nhip, restart
-        # som se bi no chen len tren lai.
+        # Unlock/resume branch: VKey may re-register a beat after us, and restarting too
+        # early just lets it back on top.
         $Monitor | Should Match ([regex]::Escape('RequestKanataRestart(__vk_settleDelay)'))
         $Monitor | Should Match '__vk_settleDelay\s*:=\s*\d+'
     }
 
     It 'goes through the elevated Kanata task, not a direct kanata launch' {
-        # Task "Kanata" chay launch-kanata.ahk khong tham so = force restart, va chi Task
-        # Scheduler moi cap duoc admin context can thiet de cai lai hook.
+        # The "Kanata" task force-restarts it, and only Task Scheduler can grant the admin
+        # context needed to reinstall the hook.
         $Monitor | Should Match ([regex]::Escape('schtasks /run /tn "Kanata"'))
         $Monitor | Should Not Match 'kanata_windows_'
     }
 
     It 'records why wintercept is not an option on this hardware' {
-        # a14-win la ARM64; build wintercept can driver kernel x64 cua Interception ma
-        # Windows on ARM khong nap noi. Ghi lai de lan sau khong ai de xuat lai roi lai
-        # mat mot buoi do.
+        # This machine is ARM64, and a wintercept build needs Interception's x64 kernel
+        # driver, which Windows on ARM cannot load. Recorded so nobody proposes it again.
         $Monitor | Should Match 'ARM64'
         $Monitor | Should Match 'wintercept'
     }

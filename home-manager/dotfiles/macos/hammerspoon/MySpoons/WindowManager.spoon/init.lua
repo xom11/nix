@@ -3,19 +3,14 @@ obj.__index = obj
 
 local hyper = { "cmd", "alt", "ctrl" }
 
--- Khung gốc của cửa sổ trước khi phóng to, tra theo window id.
---
--- Lưu kèm UUID màn hình vì frame là toạ độ TUYỆT ĐỐI: phóng to trên màn ngoài, rút màn ra,
--- rồi bấm khôi phục thì bản cũ ném cửa sổ về toạ độ của một màn hình không còn tồn tại —
--- cửa sổ biến mất khỏi vùng nhìn thấy được.
+-- Pre-maximize frames by window id. The screen UUID is stored too because frames are
+-- ABSOLUTE coordinates: maximize on an external display, unplug it, restore, and the window
+-- lands on a screen that no longer exists.
 local originalFrames = {}
 
--- macOS tái sử dụng window id sau khi cửa sổ đóng, nên bảng này vừa phình mãi không ai dọn,
--- vừa có thể trả khung của một cửa sổ đã chết cho cửa sổ mới trùng id.
---
--- Dọn lười ngay trước khi dùng, thay vì subscribe hs.window.filter.windowDestroyed: callback
--- của filter nhận userdata của cửa sổ ĐÃ huỷ, gọi w:id() trên đó là ném lỗi mỗi lần đóng cửa
--- sổ. hs.window.get(id) trả nil cho id đã chết nên cách này vừa đúng vừa rẻ.
+-- macOS reuses window ids, so this table both grows forever and can hand a dead window's
+-- frame to a new one. Pruned lazily rather than via windowDestroyed, whose callback receives
+-- the already-destroyed userdata and throws on w:id() every time a window closes.
 local function prune()
 	for id in pairs(originalFrames) do
 		if not hs.window.get(id) then
@@ -24,8 +19,7 @@ local function prune()
 	end
 end
 
--- Gom phần lặp lại của cả ba phím: lấy cửa sổ đang focus và khung khả dụng của màn hình
--- chứa nó. Không có cửa sổ (đang ở Desktop, hoặc app không có cửa sổ nào) thì bỏ qua.
+-- Shared by all three keys: focused window plus its screen's usable frame.
 local function withFocused(fn)
 	local win = hs.window.focusedWindow()
 	if not win then
@@ -39,19 +33,16 @@ local function withFocused(fn)
 end
 
 function obj:init()
-	-- Tắt animation khi đặt lại khung. Để trong init() chứ không phải ở top-level module:
-	-- top-level chạy ngay lúc require, tức là đổi một biến toàn cục của hs.window chỉ vì file
-	-- này được nạp, kể cả khi spoon chưa được init.
+	-- In init(), not at top level: top level runs on require, which would mutate a global
+	-- hs.window setting merely because this file was loaded.
 	hs.window.animationDuration = 0
 
-	-- Nửa bên trái
 	hs.hotkey.bind(hyper, ",", function()
 		withFocused(function(win, max)
 			win:setFrame({ x = max.x, y = max.y, w = max.w / 2, h = max.h })
 		end)
 	end)
 
-	-- Nửa bên phải
 	hs.hotkey.bind(hyper, ".", function()
 		withFocused(function(win, max)
 			win:setFrame({ x = max.x + (max.w / 2), y = max.y, w = max.w / 2, h = max.h })
@@ -63,8 +54,7 @@ function obj:init()
 		withFocused(function(win, max)
 			prune()
 
-			-- Một số cửa sổ (sheet, dialog, vài PWA) không có id; bản cũ gán
-			-- originalFrames[nil] = ... và ném "table index is nil".
+			-- Sheets, dialogs and some PWAs have no id; assigning at [nil] throws.
 			local id = win:id()
 			if not id then
 				win:setFrame(max)
@@ -78,8 +68,7 @@ function obj:init()
 				win:setFrame(saved.frame)
 				originalFrames[id] = nil
 			else
-				-- Chưa lưu, hoặc đã lưu nhưng cho màn hình khác (khung cũ vô nghĩa ở đây):
-				-- coi như lần phóng to mới.
+				-- Unsaved, or saved for another screen where that frame is meaningless.
 				originalFrames[id] = { frame = win:frame(), screen = uuid }
 				win:setFrame(max)
 			end

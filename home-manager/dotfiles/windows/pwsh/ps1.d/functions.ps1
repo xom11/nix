@@ -106,11 +106,11 @@ function Set-Environment([string]$variable, [string]$value) {
 # Secrets
 # ----------------------------
 
-# Giải mã lại secret và nạp thẳng vào shell đang chạy. `$env:` ánh xạ vào
-# environment block của tiến trình, nên khác Unix -- ở đó `agenix-reload` chỉ
-# ghi lại file, shell đang mở phải source lại.
+# Re-decrypts and loads straight into the running shell: `$env:` maps to the
+# process environment block, unlike Unix, where agenix-reload only rewrites the
+# file and open shells must re-source it.
 #
-# Import-Module nằm trong thân hàm để không tốn gì lúc mở shell.
+# Import-Module sits in the body so it costs nothing at shell start.
 function Update-Secrets {
     $repo = Join-Path $env:USERPROFILE '.nix'
     Import-Module (Join-Path $repo 'windows\lib\Secrets.psm1') -Force

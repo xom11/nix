@@ -16,37 +16,28 @@
             return
         }
 
-        # KHAC AHKWatchdog, khong can launcher script -- action la CHINH lenh serve;
-        # khi service dang song, instance moi bi lock don-instance cua beckon da ra
-        # nen watchdog la no-op; khi chet, lan lap ke khoi dong lai. (Cung ly do,
-        # chay tay `beckon serve` tren file that cung vo hai -- lock chan.)
+        # Unlike AHKWatchdog this needs no launcher script -- the action IS the
+        # serve command. While serve is alive the new instance loses beckon's
+        # single-instance lock, so the probe is a no-op; when it dies, the next
+        # tick restarts it.
         #
-        # LastTaskResult cua task nay KHONG con y nghia tu khi bo conhost vao
-        # truoc (09/08/2026): Task Scheduler nhan exit code cua conhost, luon la
-        # 0x0, chu khong phai exit 1 cua beckon. Truoc do 0x1 = "bi tu choi lock"
-        # = khoe; bay gio 0x0 xuat hien ca khi probe bi tu choi lan khi no vua
-        # dung len mot serve moi. Bang chung duy nhat con lai la serve-watchdog.log
-        # duoi day -- doc NOI DUNG no, va doc mtime de biet nhip probe con chay.
-        # Khong con New-Item cho thu muc log: beckon --log tu tao thu muc cha.
+        # LastTaskResult is MEANINGLESS here since conhost went in front: Task
+        # Scheduler sees conhost's code, always 0x0, not beckon's. It used to be
+        # 0x1 for "lock refused" = healthy. The only evidence left is the log
+        # below -- read its CONTENT, and its mtime to confirm probes still run.
         $log = Join-Path (Join-Path $env:LOCALAPPDATA 'beckon') 'serve-watchdog.log'
-        # cmd /c da bi bo (09/08/2026, beckon 0.5.3): beckon --log tu chuyen
-        # huong stderr. Watchdog probe nao serve dang song thi file nay chi chua
-        # dong tu-choi-lock — do la dau hieu KHOE; serve.log la cua task chinh,
-        # watchdog khong duoc dung.
+        # A separate log from the main task: while serve is alive this holds only
+        # lock-refused lines, which is the HEALTHY signal.
         #
-        # DOI HANH VI CAN THEO DOI: --log GHI TIEP chu khong ghi de. Task nay
-        # chay 5 phut/lan, tuc ~288 dong/ngay ~ 30KB/ngay ~ 11MB/nam, KHONG tu
-        # xoay vong. Truoc day `2>` ghi de nen file luon chi co ket qua probe
-        # gan nhat. Neu thay phien: xoa file khi serve dang dung, hoac dat lai
-        # cmd /c ... 2> cho RIENG task nay (task chinh thi khong nen — xem
-        # module beckon-serve, ghi de o do tung xoa mat bang chung).
-        # Doc bang -Tail thay vi doc ca file.
-        # conhost --headless: xem giai thich day du trong module beckon-serve.
-        # Tom tat — cmd.exe la console app + task chay Interactive + may nay de
-        # Windows Terminal lam terminal mac dinh => moi lan chay sinh MOT TAB WT
-        # moi. Watchdog chay 5 phut/lan nen no la thu phat sinh tab nhieu nhat,
-        # va khi watchdog phai dung len giu serve (da xay ra) thi tab do song
-        # mai. `powershell -WindowStyle Hidden` KHONG cuu duoc — da do.
+        # --log APPENDS and does not rotate: at one probe per 5 minutes that is
+        # ~30 KB/day. If it becomes a nuisance, delete it while serve is stopped,
+        # or restore an overwriting redirect for THIS task only -- not the main
+        # one, where overwriting once destroyed the evidence. Read with -Tail.
+        #
+        # conhost --headless is explained in full in the beckon-serve module.
+        # Short version: without it each run spawns a new Windows Terminal tab,
+        # and this task runs every 5 minutes, so it is the biggest source of them.
+        # `powershell -WindowStyle Hidden` does NOT help -- measured.
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
         $action    = New-ScheduledTaskAction -Execute 'conhost.exe' `
             -Argument "--headless `"$($beckonExe.Source)`" serve `"$config`" --log `"$log`""

@@ -1,11 +1,9 @@
 --- === Annotate ===
 ---
---- Lớp modal vẽ lên màn hình, bọc quanh DrawOnScreen.
+--- A drawing modal wrapped around DrawOnScreen.
 ---
---- Vào modal bằng phím `enter`; trong modal: `clear` xoá nét, `toggle` bật/tắt chế độ vẽ,
---- `enter` lần nữa hoặc Escape để thoát.
----
---- Tách từ Tab.spoon.
+--- `enter` opens it; inside, `clear` erases, `toggle` switches drawing on and off,
+--- and `enter` again or Escape leaves. Split out of Tab.spoon.
 ---
 --- Usage:
 --- ```lua
@@ -29,10 +27,10 @@ local modal
 
 --- Annotate:bindHotkeys(mapping)
 --- Method
---- mapping cần các khoá: enter (bắt buộc), clear, toggle.
+--- mapping needs: enter (required), clear, toggle.
 ---
---- Khác các spoon khác ở chỗ modal phải được tạo TỪ tổ hợp phím vào, nên không dùng
---- hs.spoons.bindHotkeysToSpec được — hs.hotkey.modal.new nhận thẳng mods/key.
+--- Unlike the other spoons, the modal is built FROM the entering chord, so
+--- hs.spoons.bindHotkeysToSpec cannot be used -- modal.new takes mods/key directly.
 function obj:bindHotkeys(mapping)
     if not mapping or not mapping.enter then
         hs.alert.show("Annotate: thiếu mapping.enter", 3)
@@ -64,18 +62,17 @@ function obj:bindHotkeys(mapping)
         end)
     end
 
-    -- Chính tổ hợp vào cũng là tổ hợp ra.
+    -- The entering chord also leaves.
     modal:bind(mapping.enter[1], mapping.enter[2], function()
         modal:exit()
     end)
 
-    -- Escape cũng thoát. Trong lúc modal mở, DrawOnScreen phủ một canvas nuốt chuột
-    -- (canvasMouseEvents + mouseCallback rỗng ở DrawOnScreen.spoon:48-49, cộng một eventtap
-    -- bắt leftMouseDown/Dragged), nên click không tới được app nào. Nếu lối ra duy nhất là
-    -- đúng một tổ hợp thì quên tổ hợp là kẹt, mà chuột đã hết tác dụng để mò ra.
+    -- Escape leaves too. While the modal is open DrawOnScreen covers the screen with a
+    -- canvas that swallows the mouse, so clicks reach no app -- with only one exit chord,
+    -- forgetting it would leave you stuck with no working mouse to find a way out.
     --
-    -- Cố ý KHÔNG thêm timer tự thoát: nó không reset theo hoạt động vẽ, nên đang trình bày
-    -- quá thời gian là overlay biến mất giữa chừng không báo trước.
+    -- Deliberately no auto-exit timer: it would not reset on drawing activity, so a
+    -- long presentation would lose the overlay mid-sentence.
     modal:bind({}, "escape", function()
         modal:exit()
     end)

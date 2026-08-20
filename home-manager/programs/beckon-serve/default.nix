@@ -5,42 +5,38 @@
   mkModule,
   ...
 }: let
-  # Chuoi tro thang working tree (triet ly mkOutOfStoreSymlink): sua file la
-  # watcher cua serve tu ap dung, khong can switch.
+  # A string into the working tree (the mkOutOfStoreSymlink idea): serve's watcher
+  # picks up edits without a switch.
   configFile = "${repoPath}/configs/shortcuts/apps.shared.toml";
   label = "com.xom11.beckon-serve";
   logDir = "${config.home.homeDirectory}/Library/Logs/beckon";
 in
   mkModule config ./. {
-    # launchd KHONG tu tao thu muc cha cho StandardOutPath — agent se khong
-    # start noi tren may sach. .keep la cach khai bao thuan HM, thay cho mot
-    # activation script chi de mkdir.
+    # launchd does NOT create the parent of StandardOutPath, so the agent fails to
+    # start on a clean machine. A .keep file beats an activation script that only
+    # calls mkdir.
     home.file."Library/Logs/beckon/.keep".text = "";
 
     launchd.agents.beckon-serve = {
       enable = true;
       config = {
         Label = label;
-        # Tro THANG vao store, khong qua path on dinh nao. Bo cai do 10/08/2026
-        # cung luc bo tinh nang cycle cua so — xem README cung thu muc.
-        # Tom tat: beckon chi can Accessibility cho 2 viec (xoay cua so trong
-        # cung mot app, va dem cua so de dung day app da minimize het). Bat
-        # phim tat, mo app, focus app, nhay ve app truoc, an app: KHONG can
-        # quyen gi. Khong grant thi khong can path co dinh de treo grant vao.
+        # Straight into the store, no stable path in between. beckon only needs
+        # Accessibility for window cycling, which was dropped -- registering
+        # hotkeys, launching, focusing and hiding need no grant at all, so there
+        # is no grant to anchor to a fixed path.
         #
-        # Va vi store path nam trong plist, moi lan bump beckon la plist doi;
-        # HM so plist bang `cmp -s` roi bootout + bootstrap lai (xem
-        # setupLaunchAgents/processAgent trong activate script), nen agent tu
-        # chay binary moi. Do la ly do khong con `launchctl kickstart -k`.
+        # A store path in the plist also means every bump changes the plist, and
+        # home-manager compares plists and re-bootstraps the agent, so it picks up
+        # the new binary on its own. Hence no `launchctl kickstart -k`.
         ProgramArguments = ["${pkgs.beckon}/bin/beckon" "serve" configFile];
         RunAtLoad = true;
-        # Serve khong bao gio thoat "thanh cong" — chet la relaunch. Throttle
-        # 60s theo bai agenix: khong crash-loop 10s khi binary/config hong.
+        # serve never exits successfully, so any exit is a relaunch. The 60 s
+        # throttle follows agenix: no 10 s crash loop on a broken binary or config.
         KeepAlive = {SuccessfulExit = false;};
         ThrottleInterval = 60;
-        # Hotkey chi song trong phien GUI. Day cung la thu chan cai bay
-        # "khoi dong tu SSH khong nhan event": launchd luon dat agent vao
-        # dung phien Aqua.
+        # Hotkeys only live in a GUI session; this also prevents the "started from
+        # SSH and receives no events" trap by pinning the agent to the Aqua session.
         LimitLoadToSessionType = "Aqua";
         StandardOutPath = "${logDir}/serve.log";
         StandardErrorPath = "${logDir}/serve.log";

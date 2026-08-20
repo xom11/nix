@@ -1,93 +1,82 @@
-# Phim tat focus-or-launch — MOT file cho ca ba OS.
+# Focus-or-launch shortcuts -- ONE file for all three OSes.
 #
-# Cu phap chuoi ung vien (beckon >= 0.9.7):
-#   "A || B || C"  — thu trai sang phai, cai dau tien HANH DONG duoc thi thang.
-#   Mot ung vien truot khong phai loi; no chi bo qua bac do va di tiep.
+# Candidate syntax needs beckon >= 0.9.7 (NOT 0.9.6, which predates it by hours):
+#   "A || B || C"  -- left to right, first one that can ACT wins; a miss is not
+#   an error. Older builds read the whole string as ONE app name, registered the
+#   hotkey successfully, then silently failed to resolve. The only sign is in
+#   serve.log. a14 sat on 0.9.6 and lost six shortcuts to exactly that.
 #
-# San 0.9.7 la CHINH XAC, dung lam tron xuong 0.9.6. Tinh nang vao o commit
-# aaf62aa luc 16:30 ngay 16/08/2026, con tag v0.9.6 ra luc 11:56 CUNG NGAY —
-# truoc 4 tieng ruoi. Ban cu KHONG bao loi: no doc ca chuoi "kitty || Terminal"
-# lam MOT ten app, dang ky hotkey van thanh cong, roi im lang khong resolve
-# duoc. Dau hieu duy nhat nam trong serve.log:
-#   failed to launch `kitty || Terminal`: no installed Windows app matches
-# a14 dung o 0.9.6 va mat 6 phim tat vi dung con so o dong tren (19/08/2026).
+# Who reads this, and when:
+#   Linux    read at NIX EVAL to generate compositor bindings => needs a rebuild.
+#   macOS    `beckon serve` reads it live and watches the file => ~1-2 s.
+#   Windows  `beckon serve` reads it live. Not managed by nix.
 #
-# Doc luc nao, boi ai:
-#   Linux    generator doc luc NIX EVAL roi sinh binding compositor
-#            => sua file la PHAI `nixos-rebuild switch`.
-#   macOS    `beckon serve` doc luc CHAY va watch file => ~1-2 s, khong rebuild.
-#   Windows  `beckon serve` doc luc CHAY. Khong do nix quan.
+# Cap held = ctrl+super+alt, produced by kanata (super is Cmd on mac, Win
+# elsewhere). This file does not need to know that.
 #
-# Cap giu = ctrl+super+alt (kanata sinh; super = Cmd tren mac, Win tren
-# Linux/Windows). File nay khong can biet Cap la gi.
+# CANDIDATE ORDER: put the WINDOWS name first, then mac, then Linux -- unless
+# that name mismatches elsewhere, where correctness beats speed. A missed first
+# candidate costs a catalog scan (~463 ms Windows / ~79 ms macOS / ~3 ms Linux),
+# but the SECOND miss onward is nearly free, so long chains are cheap. Only the
+# first candidate matters.
 #
-# THU TU UNG VIEN: dat ten cua WINDOWS truoc, roi mac, Linux cuoi — tru khi
-# ten do khop nham o OS khac, luc do tinh DUNG thang toc do. Ly do: mot ung
-# vien truot phai quet catalog, gia ~463 ms tren Windows / ~79 ms macOS /
-# ~3 ms Linux; nhung bac truot THU HAI tro di thi gan nhu mien phi, nen chuoi
-# dai khong ton tien — chi ung vien DAU la dang ke. (Do 17/08/2026 tren ca ba
-# may; so chi tiet trong `git log` cua file nay.)
-#
-# Validate: `beckon check <file nay> --resolve`. CI lap glob `apps.*.toml` —
-# ten `apps.toml` thi KHONG khop va CI se im lang khong kiem gi.
+# Validate: `beckon check <this file> --resolve`. CI globs `apps.*.toml`, so a
+# file named `apps.toml` would NOT match and CI would check nothing.
 
-# ── Cap + phim ──────────────────────────────────────────────────────────
+# ── Cap + key ───────────────────────────────────────────────────────────
 
-# NGOAI LE cua quy tac tren, va la dong duy nhat: ten Windows dung la
-# "Terminal" ("Windows Terminal" khong resolve o do), nhung dat truoc thi macOS
-# mo nham Terminal.app cua Apple. Windows chiu mot bac truot o day, co y.
+# The one exception to the ordering rule: the Windows name is "Terminal", but
+# putting it first makes macOS open Apple's Terminal.app. Windows takes one miss
+# here, deliberately.
 "ctrl+super+alt+space" = "kitty || Terminal"
 
-# "Brave" khop o ca ba may ("Brave Browser" khong resolve tren Windows lan
-# rog). Doi lai macOS tut xuong khop-chua-chu, nen "Brave Browser" giu lai lam
-# duong lui — ung vien 2 khong bao gio chay khi cai dau da khop, nen mien phi.
-# rog co HAI entry trung Name="Brave Web Browser"; alphabet quyet dinh cai nao
-# thang va ten exact khong go duoc. Hau qua nhe: ca hai deu mo Brave.
+# "Brave" matches on all three ("Brave Browser" resolves on neither Windows nor
+# rog). macOS falls back to a substring match, so the second candidate stays as a
+# safety net -- free, since it never runs once the first matches.
 "ctrl+super+alt+b" = "Brave || Brave Browser"
 
 "ctrl+super+alt+c" = "Claude"
 "ctrl+super+alt+d" = "Discord"
 
-# Ba ten cho ba OS. Tren rog cai tra loi "Files" la nemo, khong phai Nautilus.
+# One name per OS. On rog "Files" resolves to nemo, not Nautilus.
 "ctrl+super+alt+f" = "File Explorer || Finder || Files"
 
 "ctrl+super+alt+g" = "Google Gemini"
 "ctrl+super+alt+h" = "Facebook"
 
-# PWA Brave: tren rog .desktop mang URL lam Name, nen ten hien thi mot minh
-# chet o do — do la ly do co ung vien URL.
+# Brave PWAs: on rog the .desktop carries the URL as its Name, so the display
+# name alone fails there -- hence the URL candidate.
 "ctrl+super+alt+j" = "Tao Monitor || https://tao.lenamkhanh.xyz/"
 "ctrl+super+alt+k" = "Google Keep || https://keep.google.com/"
 
 "ctrl+super+alt+m" = "Messenger"
 "ctrl+super+alt+n" = "Notion"
 
-# Khop "System Settings" tren mac bang chua-chu — co y. `check --resolve` bao
-# dong nay "long" chu khong phai loi.
+# Matches "System Settings" on mac by substring, deliberately. `check --resolve`
+# calls this line loose, not wrong.
 "ctrl+super+alt+s" = "Settings"
 
 "ctrl+super+alt+t" = "Telegram"
 "ctrl+super+alt+y" = "YouTube"
 
-# Chi co tren Linux + Windows; chet tren mac, chap nhan co y.
+# Linux and Windows only; fails on mac, accepted.
 "ctrl+super+alt+z" = "Zalo"
 
 # ── Cap + Shift + phim ──────────────────────────────────────────────────
 #
-# RANG BUOC RIENG WINDOWS — chord Office key. Windows giu san RegisterHotKey
-# cho Ctrl+Win+Alt+Shift + 10 phim: D L N O P T W X Y va Space. Dat binding
-# vao do thi `beckon serve` khong dang ky duoc va Windows tu mo app cua no.
-# Chuoi ung vien KHONG cuu duoc — day la xung dot CHORD, khong phai ten app.
-# Chi ap dung cho lop Cap+Shift; lop Cap tran dung thoai mai ca 26 chu.
+# WINDOWS-ONLY CONSTRAINT: Windows reserves Ctrl+Win+Alt+Shift plus ten keys
+# (D L N O P T W X Y and Space) for the Office key. A binding there simply fails
+# to register and Windows opens its own app. Candidate chains do NOT help -- the
+# conflict is on the CHORD, not the name. Only affects the Cap+Shift layer.
 
 "ctrl+super+alt+shift+a" = "Apps"
 "ctrl+super+alt+shift+c" = "Google Chrome"
 
-# XUNG DOT Office key: `d` = OneDrive tren Windows, nen dong nay dang ky THAT
-# BAI o do. Chay dung tren mac va Linux. `e`, `q`, `r`, `u` con trong o lop nay.
+# Office-key conflict: `d` is OneDrive on Windows, so this line fails to register
+# there. Works on mac and Linux. `e`, `q`, `r`, `u` are still free in this layer.
 "ctrl+super+alt+shift+d" = "DeepSeek"
 
 "ctrl+super+alt+shift+m" = "Gmail || https://mail.google.com/"
 
-# Chi co tren macOS.
+# macOS only.
 "ctrl+super+alt+shift+v" = "VMware Fusion"

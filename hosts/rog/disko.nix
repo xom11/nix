@@ -1,18 +1,16 @@
-# Toan bo o cho NixOS. Dual-boot Windows da BO han 14/08/2026 sau hai lan cai
-# that bai (lan dau Windows Update pha boot, lan hai trinh cai khong nhin thay
-# o khi boot tu USB) -- chu may quyet dinh khong dung Windows tren may nay nua.
+# The whole disk for NixOS; dual-boot Windows was dropped after two failed
+# installs.
 #
 #   ESP    1G      EF00   /boot
-#   root   ~459.9G ext4   /        <- an het o, tru 16G cuoi
-#   swap   16G     8200            <- >= RAM (8G) nen hibernate duoc
+#   root   ~459.9G ext4   /       <- everything but the last 16G
+#   swap   16G     8200           <- >= RAM, so hibernate works
 #
-# ESP 1G thay vi 512M nhu moi khi: kich thuoc do la di san tu thoi con chia
-# cho Windows Boot Manager, va khong dang thu hep lai vi phai xoa/tao lai phan
-# vung dau o.
+# The 1G ESP is inherited from the Windows era and not worth shrinking, since that
+# means recreating the first partition.
 #
-# `end = "-16G"` cho root + `size = "100%"` cho swap: disko day phan vung
-# `100%` xuong cuoi cung, nen thu tu vat ly ra dung ESP -> root -> swap ma
-# khong phai tinh sector nao.
+# `end = "-16G"` on root plus `size = "100%"` on swap: disko pushes the `100%`
+# partition last, so the physical order comes out ESP -> root -> swap with no
+# sector arithmetic.
 {
   disko.devices = {
     disk = {

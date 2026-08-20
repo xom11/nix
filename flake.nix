@@ -66,8 +66,8 @@
     dotbrave.url = "github:xom11/dotbrave";
     dotbrave.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Chỉ có package trên darwin — overlay của nó tự vắng mặt trên Linux, nên
-    # để chung trong flakeOverlays không làm hỏng host Linux nào.
+    # darwin-only package; its overlay is simply absent on Linux, so keeping it in
+    # the shared list breaks no Linux host.
     tongue.url = "github:xom11/tongue";
     tongue.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -78,10 +78,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Spoon của bên thứ ba cho Hammerspoon. Ghim ở đây thay vì commit vào repo:
-    # code không phải của mình thì không nằm trong cây làm việc, nhưng vẫn được
-    # flake.lock cố định rev nên tái lập được và không cần mạng lúc Hammerspoon
-    # khởi động. Nâng cấp có chủ đích: nix flake update hammerspoon-spoons
+    # Third-party Hammerspoon spoons, pinned here rather than vendored: someone
+    # else's code stays out of the working tree while flake.lock still fixes the
+    # rev, so it is reproducible and needs no network at startup.
     hammerspoon-spoons = {
       url = "github:Hammerspoon/Spoons";
       flake = false;
@@ -112,11 +111,9 @@
 
     in
     {
-      # Overlay goi local, consumable tu ngoai flake nay. HIEN DANG TRONG:
-      # fcitx5-macos + neofetch2 go 10/08/2026, raiseorlaunch go 09/08/2026
-      # (xem ATTIC.md o goc repo). Co che van giu nguyen -- overlays/default.nix
-      # doc readDir roi mapAttrs, nen them mot thu muc goi moi vao overlays/ la
-      # no tu vao, khong phai sua dong nay.
+      # Local package overlay, consumable from outside this flake. Currently EMPTY
+      # (see ATTIC.md). The mechanism stays: overlays/default.nix reads the
+      # directory, so a new package directory is picked up without editing this.
       overlays.default = import ./overlays;
 
       formatter = forAllSystems (system: (pkgsFor system).alejandra);

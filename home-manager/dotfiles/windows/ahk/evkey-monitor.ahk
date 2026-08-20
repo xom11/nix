@@ -1,47 +1,40 @@
 #Requires AutoHotkey v2.0
 Persistent
 
-; Giu Kanata luon la hook WH_KEYBOARD_LL moi nhat.
+; Keep Kanata as the most recently installed WH_KEYBOARD_LL hook.
 ;
-; Root cause: ca Kanata winIOv2 va VKey deu dung WH_KEYBOARD_LL. Chain la LIFO —
-; hook cai SAU duoc goi TRUOC. Kanata phai la hook moi nhat: no an phim vat ly roi
-; bom lai phim da remap, nen VKey nam duoi chi thay dong phim cuoi cung, dung thu
-; se vao app. Neu VKey thanh hook moi nhat thi no phan ung theo nhung phim ma Kanata
-; sau do chan di, cong them ca phim Kanata bom vao — dong phim VKey nhin thay khong
-; con khop voi cai that su xay ra.
+; Both Kanata's winIOv2 and VKey use that hook, and the chain is LIFO -- the hook
+; installed LAST is called FIRST. Kanata must be last: it eats the physical key and
+; injects the remapped one, so VKey below it sees only the final key stream. With
+; VKey on top, it reacts to keys Kanata then swallows plus the ones Kanata injects,
+; and what it sees no longer matches what happens.
 ;
-; Cach khoi phuc duy nhat: restart Kanata de hook cua no dang ky lai len tren. Task
-; "Kanata" lam viec do (Task Scheduler tu dam bao admin context).
+; The only fix is restarting Kanata so its hook re-registers on top. The "Kanata"
+; scheduled task does that, and gives it admin context.
 ;
-; Vi sao phai doan bang su kien thay vi kiem tra truc tiep: user-mode KHONG co API
-; nao liet ke chain WH_KEYBOARD_LL. Ta chi bat duoc cac thoi diem VKey CO THE da
-; dang ky lai hook, roi dat Kanata len tren mot lan nua:
+; Detection is event-based because user-mode has NO API to enumerate that chain. We
+; can only catch moments when VKey MIGHT have re-registered, then put Kanata back:
+;   1. VKey goes from not-running to running  (certain)
+;   2. Session unlock                         (possible)
+;   3. Resume from sleep                      (possible)
+; (2) and (3) were once missing, so a VKey that re-hooked WITHOUT restarting flipped
+; the order silently with nothing to correct it.
 ;
-;   1. VKey tu khong-chay sang dang-chay  (chac chan dang ky lai)
-;   2. Mo khoa may                        (co the)
-;   3. Thuc tu sleep                      (co the)
-;
-; (2) va (3) truoc day bi bo sot: neu VKey dang ky lai hook ma KHONG restart tien
-; trinh thi (1) khong thay gi, thu tu dao am tham va khong co gi sua.
-;
-; Tren ARM64 (a14-win) khong co duong nao thoat kien truc nay: build wintercept can
-; driver kernel x64 cua Interception, ma Windows on ARM khong nap noi driver kernel
-; x64 — da xac minh 30/07/2026 (CodeIntegrity 3004 + "The driver \Driver\keyboard
-; failed to load"). winIOv2 (LLHOOK) la lua chon duy nhat, nen vong nay la thiet ke
-; chu khong phai cha vit tam thoi.
+; No escape from this on ARM64: wintercept needs Interception's x64 kernel driver,
+; which Windows on ARM cannot load (verified: CodeIntegrity 3004). LLHOOK is the only
+; option, so this loop is design, not a stopgap.
 
 ; --- Configuration ---
 
-; Thoi gian poll (ms). VKey restart thuong co gap vai giay.
+; Poll interval (ms). A VKey restart usually has seconds of slack.
 global __vk_checkInterval := 1000
 
-; Hoan truoc khi restart Kanata o nhanh unlock/resume. Khac nhanh (1) — o do ta da
-; BIET VKey vua len nen restart ngay la dung — con o day VKey co the dang ky lai hook
-; cham hon ta mot nhip, restart som se bi no chen len tren lai.
+; Delay before restarting on the unlock/resume paths. Unlike case (1), where VKey is
+; known to have just started, here it may re-register a beat after us -- restarting
+; too early just lets it back on top.
 global __vk_settleDelay := 2500
 
-; Chan restart trung lap: wake va unlock gan nhu luon ban lien nhau, ma moi lan
-; restart Kanata la mot nhip rot phim.
+; Wake and unlock almost always fire together, and each Kanata restart drops keys.
 global __vk_debounce := 8000
 
 ; --- State ---
@@ -49,8 +42,7 @@ global __vk_wasRunning := false
 global __vk_firstCheck := true
 global __vk_lastRequest := 0
 
-; Xin Windows gui WM_WTSSESSION_CHANGE toi cua so an cua script.
-; NOTIFY_FOR_THIS_SESSION = 0.
+; Ask Windows for WM_WTSSESSION_CHANGE on the script's hidden window.
 DllCall("Wtsapi32\WTSRegisterSessionNotification", "Ptr", A_ScriptHwnd, "UInt", 0, "Int")
 
 OnMessage(0x02B1, OnSessionChange)   ; WM_WTSSESSION_CHANGE
@@ -62,7 +54,7 @@ RequestKanataRestart(delayMs := 0) {
         return
     __vk_lastRequest := A_TickCount
     if (delayMs > 0)
-        SetTimer(RunKanataTask, -delayMs)  ; am = chay dung mot lan
+        SetTimer(RunKanataTask, -delayMs)  ; negative = run once
     else
         RunKanataTask()
 }
@@ -82,7 +74,7 @@ CheckVKey() {
         return
     }
 
-    ; Phat hien VKey tu khong-chay sang dang-chay => restart ngay
+    ; not-running -> running means it definitely re-registered
     if (isRunning && !__vk_wasRunning)
         RequestKanataRestart()
 
@@ -96,9 +88,8 @@ OnSessionChange(wParam, lParam, msg, hwnd) {
         RequestKanataRestart(__vk_settleDelay)
 }
 
-; Tren laptop, thuc tu sleep hau nhu luon keo theo mot lan mo khoa, nen nhanh nay
-; chu yeu la lop du phong cho nhanh unlock. Cua so chinh cua AHK bi an nhung van la
-; top-level window nen nhan duoc broadcast nay.
+; On a laptop, resume nearly always brings an unlock with it, so this is mostly a
+; backstop. AHK's main window is hidden but still top-level, so it gets the broadcast.
 OnPowerBroadcast(wParam, lParam, msg, hwnd) {
     global __vk_settleDelay
     static PBT_APMRESUMESUSPEND := 0x7, PBT_APMRESUMEAUTOMATIC := 0x12

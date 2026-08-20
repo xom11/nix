@@ -1,10 +1,9 @@
--- Dich tay tu sway.d/conf.d/tab.conf. `$tab` dinh nghia o vars.lua.
+-- `tab` is defined in vars.lua.
 
 local tab = require("vars").tab
 
--- Pin. Ban sway hardcode `battery_qcom_battmgr_bat` — do la pin cua a14
--- (Snapdragon), tren rog (Intel) khong ton tai nen phim se in ra rong. Do bang
--- `upower -e` cho khong phu thuoc may.
+-- The sway version hardcoded a Snapdragon battery name, which does not exist on
+-- this machine, so the key printed nothing. `upower -e` is host-independent.
 hl.bind(
 	tab .. " + P",
 	hl.dsp.exec_cmd(
@@ -12,25 +11,21 @@ hl.bind(
 	)
 )
 
--- Gio
 hl.bind(tab .. " + T", hl.dsp.exec_cmd([[notify-send -t 2000 "$(date +'%H:%M:%S - %d/%m/%Y')"]]))
 
--- Reload. `hyprctl reload` van la lenh rieng cua hyprctl chu khong di qua
--- `dispatch`, nen no KHONG bi doi cu phap khi chuyen sang Lua (khac hai lenh
--- `hyprctl dispatch` trong system.lua).
+-- `hyprctl reload` is its own command, not a `dispatch`, so the Lua switch did
+-- not change its syntax -- unlike the dispatch calls in system.lua.
 hl.bind(tab .. " + R", hl.dsp.exec_cmd([[hyprctl reload && notify-send -t 2000 "Hyprland config reloaded"]]))
 
--- Bo go: tieng Viet (lotus) / English (keyboard-us)
+-- IME: Vietnamese (lotus) / English (keyboard-us)
 hl.bind(tab .. " + W", hl.dsp.exec_cmd([[fcitx5-remote -s lotus && notify-send -t 2000 "Tiếng Việt"]]))
 hl.bind(tab .. " + E", hl.dsp.exec_cmd([[fcitx5-remote -s keyboard-us && notify-send -t 2000 "English"]]))
 
--- Chup man hinh. Ban sway co them `echo -n /tmp/ss.png | wl-copy` o dau — ve do
--- chep DUONG DAN roi bi ve sau ghi de ngay bang ANH, nen bo.
---
--- Ban hyprlang lap lai NGUYEN VAN lenh nay o ca hai binding thay vi gom vao mot
--- bien `$screenshot`, vi gia tri chua `$(slurp)` va hanh vi cua bo phan tich
--- bien hyprlang voi chuoi do la thu chua ai do o day. Ly do do khong con: `local`
--- cua Lua khong phai lop thay the van ban, no chi la mot bien giu chuoi.
+-- The sway version prefixed `echo -n /tmp/ss.png | wl-copy`, which copied the
+-- PATH only to be overwritten by the IMAGE a moment later. hyprlang repeated this
+-- command verbatim in both bindings because its variable substitution against
+-- `$(slurp)` was never measured; a Lua local is just a variable, so it can be
+-- shared.
 local screenshot =
 	[[grim -g "$(slurp)" /tmp/ss.png && wl-copy < /tmp/ss.png && notify-send -t 2000 "Screenshot copied to clipboard"]]
 

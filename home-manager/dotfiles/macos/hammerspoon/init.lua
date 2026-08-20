@@ -1,10 +1,8 @@
 -- Enable Hammerspoon CLI (`hs -c "..."`)
 --
--- cliInstall() chỉ tạo symlink khi cliStatus() trả về ĐÚNG BẰNG `false`. Khi cài dở dang —
--- ví dụ có /usr/local/bin/hs nhưng thiếu share/man/man1/hs.1 — cliStatus trả về chuỗi
--- "broken", mà "broken" là truthy nên nhánh tạo symlink không bao giờ chạy: cliInstall() trần
--- sẽ kẹt vĩnh viễn và in "cli installation problem: incomplete installation" ở mỗi lần load.
--- Máy này đang đúng trạng thái đó. Gỡ hẳn rồi cài lại là cách duy nhất thoát ra.
+-- cliInstall() only symlinks when cliStatus() is exactly `false`. A half-install returns the
+-- string "broken", which is truthy, so the install branch never runs and a bare cliInstall()
+-- prints "incomplete installation" on every load forever. Uninstall-then-install is the way out.
 if hs.ipc.cliStatus(nil, true) ~= true then
     hs.ipc.cliUninstall()
     hs.ipc.cliInstall()
@@ -14,46 +12,33 @@ end
 package.path = package.path .. ";" .. hs.configdir .. "/MySpoons/?.spoon/init.lua"
 package.path = package.path .. ";" .. hs.configdir .. "/LibSpoons/?.spoon/init.lua"
 
--- Bỏ `hs = hs` và `spoon = spoon`: cả hai đều là no-op, Hammerspoon đã đặt sẵn hai global đó
--- trước khi nạp file này.
---
--- Bỏ luôn hai global `tab` và `cap`. `cap` không có file nào dùng; `tab` cũng vậy — Tab.spoon
--- tự khai báo `local tab` riêng ở dòng 4 của nó. Modifier thật do kanata sinh ra
--- (configs/kanata/kanata_macos.kbd): Tab giữ = cmd+ctrl+shift, Caps giữ = cmd+ctrl+alt.
+-- The real modifiers come from kanata (configs/kanata/kanata_macos.kbd): holding Tab is
+-- cmd+ctrl+shift, holding Caps is cmd+ctrl+alt. Nothing here defines them.
 
--- Spoon bên thứ ba nằm trong ~/.hammerspoon/Spoons, do Nix đặt vào từ input
--- hammerspoon-spoons đã ghim rev trong flake.lock (xem default.nix cạnh file này).
---
--- Trước đây chỗ này chạy SpoonInstall: nó gọi updateRepo("default") tải index 1,2 MB bằng
--- hs.http.get — đồng bộ, chặn main thread — ở mọi lần khởi động và mọi lần tab+r reload, kể
--- cả khi spoon đã nằm sẵn trên đĩa. Tệ hơn: Spoons/ bị .gitignore che, nên trên máy clone
--- mới mà mạng hỏng thì RecursiveBinder không tải được: spoon nào gọi
--- hs.loadSpoon("RecursiveBinder") lúc load nhận về nil, và hotkey của chính spoon đó không
--- bind được (xem default.nix cạnh file này để biết spoon nào đang thật sự dùng — đổi theo
--- thời gian, đừng chép tên cụ thể vào đây). Ghim qua Nix cắt cả hai vấn đề: không lời gọi
--- mạng nào lúc khởi động, và spoon luôn có mặt sau lần build đầu.
+-- Third-party spoons come from Nix, pinned in flake.lock (see default.nix). This used to be
+-- SpoonInstall, which fetched a 1.2 MB index synchronously on every load and every reload --
+-- and since Spoons/ is gitignored, a fresh clone with no network got nil back from
+-- hs.loadSpoon and silently lost that spoon's hotkeys.
 hs.loadSpoon("RecursiveBinder")
 
 -- Reverse scroll direction for trackpads
 hs.loadSpoon("TrackpadReverse")
 
--- Focus-or-launch: beckon serve (launchd com.xom11.beckon-serve),
--- du lieu configs/shortcuts/apps.macos.toml — sua la an ngay.
+-- Focus-or-launch is beckon serve (launchd com.xom11.beckon-serve), reading
+-- configs/shortcuts/apps.shared.toml -- edits apply immediately, no reload.
 -- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerManager")
 hs.loadSpoon("WindowManager")
 hs.loadSpoon("Fn")
 hs.loadSpoon("Tab")
 
--- Chế độ gõ do `tongue` lo, gọi từ LangSwitch.spoon (phím tắt, nạp qua Tab.spoon) và
--- LanguageMemory.spoon (nhớ theo từng app). Hai spoon cũ ở đây đã bỏ hẳn: GoNhanh.spoon tự
--- open/killall GoNhanh — đúng việc tongue sinh ra để làm, và giành mất slot toàn cục
--- inputSourceChanged của LanguageMemory; LanguageSwitcher.spoon thì đã hỏng từ lâu (cần
--- InputSourceSwitch, spoon đã bị gỡ khỏi default.nix) và trùng chức năng LanguageMemory.
+-- Input mode is `tongue`, driven by LangSwitch.spoon (hotkeys, loaded via Tab.spoon) and
+-- LanguageMemory.spoon (per-app memory). Two older spoons were dropped: GoNhanh.spoon did
+-- tongue's job and took LanguageMemory's single global inputSourceChanged slot, and
+-- LanguageSwitcher.spoon had been broken for a while and duplicated LanguageMemory.
 hs.loadSpoon("LanguageMemory")
 
--- Máy khoá thì im tiếng, đăng nhập lại thì trả nguyên trạng. Không có bindHotkeys: nó chỉ nghe
--- hs.caffeinate.watcher, mọi việc làm trong init().
+-- Mute on lock, restore on unlock. No bindHotkeys -- it only listens to a watcher.
 hs.loadSpoon("LockMute")
 
 hs.alert.show("Hammerspoon config loaded")
