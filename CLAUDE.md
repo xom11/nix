@@ -116,6 +116,12 @@ that found them. The long version belongs in a commit message or `ATTIC.md`.
 -- shell's. Both fail silently.
 ```
 
+**One file is exempt: `home-manager/programs/nvim/bin/ime-route` is commented in
+Vietnamese throughout.** Match the file, do not translate it. Its comments encode
+measured findings in precise wording, and a bulk translation to satisfy the rule
+above would cost more than the inconsistency does. New comments there go in
+Vietnamese; everywhere else the rule stands.
+
 ## Rebuild Commands
 
 `--impure` is required everywhere: `lib/mkConfigs.nix` reads `$USER`/`$SUDO_USER`
