@@ -100,6 +100,22 @@ directory, so `git push` from a subdirectory would silently run no hook.
 Run any of them by hand: `./.githooks/…` via `.github/scripts/test-prepush.sh`,
 `./.github/scripts/check-placeholders.sh [--self-test]`.
 
+## Comments
+
+**English, and as few as possible.** If the code already says it, say nothing —
+no `# enable the module`, no restating a function name, no banner boxes.
+
+Write a comment only for what the code cannot show: a measured gotcha, a
+non-obvious constraint, a decision someone would otherwise undo. Those earn
+**two or three lines** — the conclusion and the trap, not the investigation
+that found them. The long version belongs in a commit message or `ATTIC.md`.
+
+```lua
+-- Hyprland 0.56 evals `hyprctl dispatch <X>` as Lua; `dpms off` is a syntax
+-- error. Keep `[[off]]`: single quotes end swayidle's arg, double quotes the
+-- shell's. Both fail silently.
+```
+
 ## Rebuild Commands
 
 `--impure` is required everywhere: `lib/mkConfigs.nix` reads `$USER`/`$SUDO_USER`

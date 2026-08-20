@@ -1,19 +1,13 @@
 --- === LockMute ===
 ---
---- Màn hình bị khoá thì mute output; đăng nhập lại trước máy thì trả đúng nguyên trạng.
+--- Mute on lock, restore exactly on unlock at the machine.
 ---
---- Máy này bật 24/7 và phần lớn thời gian không có ai ngồi trước nó: để lâu không dùng thì màn
---- hình tự tắt rồi khoá, hoặc bị khoá bằng tay (cmd+alt+L của PowerManager.spoon). Việc code
---- vẫn diễn ra, nhưng qua SSH từ máy khác — nên mọi tiếng con máy phát ra trong lúc đó
---- (notification, chuông terminal, nhạc còn sót) chỉ làm phiền người ở cùng phòng, không ai
---- cần nghe.
+--- This box runs 24/7 with nobody in front of it most of the time, while work
+--- continues over SSH -- so any sound it makes only bothers whoever is in the
+--- room. SSH raises no unlock event, so a remote session can never un-mute it.
 ---
---- SSH không sinh sự kiện unlock nào, nên phiên remote không bao giờ vô tình mở tiếng lại. Chỉ
---- lúc thật sự đăng nhập trước máy thì âm mới trở lại.
----
---- Phần notification khi khoá là việc riêng của macOS (System Settings → Notifications →
---- "Allow notifications when the screen is locked"/"when the display is sleeping"), spoon này
---- không chạm tới. Nó chỉ lo cái mà cài đặt kia không lo: tiếng.
+--- Whether notifications appear on the lock screen is a macOS setting; this only
+--- handles what that setting does not: the sound.
 ---
 --- Usage:
 --- ```lua
@@ -32,30 +26,20 @@ obj.license = "MIT"
 
 local log = hs.logger.new("LockMute", "info")
 
--- Trạng thái âm thanh trước khi mute, lưu qua hs.settings chứ không phải một biến local.
---
--- hs.reload() (tab+r) dựng lại toàn bộ Lua state. Nếu bản lưu chỉ nằm trong biến local thì
--- reload đúng lúc đang khoá là mất hẳn: unlock sau đó không còn gì để trả về, máy im tiếng
--- vĩnh viễn mà không để lại dấu vết nào để lần ra. hs.settings ghi xuống plist nên sống sót
--- cả reload lẫn việc Hammerspoon bị kill.
+-- In hs.settings, not a local: hs.reload() rebuilds all Lua state, so a reload
+-- while locked would lose the saved state and mute the machine permanently with
+-- no trace. hs.settings writes to a plist and survives reload and kill alike.
 local KEY = "LockMute.saved"
 
--- ──────────────────────────────────────────────
--- Trợ giúp
--- ──────────────────────────────────────────────
-
--- Session có đang khoá không. Hỏi thẳng hệ thống, không giữ cờ riêng — cùng lý do như
--- Caffeine:isOn(): một biến cờ sẽ lệch với thực tế ngay lần reload đầu tiên.
---
--- Khi session mở, macOS bỏ hẳn khoá CGSSessionScreenIsLocked khỏi bảng chứ không đặt nó bằng
--- false, nên phải kiểm tra theo kiểu truthy.
+-- Ask the system rather than keeping a flag, which would drift on first reload.
+-- macOS REMOVES CGSSessionScreenIsLocked when unlocked instead of setting it
+-- false, hence the truthy check.
 local function isLocked()
     local props = hs.caffeinate.sessionProperties()
     return (props ~= nil and props.CGSSessionScreenIsLocked) and true or false
 end
 
--- Thiết bị output có thể đã đổi trong lúc khoá (rút tai nghe, đổi sang HDMI). Trả về đúng
--- thiết bị đã bị mute nếu nó còn đó; không thì đành dùng thiết bị mặc định hiện tại.
+-- The output device may have changed while locked (headphones unplugged, HDMI).
 local function targetDevice(uid)
     if uid then
         local device = hs.audiodevice.findDeviceByUID(uid)
@@ -66,17 +50,13 @@ local function targetDevice(uid)
     return hs.audiodevice.defaultOutputDevice()
 end
 
--- ──────────────────────────────────────────────
--- Mute / trả âm
--- ──────────────────────────────────────────────
-
 --- LockMute:quiet()
 --- Method
---- Nhớ trạng thái âm thanh hiện tại rồi mute. Không làm gì nếu đang im rồi.
+--- Remember the current audio state, then mute. No-op if already saved.
 function obj:quiet()
-    -- Nhiều sự kiện cùng dẫn tới một lần im: màn hình tắt (screensDidSleep) rồi vài giây sau
-    -- mới khoá (screensDidLock). Lần thứ hai KHÔNG được ghi đè bản lưu, nếu không "trạng thái
-    -- trước khi mute" thành muted=true và unlock sẽ không bao giờ mở tiếng lại.
+    -- Several events lead to one quieting (sleep, then lock seconds later). The
+    -- second must NOT overwrite the save, or the remembered state becomes
+    -- muted=true and unlock never restores sound.
     if hs.settings.get(KEY) then
         return self
     end
@@ -95,9 +75,9 @@ function obj:quiet()
 
     device:setMuted(true)
 
-    -- Không phải thiết bị nào cũng cho mute: output qua HDMI/DisplayPort thường không có kênh
-    -- mute và setMuted() lặng lẽ không làm gì, chỉ đọc lại mới biết. Hạ volume về 0 là cách
-    -- duy nhất còn lại; volume cũ đã nằm trong bản lưu nên vẫn trả về được.
+    -- HDMI/DisplayPort outputs often have no mute channel and setMuted() does
+    -- nothing silently -- only reading it back tells you. Volume 0 is the
+    -- fallback; the old volume is already saved.
     if device:muted() ~= true then
         log.w("thiết bị không hỗ trợ mute, hạ volume về 0")
         device:setOutputVolume(0)
@@ -110,15 +90,15 @@ end
 
 --- LockMute:restore()
 --- Method
---- Trả âm về đúng trạng thái đã nhớ. Không làm gì nếu không có gì để trả.
+--- Restore the remembered audio state. No-op if there is nothing saved.
 function obj:restore()
     local saved = hs.settings.get(KEY)
     if not saved then
         return self
     end
 
-    -- Xoá bản lưu TRƯỚC khi chạm vào thiết bị: nếu phần dưới lỗi thì lần khoá sau vẫn nhớ lại
-    -- được trạng thái thật, thay vì kẹt vĩnh viễn với một bản lưu cũ không ai xoá nổi.
+    -- Clear the save BEFORE touching the device, so a failure below still lets
+    -- the next lock record real state instead of sticking on a stale save.
     hs.settings.clear(KEY)
 
     local device = targetDevice(saved.uid)
@@ -127,8 +107,8 @@ function obj:restore()
         return self
     end
 
-    -- Đặt volume trong lúc còn mute, bỏ mute sau cùng: làm ngược lại thì có một khoảng thiết bị
-    -- đã phát tiếng trong khi volume còn ở mức trung gian.
+    -- Volume first, unmute last: the other order plays sound at an intermediate
+    -- volume.
     if saved.volume then
         device:setOutputVolume(saved.volume)
     end
@@ -138,16 +118,12 @@ function obj:restore()
     return self
 end
 
--- ──────────────────────────────────────────────
--- Watcher
--- ──────────────────────────────────────────────
-
 local w = hs.caffeinate.watcher
 
--- Có nhiều đường vào trạng thái "không ai ngồi trước máy", và không đường nào bao được đường
--- kia: để lâu không dùng thì màn hình tắt hoặc screensaver chạy trước, khoá đến sau (có khi
--- chậm vài phút, tuỳ grace period); khoá bằng tay thì screensDidLock bắn ngay mà màn hình
--- chưa tắt. Bắt hết cả bốn, quiet() tự lo chuyện trùng lặp.
+-- Four independent routes into "nobody is here", none of which covers the
+-- others: idle sleeps or starts the screensaver before locking (the grace period
+-- can be minutes), while a manual lock fires without the screen sleeping.
+-- quiet() handles the overlap.
 local QUIET = {
     [w.screensDidLock] = true,
     [w.screensDidSleep] = true,
@@ -155,11 +131,9 @@ local QUIET = {
     [w.systemWillSleep] = true,
 }
 
--- Chiều ngược lại thì phải cẩn thận: "màn hình sáng lên" KHÔNG có nghĩa là bạn đã về. Chuột bị
--- ai đụng, hay máy tự thức để chạy việc nền, thì màn hình đăng nhập vẫn đứng đó — mở tiếng lúc
--- ấy đúng là cái cần tránh. Nên chỉ screensDidUnlock được trả âm vô điều kiện; ba sự kiện thức
--- còn lại phải kiểm tra session còn khoá hay không, chúng chỉ có ích cho trường hợp màn hình
--- tắt rồi sáng lại mà chưa kịp khoá.
+-- The reverse needs care: a woken screen does NOT mean you are back -- a nudged
+-- mouse or a background wake leaves the login screen up. Only screensDidUnlock
+-- restores unconditionally; the wake events must check the lock first.
 local WAKE = {
     [w.screensDidUnlock] = "always",
     [w.screensDidWake] = "ifUnlocked",
@@ -186,13 +160,12 @@ local function onEvent(event)
 end
 
 function obj:init()
-    -- Giữ watcher trên obj: watcher không còn ai tham chiếu sẽ bị garbage-collect và ngừng chạy
-    -- trong im lặng (bài học đã ghi ở Caffeine.spoon).
+    -- Keep the watcher on obj: an unreferenced watcher is garbage-collected and
+    -- stops silently.
     obj.watcher = w.new(onEvent):start()
 
-    -- Hammerspoon có thể đã bị reload hoặc bị kill đúng lúc đang khoá: sự kiện unlock khi đó
-    -- không ai nghe, bản lưu còn nguyên và máy sẽ im mãi. Lúc khởi động, nếu còn bản lưu treo
-    -- mà session đã mở thì trả âm ngay.
+    -- If Hammerspoon was reloaded or killed while locked, nobody heard the
+    -- unlock and the save is still there. Recover on startup.
     if hs.settings.get(KEY) and not isLocked() then
         log.i("còn trạng thái treo từ lần trước, trả âm")
         obj:restore()

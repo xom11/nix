@@ -3,13 +3,9 @@
 // Reads the statusLine JSON on stdin, prints one ANSI-colored line.
 // Docs: https://code.claude.com/docs/en/statusline.md
 //
-// Glyphs are restricted to Box Drawing / Block Elements / Arrows so the line
-// renders identically under DejaVuSansMono (kitty) and JetBrainsMono (alacritty)
-// without depending on a Nerd Font patch.
-//
-// Layout is width-aware: Claude Code injects a live COLUMNS into this process
-// (the tty itself is not reachable — all three fds are pipes and /dev/tty gives
-// ENXIO). Segments degrade through three detail levels, then drop by priority.
+// Glyphs stay in Box Drawing / Block Elements / Arrows so no Nerd Font patch is
+// needed. Width comes from the COLUMNS Claude Code injects -- the tty itself is
+// unreachable here (all fds are pipes, /dev/tty gives ENXIO).
 
 import { execFileSync } from "node:child_process";
 
@@ -70,8 +66,8 @@ const ANSI = /\x1b\[[0-9;]*m/g;
 const vwidth = (s) => [...s.replace(ANSI, "")].length;
 const clip = (s, n) => ([...s].length <= n ? s : [...s].slice(0, n - 1).join("") + "…");
 
-// Terminal width. Absent COLUMNS means an unknown (likely non-interactive)
-// consumer — assume roomy rather than truncating something nobody asked to trim.
+// No COLUMNS means a non-interactive consumer: assume roomy rather than
+// truncating something nobody asked to trim.
 const COLS = (() => {
   const n = Number.parseInt(process.env.COLUMNS ?? "", 10);
   return Number.isFinite(n) && n >= 20 ? n : 200;
@@ -80,7 +76,7 @@ const COLS = (() => {
 // gauge color: calm → watch → crowded → near the ceiling
 const heat = (p) => (p >= 85 ? CLR.crit : p >= 70 ? CLR.hot : p >= 50 ? CLR.warn : CLR.ok);
 
-// right-aligned so the line does not jitter as a value crosses 10% / 100%
+// right-aligned so the line does not jitter across 10% / 100%
 const pct = (p) => fg(heat(p), String(p).padStart(3) + "%");
 
 // compact token count: 1234 -> 1.2k, 16000 -> 16k, 1200000 -> 1.2M
@@ -93,7 +89,7 @@ function tok(n) {
   return String(n);
 }
 
-// progress gauge with 1/8-cell resolution — 10 cells give 80 visible steps
+// 1/8-cell resolution: 10 cells give 80 visible steps
 const EIGHTHS = ["", "▏", "▎", "▍", "▌", "▋", "▊", "▉"];
 function bar(p, width) {
   const v = Math.max(0, Math.min(100, p));
@@ -121,8 +117,7 @@ function until(epoch) {
   return "<1m";
 }
 
-// current git branch (or short SHA when detached); null if not a repo.
-// execFileSync, not execSync — no shell in the hot path, this runs every refresh.
+// execFileSync, not execSync: no shell in the hot path, this runs every refresh.
 function git(args, cwd) {
   return execFileSync("git", args, {
     cwd,
@@ -145,8 +140,8 @@ function gitBranch(cwd) {
   }
 }
 
-// one usage window; renders "—" when the server omitted that bucket so an
-// absent limit reads as "no data" instead of silently vanishing
+// Renders "—" for an omitted bucket, so an absent limit reads as "no data"
+// rather than silently vanishing.
 function quota(label, q, withReset) {
   const head = fg(CLR.label, label + " ");
   if (q?.used_percentage == null) return head + fg(CLR.track, "—");
@@ -154,17 +149,11 @@ function quota(label, q, withReset) {
   return head + pct(Math.round(q.used_percentage)) + (r ? dim(" ↻" + r) : "");
 }
 
-// ── layout ────────────────────────────────────────────────────
-// Every segment carries four renderings, richest first, and a priority.
-// Shrinking happens in two phases, mirroring how flex containers give up
-// space: first every segment steps down a detail level together, and only
-// when the tightest level still overflows do whole segments get dropped,
-// lowest priority first. An empty variant means "gone at this level".
-//
-//   L0  everything
-//   L1  shed decorations — session name, agent, vim mode, worktree tag
-//   L2  shed precision   — shorter gauge, no reset countdowns, no window size
-//   L3  shed structure   — no gauge, clipped names, labels implied by glyphs
+// Each segment carries four renderings, richest first, plus a priority.
+// Shrinking is two-phase like a flex container: every segment steps down a level
+// together, and only if the tightest level still overflows do whole segments get
+// dropped, lowest priority first. An empty variant means "gone at this level".
+//   L0 everything  L1 drop decorations  L2 drop precision  L3 drop structure
 const LEVELS = 4;
 
 const compose = (segs, lvl) =>
@@ -194,7 +183,7 @@ function buildSegments(d) {
   const segs = [];
   const cwd = d.workspace?.current_dir || d.cwd;
 
-  // ── session name (only when set via /rename) ──
+  // only set via /rename
   if (d.session_name) segs.push({ prio: 1, v: [fg(CLR.label, d.session_name), ""] });
 
   // ── model (+ effort / fast / thinking / agent / vim) ──
@@ -211,7 +200,7 @@ function buildSegments(d) {
   // ── branch + worktree + PR (path intentionally omitted) ──
   const branch = gitBranch(cwd);
   const b = branch ? fg(CLR.branch, branch) : "";
-  // git_worktree is the worktree *name*, not a branch — keep it as its own tag
+  // git_worktree is the worktree *name*, not a branch
   const wt = d.workspace?.git_worktree ? fg(CLR.tree, "▸" + d.workspace.git_worktree) : "";
   const pr = d.pr?.number ? fg(PR_CLR[d.pr.review_state] ?? CLR.dim, "#" + d.pr.number) : "";
   const wide = [b, wt, pr].filter(Boolean).join(" ");
@@ -237,10 +226,8 @@ function buildSegments(d) {
     });
   }
 
-  // ── token io ──
-  // total_input_tokens is everything occupying the window (fresh + cache
-  // create + cache read). total_output_tokens is the most recent response
-  // only — the payload carries no cumulative output figure.
+  // total_input_tokens covers the whole window (fresh + cache create + read);
+  // total_output_tokens is the latest response only -- there is no cumulative figure.
   if (cw) {
     const ioL = fg(CLR.label, "io ");
     const down = fg(CLR.tokIn, "↓" + tok(cw.total_input_tokens));
@@ -250,16 +237,13 @@ function buildSegments(d) {
     segs.push({ prio: 4, v: [wide, wide, ioL + down + " " + up, down + " " + up] });
   }
 
-  // ── usage limits ──
-  // Subscription-only: the whole key is absent on API-key/Bedrock/Vertex
-  // sessions where plan limits do not apply. Individual windows can also be
-  // missing when the API response carries no matching ratelimit header.
+  // Subscription-only: absent entirely on API-key/Bedrock/Vertex sessions, and
+  // individual windows are missing when no ratelimit header came back.
   const rl = d.rate_limits;
   if (rl) {
     const f = rl.five_hour;
     const w = rl.seven_day;
-    // when narrow, keep only the window closest to its ceiling — that is the
-    // one that will actually stop you
+    // when narrow, keep the window closest to its ceiling
     const tight = (w?.used_percentage ?? -1) > (f?.used_percentage ?? -1);
     const wide = quota("5h", f, true) + DOT + quota("wk", w, true);
     segs.push({

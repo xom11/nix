@@ -1,36 +1,18 @@
-# Config only -- the herdr binary is NOT installed by apply.ps1, for the same reason
-# dotfiles.ai.pi is config-only: herdr ships `herdr update` and `herdr channel` and keeps itself
-# current from its own release feed. A second installer writing the same path would be two
-# updaters racing, and whichever ran last would win.
+# Config only -- apply.ps1 does NOT install the binary, because herdr self-updates
+# from its own feed and a second installer writing the same path would be two
+# updaters racing. (The nix hosts are the opposite: pkgs.herdr owns the binary, so
+# `herdr update` is given up -- a read-only store path cannot be replaced.)
 #
-# That is the opposite of the nix hosts, where home-manager/programs/herdr owns the binary via
-# pkgs.herdr and therefore gives `herdr update` up -- a read-only store path cannot be replaced.
-# Windows has no such constraint, so the self-updater is kept.
-#
-# One-time install on a machine that has never had it. Windows is PREVIEW-ONLY: the installer
-# errors out on `-Channel stable`, and herdr's own default channel is already preview there.
+# First install on a fresh machine; Windows is PREVIEW-ONLY, `-Channel stable` errors:
 #   $env:HERDR_CHANNEL='preview'; irm https://herdr.dev/install.ps1 | iex
-# It lands in %LOCALAPPDATA%\Programs\Herdr\bin and puts that directory first on the user PATH
-# via HKCU\Environment. No admin needed.
 #
-# `herdr --remote macmini` does NOT work from here, and no version bump fixes that: upstream
-# states plainly that "Native Windows `herdr --remote` is not part of the beta", alongside
-# direct terminal attach, live handoff and remote clipboard image bridging. The documented
-# shape from Windows is `ssh macmini` and then `herdr` on that side, where it behaves like
-# tmux on the remote shell. Protocol numbers (0.8.0 is 19) therefore never come into it on
-# this platform -- they only matter between two ends that can actually attach.
+# `herdr --remote macmini` does NOT work from Windows and no version bump fixes it --
+# upstream excludes it from the beta. Use `ssh macmini` then `herdr` there. Protocol
+# numbers never come into it on this platform. What that shape loses is pasting a
+# screenshot into an agent, which ahk\ferry.ahk fills instead.
 #
-# The one thing that shape loses is pasting a screenshot into an agent, since the local
-# clipboard never reaches the server. Tab+v fills that hole by hand: ahk\ferry.ahk ->
-# pwsh\ps1.d\ferry.ps1, which ssh's the image across and types the path back here. It
-# needs nothing installed on the far end and nothing to do with herdr -- it works the
-# same into tmux or a plain shell -- which is why it is not named after herdr.
-#
-# Upstream publishes no ARM64 Windows build: install.ps1 maps Arm64 to windows-x86_64 and says
-# so out loud ("installing the x86_64 build under Windows emulation"). On a14 herdr therefore
-# runs under Prism -- verified by PE header (machine 0x8664), deliberate, and the same accepted
-# trade-off as kanata and rustup. The bundled ConPTY does ship an arm64 OpenConsole.exe, so the
-# pty layer itself is native.
+# No ARM64 Windows build exists: install.ps1 maps Arm64 to x86_64, so on a14 herdr
+# runs under Prism -- deliberate, same trade-off as kanata and rustup.
 @{
     Description = 'herdr: config.toml generated from the shared file plus a Windows-only default_shell'
     Apply = {
@@ -46,42 +28,31 @@
             return
         }
 
-        # Why this module generates a file instead of linking one, like every other entry here.
+        # Generated, not linked, unlike every other entry here: herdr reads exactly ONE
+        # config file, and `default_shell` differs per OS. Empty is not neutral on
+        # Windows -- herdr spawns PowerShell 5.1, which reads a different profile
+        # directory than the one dotfiles.pwsh links, so the pane comes up with no
+        # profile while every log line says success. The Windows build ignores $SHELL
+        # (measured), so this config value is the only lever.
         #
-        # herdr reads exactly ONE config file -- no include directive, no per-platform tables.
-        # The shared file cannot carry `default_shell` because the correct value differs per OS,
-        # and leaving it empty is not neutral on Windows: herdr then spawns Windows PowerShell
-        # 5.1, which reads Documents\WindowsPowerShell, while dotfiles.pwsh links this repo's
-        # profile into Documents\PowerShell (the pwsh 7 path). The pane comes up with no
-        # profile, no aliases, no functions, no agenix drop-in -- it looks broken while every
-        # log line says success.
-        #
-        # Upstream documents an empty value as "$SHELL, then /bin/sh". The Windows build
-        # ignores $SHELL -- measured on a14: setting it changed nothing, setting default_shell
-        # did. So the config value is the only lever there is.
-        #
-        # The trade-off, stated plainly: the target is a copy, not a symlink, so editing the
-        # shared config does not reach Windows until apply.ps1 runs again (then
-        # `herdr server reload-config`). That is the price of keeping ONE source of truth; the
-        # alternative -- a second config.toml checked in for Windows -- drifts silently the
-        # first time a keybinding changes on a mac.
+        # The cost: a copy means editing the shared config does not reach Windows until
+        # apply.ps1 runs again, then `herdr server reload-config`. Cheaper than a second
+        # checked-in config.toml, which drifts the first time a mac keybinding changes.
         $pwshExe = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
         if (-not $pwshExe) {
             Write-Warn 'herdr -> pwsh not on PATH; skipping (packages.pwsh installs it)'
             return
         }
-        # Resolved at apply time rather than hardcoded, so this survives pwsh moving and stays
-        # correct on a host that installed it somewhere else.
+        # Resolved at apply time so it survives pwsh moving.
         if ($pwshExe.Contains("'")) {
             Write-Warn "herdr -> pwsh path contains a quote, cannot express as a TOML literal: $pwshExe"
             return
         }
 
-        # Inject INTO the existing [terminal] table. Appending a second [terminal] at the end
-        # looks harmless and is not: TOML forbids redefining a table, so herdr rejects the whole
-        # file and silently falls back to its defaults -- which is exactly the bug being fixed.
-        # A duplicate `default_shell` key inside one table is equally fatal, so an existing line
-        # is replaced rather than added to.
+        # Inject INTO the existing [terminal] table. A second [terminal] at the end looks
+        # harmless but TOML forbids redefining a table, so herdr rejects the file and
+        # falls back to defaults -- exactly the bug being fixed. A duplicate key inside
+        # one table is equally fatal, so an existing line is replaced.
         $lines    = Get-Content -LiteralPath $src
         $out      = [System.Collections.Generic.List[string]]::new()
         $inTerm   = $false
@@ -91,8 +62,7 @@
         foreach ($line in $lines) {
             $trimmed = $line.Trim()
 
-            # Leaving [terminal] for another table without having injected yet: do it now, so
-            # the key lands inside the table it belongs to.
+            # Leaving [terminal] without having injected: do it now, inside the table.
             if ($inTerm -and $trimmed.StartsWith('[') -and $trimmed -ne '[terminal]') {
                 if (-not $injected) { $out.Add($shellLine); $injected = $true }
                 $inTerm = $false
@@ -106,8 +76,7 @@
                 continue
             }
 
-            # Drop any uncommented default_shell the shared file may grow later; ours wins on
-            # Windows and two of them would be invalid TOML.
+            # Ours wins on Windows, and two keys would be invalid TOML.
             if ($inTerm -and $trimmed -match '^default_shell\s*=') { continue }
 
             $out.Add($line)
@@ -131,10 +100,9 @@
             New-Item -ItemType Directory -Path $dstDir -Force | Out-Null
         }
 
-        # An earlier revision of this repo linked config.toml straight to the shared file. That
-        # link must go BEFORE anything writes here: Set-Content follows a symlink and writes the
-        # TARGET, which would push this Windows-only default_shell into the file every other
-        # host reads.
+        # An older revision linked this to the shared file. The link must go BEFORE any
+        # write: Set-Content follows a symlink and writes the TARGET, which would push
+        # this Windows-only default_shell into the file every other host reads.
         if (Test-Path -LiteralPath $dst) {
             $item = Get-Item -LiteralPath $dst -Force
             if ($item.LinkType -in 'SymbolicLink', 'Junction') {
@@ -155,9 +123,9 @@
             Write-Info 'herdr -> run `herdr server reload-config` to apply without restarting'
         }
 
-        # This one has no platform delta, so it stays a real link and keeps the live-edit
-        # property. Individual file, never the whole %APPDATA%\herdr directory -- the running
-        # server keeps herdr.sock, session.json and herdr*.log in there.
+        # No platform delta, so a real link keeps the live-edit property. Individual
+        # file, never the whole directory -- the running server keeps its socket, session
+        # state and logs in there.
         $detection = Join-Path $srcDir 'agent-detection\claude.toml'
         if (Test-Path -LiteralPath $detection) {
             New-IdempotentSymlink -Source $detection `

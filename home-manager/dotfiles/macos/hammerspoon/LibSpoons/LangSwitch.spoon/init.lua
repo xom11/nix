@@ -1,15 +1,12 @@
 --- === LangSwitch ===
 ---
---- Đổi thẳng sang một chế độ gõ cụ thể, mỗi ngôn ngữ một phím — không phải vòng qua lại như
---- phím đổi bộ gõ mặc định của macOS.
+--- Jump straight to one input mode, one key per language -- not the cycling the
+--- macOS default key does. Split out of Tab.spoon.
 ---
---- Tách từ Tab.spoon.
----
---- Việc đổi giao hẳn cho `tongue`, không tự gọi hs.keycodes nữa. Một "chế độ" thật ra là HAI
---- cần gạt — layout hệ thống và bộ gõ tiếng Việt — mà hs.keycodes chỉ với tới cần thứ nhất.
---- Bản cũ đặt `en` = layout Unicode Hex Input rồi trông cậy vào việc GoNhanh không đụng tới
---- layout đó; đúng được là nhờ may. `tongue en` gạt cả hai (chọn ABC, tắt GoNhanh) rồi đọc
---- lại máy để chắc chắn nó đã đổi thật mới báo thành công.
+--- Switching is delegated to `tongue` because a "mode" is TWO levers -- the
+--- system layout and the Vietnamese IME -- and hs.keycodes only reaches the
+--- first. `tongue` moves both and reads the machine back before reporting
+--- success.
 ---
 --- Usage:
 --- ```lua
@@ -32,32 +29,22 @@ local log = hs.logger.new("LangSwitch", "info")
 
 --- LangSwitch.modes
 --- Variable
---- Các chế độ `tongue` hiểu.
----
---- Không còn bảng sourceID ở đây. Bản đồ chế độ -> (layout, bộ gõ) nay nằm trong tongue và
---- ~/.config/tongue/config.toml, nên chỉ còn đúng một nơi biết ID của Apple; đổi bộ gõ khác
---- là sửa config, không phải sửa spoon. Tên chế độ cũng chính là thứ LanguageMemory ghi vào
---- ~/.hammerspoon/LanguageMemory.json, nên hai chỗ vẫn nói cùng một thứ tiếng.
+--- Modes `tongue` understands. The mode -> (layout, IME) map lives in
+--- ~/.config/tongue/config.toml, so only one place knows Apple's source IDs.
+--- These names are also what LanguageMemory persists.
 obj.modes = { "vi", "en", "zh" }
 
--- ──────────────────────────────────────────────
--- Tìm binary
--- ──────────────────────────────────────────────
-
--- Hammerspoon là app GUI: PATH của nó do launchd cấp và chỉ có
--- /usr/bin:/bin:/usr/sbin:/sbin — không thấy profile của Nix. hs.task thì lại đòi đường dẫn
--- tuyệt đối. Nên hỏi shell đăng nhập đúng MỘT lần rồi nhớ lại, thay vì ghim cứng đường dẫn:
--- máy khác cài tongue ở chỗ khác, và đường dẫn store còn đổi sau mỗi lần nâng cấp.
+-- A GUI app gets its PATH from launchd, which does not include Nix's profile,
+-- and hs.task needs an absolute path. So ask a login shell ONCE and remember --
+-- hardcoding fails across machines and changes on every upgrade.
 local binary = nil
 local waiting = {}
 
--- Shell đăng nhập có thể lẫn escape của prompt vào stdout (powerlevel10k phát chuỗi đổi hình
--- con trỏ ngay khi khởi động), nên bóc lấy đúng đoạn đường dẫn chứ không tin nguyên dòng.
---
--- Lấy TOKEN CUỐI của dòng, đừng dùng `.*(/[^%s]*/tongue)$`: `.*` tham lam nên nó nuốt gần hết
--- dòng rồi chừa lại đoạn khớp NGẮN NHẤT — "/etc/profiles/.../bin/tongue" ra thành "/bin/tongue",
--- một đường dẫn không tồn tại nhưng trông đủ hợp lý để lọt qua mọi kiểm tra hình thức.
--- Kiểm luôn file có thật: thà dò lại còn hơn nhớ một đường dẫn hỏng cho tới lần reload sau.
+-- A login shell can mix prompt escapes into stdout, so take the LAST token of a
+-- line rather than trusting the whole line. Do not use `.*(/[^%s]*/tongue)$`:
+-- the greedy `.*` leaves the SHORTEST match, turning a real path into
+-- "/bin/tongue" -- nonexistent but plausible enough to pass every shape check.
+-- Also stat it: re-probing beats remembering a broken path until the next reload.
 local function parseBinary(out)
     for line in (out or ""):gmatch("[^\r\n]+") do
         local token = line:gsub("%c", ""):match("([^%s]+)%s*$")
@@ -68,16 +55,15 @@ local function parseBinary(out)
     return nil
 end
 
--- /bin/zsh chứ không phải $SHELL: env của tiến trình GUI thường không có SHELL, mà /bin/zsh
--- thì macOS nào cũng có. -l để nạp profile (chỗ PATH của Nix được thêm vào), không -i để khỏi
--- kéo theo cả cấu hình shell tương tác.
+-- /bin/zsh, not $SHELL: a GUI process often has no SHELL. `-l` loads the profile
+-- where Nix extends PATH; no `-i`, to skip interactive shell config.
 local function withBinary(fn)
     if binary then
         return fn(binary)
     end
     table.insert(waiting, fn)
     if #waiting > 1 then
-        return -- đã có một lượt dò đang chạy, cứ xếp hàng
+        return -- a probe is already running; queue up
     end
     hs.task.new("/bin/zsh", function(_, out)
         binary = parseBinary(out)
@@ -86,7 +72,7 @@ local function withBinary(fn)
         if not binary then
             hs.alert.show("LangSwitch: không tìm thấy `tongue` trong PATH", 3)
             log.e("không tìm thấy tongue — đã cài và rebuild chưa?")
-            return -- waiting đã rỗng nên lần bấm phím sau sẽ dò lại
+            return -- waiting is empty, so the next keypress re-probes
         end
         log.i("tongue: " .. binary)
         for _, f in ipairs(work) do
@@ -94,10 +80,6 @@ local function withBinary(fn)
         end
     end, { "-lc", "command -v tongue" }):start()
 end
-
--- ──────────────────────────────────────────────
--- Đổi chế độ
--- ──────────────────────────────────────────────
 
 local listeners = {}
 
@@ -122,11 +104,10 @@ local function run(mode, notify)
                 end
             end
         end, { mode })
-        -- hs.task.new trả nil khi đường dẫn không chạy được. Không bắt ở đây thì `:start()`
-        -- ném lỗi index-nil vào console rồi phím tắt lặng thinh — đúng cách hỏng khó lần ra
-        -- nhất: bấm phím, không có gì xảy ra, không có gì báo.
+        -- hs.task.new returns nil for an unrunnable path. Unchecked, `:start()`
+        -- throws into the console and the hotkey just does nothing, silently.
         if not task then
-            binary = nil -- ép dò lại ở lần sau
+            binary = nil -- force a re-probe next time
             hs.alert.show("LangSwitch: không chạy được " .. bin, 3)
             log.e("hs.task.new trả nil cho " .. bin)
             return
@@ -137,9 +118,8 @@ end
 
 --- LangSwitch:switch(mode)
 --- Method
---- Đổi chế độ vì NGƯỜI DÙNG yêu cầu, rồi báo cho các listener.
----
---- Chỉ dùng cho hành động có chủ đích (phím tắt). Khôi phục tự động phải đi qua :apply().
+--- Switch because the USER asked, then notify listeners. Deliberate actions
+--- only -- automatic restores go through :apply().
 function obj:switch(mode)
     run(mode, true)
     return self
@@ -147,12 +127,12 @@ end
 
 --- LangSwitch:apply(mode)
 --- Method
---- Đổi chế độ nhưng KHÔNG báo listener — dành cho khôi phục tự động.
+--- Switch WITHOUT notifying listeners -- for automatic restores.
 ---
---- Tách riêng khỏi :switch() để chặn vòng lặp học-lại-chính-mình từ gốc: nếu khôi phục cũng
---- phát tín hiệu, LanguageMemory sẽ học lại đúng thứ nó vừa đặt, mà lệnh chạy mất ~200ms nên
---- lúc tín hiệu về, app đang focus có thể đã là app khác — tức là gán nhầm chế độ của app cũ
---- cho app mới. Bản cũ phải dựng cờ `applied` để lọc tiếng vọng đó; hai lối vào thì không cần.
+--- Separate from :switch() to kill the relearn loop at the root: a restore that
+--- signalled would make LanguageMemory relearn what it just set, and since the
+--- call takes ~200 ms the focused app may have changed by then, filing the old
+--- app's mode under the new one.
 function obj:apply(mode)
     run(mode, false)
     return self
@@ -160,11 +140,10 @@ end
 
 --- LangSwitch:onModeChange(fn)
 --- Method
---- Đăng ký hàm chạy sau mỗi lần :switch() thành công, nhận tên chế độ.
+--- Register a function to run after each successful :switch().
 ---
---- Đây là kênh DUY NHẤT biết được người dùng vừa đổi chế độ. hs.keycodes.inputSourceChanged
---- không thay thế được: với bộ gõ ngoài, `vi` và `en` dùng CHUNG một input source (ABC) — thứ
---- phân biệt là bộ gõ bật hay tắt — nên macOS không phát sự kiện nào khi đổi vi <-> en.
+--- The ONLY channel that sees a user mode change: with an external IME, `vi` and
+--- `en` share one input source (ABC), so macOS fires no event between them.
 function obj:onModeChange(fn)
     table.insert(listeners, fn)
     return self

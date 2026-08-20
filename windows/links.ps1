@@ -16,29 +16,19 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" }
     )
 
-    # 'dotfiles.powertoys' is intentionally absent: PowerToys is not installed on any host, so
-    # the link only created a stray settings.json. The source file is kept in the repo for when
-    # PowerToys comes back -- re-add the entry here and to $modules in apply.ps1 at that point.
+    # 'dotfiles.powertoys' absent on purpose: PowerToys is on no host, so the link
+    # only created a stray settings.json. The source file stays for when it returns.
 
-    # 'dotfiles.dotpkg' is deliberately absent, and was removed on 2026-08-12
-    # after a measurement rather than on principle.
+    # 'dotfiles.dotpkg' absent after a measurement, not on principle. dotpkg writes
+    # its lock with create-then-rename, and a rename REPLACES a symlink with a real
+    # file: the link broke on the first `dotpkg update`, the new pin landed in the
+    # home-directory copy, and the repo silently stopped receiving updates with
+    # `git status` clean throughout.
     #
-    # pkg.toml and pkg.lock used to be linked into %USERPROFILE%. dotpkg writes
-    # the lock atomically -- File::create on a temp file, then fs::rename over the
-    # target -- and a rename REPLACES a symlink with a regular file. Measured on
-    # a14: LinkType went from SymbolicLink to blank on the first `dotpkg update`,
-    # the new pin landed in the home-directory copy, and the repo silently stopped
-    # receiving updates. `git status` stays clean through all of it.
-    #
-    # So nothing writable is linked. packages.dotpkg passes --config and --lock
-    # pointing straight at the committed files, and a human drives dotpkg by
-    # cd-ing into home-manager/dotfiles/windows/dotpkg and running it bare, where
-    # its own ./pkg.toml and ./pkg.lock defaults resolve to the same two files.
-    #
-    # The rule this leaves behind is worth more than the entry was: a file some
-    # tool REWRITES does not belong behind a symlink into this repo unless that
-    # tool has been measured to overwrite in place. vim.pack has been (see
-    # nvim-pack-lock.json); dotpkg has been, and failed.
+    # So nothing writable is linked -- packages.dotpkg passes --config/--lock at
+    # the committed files instead. The rule that leaves behind: a file some tool
+    # REWRITES does not belong behind a symlink into this repo unless that tool is
+    # measured to overwrite in place. vim.pack does; dotpkg does not.
 
     'dotfiles.ai.claude' = @(
         @{ Source = "$Hm\dotfiles\ai\claude.d\CLAUDE.md"
@@ -66,17 +56,12 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:APPDATA\aichat\roles" }
     )
 
-    # opencode keeps the same XDG-shaped layout on Windows as it does on the nix hosts --
-    # `opencode debug paths` reports config at %USERPROFILE%\.config\opencode -- so these targets
-    # mirror home-manager/dotfiles/ai/opencode.d/default.nix one for one.
+    # opencode uses the same XDG-shaped layout here as on the nix hosts, so these
+    # mirror opencode.d/default.nix one for one. plugin\ is linked whole because
+    # opencode.json names it by a path relative to the config directory.
     #
-    # plugin\ is linked as a whole directory because opencode.json refers to the plugin by the
-    # relative path "./plugin/router-models.mjs", which resolves against the config directory.
-    #
-    # mcp\router-search is deliberately NOT linked: opencode.json starts that server by running
-    # `router-search-mcp`, a wrapper that only exists where nix builds it (writeShellScriptBin in
-    # opencode.d/default.nix). Windows has no such command, so opencode logs one failed MCP at
-    # startup and carries on. The other servers, the 9router provider and the model all work.
+    # mcp\router-search is NOT linked: it is started via `router-search-mcp`, a
+    # wrapper only nix builds. Windows logs one failed MCP at startup and carries on.
     'dotfiles.ai.opencode' = @(
         @{ Source = "$Hm\dotfiles\ai\opencode.d\opencode.json"
            Target = "$env:USERPROFILE\.config\opencode\opencode.json" }
@@ -88,19 +73,12 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:USERPROFILE\.config\opencode\plugin" }
     )
 
-    # Config only -- the pi binary is NOT installed by apply.ps1, on purpose.
+    # Config only -- the binary is NOT installed by apply.ps1: pi self-updates, and
+    # under scoop two updaters would write the same path with install.json going
+    # stale whenever pi won. It lives at %LOCALAPPDATA%\pi, unpacked from the
+    # GitHub release, with that directory on the user PATH.
     #
-    # pi ships `pi update --self` and keeps itself current from its own releases, the same
-    # arrangement claude (%USERPROFILE%\.local\bin) and agy (%LOCALAPPDATA%\agy) already have
-    # on this machine. Putting it under scoop instead would mean two updaters writing the
-    # same binary, with scoop's install.json quietly going stale every time pi won.
-    #
-    # So it lives at %LOCALAPPDATA%\pi, unpacked from the GitHub release, with that directory
-    # on the user PATH. On a machine that has never had it: grab pi-windows-<arch>.zip from
-    # github.com/earendil-works/pi/releases, unpack it there, add the directory to PATH.
-    #
-    # Verified working on a14 (arm64 native, PE machine 0xAA64) -- unlike opencode, whose TUI
-    # cannot start on Windows-on-ARM at all.
+    # Runs arm64-native on a14, unlike opencode, whose TUI cannot start there.
     'dotfiles.ai.pi' = @(
         @{ Source = "$Hm\dotfiles\ai\pi.d\settings.json"
            Target = "$env:USERPROFILE\.pi\agent\settings.json" }
@@ -129,9 +107,8 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:APPDATA\yazi\config" }
     )
 
-    # 'programs.herdr' is deliberately absent from this table. It needs a generated config.toml
-    # (the shared file plus a Windows-only default_shell) which no symlink can express, so it
-    # lives in modules/programs/herdr/module.ps1 instead. Note apply.ps1 checks THIS table
-    # first and `continue`s on a hit -- a name listed here never reaches its module file, so a
-    # module and a link entry are mutually exclusive, not complementary.
+    # 'programs.herdr' absent: it needs a generated config.toml no symlink can
+    # express, so it lives in modules/programs/herdr/module.ps1. apply.ps1 checks
+    # THIS table first and `continue`s on a hit, so a name here never reaches its
+    # module file -- the two are mutually exclusive, not complementary.
 }

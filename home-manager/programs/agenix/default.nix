@@ -15,18 +15,13 @@
   identityPath = "${config.home.homeDirectory}/.ssh/id_ed25519";
   secretsNix = "${config.home.homeDirectory}/.nix/home-manager/programs/agenix/secrets.nix";
 
-  # agenix only decrypts when its launchd agent (systemd unit on linux) is
-  # reloaded, i.e. on a switch. Every consumer points `file` at the working
-  # tree rather than a path literal, so the ciphertext is never frozen into the
-  # store and this script can re-decrypt whatever is on disk right now.
-  #
-  # The mapping is baked in at build time rather than read from a manifest:
-  # adding a secret is a Nix change that needs a switch either way, changing
-  # one's contents is not.
+  # agenix only decrypts on a switch. Every consumer points `file` at the working
+  # tree, not a path literal, so the ciphertext is never frozen into the store and
+  # this script can re-decrypt what is on disk now. The mapping is baked in at
+  # build time: adding a secret needs a switch anyway, editing one does not.
   secrets = lib.attrValues config.age.secrets;
-  # Index-aligned bash arrays rather than generated `case` arms: the lookup
-  # then lives in the script, where it can try more than one spelling of an
-  # argument and where a failure can be counted instead of aborting the run.
+  # Index-aligned arrays, not generated `case` arms, so the lookup lives in the
+  # script -- it can try several spellings of an argument and count failures.
   mkArray = name: f: "${name}=(${lib.concatMapStringsSep " " (s: lib.escapeShellArg (f s)) secrets})";
 
   reload = pkgs.writeShellApplication {
@@ -47,24 +42,21 @@
       tmp=
       trap 'if [ -n "$tmp" ]; then rm -f "$tmp"; fi' EXIT
 
-      # Every failure path below is explicit. reload_all invokes this with
-      # errexit suppressed -- one unreadable secret must not abort the rest --
-      # so a failing command no longer stops the function by itself.
+      # Failure paths are explicit: reload_all suppresses errexit so one
+      # unreadable secret cannot abort the rest.
       reload_one() {
         local src="$1" target="$2" mode="$3" dest
-        # Resolve through agenix's generation symlink so its layout survives.
-        # When that chain is broken -- macOS prunes $TMPDIR eventually -- fall
-        # back to the target itself and leave a real file there; the next
-        # switch relinks it.
+        # Resolve through agenix's generation symlink to keep its layout. If
+        # that chain is broken (macOS prunes $TMPDIR), write a real file at the
+        # target; the next switch relinks it.
         dest="$(readlink -f "$target" 2>/dev/null)" || dest=
         [ -n "$dest" ] || dest="$target"
         mkdir -p "$(dirname "$dest")" || return 1
 
-        # Decrypt to a sibling temp file first: a failure here must leave the
-        # previous plaintext untouched rather than truncate it. The name is
-        # dot-prefixed because consumers glob these directories -- ssh/config
-        # Includes ~/.ssh/age.d/*, so a leftover from a hard kill would be read
-        # as a second config forever.
+        # Sibling temp file first, so a failure leaves the previous plaintext
+        # intact instead of truncating it. Dot-prefixed because consumers glob
+        # these directories -- ssh/config Includes age.d/*, and a leftover from
+        # a hard kill would be read as a second config forever.
         tmp="$(mktemp "$(dirname "$dest")/.agenix-reload.XXXXXX")" || return 1
         if ! age -d -i "$identity" "$src" > "$tmp"; then
           rm -f "$tmp"
@@ -97,11 +89,9 @@
 
       reload_named() {
         local arg="$1" resolved i
-        # Match the argument as given first: if the repo is reached through a
-        # symlink, that literal form is what Nix baked into SRC, and it is what
-        # nvim passes. Canonical form is the fallback, so `agenix-reload
-        # apikey.zsh.age` from inside age.d/ hits the same entry instead of
-        # silently reporting it undeclared.
+        # Literal form first: that is what Nix baked into SRC when the repo is
+        # reached through a symlink, and what nvim passes. Canonical form is the
+        # fallback, so calling it from inside age.d/ hits the same entry.
         resolved="$(realpath "$arg" 2>/dev/null)" || resolved=
         for i in "''${!SRC[@]}"; do
           if [ "$arg" = "''${SRC[i]}" ] ||
@@ -110,8 +100,7 @@
             return
           fi
         done
-        # secrets.nix rules cover every *.age in the tree, but only some are
-        # wired into age.secrets. Editing one of the others is not an error.
+        # secrets.nix covers every *.age, but only some are in age.secrets.
         echo "agenix-reload: $arg is not a declared secret, skipping" >&2
       }
 
@@ -134,27 +123,18 @@ in
 
     age.identityPaths = [identityPath];
 
-    # agenix ships KeepAlive = { Crashed = false; SuccessfulExit = false; }.
-    # launchd ORs those conditions, and `Crashed = false` means "relaunch
-    # whenever it exits for any reason other than a crash" -- always true for a
-    # job that exits 0. Hence a relaunch every ~10s forever: 34k generations
-    # and a 4.7 MB log on macmini, plus every `agenix-reload` result silently
-    # overwritten within seconds.
+    # agenix ships `Crashed = false` alongside `SuccessfulExit = false`, and
+    # launchd ORs them -- so a job exiting 0 relaunches every ~10 s forever
+    # (34k generations and a 4.7 MB log on macmini), overwriting every
+    # `agenix-reload` result within seconds.
     #
-    # Drop only that key. `SuccessfulExit = false` is the one upstream wanted:
-    # retry while the decrypt keeps failing, stop once it succeeds. A fresh
-    # machine generates its own id_ed25519 (see programs/ssh) which cannot
-    # decrypt anything, so without the retry it would need a manual
-    # `agenix-reload` after the real key is dropped in.
+    # Drop only that key. `SuccessfulExit = false` is the retry upstream wanted:
+    # a fresh machine's self-generated id_ed25519 decrypts nothing, so without it
+    # the real key would need a manual reload after being dropped in.
     #
-    # That retry is blind -- launchd just relaunches on a non-zero exit, it
-    # does not watch the key -- so a host with agenix enabled and no usable
-    # key retries until the session ends. Nothing accumulates on disk (the
-    # generation counter only advances on success, so every failed run reuses
-    # the same directory), but the logs do, at a measured 425 bytes a go.
-    # ThrottleInterval stretches launchd's 10s floor to a minute: a fresh
-    # machine still heals on its own, a misconfigured one costs ~600 KB/day
-    # instead of ~3.7 MB. `agenix-reload` is there when a minute is too long.
+    # That retry is blind, so a host with no usable key retries until the session
+    # ends -- 425 bytes of log per attempt. ThrottleInterval stretches launchd's
+    # 10 s floor to a minute: still self-healing, ~600 KB/day instead of 3.7 MB.
     launchd.agents.activate-agenix.config = {
       KeepAlive = lib.mkForce {SuccessfulExit = false;};
       ThrottleInterval = 60;
