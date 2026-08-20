@@ -55,19 +55,18 @@ if vim.fn.executable(route) == 1 then
 -- and `tongue.exe` refuses with "khong voi toi duoc desktop tuong tac" -- VKey
 -- lives in session 1.
 --
--- A scheduled task with `-LogonType Interactive` DOES cross that wall: measured
--- on a14 20/08/2026 at 376-401 ms, 5/5 -- but only with `-MultipleInstances
--- Parallel` (the IgnoreNew default silently drops a start while the previous
--- instance runs; one call never ran for 40 s) and `-AllowStartIfOnBatteries`
--- (without it the task sits at State=Queued forever, LastTaskResult=0).
+-- That wall has since been crossed, upstream: tongue 74be163 adds `tongue agent`,
+-- a process living in the desktop session that listens on `\\.\pipe\tongue-<user>`
+-- -- a namespace that is NOT per-session -- and every session-0 call forwards into
+-- it. Deployed on a14 as the `TongueAgent` task; `ssh a14 tongue vi` works, 5/5.
 --
--- Not used, and the reason is the WIRE, not the session hop: leaving Insert
--- costs TWO sequential backend calls (this plugin sets `observe` on the way out,
--- which skips the fast path), and one ssh leg to a14 is 452 ms multiplexed /
--- 829 ms not. That is ~1.7 s per <Esc> against a 150-400 ms window. So
--- `ime-route` refuses such a host BY NAME before opening the connection
--- (`SKIP_HOSTS`, escape hatch `IME_ROUTE_SKIP=`), and `ime-route where` says so
--- in full. Switch modes on a14 itself with Cap+Q/W/E.
+-- `ime-route` still refuses a14, and the reason is now the WIRE rather than the
+-- wall: leaving Insert costs TWO sequential backend calls (this plugin sets
+-- `observe` on the way out, which skips the fast path), and one ssh leg to a14 is
+-- 452 ms multiplexed / 829 ms not. The pipe hop is free; the two ssh legs are not
+-- -- ~900 ms per <Esc> against a 150-400 ms window. So the host is refused BY NAME
+-- before the connection opens (`SKIP_HOSTS`, escape hatch `IME_ROUTE_SKIP=`), and
+-- `ime-route where` spells that out. Switch modes on a14 itself with Cap+Q/W/E.
 elseif vim.fn.executable("tongue") == 1 then
 	backend = "tongue"
 end
