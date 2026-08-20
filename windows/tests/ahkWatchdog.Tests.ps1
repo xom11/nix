@@ -116,6 +116,7 @@ Describe 'windows services.ahk-watchdog module' {
                     DisallowStartIfOnBatteries = $false
                     StopIfGoingOnBatteries     = $false
                     StartWhenAvailable         = $true
+                    MultipleInstances          = 'IgnoreNew'
                     ExecutionTimeLimit         = 'PT0S'
                 }
                 Description = 'Start main.ahk when it is not running; leaves a healthy instance alone'

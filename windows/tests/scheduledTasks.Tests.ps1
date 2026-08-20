@@ -40,6 +40,7 @@ Describe 'windows scheduled service task modules' {
                     DisallowStartIfOnBatteries    = $false
                     StopIfGoingOnBatteries        = $false
                     StartWhenAvailable            = $true
+                    MultipleInstances             = 'IgnoreNew'
                     ExecutionTimeLimit            = 'PT0S'
                 }
             }
