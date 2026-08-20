@@ -84,3 +84,39 @@ Match originalhost macmini,rog,airm3,a14 exec "uname -a | grep -qv Android"
   ControlMaster auto
   ControlPath ~/.ssh/control-%n-%C
   ControlPersist 8h
+
+# Kenh NGUOC cho ime-route. `mm` la macmini, khac dung mot dong: no mang theo mot
+# cong forward nguoc de macmini voi ve day ma doi bo go.
+#
+# Vi sao can: nvim chay tren macmini con ban phim o may Windows nay. Duong cu la
+# `ssh a14 ...`, ton 656 ms mot chang vi sshd cua Windows sinh mot pwsh moi
+# (293 ms chi de khoi dong). Di nho kenh cua phien NGUOI DUNG da mo thi khong sinh
+# shell nao -- va dau kia da nam trong session 1, noi VKey song, nen bien mat luon
+# bai toan session 0. Do 20/08/2026 qua duong nay: 77 ms, so voi 656 ms.
+#
+# VI SAO MOT ALIAS chu khong phai `Match ... exec`, ca hai deu da DO tren may:
+#
+#   * `Match originalhost macmini !exec "uname"` -- dung ve logic (uname co tren
+#     Unix, vang tren PATH cua cmd.exe) nhung tren OpenSSH_for_Windows_9.5 no lam
+#     `ssh -G macmini` TREO han, khong in mot dong nao, va RemoteForward khong he
+#     duoc ap trong phien binh thuong. Hai trieu chung, cung mot ket luan: khong
+#     dung duoc.
+#   * `Match ... exec "ver"` (builtin cua cmd) thi chay, nhung tren may Unix shell
+#     in `command not found` ra stderr cho MOI lan ssh vao macmini -- ke ca scp,
+#     git, rsync.
+#
+# Khoanh HEP la bat buoc chu khong phai gon gang: file nay dung chung cho moi may
+# (windows/links.ps1 symlink no sang a14). Dat RemoteForward thang trong
+# `Host macmini` la rog va airm3 cung forward, may nao noi truoc thi giu cong, va
+# macmini se lai bo go cua SAI MAY ma khong mot loi bao nao.
+#
+# KHONG dat ExitOnForwardFailure: cong bi chiem se lam ssh TU CHOI MO PHIEN, tuc
+# khoa nguoi dung ra khoi chinh luong lam viec cua ho vi mot toi uu do tre. Truot
+# lang le la dung o day -- ime-route thay khong ai nghe thi lui ve ssh, cham chu
+# khong hong.
+Host mm
+  HostName 100.91.203.20
+  User lenamkhanh
+  ServerAliveInterval 60
+  ServerAliveCountMax 3
+  RemoteForward 47701 127.0.0.1:47701

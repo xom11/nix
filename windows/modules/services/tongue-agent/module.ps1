@@ -21,6 +21,15 @@
             Write-Warn 'tongue.exe has no `agent` subcommand -- copy a newer build to .local\bin'
             return
         }
+        # Same gate one level down, and it is NOT redundant: a build that has `agent` but
+        # not `--listen` takes the flag as an unexpected argument and exits at once, so
+        # the task would sit at State=Ready looking healthy while the tunnel finds nobody
+        # listening. Checking `agent --help` rather than `--help`: the flag lives on the
+        # subcommand, and the top-level help never mentions it.
+        if (-not (& $exe agent --help 2>&1 | Select-String -SimpleMatch 'listen' -Quiet)) {
+            Write-Warn 'tongue.exe `agent` has no --listen -- copy a newer build to .local\bin'
+            return
+        }
 
         # Why this task exists: Windows OpenSSH is a service, so the shell it spawns lands
         # in SESSION 0. Both mechanisms tongue drives VKey with are per-session -- window
@@ -40,8 +49,27 @@
         # that console arrives as a NEW TAB indistinguishable from one you opened. Closing
         # it kills the agent. Measured and written up at services/beckon-serve; the same
         # trap applies verbatim here. Point at the real exe, not a shim.
+        # Second door, for the reverse tunnel. The pipe above serves session-0 calls, and
+        # every one of those pays for a fresh PowerShell before doing any work -- 293 ms
+        # of the 656 ms a leg costs, measured on this machine 2026-08-20. That is the whole
+        # budget for something that runs on every exit from Insert mode.
+        #
+        # A call arriving through `ssh -R` pays none of it: no shell is spawned, and this
+        # end of the pipe is already in the desktop session where VKey lives. Measured
+        # 11.6 ms round trip against 656 ms.
+        #
+        # THE PORT IS WRITTEN IN THREE PLACES AND NOTHING CROSS-CHECKS THEM:
+        #   here, home-manager/programs/ssh/config (RemoteForward), and bin/ime-route
+        #   (tunnel_port). A mismatch does not break loudly -- ime-route simply finds
+        #   nobody listening and falls back to ssh, i.e. it gets SLOW rather than WRONG.
+        #   That is the deliberate shape: the `name` check in the reply makes a mismatch
+        #   cost latency, never a switch on the wrong machine.
+        #
+        # Loopback only. tongue refuses a non-loopback --listen outright, so this is
+        # belt and braces rather than the only guard.
+        $listen    = '127.0.0.1:47701'
         $userId    = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        $action    = New-ScheduledTaskAction -Execute 'conhost.exe' -Argument "--headless `"$exe`" agent"
+        $action    = New-ScheduledTaskAction -Execute 'conhost.exe' -Argument "--headless `"$exe`" agent --listen $listen"
         # Exactly ONE trigger: Test-ScheduledTaskMatch checks Triggers.Count -ne 1, so a
         # trigger-less task would be silently re-registered on every apply run. A logon
         # trigger is harmless anyway -- the agent starts, then idles out.
