@@ -359,13 +359,26 @@ ssh_host_for() {
 # BAT KHA THI, khong phai chua thu: sshd nhet ca chuoi vao MOT o argv, pwsh nhan
 # no lam mot token va thoat 64.
 #
-# Nen `tongue agent` mua TAM VOI (`ssh a14 tongue vi` cho script va tu dong hoa)
-# chu khong mua toc do, va dong SKIP_HOSTS nay o lai.
+# TAT CA DOAN TREN NOI VE DUONG `ssh a14 ...`, VA NO KHONG CON LA DUONG DUY NHAT.
+# Tu 20/08/2026 co mot cua thu hai: `tongue agent --listen` mo mot cong loopback,
+# va may Windows mang mot `-R` toi cong do khi no `ssh mm` vao day. Loi goi di
+# NGUOC kenh cua phien nguoi dung, khong sinh pwsh nao, va dau kia da o session 1.
+# Do tron ven: 77 ms, so voi 656 ms. Xem `tunnel_call` ben tren.
+#
+# Nen a14 DA RA KHOI SKIP_HOSTS. Hai che do, ca hai deu dung:
+#
+#   * co phien `ssh mm` dang mo  -> 77 ms mot luot, thua trong cua so 150-400 ms;
+#   * khong co                   -> lui ve `ssh a14 tongue`, 656 ms. Cham, nhung
+#     DUNG may va dung mode -- va chinh lan ssh do hoi sinh agent, nen luot sau
+#     lai di duong tunnel.
+#
+# Trieu chung khi thay cham: kiem xem da mo `ssh mm` (khong phai `ssh macmini`)
+# tu may Windows chua. `ime-route where` in ra tuyen dang dung.
 #
 # Loc theo TEN chu khong probe: probe chinh la cai dat. `-` chu khong `:-` de
 # `IME_ROUTE_SKIP=` tat han duoc bo loc; voi `:-` thi chuoi rong roi ve mac dinh
 # va cai cong tat nay im lang khong lam gi.
-SKIP_HOSTS=${IME_ROUTE_SKIP-a14 rog-win}
+SKIP_HOSTS=${IME_ROUTE_SKIP-rog-win}
 
 routable() {
   local h
@@ -537,9 +550,109 @@ trap '[ -n "$kid" ] && kill -TERM $kid 2>/dev/null; [ -n "$tmpout" ] && rm -f "$
 #
 # ServerAliveInterval vi ConnectTimeout chi gac giai doan CONNECT, khong gac luc
 # lenh dang chay o dau kia.
+# ------------------------------------------------------------ duong ham nguoc ---
+#
+# May giu ban phim mo mot `-R` khi no `ssh mm` vao day (xem `Host mm` trong
+# programs/ssh/config), nen loi goi di NGUOC kenh cua phien NGUOI DUNG da mo. Dau
+# kia da o session 1 -- noi VKey song -- nen khong con buc tuong session 0, va
+# khong ton mot lan spawn pwsh nao. Do 20/08/2026: 77 ms tron ven, so voi 656 ms
+# qua `ssh a14 tongue`.
+#
+# Cong nam o BA CHO va khong gi kiem cheo: bang duoi day, `RemoteForward` trong
+# ssh/config, va `--listen` trong windows/modules/services/tongue-agent. Lech thi
+# khong ai nghe -> lui ve ssh: CHAM chu khong SAI. Do la hinh dang co y chon.
+#
+# Host khong co trong bang thi `tunnel_port` tra rong va khong mot socket nao duoc
+# mo -- rog va airm3 khong tra dong nao cho co che nay.
+tunnel_port() {
+  case $1 in
+  a14) printf '47701' ;;
+  *) return 1 ;;
+  esac
+}
+
+# Cooldown khi tunnel cham hoac chet.
+#
+# Ca xau khong phai "khong ai nghe" -- cai do bi tu choi trong ~15 ms. Ca xau la
+# cong VAN duoc ssh giu nhung dau kia da idle-exit: luc do `read` cho den het han.
+# Do duoc 2095 ms. Khong co cooldown thi moi lan bam Esc deu tra khoan do TRUOC khi
+# lui ve ssh, tuc cham hon han khi khong dung tunnel.
+TUNNEL_DEAD=$TMP/ime-route.tunnel-dead.$(id -u)
+TUNNEL_COOLDOWN=${IME_ROUTE_TUNNEL_COOLDOWN:-30}
+
+tunnel_ok() {
+  local mt now
+  [ -f "$TUNNEL_DEAD" ] || return 0
+  mt=$(mtime "$TUNNEL_DEAD") || return 0
+  [ -n "$mt" ] || return 0
+  now=$(date +%s)
+  [ $((now - mt)) -ge "$TUNNEL_COOLDOWN" ]
+}
+
+# Mot luot goi qua tunnel. In stdout cua agent, tra 0 khi agent tra ve code 0.
+#
+# `read -t` la bat buoc: bash `/dev/tcp` KHONG co connect timeout, va cai deadline
+# duy nhat ta dat duoc nam o vong doc. 1 giay la ba lan chi phi thuc te (77 ms) va
+# van duoi ngan sach mot lan bam Esc.
+tunnel_call() { # $1 = host, $2 = payload gui di
+  local port line code body
+  port=$(tunnel_port "$1") || return 1
+  tunnel_ok || return 1
+  exec 3<>"/dev/tcp/127.0.0.1/$port" 2>/dev/null || {
+    : >"$TUNNEL_DEAD" 2>/dev/null
+    return 1
+  }
+  printf '%s\n' "$2" >&3
+  if ! IFS= read -r -t 1 line <&3; then
+    exec 3<&- 2>/dev/null
+    : >"$TUNNEL_DEAD" 2>/dev/null
+    log "tunnel $1: khong tra loi trong 1s -- lui ve ssh, nghi $TUNNEL_COOLDOWN s"
+    return 1
+  fi
+  exec 3<&- 2>/dev/null
+  code=${line%% *}
+  body=${line#* }
+  [ "$code" = 0 ] || return 1
+  # Tunnel song: xoa dau cooldown neu con.
+  rm -f "$TUNNEL_DEAD" 2>/dev/null
+  [ "$body" = "$line" ] && body=""
+  printf '%s\n' "$body"
+}
+
+# May Windows: khong co bash, nen `$LEAF_PATH leaf-get` o dau kia la mot duong POSIX
+# khong ton tai. Goi thang `tongue`.
+#
+# Va phai la `tongue` TRAN chu khong phai mot duong dan tuyet doi: chinh no la thu
+# kich `maybe_forward` -> khong thay pipe -> `schtasks /run`, tuc duong ssh vua phuc
+# vu duoc lenh VUA HOI SINH agent. Nho vay tunnel chet chi ton dung mot luot cham
+# roi tu khoi, khong can mot co che hoi sinh rieng. Da do 20/08/2026: agent 0 tien
+# trinh -> `ssh a14 tongue` in `vi` -> agent song lai o session 1 va nghe 47701.
+windows_host() { [ -n "$(tunnel_port "$1" 2>/dev/null)" ]; }
+
+remote_cmd() { # $1 = host, $2 = get|set, $3 = token
+  if windows_host "$1"; then
+    case $2 in
+    get) printf 'tongue' ;;
+    set) printf 'tongue %s' "$3" ;;
+    esac
+  else
+    printf '%s leaf-%s%s' "$LEAF_PATH" "$2" "${3:+ $3}"
+  fi
+}
+
 remote() { # $1 = host, $2 = get|set, $3 = token
+  # Tunnel truoc: cung ket qua, mot phan chin chi phi. Truot thi roi thang xuong
+  # ssh ben duoi -- va chinh lan ssh do hoi sinh agent cho luot sau.
+  case $2 in
+  get)
+    tunnel_call "$1" "" && return 0
+    ;;
+  set)
+    tunnel_call "$1" "$3" >/dev/null && return 0
+    ;;
+  esac
   ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 -o ServerAliveCountMax=3 -- "$1" \
-    "$LEAF_PATH leaf-$2${3:+ $3}" &
+    "$(remote_cmd "$1" "$2" "${3:-}")" &
   kid=$!
   wait "$kid"
 }
@@ -633,15 +746,30 @@ set)
     # trap phai ngat duoc. `kid` nay giu NHIEU pid, nen trap ban ca danh sach.
     rc=1
     jobs_list=""
+    # Tunnel truoc, TUAN TU: 77 ms mot host nen fan-out khong mua them gi, va host
+    # nao an o day thi khong phai mo ssh nua.
+    pending=""
+    while read -r h; do
+      [ -n "$h" ] || continue
+      if tunnel_call "$h" "$mode" >/dev/null; then
+        rc=0
+        log "set $mode -> $h (tunnel)"
+      else
+        pending="$pending$h
+"
+      fi
+    done <<EOF
+$targets
+EOF
     while read -r h; do
       [ -n "$h" ] || continue
       ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 \
-        -o ServerAliveCountMax=3 -- "$h" "$LEAF_PATH leaf-set $mode" >/dev/null 2>&1 &
+        -o ServerAliveCountMax=3 -- "$h" "$(remote_cmd "$h" set "$mode")" >/dev/null 2>&1 &
       jobs_list="$jobs_list$!:$h
 "
       kid="$kid $!"
     done <<EOF
-$targets
+$pending
 EOF
     # `wait` phai chay o shell CHINH (no chi biet job cua chinh no), nen doc bang
     # here-doc chu khong pipe -- pipe se day vong lap vao subshell.
@@ -693,6 +821,28 @@ exchange)
     # Khac `get` o cho KHONG duoc break: mot may khong doc duoc van phai duoc DAT.
     tmpdir=$(mktemp -d) || exit 1
     jobs_list=""
+    rc=1
+    # Qua tunnel thi `exchange` la hai luot doc/dat chu khong phai mot -- agent chi
+    # noi hai dong tu `tongue`, khong co dong tu gop. Van dang: 2 x 77 ms = 154 ms
+    # so voi 656 ms cua MOT chang ssh. Gop lai o agent chi mua them ~11 ms nen
+    # khong dang mot dong tu moi tren day.
+    pending=""
+    tok=""
+    while read -r h; do
+      [ -n "$h" ] || continue
+      if out=$(tunnel_call "$h" ""); then
+        if tunnel_call "$h" "$mode" >/dev/null; then
+          rc=0
+          [ -n "$tok" ] || tok=$out
+          log "exchange $mode -> $h (tunnel, doc duoc '$out')"
+          continue
+        fi
+      fi
+      pending="$pending$h
+"
+    done <<EOF
+$targets
+EOF
     while read -r h; do
       [ -n "$h" ] || continue
       ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 \
@@ -702,9 +852,8 @@ exchange)
 "
       kid="$kid $!"
     done <<EOF
-$targets
+$pending
 EOF
-    rc=1
     failed=""
     while IFS=: read -r p h; do
       [ -n "$p" ] || continue
@@ -719,18 +868,22 @@ EOF
     done <<EOF
 $jobs_list
 EOF
-    # So doc lay tu dich TRE NHAT tra loi duoc, y het `get`.
-    tok=""
-    while read -r h; do
-      [ -n "$h" ] || continue
-      [ -s "$tmpdir/$h" ] || continue
-      tok=$(<"$tmpdir/$h")
-      tok=${tok%%[$'\n']*}
-      [ -n "$tok" ] && break
-      tok=""
-    done <<EOF
+    # So doc lay tu dich TRE NHAT tra loi duoc, y het `get`. CHI khi nhanh tunnel
+    # ben tren chua hoc duoc gi -- truoc day o day la `tok=""` vo dieu kien, va no
+    # xoa sach so doc tunnel vua lay: log ghi `doc duoc 'vi'` con lenh in ra
+    # `unknown`. Hai nguon cung ghi mot bien, chi mot cai duoc quyen reset.
+    if [ -z "$tok" ]; then
+      while read -r h; do
+        [ -n "$h" ] || continue
+        [ -s "$tmpdir/$h" ] || continue
+        tok=$(<"$tmpdir/$h")
+        tok=${tok%%[$'\n']*}
+        [ -n "$tok" ] && break
+        tok=""
+      done <<EOF
 $targets
 EOF
+    fi
 
     # DUONG LUI, va no BAT BUOC chu khong phai phong xa: dau kia co the dang
     # chay ban ime-route chua biet `leaf-exchange`. Lech ban giua cac may la
