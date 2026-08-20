@@ -57,6 +57,10 @@ $modules = @(
     'services.ahk-watchdog'       # must follow services.ahk; revives main.ahk between logons
     'services.beckon-serve'       # hotkey host (replaces launch-app.ahk); no ordering constraint vs vkey/kanata -- RegisterHotKey, not a hook
     'services.beckon-serve-watchdog' # revives beckon serve between logons; the single-instance lock makes it a no-op while healthy
+    # No ordering constraint: it registers no hook and grabs no hotkey, it only
+    # listens on a named pipe. Must come after nothing, but reads best next to sshd
+    # -- sshd is the reason it exists.
+    'services.tongue-agent'       # bridges session 0 (SSH) to the desktop session
     'services.sshd'
 )
 
