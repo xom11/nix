@@ -56,7 +56,13 @@ function Test-ScheduledTaskMatch {
     # re-registers it; answering yes is what keeps `apply.ps1` idempotent and quiet.
     #
     # This is the union of the per-module comparisons it replaces, and deliberately compares
-    # every property rather than only the ones a given module happens to set. A property left
+    # every property rather than only the ones a given module happens to set. MultipleInstances
+    # was the one gap, found 20/08/2026 while costing out an on-demand task: no module sets it,
+    # so nothing noticed -- but a task once registered without -MultipleInstances Parallel would
+    # be reported Skip forever while silently dropping every start that overlapped a running
+    # instance, with LastTaskResult stuck at 0 throughout. Measured before adding the compare:
+    # both New-ScheduledTaskSettingsSet and Get-ScheduledTask report MultipleInstancesEnum and
+    # agree after a [string] cast, so this does not re-register the existing six tasks. A property left
     # unset still has a value -- an omitted -RestartCount means 0, not "don't care" -- so
     # comparing it is how a task that used to carry one gets repaired after the module stops
     # asking for it. Skipping it instead would leave the stale value in place forever.
@@ -115,6 +121,7 @@ function Test-ScheduledTaskMatch {
     if ([bool]$es.DisallowStartIfOnBatteries -ne [bool]$Settings.DisallowStartIfOnBatteries) { return $false }
     if ([bool]$es.StopIfGoingOnBatteries     -ne [bool]$Settings.StopIfGoingOnBatteries)     { return $false }
     if ([bool]$es.StartWhenAvailable         -ne [bool]$Settings.StartWhenAvailable)         { return $false }
+    if ([string]$es.MultipleInstances        -ne [string]$Settings.MultipleInstances)        { return $false }
     if ($es.ExecutionTimeLimit               -ne $Settings.ExecutionTimeLimit)               { return $false }
     if ([int]$es.RestartCount                -ne [int]$Settings.RestartCount)                { return $false }
     if ([string]$es.RestartInterval          -ne [string]$Settings.RestartInterval)          { return $false }
