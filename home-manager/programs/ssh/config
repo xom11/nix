@@ -80,7 +80,12 @@ Host github.com
 #     control-socket path overflows the ~108-char Unix-socket limit
 #     ("unix_listener: path too long"). `uname -a` says "Android" there, so
 #     `grep -qv Android` fails and multiplexing stays off.
-Match originalhost macmini,rog,airm3,a14 exec "uname -a | grep -qv Android"
+# `mm` phai co ten o day, khong phai chi `macmini`: khoi nay khop theo
+# ORIGINALHOST -- ten go tren dong lenh -- chu khong theo HostName, nen hai alias
+# tro cung mot may van la hai muc rieng. Thieu no thi `ssh mm` tu mot may Unix
+# mat ghep kenh (do: controlmaster false, controlpersist no) va moi lan goi tra
+# lai ca cai bat tay, im lang.
+Match originalhost macmini,mm,rog,airm3,a14 exec "uname -a | grep -qv Android"
   ControlMaster auto
   ControlPath ~/.ssh/control-%n-%C
   ControlPersist 8h
