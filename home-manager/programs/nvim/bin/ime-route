@@ -11,9 +11,10 @@
 # Script nay la mot backend cua tongue.nvim (hop dong 4 khoa), khong phai mot lop
 # va vong: no chuan hoa moi may ve chung mot bang tu vung en/vi/zh roi dinh tuyen.
 #
-#   ime-route get           -> in en | vi | zh | unknown
-#   ime-route set <token>   -> dat che do do
-#   ime-route where         -> in dich dang dung (de go roi / checkhealth)
+#   ime-route get              -> in en | vi | zh | unknown
+#   ime-route set <token>      -> dat che do do
+#   ime-route exchange <token> -> dat che do do VA in che do CU (mot chang ssh)
+#   ime-route where            -> in dich dang dung (de go roi / checkhealth)
 #
 # KIEN TRUC: mot script, hai vai.
 #
@@ -405,6 +406,10 @@ leaf-set)
   cmd=set
   IME_ROUTE_LEAF=1
   ;;
+leaf-exchange)
+  cmd=exchange
+  IME_ROUTE_LEAF=1
+  ;;
 esac
 
 # Nhat ky chan doan, TAT theo mac dinh va bat bang cach TAO FILE:
@@ -522,7 +527,9 @@ tmpout=""
 # `$kid` KHONG duoc ngoac kep: nhanh `set` fan-out song song nen no giu NHIEU pid
 # cach nhau bang khoang trang, va can word-splitting de `kill` nhan du danh sach.
 # shellcheck disable=SC2086
-trap '[ -n "$kid" ] && kill -TERM $kid 2>/dev/null; [ -n "$tmpout" ] && rm -f "$tmpout"; exit 143' TERM INT
+tmpdir=""
+
+trap '[ -n "$kid" ] && kill -TERM $kid 2>/dev/null; [ -n "$tmpout" ] && rm -f "$tmpout"; [ -n "$tmpdir" ] && rm -rf "$tmpdir"; exit 143' TERM INT
 
 # `-n` (stdin tu /dev/null): vong lap `set` doc danh sach dich tu stdin, ma ssh
 # MAC DINH doc stdin -- no nuot not cac dong con lai va vong lap chay dung mot
@@ -653,6 +660,128 @@ EOF
   else
     log "set $mode"
     leaf_set "$mode" || exit $?
+  fi
+  ;;
+
+# Doc VA dat trong MOT chang ssh. Cung hai viec ma `get` roi `set` lam, cung so
+# doc tra ve, nhung mot vong thay vi hai -- va mot vong la gan nhu toan bo chi
+# phi khi dau kia la Windows: do 20/08/2026 mot chang ton 656 ms, trong do 293 ms
+# chi la PowerShell khoi dong truoc khi lam bat cu viec gi.
+#
+# Plugin chi goi cai nay o DUNG MOT bien -- roi Insert, ep tieng Anh -- vi lenh
+# da GHI xong luc cau tra loi ve, nen no chi dung duoc o cho ghi mu la an toan.
+# Khoi phuc mot layout da nho thi khong, va duong `get`+`set` giu chieu do.
+#
+# O LEAF van la hai loi goi, va do la co y: cho dat nam o CHANG SSH chu khong o
+# hai lan chay `tongue` cuc bo tren cung mot may.
+exchange)
+  mode=${2:-}
+  case "$mode" in
+  en | vi | zh) ;;
+  *)
+    echo "ime-route: exchange can mot token (en|vi|zh), nhan duoc '${mode}'" >&2
+    exit 2
+    ;;
+  esac
+  if [ -n "$no_route" ]; then
+    # Y het nhanh `get`: `unknown` nghia la "khong biet may dang o dau", nen
+    # plugin se khong nho no de khoi phuc.
+    echo unknown
+    log "exchange $mode -> KHONG DINH TUYEN DUOC (client: $skipped)"
+  elif [ -n "$targets" ]; then
+    # Toi TAT CA client, song song -- cung luat voi `set`, va vi cung mot ly do.
+    # Khac `get` o cho KHONG duoc break: mot may khong doc duoc van phai duoc DAT.
+    tmpdir=$(mktemp -d) || exit 1
+    jobs_list=""
+    while read -r h; do
+      [ -n "$h" ] || continue
+      ssh -n -o BatchMode=yes -o ConnectTimeout=3 -o ServerAliveInterval=2 \
+        -o ServerAliveCountMax=3 -- "$h" "$LEAF_PATH leaf-exchange $mode" \
+        >"$tmpdir/$h" 2>/dev/null &
+      jobs_list="$jobs_list$!:$h
+"
+      kid="$kid $!"
+    done <<EOF
+$targets
+EOF
+    rc=1
+    failed=""
+    while IFS=: read -r p h; do
+      [ -n "$p" ] || continue
+      if wait "$p"; then
+        rc=0
+        log "exchange $mode -> $h"
+      else
+        failed="$failed$h
+"
+        log "exchange $mode -> $h TRUOT"
+      fi
+    done <<EOF
+$jobs_list
+EOF
+    # So doc lay tu dich TRE NHAT tra loi duoc, y het `get`.
+    tok=""
+    while read -r h; do
+      [ -n "$h" ] || continue
+      [ -s "$tmpdir/$h" ] || continue
+      tok=$(<"$tmpdir/$h")
+      tok=${tok%%[$'\n']*}
+      [ -n "$tok" ] && break
+      tok=""
+    done <<EOF
+$targets
+EOF
+
+    # DUONG LUI, va no BAT BUOC chu khong phai phong xa: dau kia co the dang
+    # chay ban ime-route chua biet `leaf-exchange`. Lech ban giua cac may la
+    # trang thai BINH THUONG o day -- xem chu thich `LEAF_PATH` dau file -- va
+    # khong co duong lui thi Normal mode am tham thoi ve tieng Anh tren dung
+    # nhung may cu, tuc mat chinh thu plugin hua.
+    #
+    # Doc TRUOC khi dat, y het duong cu: chi lam khi chua hoc duoc gi tu mot
+    # dich nao khac, nen ca thuong gap (mot client) van la doc-roi-dat chu khong
+    # phai ba chang.
+    if [ -n "$failed" ]; then
+      if [ -z "$tok" ]; then
+        while read -r h; do
+          [ -n "$h" ] || continue
+          if remote "$h" get >"$tmpdir/fallback" 2>/dev/null; then
+            tok=$(<"$tmpdir/fallback")
+            tok=${tok%%[$'\n']*}
+            [ -n "$tok" ] && break
+            tok=""
+          fi
+        done <<EOF
+$failed
+EOF
+      fi
+      while read -r h; do
+        [ -n "$h" ] || continue
+        if remote "$h" set "$mode" >/dev/null 2>&1; then
+          rc=0
+          log "exchange $mode -> $h (lui ve get+set: ban cu)"
+        else
+          log "exchange $mode -> $h TRUOT ca duong lui"
+        fi
+      done <<EOF
+$failed
+EOF
+    fi
+
+    rm -rf "$tmpdir"
+    tmpdir=""
+    [ "$rc" = 0 ] || {
+      log "exchange $mode -> moi dich deu TRUOT"
+      exit 1
+    }
+    printf '%s\n' "${tok:-unknown}"
+  else
+    # `leaf_get` truot khong duoc lam hong lan DAT: mat so doc chi mat phan hoc,
+    # con Normal mode van phai ve tieng Anh.
+    out=$(leaf_get) || out=""
+    leaf_set "$mode" || exit $?
+    printf '%s\n' "${out:-unknown}"
+    log "exchange $mode <- ${out:-<rong>}"
   fi
   ;;
 
