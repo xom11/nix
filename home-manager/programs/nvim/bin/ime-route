@@ -318,6 +318,18 @@ ssh_host_for() {
 # Fan-out song song ben duoi KHONG cuu duoc ca nay: no gop cac dich cua CUNG mot
 # lenh, con `get` roi `set` thi van noi tiep nhau.
 #
+# Va cho ai dinh toi uu tiep: CHO CHAM KHONG NAM O TONGUE. Do 20/08/2026, xen ke
+# 9 cap de triet tieu troi: `ssh a14 exit` (chi ssh + shell dang nhap) da ton
+# 430 ms, con `ssh a14 tongue status` tron ven 495 ms -- tuc phan cua tongue va
+# ca cau pipe chi ~65 ms, 13%. De doi chieu: `ssh rog true` het 45 ms.
+#
+# Thu phao that su la shell dang nhap. `DefaultShell` cua sshd tren a14 dang la
+# `pwsh.exe`, va do TAI CHO tren may do (median 9 lan): `cmd /c exit` 12 ms,
+# `powershell -NoProfile` 133 ms, `pwsh -NoProfile` 225 ms. Doi DefaultShell sang
+# cmd.exe co the cat ~200 ms moi luot ssh -- nhung no cham MOI thu dang ssh vao
+# a14 (script PowerShell doc thang vao `$env:`, cu phap `;`, ...), nen day la
+# quyet dinh cua chu may chu khong phai mot toi uu cua ime-route.
+#
 # Nen `tongue agent` mua TAM VOI (`ssh a14 tongue vi` cho script va tu dong hoa)
 # chu khong mua toc do, va dong SKIP_HOSTS nay o lai.
 #
@@ -427,10 +439,19 @@ else
   via="SSH_CONNECTION cua phien"
   if [ -n "$ip" ]; then
     target=$(ssh_host_for "$ip")
-    # "Co IP ma khong tra ra ten Host" la trang thai THU BA, khong duoc gop vao
-    # "khong co client": mot ben nghia la ban phim o ngay day, ben kia nghia la
-    # ban phim o noi ta khong biet duong toi. Gop lai thi ca thu hai lang le lai
-    # nham may.
+    # "Co IP ma khong tra ra ten Host" la trang thai THU BA ve mat NHAN THUC, nhung
+    # CO Y khong duoc doi xu rieng ve mat HANH VI: no van roi xuong leaf. Truoc day
+    # doan nay noi nguoc lai va ma thi khong lam theo -- sua lai cho khop cai code
+    # that su lam, vi ca "sai" o day lai la ca DUNG:
+    #
+    #   - `Include ~/.colima/ssh_config` tro 127.0.0.1, va loopback thi leaf DUNG la
+    #     dich dung.
+    #   - Ngoai herdr, `SSH_CONNECTION` con lai co the la hoa thach cua mot phien da
+    #     dong (tmux/screen); khong co nguon tin nao dung hon, da ghi o tren.
+    #
+    # Nen chi doi `via` -- de `where` va nhat ky noi ro da hoi gi roi khong thay --
+    # chu khong dat `no_route`. Muon chan that thi phai loc theo dia chi nguon
+    # (loopback / link-local), khong phai theo "tra khong ra ten".
     [ -n "$target" ] || via="SSH_CONNECTION cua phien (client $ip KHONG co Host trong ~/.ssh/config)"
     # Cung mot luat cho duong ssh truc tiep: nguoi ta ssh tu a14 vao macmini roi
     # mo nvim, khong qua herdr.
