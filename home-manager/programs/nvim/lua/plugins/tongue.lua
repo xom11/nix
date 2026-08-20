@@ -44,7 +44,18 @@ if vim.fn.executable(route) == 1 then
 		unknown = "unknown",
 		tokens = { "en", "vi", "zh" },
 	}
-elseif vim.fn.has("mac") == 1 and vim.fn.executable("tongue") == 1 then
+-- Same lesson one level down: gate on the tool, not the OS. a14 carries
+-- `tongue.exe`, but auto-detect's Windows chain knows only `im-select.exe` --
+-- which reads a locale ID, and with VKey `vi` and `en` are the SAME locale, so
+-- it runs and changes nothing you can see. Measured on a14 20/08/2026:
+-- `active via im-select.exe`, `reads back "0"`, and the plugin's own note says
+-- exactly that. `tongue` sees VKey; declaring it here is what picks it.
+--
+-- Only helps a LOCAL nvim there: over SSH, Windows puts the session in session 0
+-- and `tongue.exe` refuses with "khong voi toi duoc desktop tuong tac" -- VKey
+-- lives in session 1. No ssh-based path can drive it, which is also why
+-- `ime-route` cannot route to a14.
+elseif vim.fn.executable("tongue") == 1 then
 	backend = "tongue"
 end
 
