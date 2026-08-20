@@ -22,6 +22,17 @@ Host macmini
 Host a14
   HostName 100.83.225.100
   User kln
+  # Ghep kenh duoc, du la Windows -- ControlMaster la tinh nang PHIA CLIENT: socket
+  # nam tren may nay, sshd dau kia chi thay mot ket noi nhieu channel. Canh bao o
+  # khoi Match ben duoi noi ve viec chay ssh TU Windows, khong phai den Windows.
+  # Do 20/08/2026 tu macmini: 829 ms khong mux -> 452 ms co mux (median 6 mau).
+  #
+  # Nhung day la laptop Modern Standby: no ngu thi master thanh xac, va luot sau
+  # TREO o mux socket thay vi truot nhanh. `Host` dung truoc `Match` nen hai dong
+  # nay thang ControlPersist 8h o duoi -- 8 tieng qua dai cho mot may hay ngu.
+  ControlPersist 10m
+  ServerAliveInterval 30
+  ServerAliveCountMax 3
 Host airm3
   HostName 100.127.95.48
   User kln
@@ -64,7 +75,7 @@ Host github.com
 #     control-socket path overflows the ~108-char Unix-socket limit
 #     ("unix_listener: path too long"). `uname -a` says "Android" there, so
 #     `grep -qv Android` fails and multiplexing stays off.
-Match originalhost macmini,rog,airm3 exec "uname -a | grep -qv Android"
+Match originalhost macmini,rog,airm3,a14 exec "uname -a | grep -qv Android"
   ControlMaster auto
   ControlPath ~/.ssh/control-%n-%C
   ControlPersist 8h
