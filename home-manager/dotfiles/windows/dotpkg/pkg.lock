@@ -15,8 +15,8 @@ version = "0.26.1"
 
 [scoop.beckon]
 bucket  = "xom11"
-commit  = "8e40802ecf848078a166952ff0ac1adfe39abf05"
-version = "0.9.20"
+commit  = "1dc60ca79893efa9b8d773f69efd4df48febc2fa"
+version = "0.9.21"
 
 [scoop.dotpkg]
 bucket  = "xom11"
