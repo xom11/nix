@@ -19,6 +19,9 @@
     SHELL = "${pkgs.zsh}/bin/zsh";
     NIX_CONFIG="extra-experimental-features = nix-command flakes";
     NIXPKGS_ALLOW_UNFREE = 1;
+    # opencode's file logger reads ONLY this env var (default INFO);
+    # the logLevel field in opencode.json does not reach it.
+    OPENCODE_LOG_LEVEL = "WARN";
   };
   home.sessionPath = [
     "$HOME/.local/bin"
