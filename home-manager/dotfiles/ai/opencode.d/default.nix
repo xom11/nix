@@ -21,9 +21,6 @@ in
       ".config/opencode/mcp/router-search/server.mjs" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/mcp/router-search/server.mjs";
       };
-      ".config/opencode/plugin/router-models.mjs" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${pwd}/plugin/router-models.mjs";
-      };
     };
     home.packages = with pkgs; [
       (pkgs.writeShellScriptBin "router-search-mcp" ''

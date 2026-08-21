@@ -57,8 +57,7 @@ $Hm = $Ctx.HomeManagerDir
     )
 
     # opencode uses the same XDG-shaped layout here as on the nix hosts, so these
-    # mirror opencode.d/default.nix one for one. plugin\ is linked whole because
-    # opencode.json names it by a path relative to the config directory.
+    # mirror opencode.d/default.nix one for one.
     #
     # mcp\router-search is NOT linked: it is started via `router-search-mcp`, a
     # wrapper only nix builds. Windows logs one failed MCP at startup and carries on.
@@ -69,8 +68,6 @@ $Hm = $Ctx.HomeManagerDir
            Target = "$env:USERPROFILE\.config\opencode\tui.json" }
         @{ Source = "$Hm\dotfiles\ai\opencode.d\OPENCODE.md"
            Target = "$env:USERPROFILE\.config\opencode\OPENCODE.md" }
-        @{ Source = "$Hm\dotfiles\ai\opencode.d\plugin"
-           Target = "$env:USERPROFILE\.config\opencode\plugin" }
     )
 
     # Config only -- the binary is NOT installed by apply.ps1: pi self-updates, and

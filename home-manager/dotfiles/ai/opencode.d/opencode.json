@@ -32,18 +32,30 @@
       "options": {
         "baseURL": "{env:ROUTER_ENDPOINT}",
         "apiKey": "{env:ROUTER_KEY}"
+      },
+      "models": {
+        "combo1": {
+          "name": "combo1",
+          "modalities": { "input": ["text", "image"], "output": ["text"] }
+        },
+        "combo2": {
+          "name": "combo2",
+          "modalities": { "input": ["text", "image"], "output": ["text"] }
+        },
+        "taoxyz": {
+          "name": "taoxyz",
+          "modalities": { "input": ["text", "image"], "output": ["text"] }
+        }
       }
     }
   },
-  "model": "9router/combo1",
   "permission": "allow",
   "tool_output": {
     "max_lines": 500,
     "max_bytes": 16384
   },
   "plugin": [
-    "superpowers@git+https://github.com/obra/superpowers.git",
-    "./plugin/router-models.mjs"
+    "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "agent": {
     "explorer": {
