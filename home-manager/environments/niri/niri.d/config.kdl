@@ -10,7 +10,7 @@
 //    Nghia la: co bap tay sway/hyprland KHONG dung lai duoc o day.
 //
 // 2. KHONG CO `include` NAO. Bo phim launcher sinh tu
-//    configs/shortcuts/apps.linux.toml (beckon, to hop `Cap`) CHUA duoc noi
+//    configs/shortcuts/launch-app.toml (beckon, to hop `Cap`) CHUA duoc noi
 //    vao — co y, day la ban toi thieu de thu. niri >= 25.11 CO ho tro
 //    `include` o cap cao nhat, `~/duong/dan` tu 26.04, va `binds` merge
 //    (dinh nghia sau de len dinh nghia truoc), nen luc can chi viec them mot

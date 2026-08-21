@@ -1,9 +1,9 @@
-# Generates dconf custom-keybindings from configs/shortcuts/apps.shared.toml.
+# Generates dconf custom-keybindings from configs/shortcuts/launch-app.toml.
 # READ AT EVAL, so editing that file needs a switch -- unlike mac/Windows, where
 # beckon serve reads it live. The path literal is deliberate: dconf is an eval
 # product anyway.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
 
   modMap = {
     ctrl = "<Ctrl>";

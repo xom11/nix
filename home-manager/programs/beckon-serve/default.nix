@@ -7,7 +7,7 @@
 }: let
   # A string into the working tree (the mkOutOfStoreSymlink idea): serve's watcher
   # picks up edits without a switch.
-  configFile = "${repoPath}/configs/shortcuts/apps.shared.toml";
+  configFile = "${repoPath}/configs/shortcuts/launch-app.toml";
   label = "com.xom11.beckon-serve";
   logDir = "${config.home.homeDirectory}/Library/Logs/beckon";
 in

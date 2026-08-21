@@ -20,8 +20,8 @@
 # but the SECOND miss onward is nearly free, so long chains are cheap. Only the
 # first candidate matters.
 #
-# Validate: `beckon check <this file> --resolve`. CI globs `apps.*.toml`, so a
-# file named `apps.toml` would NOT match and CI would check nothing.
+# Validate: `beckon check <this file> --resolve`. CI runs exactly that on the
+# beckon rev pinned in flake.lock (.github/workflows/eval.yml, job `shortcuts`).
 
 # ── Cap + key ───────────────────────────────────────────────────────────
 

@@ -1,10 +1,10 @@
-# Generates sway launcher bindings from configs/shortcuts/apps.shared.toml.
+# Generates sway launcher bindings from configs/shortcuts/launch-app.toml.
 # READ AT EVAL, so editing that file needs a switch plus a sway reload.
 # Plain `exec beckon "<app>"`: no wrapper script and no workspace-per-app, which
 # is configured separately in sway.d. Emitted into ~/.config/sway-nix/ because
 # ~/.config/sway is a whole-directory symlink.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
 
   modMap = {
     ctrl = "Ctrl";
@@ -26,7 +26,7 @@
 in
   ''
     # vim: ft=swayconfig
-    # GENERATED from configs/shortcuts/apps.shared.toml -- do not edit by hand.
+    # GENERATED from configs/shortcuts/launch-app.toml -- do not edit by hand.
   ''
   + lib.concatStringsSep "\n" lines
   + "\n"

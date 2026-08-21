@@ -30,7 +30,7 @@ hl.monitor({ output = "eDP-1", disabled = true })
 -- like hyprlang it errors on zero matches. Results are sorted.
 require("~/.config/hypr/conf.d/*.lua")
 
--- Generated from configs/shortcuts/apps.shared.toml. No `.lua` suffix:
+-- Generated from configs/shortcuts/launch-app.toml. No `.lua` suffix:
 -- `require` appends it.
 require("~/.config/hypr-nix/launch-app")
 

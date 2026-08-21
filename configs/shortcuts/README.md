@@ -2,15 +2,16 @@
 
 - `Cap` = `cmd+ctrl+alt` (macOS) / `super+ctrl+alt` (Windows, Linux)
 - Engine la `beckon` o ca nam nen tang.
-- **MOT file cho ca ba target: `apps.shared.toml`** (gop 16/08/2026 tu
-  `apps.{linux,macos,windows}.toml`). Bang duoi day khong con cot theo OS, vi
-  khong con gi de tach.
+- **MOT file cho ca ba target: `launch-app.toml`** (gop 16/08/2026 tu
+  `apps.{linux,macos,windows}.toml`; doi ten tu `apps.shared.toml` 21/08/2026
+  de khop voi ten module sinh binding tu no). Bang duoi day khong con cot theo
+  OS, vi khong con gi de tach.
 
 Cai lam viec gop kha thi la CHUOI UNG VIEN cua beckon >= 0.9.6:
 `"A || B"` thu trai sang phai, cai dau tien hanh dong duoc thi thang. Nho no,
 bon dong tung khac nhau theo OS gio la mot dong.
 
-Bang nay sinh tay tu `apps.shared.toml` — sua file thi sua ca bang, khong co
+Bang nay sinh tay tu `launch-app.toml` — sua file thi sua ca bang, khong co
 gi kiem tra ho.
 
 ## `Cap` + phim
@@ -64,9 +65,9 @@ con trong o lop nay) — la doi phim tat quen tay nen chua tu doi.
 
 Lop `Cap` tran (3 modifier) khong dinh rang buoc nay, dung thoai mai ca 26 chu.
 
-## Cac lop phim khac (khong sinh tu apps.*.toml)
+## Cac lop phim khac (khong sinh tu launch-app.toml)
 
-Hai nhom nay khong di qua apps.*.toml/beckon nen khong nam trong bang
+Hai nhom nay khong di qua launch-app.toml/beckon nen khong nam trong bang
 tren. Doc truc tiep o nguon thay vi chep lai o day, de tranh bang tay
 bi lech nhu file README cu:
 

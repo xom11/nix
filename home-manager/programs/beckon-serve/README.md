@@ -1,7 +1,7 @@
 # beckon-serve
 
 `beckon serve` chạy như launchd agent (`com.xom11.beckon-serve`), đọc
-`configs/shortcuts/apps.macos.toml` từ working tree — sửa file là áp dụng
+`configs/shortcuts/launch-app.toml` từ working tree — sửa file là áp dụng
 trong ~1-2 s, không cần switch.
 
 ## Không cấp quyền gì cả (từ 10/08/2026)

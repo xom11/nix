@@ -25,7 +25,7 @@ hs.loadSpoon("RecursiveBinder")
 hs.loadSpoon("TrackpadReverse")
 
 -- Focus-or-launch is beckon serve (launchd com.xom11.beckon-serve), reading
--- configs/shortcuts/apps.shared.toml -- edits apply immediately, no reload.
+-- configs/shortcuts/launch-app.toml -- edits apply immediately, no reload.
 -- hs.loadSpoon("LaunchTerminal")
 hs.loadSpoon("PowerManager")
 hs.loadSpoon("WindowManager")

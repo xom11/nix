@@ -22,5 +22,5 @@ mkModule config ./. {
   # until the next switch, and beckon 0.8.0+ WRITES BACK to this file from its
   # Settings window, which would fail against the store.
   home.file."${config.xdg.configHome}/beckon/apps.toml".source =
-    config.lib.file.mkOutOfStoreSymlink "${repoPath}/configs/shortcuts/apps.shared.toml";
+    config.lib.file.mkOutOfStoreSymlink "${repoPath}/configs/shortcuts/launch-app.toml";
 }

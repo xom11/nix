@@ -1,10 +1,10 @@
-# Generates hyprland launcher bindings from configs/shortcuts/apps.shared.toml.
+# Generates hyprland launcher bindings from configs/shortcuts/launch-app.toml.
 # READ AT EVAL, so editing that file needs a switch plus a reload.
 # Plain `exec beckon "<app>"`, no workspace logic -- that belongs to hypr.d.
 # Emitted into ~/.config/hypr-nix/ because ~/.config/hypr is a whole-directory
 # symlink.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/apps.shared.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
 
   apps = builtins.attrValues data;
 
@@ -39,7 +39,7 @@ in
       ${lib.concatStringsSep "\n      " badApps}
   '';
     ''
-      -- SINH TU configs/shortcuts/apps.shared.toml — dung sua tay file nay.
+      -- SINH TU configs/shortcuts/launch-app.toml — dung sua tay file nay.
     ''
     + lib.concatStringsSep "\n" lines
     + "\n"

@@ -28,7 +28,7 @@ Không có phiên X11 nào — `share/xsessions` rỗng.
 
 GNOME cố ý ở lại làm lưới an toàn: cấu hình sway/hyprland/niri hỏng cũng không
 khoá được người dùng khỏi máy. Phím tắt launcher của GNOME/sway/hyprland đến từ
-**một** file `configs/shortcuts/apps.shared.toml`; niri chưa được nối vào.
+**một** file `configs/shortcuts/launch-app.toml`; niri chưa được nối vào.
 
 Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không phải reboot.
 

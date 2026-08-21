@@ -28,7 +28,7 @@
 ;; tung boc them mot `fork` de bo phim Win khi dang giu Shift — ne chord OFFICE
 ;; KEY cua Windows (Ctrl+Win+Alt+Shift+<chu>). DA GO (09/08/2026): thay vi be
 ;; ban phim cho khac ba nen tang kia, chi can TRANH 10 chu ma Windows giu san
-;; o lop Cap+Shift. Danh sach nam trong configs/shortcuts/apps.shared.toml.
+;; o lop Cap+Shift. Danh sach nam trong configs/shortcuts/launch-app.toml.
 ;;
 ;; Van phai la LAYER chu khong phai `(multi lmet lctl lalt)` tran nhu Linux:
 ;; day la workaround cho bug CHI CO tren Windows (xem README cung thu muc) --

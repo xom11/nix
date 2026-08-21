@@ -31,7 +31,7 @@ LogLine("startup  pid=" . DllCall("GetCurrentProcessId"))
 
 #Include lib/ui.ahk
 ; Focus-or-launch is beckon serve (task \BeckonServe), reading
-; configs/shortcuts/apps.shared.toml -- edits apply immediately.
+; configs/shortcuts/launch-app.toml -- edits apply immediately.
 #Include evkey-monitor.ahk
 #Include caffeine.ahk
 #Include ferry.ahk
