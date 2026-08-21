@@ -8,5 +8,9 @@
     "enabled": true,
     "notifications": true,
     "sound": false
+  },
+  "keybinds": {
+    "messages_last_user": "<leader>j",
+    "session_toggle_timestamps": "<leader>d"
   }
 }

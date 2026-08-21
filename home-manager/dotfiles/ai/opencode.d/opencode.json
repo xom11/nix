@@ -50,6 +50,7 @@
     }
   },
   "permission": "allow",
+  "logLevel": "WARN",
   "tool_output": {
     "max_lines": 500,
     "max_bytes": 16384
