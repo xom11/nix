@@ -72,6 +72,23 @@ map("n", "<leader>ob", function()
 	end
 end, { desc = "Open file in browser" })
 
+-- Open current file with its OS default app (.excalidraw -> Excalidraw PWA)
+map("n", "<leader>oa", function()
+	local file = vim.fn.expand("%:p")
+	if file == "" then
+		print("No file to open")
+		return
+	end
+	vim.cmd("silent update")
+	if vim.fn.has("mac") == 1 then
+		vim.fn.system("open " .. vim.fn.shellescape(file))
+	elseif vim.fn.has("win32") == 1 then
+		vim.fn.system('start "" ' .. vim.fn.shellescape(file))
+	else
+		vim.fn.system("xdg-open " .. vim.fn.shellescape(file))
+	end
+end, { desc = "Open file with default app" })
+
 vim.api.nvim_create_user_command("SortIgnoreComment", function(opts)
 	local cms = vim.bo.commentstring
 	if cms == "" then
