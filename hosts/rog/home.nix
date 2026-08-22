@@ -67,8 +67,5 @@
     pkgs.dotbrave
     # Kept from the standalone Ubuntu era.
     pkgs.discordchatexporter-cli
-    # Excalidraw plugin saves straight back into vault files -- the PWA cannot
-    # (its Ctrl+S goes through showSaveFilePicker every time).
-    pkgs.obsidian
   ];
 }
