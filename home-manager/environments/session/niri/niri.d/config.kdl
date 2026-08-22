@@ -1,13 +1,18 @@
 // vim: ft=kdl
-// niri tren rog. KHAC HAI SESSION KIA O BA DIEM, va ca ba deu de nham:
+// niri tren rog. Tach theo khuon sway.d/hyprland.d (22/08/2026): file nay chi
+// con la khung include; noi dung nam o conf.d/{system,shortcuts,tab}.kdl.
 //
-// 1. BO PHIM LA MAC DINH CUA UPSTREAM, khong dich tu sway.d/hypr.d (quyet dinh
-//    14/08/2026). niri la scrollable-tiling: mot dai cot truot ngang, khong co
-//    cay container. `layout stacking`, `layout tabbed`, `focus parent` cua sway
-//    khong co gi tuong ung, con `consume/expel window`, `switch-preset-column-
-//    width`, `center-column` thi sway/hyprland khong co. Dich qua lai chi tao
-//    ra mot ban lai nua vong. Tra cuu phim NGAY TRONG PHIEN bang Mod+Shift+/.
-//    Nghia la: co bap tay sway/hyprland KHONG dung lai duoc o day.
+// KHAC HAI SESSION KIA O BA DIEM, va ca ba deu de nham:
+//
+// 1. PHIM QUAN LY CUA SO LA MAC DINH CUA UPSTREAM, khong dich tu sway.d/hypr.d
+//    (quyet dinh 14/08/2026). niri la scrollable-tiling: mot dai cot truot
+//    ngang, khong co cay container. `layout stacking`, `layout tabbed`,
+//    `focus parent` cua sway khong co gi tuong ung, con `consume/expel window`,
+//    `switch-preset-column-width`, `center-column` thi sway/hyprland khong co.
+//    Dich qua lai chi tao ra mot ban lai nua vong. Tra cuu phim NGAY TRONG
+//    PHIEN bang Mod+Shift+/. Nghia la: co bap tay sway/hyprland KHONG dung lai
+//    duoc o day. Lop tien ich (bo goc, gio/pin, clipboard, nguon may, am luong/
+//    do sang co notify) thi DA port vao conf.d/, 22/08/2026.
 //
 // 2. Bo phim launcher sinh tu configs/shortcuts/launch-app.toml (beckon, to
 //    hop `Cap`) duoc NOI VAO bang dung mot dong `include` duoi day, lap y khuon
@@ -16,304 +21,21 @@
 //    thi phai switch; con sau switch niri tu live-reload, khong can buoc gi
 //    nua (sway/hyprland van phai Tab+r).
 //
-// 3. niri TU LIVE-RELOAD file nay (ke ca file duoc include). Sua xong luu la
-//    an ngay: khong switch, khong `Tab+r`. Doi lai, config hong thi no giu
-//    ban cu va bao loi — chay `niri validate` de doc loi cho ro.
+// 3. niri TU LIVE-RELOAD toan bo cay include. Sua xong luu la an ngay: khong
+//    switch, khong `Tab+r`. Doi lai, config hong thi no giu ban cu va bao loi
+//    — chay `niri validate` de doc loi cho ro.
 //
-// ~/.config/niri la symlink CA THU MUC vao repo (xem ../default.nix).
+// THU TU include CO Y NGHIA: bind trung nhau GIUA CAC FILE thi dinh nghia sau
+// thang (merge), nhung TRONG CUNG MOT FILE la LOI CUNG — da do 22/08/2026 khi
+// them Tab+r de len switch-preset-window-height. launch-app o truoc nen lop
+// conf.d duoc phep de len no neu co trung.
+//
+// ~/.config/niri la symlink CA THU MUC vao repo (xem ../default.nix), vi vay
+// duong dan include tuyet doi ben duoi van chay dung vao cay nay.
 
-// Launcher bindings, sinh tu configs/shortcuts/launch-app.toml. Truoc binds
-// chinh nen neu co trung phim thi ban trong file nay thang (binds merge:
-// dinh nghia sau de len tren).
+// Launcher bindings, sinh tu configs/shortcuts/launch-app.toml.
 include "~/.config/niri-nix/launch-app.kdl"
 
-// =============================================================================
-// Input — so lieu bung nguyen tu sway.d/conf.d/system.conf.
-// `repeat-rate` cua niri cung don vi voi `repeat_rate` cua sway (ky tu/giay).
-// niri tach san touchpad/mouse nen giu duoc accel rieng cho tung loai, thu ma
-// ban hyprland da phai gop lam mot `sensitivity`.
-// =============================================================================
-input {
-    keyboard {
-        repeat-delay 300
-        repeat-rate 30
-    }
-
-    touchpad {
-        tap
-        dwt
-        natural-scroll
-        middle-emulation
-        accel-speed -0.3
-        scroll-method "two-finger"
-    }
-
-    mouse {
-        accel-speed -0.2
-    }
-}
-
-// =============================================================================
-// Layout
-// =============================================================================
-layout {
-    gaps 0
-
-    // Ca hai TAT, cho khop sway.d (`for_window [app_id=".*"] border pixel 0`)
-    // va hypr.d (`border_size 0`).
-    //
-    // Doi lai: niri khong con dau hieu nao chi ra cua so dang focus. Neu thay
-    // kho dung thi xoa dong `off` trong `focus-ring` — do la mot tu, va niri
-    // live-reload nen an ngay.
-    focus-ring {
-        off
-    }
-
-    border {
-        off
-    }
-}
-
-// =============================================================================
-// Dich vu nen — cung danh sach voi hypr.d/conf.d/system.conf.
-//
-// Khong can lo chuyen chay chong nhu ben hyprland (`exec` vs `exec-once`):
-// spawn-at-startup cua niri chi chay mot lan luc khoi dong phien, live-reload
-// KHONG chay lai chung.
-//
-// `autotiling` khong co o day: no la cong cu rieng cua sway (goi khai trong
-// sway/default.nix), va niri tu xep cot nen khong co viec gi de lam.
-// =============================================================================
-// Noctalia so huu notification daemon, lock screen, idle, wallpaper va
-// monitor profile -- dung chung voi sway.d va hyprland.d tu 22/08/2026.
-// (truoc do la mako/kanshi/swayidle/swaylock/swaybg -- da goi khoi
-// shared/wayland, xem attic/wayland-legacy-tools-2026-08-22.)
-spawn-at-startup "noctalia-shell"
-spawn-sh-at-startup "wl-paste --watch cliphist store"
-
-// kanshi da goi (2026-08-22) -- Noctalia qua wlr-output-management dam nhan
-// monitor profile. Bai do kanshi-lai-duoc-niri chua bao gio duoc thuc hien;
-// neu can lai: `output "HDMI-A-1" { mode "3840x2160@60"; scale 2; }` o day,
-// va nho `off` la TINH, y het bay cua hyprland.
-
-spawn-at-startup "fcitx5" "-rd"
-
-// Idle timers + lock screen thuoc Noctalia (spawn o tren). Niri tu bat lai
-// man hinh khi co input nen khong con `resume` gi can lam.
-
-// =============================================================================
-// Nap lung — sway dung `bindswitch lid:on`, hyprland dung `bindl switch:on:...`
-// (ten thiet bi phai khop may). niri co section rieng va khong can ten thiet bi.
-// Rang buoc cua niri: switch-events CHI nhan action `spawn`.
-// =============================================================================
-switch-events {
-    lid-close { spawn "systemctl" "suspend"; }
-}
-
-// =============================================================================
-// Binds — nguyen ban upstream, tru ba cho thay cho khop repo:
-//   Mod+T       alacritty -> kitty
-//   Mod+D       fuzzel    -> rofi (cung lenh sway.d/hypr.d dung)
-//   Super+Alt+L swaylock  (giu nguyen, repo cung dung swaylock)
-//
-// BA THU UPSTREAM CO MA O DAY BO HAN, deu vi goi khong co tren rog:
-//   - Super+Alt+S (orca, doc man hinh)
-//   - XF86AudioPlay/Pause/Stop/Prev/Next (playerctl)
-// Xem home-manager/environments/wayland/default.nix cho danh sach goi that co.
-//
-// Phim am luong/do sang giu dung ban upstream, KHONG co notify-send hien muc
-// nhu sway.d/hypr.d.
-// =============================================================================
-binds {
-    // Bang phim quan trong, hien ngay trong phien.
-    Mod+Shift+Slash { show-hotkey-overlay; }
-
-    Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
-    Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-normal-window" "-show" "drun"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: noctalia" { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
-
-    // allow-when-locked=true de van chinh duoc khi da khoa man hinh.
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-
-    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
-
-    // Overview: thu nho toan bo workspace/cua so. Khong co doi ung ben
-    // sway/hyprland.
-    Mod+O repeat=false { toggle-overview; }
-
-    Mod+Q repeat=false { close-window; }
-
-    Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
-    Mod+Right { focus-column-right; }
-    Mod+H     { focus-column-left; }
-    Mod+J     { focus-window-down; }
-    Mod+K     { focus-window-up; }
-    Mod+L     { focus-column-right; }
-
-    Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Down  { move-window-down; }
-    Mod+Ctrl+Up    { move-window-up; }
-    Mod+Ctrl+Right { move-column-right; }
-    Mod+Ctrl+H     { move-column-left; }
-    Mod+Ctrl+J     { move-window-down; }
-    Mod+Ctrl+K     { move-window-up; }
-    Mod+Ctrl+L     { move-column-right; }
-
-    Mod+Home { focus-column-first; }
-    Mod+End  { focus-column-last; }
-    Mod+Ctrl+Home { move-column-to-first; }
-    Mod+Ctrl+End  { move-column-to-last; }
-
-    Mod+Shift+Left  { focus-monitor-left; }
-    Mod+Shift+Down  { focus-monitor-down; }
-    Mod+Shift+Up    { focus-monitor-up; }
-    Mod+Shift+Right { focus-monitor-right; }
-    Mod+Shift+H     { focus-monitor-left; }
-    Mod+Shift+J     { focus-monitor-down; }
-    Mod+Shift+K     { focus-monitor-up; }
-    Mod+Shift+L     { focus-monitor-right; }
-
-    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
-    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
-    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
-    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
-    Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
-    Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
-    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
-    Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
-
-    Mod+Page_Down      { focus-workspace-down; }
-    Mod+Page_Up        { focus-workspace-up; }
-    Mod+U              { focus-workspace-down; }
-    Mod+I              { focus-workspace-up; }
-    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
-    Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
-    Mod+Ctrl+U         { move-column-to-workspace-down; }
-    Mod+Ctrl+I         { move-column-to-workspace-up; }
-
-    Mod+Shift+Page_Down { move-workspace-down; }
-    Mod+Shift+Page_Up   { move-workspace-up; }
-    Mod+Shift+U         { move-workspace-down; }
-    Mod+Shift+I         { move-workspace-up; }
-
-    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
-    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
-    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
-
-    Mod+WheelScrollRight      { focus-column-right; }
-    Mod+WheelScrollLeft       { focus-column-left; }
-    Mod+Ctrl+WheelScrollRight { move-column-right; }
-    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
-
-    Mod+Shift+WheelScrollDown      { focus-column-right; }
-    Mod+Shift+WheelScrollUp        { focus-column-left; }
-    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
-    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
-
-    // niri la he workspace DONG: chi so lon hon so workspace hien co se tro ve
-    // workspace trong o duoi cung, chu khong tao ra workspace so do. Khac han
-    // Mod+1..4 co dinh cua sway/hyprland.
-    Mod+1 { focus-workspace 1; }
-    Mod+2 { focus-workspace 2; }
-    Mod+3 { focus-workspace 3; }
-    Mod+4 { focus-workspace 4; }
-    Mod+5 { focus-workspace 5; }
-    Mod+6 { focus-workspace 6; }
-    Mod+7 { focus-workspace 7; }
-    Mod+8 { focus-workspace 8; }
-    Mod+9 { focus-workspace 9; }
-    Mod+Ctrl+1 { move-column-to-workspace 1; }
-    Mod+Ctrl+2 { move-column-to-workspace 2; }
-    Mod+Ctrl+3 { move-column-to-workspace 3; }
-    Mod+Ctrl+4 { move-column-to-workspace 4; }
-    Mod+Ctrl+5 { move-column-to-workspace 5; }
-    Mod+Ctrl+6 { move-column-to-workspace 6; }
-    Mod+Ctrl+7 { move-column-to-workspace 7; }
-    Mod+Ctrl+8 { move-column-to-workspace 8; }
-    Mod+Ctrl+9 { move-column-to-workspace 9; }
-
-    // Gom cua so vao cot / day ra khoi cot.
-    Mod+BracketLeft  { consume-or-expel-window-left; }
-    Mod+BracketRight { consume-or-expel-window-right; }
-    Mod+Comma  { consume-window-into-column; }
-    Mod+Period { expel-window-from-column; }
-
-    // Chuyen qua lai cac muc chieu rong dat san trong preset-column-widths.
-    Mod+R { switch-preset-column-width; }
-    Mod+Shift+R { switch-preset-column-width-back; }
-
-    Mod+Ctrl+Shift+R { switch-preset-window-height; }
-    Mod+Ctrl+R { reset-window-height; }
-
-    Mod+F { maximize-column; }
-    Mod+Shift+F { fullscreen-window; }
-    Mod+M { maximize-window-to-edges; }
-    Mod+Ctrl+F { expand-column-to-available-width; }
-
-    Mod+C { center-column; }
-    Mod+Ctrl+C { center-visible-columns; }
-
-    Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
-
-    Mod+Shift+Minus { set-window-height "-10%"; }
-    Mod+Shift+Equal { set-window-height "+10%"; }
-
-    Mod+V       { toggle-window-floating; }
-    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
-
-    // Xep cac cua so trong cot thanh tab doc.
-    Mod+W { toggle-column-tabbed-display; }
-
-    // Chup man hinh: niri co UI tuong tac san (chon vung bang chuot/phim),
-    // vua chep vao clipboard vua ghi ra screenshot-path. Thay han cap
-    // grim+slurp ma sway.d/hypr.d phai goi tay.
-    Print { screenshot; }
-    Ctrl+Print { screenshot-screen; }
-    Alt+Print { screenshot-window; }
-
-    // Loi thoat khi mot app xin niri ngung xu ly phim tat (remote desktop, KVM).
-    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
-
-    // `quit` co hop thoai xac nhan san, khong can rofi -dmenu nhu sway.d/hypr.d.
-    Mod+Shift+E { quit; }
-    Ctrl+Alt+Delete { quit; }
-
-    Mod+Shift+P { power-off-monitors; }
-}
-
-// =============================================================================
-// GPU render -- cung mot benh da sua cho Hyprland ngay 19/08/2026, xem
-// hosts/rog/nvidia.nix va hypr.d/hyprland.conf.
-//
-// HDMI cua rog noi vao NVIDIA, con Intel chi giu eDP-1 (da tat). Nhung ca
-// wlroots lan smithay deu chon GPU chinh theo `boot_vga`, ma do tren may:
-//   0000:00:02.0 (Intel)  boot_vga=1
-//   0000:01:00.0 (NVIDIA) boot_vga=0
-// nen mac dinh niri se ve tren Intel roi chep sang NVIDIA de xuat hinh -- dung
-// duong da lam Hyprland giat chuot.
-//
-// niri KHONG co bien moi truong cho viec nay (quet chuoi trong binary 26.04:
-// chi co NIRI_CONFIG / NIRI_SOCKET / SMITHAY_USE_LEGACY), nen phai khai o day.
-// Va no nhan RENDER node chu khong phai card node -- khac AQ_DRM_DEVICES cua
-// Hyprland va WLR_DRM_DEVICES cua sway, ca hai deu nhan card node.
-//
-// `/dev/dri/nvidia-render` la symlink do udev sinh (hosts/rog/nvidia.nix).
-// Dung ten do chu khong dung `/dev/dri/renderD129`: so do la vo tinh.
-//
-// CANH BAO: `debug` la bac API thap nhat cua niri -- wiki ghi ro no "khong
-// duoc bao ve boi chinh sach breaking change" va "co the doi hoac ngung chay
-// bat cu luc nao". Neu mot ban niri moi lam phien khong len, day la cho dau
-// tien can xem. CHUA AI VAO PHIEN NIRI TREN MAY NAY, nen dong duoi day chua
-// duoc kiem tren thuc te -- khac hai session kia.
-// =============================================================================
-debug {
-    render-drm-device "/dev/dri/nvidia-render"
-}
+include "~/.config/niri/conf.d/system.kdl"
+include "~/.config/niri/conf.d/shortcuts.kdl"
+include "~/.config/niri/conf.d/tab.kdl"
