@@ -813,9 +813,15 @@ sửa xong tự ăn lại. GNOME/sway/hyprland thì ngược hẳn: đây là NI
 eval, không phải chương trình chạy nền đọc trực tiếp, nên sửa file mà không
 switch là vô nghĩa — và sway/hyprland còn cần thêm một bước reload tay riêng
 sau switch vì home-manager không tự gọi `swaymsg reload`/`hyprctl reload`.
-Binding sway/hyprland chỉ là `exec beckon "<app>"` TRẦN — không
-`sway-beckon.sh`, không workspace-per-app (quyết định 09/08/2026); workspace
-logic là việc riêng của sway/hypr config, beckon không biết gì về workspace.
+Binding sway vẫn là `exec beckon "<app>"` TRẦN. Binding hyprland thì KHÔNG
+nữa (22/08/2026, đảo quyết định 09/08/2026): script trong binding hỏi
+`beckon resolve` (~4 ms) — app đang chạy thì focus bình thường, chưa chạy thì
+nhảy sang workspace trống đầu tiên của monitor hiện tại (`hl.dsp.focus{...}`,
+không phải `dsp.workspace.change_id` — cái đó ĐỔI TÊN workspace) rồi mới launch,
+kèm xoá windowrule toàn cục cũ. Nên app mở bằng cách khác ở nguyên space hiện
+tại; TOML dùng tên thân thiện ("Claude") còn cửa sổ mang id thô
+("brave-<ext>-Default") nên việc hỏi beckon là bắt buộc, đừng quay lại so class
+trong Lua.
 **niri cố ý CHƯA nối vào** dù cũng chạy trên rog — xem chú thích trong
 `home-manager/environments/niri/default.nix`; đừng tưởng là bỏ sót. (Chú thích
 đó lại trỏ tiếp sang một `README` không tồn tại — lý do thật chưa được ghi ở

@@ -1,17 +1,31 @@
 # Generates hyprland launcher bindings from configs/shortcuts/launch-app.toml.
 # READ AT EVAL, so editing that file needs a switch plus a reload.
-# Plain `exec beckon "<app>"`, no workspace logic -- that belongs to hypr.d.
+#
+# Each binding asks `beckon resolve` (~4 ms) whether any candidate is RUNNING:
+# yes -> plain beckon focus. No -> jump to the lowest empty workspace on the
+# CURRENT monitor (`hyprctl dispatch 'hl.dsp.focus{...}'`;
+# `dsp.workspace.change_id` RENAMES a workspace, it does not switch) and launch
+# there. Windows opened by anything else stay put -- the old global windowrule
+# moved EVERY new window and was removed for exactly that.
+#
+# TOML names are FRIENDLY ("Claude"), while live windows carry raw ids
+# ("brave-<ext>-Default"); only beckon knows that mapping, hence resolve here
+# instead of matching classes in Lua. The launch leg passes the WHOLE chain so
+# beckon keeps its own left-to-right resolution.
+#
 # Emitted into ~/.config/hypr-nix/ because ~/.config/hypr is a whole-directory
 # symlink.
-{lib}: let
+{
+  lib,
+}: let
   data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
 
   apps = builtins.attrValues data;
 
-  # App names are embedded VERBATIM into a double-quoted shell string, which is
-  # itself inside a Lua long-bracket string. These two characters break one layer
-  # or the other with no warning, so reject them at eval.
-  badApps = lib.filter (a: lib.hasInfix "]]" a || lib.hasInfix ''"'' a) apps;
+  # App names sit VERBATIM inside a Lua [==[ long bracket AND shell single
+  # quotes. These two characters break one layer or the other with no warning,
+  # so reject them at eval.
+  badApps = lib.filter (a: lib.hasInfix "]]" a || lib.hasInfix "'" a) apps;
 
   modMap = {
     ctrl = "CTRL";
@@ -31,11 +45,29 @@
     lib.concatStringsSep " + " (mods ++ [key]);
 
   lines =
-    map (combo: ''hl.bind("${toBind combo}", hl.dsp.exec_cmd([[beckon "${data.${combo}}"]]))'')
+    map (
+      combo: let
+        app = data.${combo};
+        candidates = lib.concatStringsSep " " (
+          map (c: "'${c}'") (lib.splitString " || " app)
+        );
+      in
+        ''
+          hl.bind("${toBind combo}", hl.dsp.exec_cmd([==[
+          	run=""
+          	for c in ${candidates}; do
+          		beckon resolve "$c" 2>/dev/null | grep -qE 'Status: *running' && run="$c" && break
+          	done
+          	if [ -n "$run" ]; then exec beckon "$run"; fi
+          	hyprctl dispatch 'hl.dsp.focus({ workspace = [[emptym]], on_current_monitor = true })'
+          	exec beckon '${app}'
+          ]==]))
+        ''
+    )
     (builtins.attrNames data);
 in
   assert lib.assertMsg (badApps == []) ''
-    launch-app.nix: ten app chua `]]` hoac `"`, khong nhung an toan vao config duoc:
+    launch-app.nix: ten app chua `]]` hoac `'`, khong nhung an toan vao config duoc:
       ${lib.concatStringsSep "\n      " badApps}
   '';
     ''
