@@ -77,5 +77,8 @@
     pkgs.dotbrave
     # Kept from the standalone Ubuntu era.
     pkgs.discordchatexporter-cli
+    # GUI sắp xếp màn hình (vị trí, extend/duplicate) cho cả ba session Wayland
+    # ở đây; noctalia v4 KHÔNG có output management, đừng tin comment cũ nói ngược lại.
+    pkgs.wdisplays
   ];
 }
