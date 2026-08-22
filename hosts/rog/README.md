@@ -16,7 +16,7 @@ sudo nixos-rebuild switch --impure --flake ~/.nix#rog
 
 ## Bốn session, chọn ở GDM
 
-Máy này cài **bốn** môi trường; chọn bằng nút bánh răng ở màn đăng nhập GDM.
+Máy này cài **bốn** môi trường; chọn ở màn đăng nhập ReGreet (greetd + cage).
 Không có phiên X11 nào — `share/xsessions` rỗng.
 
 | Session | Config | Áp dụng thay đổi phím |
@@ -24,11 +24,12 @@ Không có phiên X11 nào — `share/xsessions` rỗng.
 | GNOME | dconf, sinh lúc eval | `nixos-rebuild switch` |
 | sway | `home-manager/environments/sway/sway.d` | switch, rồi `Tab+r` |
 | hyprland | `home-manager/environments/hyprland/hypr.d` | switch, rồi `Tab+r` |
-| niri | `home-manager/environments/niri/niri.d` | — chưa nối phím launcher (cố ý) |
+| niri | `home-manager/environments/niri/niri.d` | switch — niri tự live-reload |
 
 GNOME cố ý ở lại làm lưới an toàn: cấu hình sway/hyprland/niri hỏng cũng không
-khoá được người dùng khỏi máy. Phím tắt launcher của GNOME/sway/hyprland đến từ
-**một** file `configs/shortcuts/launch-app.toml`; niri chưa được nối vào.
+khoá được người dùng khỏi máy. Phím tắt launcher của cả bốn session đến từ
+**một** file `configs/shortcuts/launch-app.toml`; bản của niri được sinh ra
+`~/.config/niri-nix/launch-app.kdl` rồi include vào config.kdl.
 
 Sau khi `switch`, chỉ cần **đăng xuất** để đổi session — không phải reboot.
 

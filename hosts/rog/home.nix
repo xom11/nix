@@ -28,8 +28,10 @@
       # it still builds and still writes, and nothing reads it.
       hyprland.enable = true;
       i18n.enable = true;
-      # Trial since 2026-08-14. Keybindings are niri's DEFAULTS, not ported from
-      # sway/hyprland, and the launcher layer is NOT wired in yet.
+      # Trial since 2026-08-14. Keybindings are niri's DEFAULTS, not ported
+      # from sway/hyprland (scrollable-tiling has no counterpart for most of
+      # them); the launcher layer is generated into ~/.config/niri-nix/ and
+      # included by one line in config.kdl.
       niri.enable = true;
       sway.enable = true;
       wayland.enable = true;
