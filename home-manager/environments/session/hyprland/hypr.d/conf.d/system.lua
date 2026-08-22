@@ -7,9 +7,10 @@ local modAlt = mod .. " + " .. alt
 -- frequent key, and re-running would stack a second cliphist and fcitx5.
 -- `hl.exec_cmd` runs now; `hl.dsp.exec_cmd` only builds a closure for a keybind,
 -- so using it here would silently do nothing.
-	-- Noctalia owns idle timers, lock screen, notifications, wallpaper and
-	-- monitor profiles in both sessions; the autostart below starts it.
-	-- (dms ran here 2026-08-22 only -- see shell/dms for a one-line revert.)
+-- Noctalia owns idle timers, lock screen, notifications, wallpaper and
+-- monitor profiles in both sessions; the autostart below starts it.
+-- (dms ran here 2026-08-22 only -- see shell/dms for a one-line revert.)
+hl.on("hyprland.start", function()
 	hl.exec_cmd("noctalia-shell")
 	hl.exec_cmd("wl-paste --watch cliphist store")
 	hl.exec_cmd("fcitx5 -rd")
