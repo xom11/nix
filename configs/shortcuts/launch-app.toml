@@ -38,6 +38,10 @@
 "ctrl+super+alt+c" = "Claude"
 "ctrl+super+alt+d" = "Discord"
 
+# Excalidraw PWA (brave.toml [pwa]). URL candidate covers OSes where the PWA
+# is not installed yet -- it opens as a plain browser tab instead of failing.
+"ctrl+super+alt+e" = "Excalidraw || https://excalidraw.com"
+
 # One name per OS. On rog "Files" resolves to nemo, not Nautilus.
 "ctrl+super+alt+f" = "File Explorer || Finder || Files"
 
