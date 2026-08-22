@@ -9,8 +9,8 @@
       },
       "models": [
         {
-          "id": "combo1",
-          "name": "Combo1 (9router)",
+          "id": "combo",
+          "name": "Combo (9router)",
           "reasoning": true,
           "input": ["text", "image"],
           "contextWindow": 128000,

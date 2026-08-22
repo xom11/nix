@@ -1,6 +1,6 @@
 {
   "defaultProvider": "9router",
-  "defaultModel": "combo1",
+  "defaultModel": "combo",
   "defaultThinkingLevel": "xhigh",
   "hideThinkingBlock": true,
   "theme": "dark",
@@ -18,7 +18,7 @@
     "baseDelayMs": 2000
   },
   "enabledModels": [
-    "combo1"
+    "combo"
   ],
   "lastChangelogVersion": "0.84.1"
 }
