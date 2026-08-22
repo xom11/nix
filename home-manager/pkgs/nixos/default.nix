@@ -15,6 +15,8 @@ mkModule config ./. {
     kitty
     localsend
     nemo
+    # PipeWire/PulseAudio GUI mixer: switch sinks/ports and per-app volume.
+    pavucontrol
     # slack
     telegram-desktop
     vlc
