@@ -183,7 +183,11 @@ chéo. Cả bốn đã làm hai phiên làm việc độc lập cùng kết lu�
   20/08/2026: config Lua hỏng (sai tên khoá, hay lỗi cú pháp trong một file được
   `require`) → thoát **1** kèm đúng `file:dòng`; còn `.conf` hỏng (ép qua
   `HYPRLAND_CONFIG=<file>`) thì vẫn in `config ok` và thoát **0**. Vẫn phải đọc
-  output, đừng chỉ nhìn `$?`.
+  output, đừng chỉ nhìn `$?`. Và **phiên đang chạy thì im lặng theo kiểu khác**:
+  sửa hỏng file Lua được `require` (đo 22/08/2026 với `system.lua` mất dòng
+  `hl.on(...)`) → `hyprctl configerrors` vẫn TRỐNG, `hyprctl reload` vẫn `ok`,
+  compositor giữ config cũ trong bộ nhớ và chỉ ném toast lỗi qua autoreload.
+  Trước khi reload một đợt sửa Lua, chạy `luac -p` qua các file vừa đụng.
 - **Trên Windows, `Get-Item`/`Get-ChildItem` báo `Length = 0` cho MỌI symlink** —
   mà gần như mọi dotfile ở đây là symlink về repo. Đo 20/08/2026:
   `Documents\PowerShell\Microsoft.PowerShell_profile.ps1` ra 0 B, còn
