@@ -23,7 +23,9 @@ end)
 -- DMS's own idle auto-suspend OFF in its settings.
 hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend"), { locked = true })
 
-hl.bind(modAlt .. " + L", hl.dsp.exec_cmd("dms ipc call lock"))
+-- Target `lock`, function `lock`: `dms ipc call lock` alone answers
+-- "Function required to send message." and still exits 0.
+hl.bind(modAlt .. " + L", hl.dsp.exec_cmd("dms ipc call lock lock"))
 hl.bind(
 	modAlt .. " + SHIFT + L",
 	hl.dsp.exec_cmd(
