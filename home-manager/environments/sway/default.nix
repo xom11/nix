@@ -15,10 +15,16 @@ in
       ".config/sway" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sway.d";
       };
-      # The only GENERATED file here, and it cannot live in ~/.config/sway because
-      # that is a whole-directory symlink into the repo.
+      # The GENERATED files here cannot live in ~/.config/sway because that is
+      # a whole-directory symlink into the repo. The script exists so bindings
+      # stay one line -- the focus-or-empty-workspace logic would be quoting
+      # hell inline in swayconfig.
       ".config/sway-nix/launch-app.conf".text =
-        import ./launch-app.nix {inherit lib;};
+        (import ./launch-app.nix {inherit lib;}).conf;
+      ".config/sway-nix/launch-app.sh" = {
+        text = (import ./launch-app.nix {inherit lib;}).script;
+        executable = true;
+      };
     };
     home.packages = with pkgs; [
       autotiling
