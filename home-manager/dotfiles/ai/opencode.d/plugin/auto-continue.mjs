@@ -111,7 +111,9 @@ const hook = async ({ client }) => {
         const now = Date.now()
         const st = state.get(sid)
         const { count, exhausted } = nextAttempt(st, now)
-        state.set(sid, { count: count + 1, lastAt: now, lastSentAt: st?.lastSentAt ?? 0 })
+        const willSend = !exhausted && !isThrottled(st, now)
+        // mark the send time immediately: the actual prompt fires at now+DELAY_MS
+        state.set(sid, { count: count + 1, lastAt: now, lastSentAt: willSend ? now : (st?.lastSentAt ?? 0) })
 
         if (exhausted) {
           await toast(
@@ -120,7 +122,7 @@ const hook = async ({ client }) => {
           )
           return
         }
-        if (isThrottled(st, now)) return
+        if (!willSend) return
 
         setTimeout(async () => {
           await toast(`Provider stream dropped — sending "Continue." (${count + 1}/${MAX_RETRY})`, 'warning')
