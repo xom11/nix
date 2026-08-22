@@ -134,6 +134,7 @@
   , bspc
   . del
   / ret
+  bspc $del_word_left
   [ $del_word_left
   ] $del_word_right
 
