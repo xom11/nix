@@ -7,11 +7,10 @@ local modAlt = mod .. " + " .. alt
 -- frequent key, and re-running would stack a second cliphist and fcitx5.
 -- `hl.exec_cmd` runs now; `hl.dsp.exec_cmd` only builds a closure for a keybind,
 -- so using it here would silently do nothing.
--- DMS owns idle timers, lock screen, notifications, wallpaper and monitor
--- profiles in both sessions; `dms run` starts all five. swayidle/swaylock/
--- kanshi/swaybg removed 2026-08-22 (attic/wayland-legacy-tools-2026-08-22).
-hl.on("hyprland.start", function()
-	hl.exec_cmd("dms run")
+	-- Noctalia owns idle timers, lock screen, notifications, wallpaper and
+	-- monitor profiles in both sessions; the autostart below starts it.
+	-- (dms ran here 2026-08-22 only -- see shell/dms for a one-line revert.)
+	hl.exec_cmd("noctalia-shell")
 	hl.exec_cmd("wl-paste --watch cliphist store")
 	hl.exec_cmd("fcitx5 -rd")
 end)
@@ -23,9 +22,9 @@ end)
 -- DMS's own idle auto-suspend OFF in its settings.
 hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend"), { locked = true })
 
--- Target `lock`, function `lock`: `dms ipc call lock` alone answers
+-- Target `lockScreen`, function `lock`: calling the target alone answers
 -- "Function required to send message." and still exits 0.
-hl.bind(modAlt .. " + L", hl.dsp.exec_cmd("dms ipc call lock lock"))
+hl.bind(modAlt .. " + L", hl.dsp.exec_cmd("noctalia-shell ipc call lockScreen lock"))
 hl.bind(
 	modAlt .. " + SHIFT + L",
 	hl.dsp.exec_cmd(

@@ -36,10 +36,12 @@
         niri.enable = true;
         sway.enable = true;
       };
-      # Since 2026-08-22: DMS owns notifications, lock, idle, wallpaper and
-      # monitor profiles in BOTH sway and hyprland here. It regenerates
-      # hypr.d/dms/ through the config symlink on every run (gitignored).
-      shell.dms.enable = true;
+      # Noctalia since 2026-08-22 (nixpkgs v4.7.7): owns notifications, lock,
+      # idle, wallpaper and monitor profiles in BOTH sway and hyprland here.
+      # Its state lives in ~/.config/noctalia/. dms kept one flag below for a
+      # one-line revert.
+      shell.noctalia.enable = true;
+      # shell.dms.enable = true;
       shared.wayland.enable = true;
     };
     pkgs = {

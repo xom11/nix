@@ -620,9 +620,10 @@ home-manager/
   environments/      # fonts, i18n + session/{sway,hyprland,niri,gnome,i3wm},
                      #   shell/dms, shared/wayland
                      #   session/: WM/DE -- cai dinh nghia "dang ngoi vao gi";
-                     #   shell/dms: DankMaterialShell (rog duy nhat) --
-                     #   notification/lock/idle/wallpaper/monitor cho CA sway
-                     #   lan hyprland; shared/wayland: tool nho dung chung
+                     #   shell/noctalia: Noctalia v4 tu nixpkgs (rog duy nhat)
+                     #   -- notification/lock/idle/wallpaper/monitor cho CA sway
+                     #   lan hyprland; shell/dms: DankMaterialShell, DA TAT tren
+                     #   rog (giu de revert); shared/wayland: tool nho dung chung
                      #   (rofi, cliphist, grim...). Ton tai vi sway va
                      #   hyprland cung bat tren rog se dung nhau o home.file
   pkgs/              # dev, lang, nixos, tools, ubuntu
