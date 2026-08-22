@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   mkModule,
   ...
 }:
@@ -13,4 +14,7 @@
       "opencode.d".enable = lib.mkDefault true;
       "pi.d".enable = lib.mkDefault true;
     };
+    home.packages = [
+      pkgs.codegraph
+    ];
   }
