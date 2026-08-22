@@ -1,12 +1,12 @@
-// Auto-continue: recover from the known upstream bug where a provider stream
-// ends without any content and without an error (finish="unknown", zero
-// tokens). opencode treats that as a normal end-of-turn and exits the agent
-// loop silently (github.com/anomalyco/opencode/issues/41469, #37852).
-//
-// This plugin watches message.updated events; when a main-session assistant
-// turn finishes empty+unknown it re-prompts the session with "Continue." up to
-// MAX_RETRY times within WINDOW_MS, so a mid-task drop resumes instead of
-// silently stopping. Subagent/title sessions are left alone.
+// Auto-continue: recover from provider streams that end without usable
+// content, which makes opencode exit the agent loop silently. Two shapes:
+//   - finish="unknown", zero tokens, no error (upstream #41469, #37852)
+//   - a transient transport error recorded on the message (ECONNRESET,
+//     SSE timeout, ...) instead of any content
+// Watches message.updated events; on a match in a main session it re-prompts
+// "Continue." up to MAX_RETRY times within WINDOW_MS, keeping at least
+// MIN_GAP_MS between sends. User-initiated aborts are never retried.
+// Subagent/title sessions are left alone.
 
 import { appendFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -15,6 +15,7 @@ import { join } from 'node:path'
 const MAX_RETRY = 3
 const WINDOW_MS = 10 * 60 * 1000
 const DELAY_MS = 1500
+const MIN_GAP_MS = 5000
 const DEBUG = !!process.env.AUTO_CONTINUE_DEBUG
 const dbg = (...a) => {
   const line = `[${new Date().toISOString()}] ${a.join(' ')}\n`
@@ -24,8 +25,36 @@ const dbg = (...a) => {
 }
 if (DEBUG) dbg('module loaded', process.pid)
 
+// Matched case-insensitively against "ErrorName: message". Deliberately
+// narrow: permanent failures (400/404/410, auth, quota) must NOT loop.
+const RETRYABLE_ERRORS = [
+  'econnreset',
+  'econnrefused',
+  'socket hang up',
+  'premature close',
+  'fetch failed',
+  'sse read timed out',
+  'idle timeout',
+  'no data received',
+  'service unavailable',
+  'gateway timeout',
+  'overloaded',
+  'rate limit',
+  'too many requests',
+]
+const ABORT_ERRORS = ['messageabortederror', 'operation was aborted']
+
+export function errorMatches(msg) {
+  const e = msg?.error
+  if (!e || typeof e !== 'object') return false
+  const s = `${e.name ?? ''}: ${e.data?.message ?? e.message ?? ''}`.toLowerCase()
+  if (ABORT_ERRORS.some((p) => s.includes(p))) return false
+  return RETRYABLE_ERRORS.some((p) => s.includes(p))
+}
+
 export function shouldRecover(msg) {
   if (!msg || msg.role !== 'assistant') return false
+  if (errorMatches(msg)) return true
   if (!msg.time?.completed) return false
   if (msg.error) return false
   if (msg.finish !== 'unknown') return false
@@ -36,6 +65,10 @@ export function nextAttempt(st, now, maxRetry = MAX_RETRY, windowMs = WINDOW_MS)
   const fresh = !st || now - st.lastAt > windowMs
   const count = fresh ? 0 : st.count
   return { count, exhausted: count >= maxRetry }
+}
+
+export function isThrottled(st, now, minGapMs = MIN_GAP_MS) {
+  return !!st?.lastSentAt && now - st.lastSentAt < minGapMs
 }
 
 const hook = async ({ client }) => {
@@ -57,7 +90,7 @@ const hook = async ({ client }) => {
         if (!info) return
         if (DEBUG)
           console.error(
-            `[auto-continue] evt ${info.id?.slice(-6)} role=${info.role} finish=${info.finish} out=${info.tokens?.output} done=${!!info.time?.completed} err=${info.error ? 'y' : 'n'}`,
+            `[auto-continue] evt ${info.id?.slice(-6)} role=${info.role} finish=${info.finish} out=${info.tokens?.output} done=${!!info.time?.completed} err=${info.error ? info.error.name : 'n'}`,
           )
 
         if (!shouldRecover(info)) {
@@ -75,24 +108,22 @@ const hook = async ({ client }) => {
         const row = sess?.data ?? sess
         if (row?.parentID) return
 
-        const status = await client.session.status({ path: { id: sid } })
-        const srow = status?.data ?? status
-        if (srow?.type && srow.type !== 'idle') return
-
         const now = Date.now()
-        const { count, exhausted } = nextAttempt(state.get(sid), now)
-        state.set(sid, { count: count + 1, lastAt: now })
+        const st = state.get(sid)
+        const { count, exhausted } = nextAttempt(st, now)
+        state.set(sid, { count: count + 1, lastAt: now, lastSentAt: st?.lastSentAt ?? 0 })
 
         if (exhausted) {
           await toast(
-            `Provider returned an empty stream again (${count}/${MAX_RETRY} auto-continues used). Send a message to retry manually.`,
+            `Provider dropped the stream again (${count}/${MAX_RETRY} auto-continues used). Send a message to retry manually.`,
             'error',
           )
           return
         }
+        if (isThrottled(st, now)) return
 
         setTimeout(async () => {
-          await toast(`Provider stream came back empty — sending "Continue." (${count + 1}/${MAX_RETRY})`, 'warning')
+          await toast(`Provider stream dropped — sending "Continue." (${count + 1}/${MAX_RETRY})`, 'warning')
           try {
             await client.session.prompt({
               path: { id: sid },
