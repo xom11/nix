@@ -22,23 +22,25 @@
       rofi.enable = true;
     };
     environments = {
-      # Since 2026-08-22: DMS owns notifications, lock, idle, wallpaper and
-      # monitor profiles in BOTH sway and hyprland here. It regenerates
-      # hypr.d/dms/ through the config symlink on every run (gitignored).
-      dms.enable = true;
       fonts.enable = true;
+      i18n.enable = true;
       # gnome dropped 2026-08-19 with the GNOME desktop itself: the module only
       # writes dconf keybindings and Shell extensions, so with no GNOME session
       # it still builds and still writes, and nothing reads it.
-      hyprland.enable = true;
-      i18n.enable = true;
-      # Trial since 2026-08-14. Keybindings are niri's DEFAULTS, not ported
-      # from sway/hyprland (scrollable-tiling has no counterpart for most of
-      # them); the launcher layer is generated into ~/.config/niri-nix/ and
-      # included by one line in config.kdl.
-      niri.enable = true;
-      sway.enable = true;
-      wayland.enable = true;
+      session = {
+        hyprland.enable = true;
+        # Trial since 2026-08-14. Keybindings are niri's DEFAULTS, not ported
+        # from sway/hyprland (scrollable-tiling has no counterpart for most of
+        # them); the launcher layer is generated into ~/.config/niri-nix/ and
+        # included by one line in config.kdl.
+        niri.enable = true;
+        sway.enable = true;
+      };
+      # Since 2026-08-22: DMS owns notifications, lock, idle, wallpaper and
+      # monitor profiles in BOTH sway and hyprland here. It regenerates
+      # hypr.d/dms/ through the config symlink on every run (gitignored).
+      shell.dms.enable = true;
+      shared.wayland.enable = true;
     };
     pkgs = {
       dev.enable = true;

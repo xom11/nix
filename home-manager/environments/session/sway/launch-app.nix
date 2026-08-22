@@ -24,7 +24,7 @@
 # Both files land in ~/.config/sway-nix/ because ~/.config/sway is a
 # whole-directory symlink into the repo.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../../configs/shortcuts/launch-app.toml);
 
   apps = builtins.attrValues data;
 

@@ -18,7 +18,7 @@
     };
     environments = {
       fonts.enable = true;
-      i3wm.enable = true;
+      session.i3wm.enable = true;
       i18n.enable = true;
     };
     pkgs = {

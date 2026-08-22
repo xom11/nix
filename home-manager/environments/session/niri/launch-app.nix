@@ -22,7 +22,7 @@
   lib,
   homeDir,
 }: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../../configs/shortcuts/launch-app.toml);
 
   apps = lib.flatten (map (a: lib.splitString " || " a) (builtins.attrValues data));
 

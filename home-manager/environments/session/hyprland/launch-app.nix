@@ -18,7 +18,7 @@
 {
   lib,
 }: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../../configs/shortcuts/launch-app.toml);
 
   apps = builtins.attrValues data;
 

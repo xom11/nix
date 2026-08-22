@@ -3,7 +3,7 @@
 # beckon serve reads it live. The path literal is deliberate: dconf is an eval
 # product anyway.
 {lib}: let
-  data = builtins.fromTOML (builtins.readFile ../../../configs/shortcuts/launch-app.toml);
+  data = builtins.fromTOML (builtins.readFile ../../../../configs/shortcuts/launch-app.toml);
 
   modMap = {
     ctrl = "<Ctrl>";

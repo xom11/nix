@@ -15,8 +15,8 @@
       fonts.enable = true;
       # GNOME instead of i3wm, to test the shortcuts on the GNOME path. A CHOICE,
       # not a constraint: `types` is a list, so a host can enable several desktops.
-      # i3wm.enable = true;
-      gnome.enable = true;
+      # session.i3wm.enable = true;
+      session.gnome.enable = true;
       i18n.enable = true;
     };
     pkgs = {

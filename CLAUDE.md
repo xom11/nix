@@ -617,10 +617,12 @@ home-manager/
                      #   (go 16/08/2026); terminal/kitty
                      # macos/{hammerspoon,sleepwatcher}
                      # conda, rofi
-  environments/      # fonts, gnome, i18n, i3wm, sway, hyprland, wayland, dms
-                     #   dms: DankMaterialShell (quickshell), rog duy nhat --
+  environments/      # fonts, i18n + session/{sway,hyprland,niri,gnome,i3wm},
+                     #   shell/dms, shared/wayland
+                     #   session/: WM/DE -- cai dinh nghia "dang ngoi vao gi";
+                     #   shell/dms: DankMaterialShell (rog duy nhat) --
                      #   notification/lock/idle/wallpaper/monitor cho CA sway
-                     #   lẫn hyprland; wayland: tool nhỏ dùng chung còn lại
+                     #   lan hyprland; shared/wayland: tool nho dung chung
                      #   (rofi, cliphist, grim...). Ton tai vi sway va
                      #   hyprland cung bat tren rog se dung nhau o home.file
   pkgs/              # dev, lang, nixos, tools, ubuntu
