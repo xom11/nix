@@ -1,18 +1,12 @@
-// =============================================================================
-// shortcuts.kdl — doi ung sway.d/conf.d/shortcuts.conf / hypr.d shortcuts.lua.
-// Phim am luong/do sang (co notify hien muc), quan ly cua so (nguyen ban
-// upstream niri), clipboard, chup man hinh.
-// =============================================================================
+// Phim am luong/do sang, clipboard, chup man hinh; quan ly cua so giu nguyen
+// ban upstream niri.
 binds {
-    // Bang phim quan trong, hien ngay trong phien.
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-normal-window" "-show" "drun"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: noctalia" { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
 
-    // allow-when-locked=true de van chinh duoc khi da khoa man hinh.
-    // Lenh + notify-send lap y khuon shortcuts.conf cua sway.d/shortcuts.lua cua hypr.d.
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume --limit 2.0 @DEFAULT_AUDIO_SINK@ 10%+ && notify-send -h string:x-canonical-private-synchronous:vol -t 2000 \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@)\""; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%- && notify-send -h string:x-canonical-private-synchronous:vol -t 2000 \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@)\""; }
     XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && notify-send -h string:x-canonical-private-synchronous:vol -t 2000 \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@)\""; }
@@ -21,8 +15,6 @@ binds {
     XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "brightnessctl set 10%+ && notify-send -h string:x-canonical-private-synchronous:br -t 2000 \"$(brightnessctl -m)\""; }
     XF86MonBrightnessDown allow-when-locked=true { spawn-sh "brightnessctl set 10%- && notify-send -h string:x-canonical-private-synchronous:br -t 2000 \"$(brightnessctl -m)\""; }
 
-    // Overview: thu nho toan bo workspace/cua so. Khong co doi ung ben
-    // sway/hyprland.
     Mod+O repeat=false { toggle-overview; }
 
     Mod+Q repeat=false { close-window; }
@@ -97,9 +89,8 @@ binds {
     Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
     Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
 
-    // niri la he workspace DONG: chi so lon hon so workspace hien co se tro ve
-    // workspace trong o duoi cung, chu khong tao ra workspace so do. Khac han
-    // Mod+1..4 co dinh cua sway/hyprland.
+    // Khac sway/hyprland: chi so vuot so workspace hien co se tro ve workspace
+    // trong cuoi cung, khong tao moi.
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
@@ -151,23 +142,19 @@ binds {
     // Xep cac cua so trong cot thanh tab doc.
     Mod+W { toggle-column-tabbed-display; }
 
-    // Chup man hinh: niri co UI tuong tac san (chon vung bang chuot/phim),
-    // vua chep vao clipboard vua ghi ra screenshot-path. Thay han cap
-    // grim+slurp ma sway.d/hypr.d phai goi tay.
+    // Chup man hinh bang UI san cua niri, thay grim+slurp.
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
 
-    // clipboard history — cung dong lenh voi shortcuts.conf/shortcuts.lua.
+    // clipboard history — cung dong lenh voi sway/hyprland.
     Alt+V hotkey-overlay-title="Lịch clipboard" { spawn-sh "cliphist list | rofi -normal-window -dmenu | cliphist decode | wl-copy && wtype -M ctrl v -m ctrl"; }
 
-    // workspace back_and_forth cua sway.d.
     Mod+Tab { focus-workspace-previous; }
 
-    // Loi thoat khi mot app xin niri ngung xu ly phim tat (remote desktop, KVM).
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
-    // `quit` co hop thoai xac nhan san, khong can rofi -dmenu nhu sway.d/hypr.d.
+    // `quit` co hop thoai xac nhan san.
     Mod+Shift+E { quit; }
     Ctrl+Alt+Delete { quit; }
 

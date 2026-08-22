@@ -1,20 +1,12 @@
 # Generates hyprland launcher bindings from configs/shortcuts/launch-app.toml.
 # READ AT EVAL, so editing that file needs a switch plus a reload.
 #
-# Each binding asks `beckon resolve` (~4 ms) whether any candidate is RUNNING:
-# yes -> plain beckon focus. No -> jump to the lowest empty workspace on the
-# CURRENT monitor (`hyprctl dispatch 'hl.dsp.focus{...}'`;
-# `dsp.workspace.change_id` RENAMES a workspace, it does not switch) and launch
-# there. Windows opened by anything else stay put -- the old global windowrule
-# moved EVERY new window and was removed for exactly that.
-#
-# TOML names are FRIENDLY ("Claude"), while live windows carry raw ids
-# ("brave-<ext>-Default"); only beckon knows that mapping, hence resolve here
-# instead of matching classes in Lua. The launch leg passes the WHOLE chain so
-# beckon keeps its own left-to-right resolution.
-#
-# Emitted into ~/.config/hypr-nix/ because ~/.config/hypr is a whole-directory
-# symlink.
+# Each binding asks `beckon resolve` whether any candidate is RUNNING: yes ->
+# beckon focus. No -> jump to the lowest empty workspace on the CURRENT monitor
+# (`dsp.workspace.change_id` RENAMES a workspace, it does not switch) and
+# launch there. TOML names are FRIENDLY ("Claude") while live windows carry raw
+# ids ("brave-<ext>-Default"), so only beckon can map them; the launch leg
+# passes the WHOLE chain.
 {
   lib,
 }: let

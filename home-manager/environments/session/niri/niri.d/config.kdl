@@ -1,37 +1,17 @@
 // vim: ft=kdl
-// niri tren rog. Tach theo khuon sway.d/hyprland.d (22/08/2026): file nay chi
-// con la khung include; noi dung nam o conf.d/{system,shortcuts,tab}.kdl.
+// Khung include; noi dung nam o conf.d/. Ba diem de nham:
 //
-// KHAC HAI SESSION KIA O BA DIEM, va ca ba deu de nham:
+// 1. Phim quan ly cua so la MAC DINH upstream, khong dich tu sway/hyprland
+//    (niri la scrollable-tiling, khong co container tree). Tra cuu trong phien
+//    bang Mod+Shift+/.
+// 2. launch-app.kdl do home-manager SINH LUC EVAL: sua TOML thi phai switch;
+//    sau switch niri tu live-reload (sway/hyprland van phai Tab+r).
+// 3. Live-reload toan bo cay include; config hong thi giu ban cu — doc loi
+//    bang `niri validate`.
 //
-// 1. PHIM QUAN LY CUA SO LA MAC DINH CUA UPSTREAM, khong dich tu sway.d/hypr.d
-//    (quyet dinh 14/08/2026). niri la scrollable-tiling: mot dai cot truot
-//    ngang, khong co cay container. `layout stacking`, `layout tabbed`,
-//    `focus parent` cua sway khong co gi tuong ung, con `consume/expel window`,
-//    `switch-preset-column-width`, `center-column` thi sway/hyprland khong co.
-//    Dich qua lai chi tao ra mot ban lai nua vong. Tra cuu phim NGAY TRONG
-//    PHIEN bang Mod+Shift+/. Nghia la: co bap tay sway/hyprland KHONG dung lai
-//    duoc o day. Lop tien ich (bo goc, gio/pin, clipboard, nguon may, am luong/
-//    do sang co notify) thi DA port vao conf.d/, 22/08/2026.
-//
-// 2. Bo phim launcher sinh tu configs/shortcuts/launch-app.toml (beckon, to
-//    hop `Cap`) duoc NOI VAO bang dung mot dong `include` duoi day, lap y khuon
-//    sway/hyprland (`~/.config/sway-nix/`, `~/.config/hypr-nix/`). File do do
-//    home-manager SINH LUC EVAL (~/.config/niri-nix/launch-app.kdl) — sua TOML
-//    thi phai switch; con sau switch niri tu live-reload, khong can buoc gi
-//    nua (sway/hyprland van phai Tab+r).
-//
-// 3. niri TU LIVE-RELOAD toan bo cay include. Sua xong luu la an ngay: khong
-//    switch, khong `Tab+r`. Doi lai, config hong thi no giu ban cu va bao loi
-//    — chay `niri validate` de doc loi cho ro.
-//
-// THU TU include CO Y NGHIA: bind trung nhau GIUA CAC FILE thi dinh nghia sau
-// thang (merge), nhung TRONG CUNG MOT FILE la LOI CUNG — da do 22/08/2026 khi
-// them Tab+r de len switch-preset-window-height. launch-app o truoc nen lop
-// conf.d duoc phep de len no neu co trung.
-//
-// ~/.config/niri la symlink CA THU MUC vao repo (xem ../default.nix), vi vay
-// duong dan include tuyet doi ben duoi van chay dung vao cay nay.
+// Thu tu include CO Y NGHIA: bind trung GIUA CAC FILE thi dinh nghia sau thang,
+// TRONG CUNG FILE la loi cung. ~/.config/niri la symlink ca thu muc vao repo
+// nen include tuyet doi ben duoi van tro ve cay nay.
 
 // Launcher bindings, sinh tu configs/shortcuts/launch-app.toml.
 include "~/.config/niri-nix/launch-app.kdl"

@@ -1,23 +1,15 @@
 # Generates niri launcher bindings from configs/shortcuts/launch-app.toml.
-# READ AT EVAL, so editing that file needs a switch. niri also live-reloads the
-# generated file, so once switched in, further TOML edits need ONLY another
-# switch -- no Tab+r, no session restart (unlike sway/hyprland).
+# READ AT EVAL, so editing that file needs a switch; niri live-reloads the
+# generated file afterwards, so no Tab+r, no session restart.
 #
-# Each bind spawns the script DIRECTLY with candidates as separate argv entries:
-# niri's plain `spawn` execve's without a shell, so nothing inside the names
-# needs shell quoting. The assert below rejects what WOULD break it -- `"` and
-# `\`, the two KDL escape characters -- where sway's version rejects `'`
-# because its exec goes through a shell.
+# Each bind spawns the script DIRECTLY with candidates as separate argv entries
+# (niri's `spawn` execve's without a shell); the assert rejects `"` and `\`,
+# the two KDL escape characters -- sway's version rejects `'` because its exec
+# goes through a shell.
 #
-# The script asks `beckon resolve` (~4 ms) whether any candidate is RUNNING:
-# yes -> plain beckon focus. No -> focus the first empty workspace on the
-# focused output (niri always keeps an empty workspace at the end of each
-# output) and launch there. Windows opened by anything else stay put -- same
-# shape as sway/hyprland after their global move-every-new-window rules were
-# removed.
-#
-# Lands in ~/.config/niri-nix/ because ~/.config/niri is a whole-directory
-# symlink into the repo.
+# The script asks `beckon resolve` whether any candidate is RUNNING: yes ->
+# beckon focus. No -> focus the first empty workspace on the focused output
+# and launch there.
 {
   lib,
   homeDir,

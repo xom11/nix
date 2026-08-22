@@ -9,17 +9,14 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
-    # NEEDS environments/wayland alongside it for the shared Wayland packages,
-    # and the `dms` module for notifications, lock, idle and wallpaper.
-    # This module owns only sway's own files.
+    # NEEDS environments/wayland alongside it for the shared Wayland packages.
     home.file = {
       ".config/sway" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sway.d";
       };
-      # The GENERATED files here cannot live in ~/.config/sway because that is
-      # a whole-directory symlink into the repo. The script exists so bindings
-      # stay one line -- the focus-or-empty-workspace logic would be quoting
-      # hell inline in swayconfig.
+      # The GENERATED files cannot live in ~/.config/sway (whole-directory
+      # symlink into the repo). The script keeps bindings one line -- the
+      # focus-or-empty-workspace logic would be quoting hell inline.
       ".config/sway-nix/launch-app.conf".text =
         (import ./launch-app.nix {inherit lib;}).conf;
       ".config/sway-nix/launch-app.sh" = {

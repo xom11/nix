@@ -1,9 +1,8 @@
 local vars = require("vars")
 local mod, alt = vars.mod, vars.alt
 
--- hyprlang deliberately had no variable for this, because the value contains
--- `$(...)` and its substitution behaviour there was never measured. Lua has no
--- substitution layer at all: `..` concatenates and `[[...]]` interprets nothing.
+-- Lua has no substitution layer: `..` concatenates and `[[...]]` interprets
+-- nothing, so this helper is safe where hyprlang's `$(...)` was not.
 local function notify(tag, cmd)
 	return ([[notify-send -h string:x-canonical-private-synchronous:%s -t 2000 "$(%s)"]]):format(tag, cmd)
 end
@@ -44,11 +43,6 @@ hl.bind(
 	{ locked = true, repeating = true }
 )
 
--- Called bare, these are the mouse variants; `resize` with x/y is resizeactive
--- instead, as in the submap below.
-hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
-
 hl.bind(mod .. " + Q", hl.dsp.window.close())
 hl.bind(mod .. " + Tab", hl.dsp.focus({ workspace = "previous" }))
 
@@ -58,8 +52,6 @@ hl.bind(
 	hl.dsp.exec_cmd([[cliphist list | rofi -normal-window -dmenu | cliphist decode | wl-copy && wtype -M ctrl v -m ctrl]])
 )
 
--- `hl.focus` distinguishes intent by FIELD NAME, not argument order:
--- direction / monitor / workspace / window / last.
 hl.bind(mod .. " + Left", hl.dsp.focus({ direction = "left" }))
 hl.bind(mod .. " + Down", hl.dsp.focus({ direction = "down" }))
 hl.bind(mod .. " + Up", hl.dsp.focus({ direction = "up" }))
@@ -70,16 +62,12 @@ hl.bind(mod .. " + SHIFT + Down", hl.dsp.window.move({ direction = "down" }))
 hl.bind(mod .. " + SHIFT + Up", hl.dsp.window.move({ direction = "up" }))
 hl.bind(mod .. " + SHIFT + Right", hl.dsp.window.move({ direction = "right" }))
 
--- hyprlang's `fullscreen, 0` is true fullscreen; 1 is maximize.
 hl.bind(mod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind(mod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 
--- dwindle has no parent container to focus, so grouping is the nearest thing to
--- sway's `focus parent`.
+-- dwindle has no parent container; grouping is the nearest to sway's `focus parent`.
 hl.bind(mod .. " + A", hl.dsp.group.toggle())
 
--- `window.move` follows the window across; add `follow = false` for the silent
--- variant, deliberately not used here.
 for i = 1, 4 do
 	hl.bind(mod .. " + " .. i, hl.dsp.focus({ workspace = i }))
 	hl.bind(mod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
@@ -89,18 +77,13 @@ end
 hl.bind(mod .. " + SHIFT + C", hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind(mod .. " + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
 
--- A submap is not sway's `mode`: sway grabs the whole keyboard, a submap only
--- rebinds the keys it defines, so an unlisted key typed mid-resize goes straight
--- to the focused window. All three exits exist, so nothing gets stuck; to grab
--- everything, add `hl.bind("catchall", hl.dsp.no_op())` -- valid only INSIDE a
--- submap.
---
--- `hl.define_submap` does not enter a mode at runtime; it sets a config-manager
--- flag while the function runs, so every `hl.bind` inside attaches to it.
+-- A submap only rebinds the keys it defines (unlike sway's `mode`, which grabs
+-- the whole keyboard), and `hl.define_submap` does not enter a mode at runtime
+-- -- it sets a config-manager flag while the function runs, so every
+-- `hl.bind` inside attaches to it.
 hl.bind(mod .. " + R", hl.dsp.submap("resize"))
 
 hl.define_submap("resize", function()
-	-- `relative = true` makes these DELTAS; without it they are absolute sizes.
 	hl.bind("J", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
 	hl.bind("K", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
 	hl.bind("L", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })

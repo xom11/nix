@@ -16,8 +16,7 @@ in
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/hypr.d";
       };
       # ~/.config/hypr is a WHOLE-DIRECTORY symlink into the repo, so a generated
-      # file cannot live there. The `.lua` suffix is required: hyprland.lua
-      # requires it without one and Hyprland appends the extension itself.
+      # file cannot live there. hyprland.lua requires the file without a suffix.
       ".config/hypr-nix/launch-app.lua".text = launchApp;
     };
   }

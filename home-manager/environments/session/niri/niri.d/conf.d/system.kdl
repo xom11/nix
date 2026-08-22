@@ -1,14 +1,5 @@
-// =============================================================================
-// system.kdl — doi ung sway.d/conf.d/system.conf / hypr.d/conf.d/system.lua.
-// Input, layout, dich vu nen, nap lung, GPU va nhom phim nguon may.
-// =============================================================================
-
-// -----------------------------------------------------------------------------
-// Input — so lieu bung nguyen tu sway.d/conf.d/system.conf.
-// `repeat-rate` cua niri cung don vi voi `repeat_rate` cua sway (ky tu/giay).
-// niri tach san touchpad/mouse nen giu duoc accel rieng cho tung loai, thu ma
-// ban hyprland da phai gop lam mot `sensitivity`.
-// -----------------------------------------------------------------------------
+// Input, dich vu nen, nap lung, GPU. So lieu input lay nguyen tu sway.d;
+// niri tach touchpad/mouse nen giu duoc accel rieng tung loai.
 input {
     keyboard {
         repeat-delay 300
@@ -32,12 +23,8 @@ input {
 layout {
     gaps 0
 
-    // Ca hai TAT, cho khop sway.d (`for_window [app_id=".*"] border pixel 0`)
-    // va hypr.d (`border_size 0`).
-    //
-    // Doi lai: niri khong con dau hieu nao chi ra cua so dang focus. Neu thay
-    // kho dung thi xoa dong `off` trong `focus-ring` — do la mot tu, va niri
-    // live-reload nen an ngay.
+    // Khop sway.d/hypr.d (border 0). Doi lai: khong con dau hieu nao chi ra
+    // cua so focus — thay kho dung thi xoa dong `off` trong focus-ring.
     focus-ring {
         off
     }
@@ -47,9 +34,8 @@ layout {
     }
 }
 
-// Tat toan bo animation — cho khop hypr.d (`animations.enabled = false`) va
-// sway (khong co san). Ten loai doc tu binary 26.04: co duoi `-movement`,
-// khai wiki moi hon dung `window-move` thi bi tu choi.
+// Ten animation doc tu binary 26.04: phai co duoi `-movement`, khai wiki
+// (`window-move`) bi tu choi.
 animations {
     window-open {
         off
@@ -71,53 +57,38 @@ animations {
     }
 }
 
-// -----------------------------------------------------------------------------
-// Dich vu nen — cung danh sach voi hypr.d/conf.d/system.lua.
+// spawn-at-startup chay mot lan luc khoi phien, live-reload khong chay lai.
 //
-// Khong can lo chuyen chay chong nhu ben hyprland (`exec` vs `exec-once`):
-// spawn-at-startup cua niri chi chay mot lan luc khoi dong phien, live-reload
-// KHONG chay lai chung.
+// CO Y KHONG spawn fcitx5: unit `fcitx5-daemon.service` cua home-manager tu
+// chay luc login; hai nguon cung bat la DUA NHAU — instance thua chet keo mat
+// addon `waylandim`, mat tieng Viet cho den khi kill fcitx5 lam lai.
 //
-// CO Y KHONG co `spawn-at-startup "fcitx5"`: home-manager (i18n.inputMethod)
-// da ship san unit `fcitx5-daemon.service` co `After=graphical-session.target`
-// va no tu chay luc login. Do 22/08/2026: hai nguon cung bat la DUA NHAU —
-// instance cua unit mat cuoc roi chet, keo theo instance con sot mat addon
-// `waylandim` => khong go duoc tieng Viet o moi app cho den khi kill va bat
-// fcitx5 lai tay. Mot nguon duy nhat: de unit systemd lo.
-//
-// `autotiling` khong co o day: no la cong cu rieng cua sway (goi khai trong
-// sway/default.nix), va niri tu xep cot nen khong co viec gi de lam.
-// -----------------------------------------------------------------------------
-// Noctalia so huu notification daemon, lock screen, idle, wallpaper va
-// monitor profile -- dung chung voi sway.d va hyprland.d tu 22/08/2026.
-// (truoc do la mako/kanshi/swayidle/swaylock/swaybg -- da goi khoi
-// shared/wayland, xem attic/wayland-legacy-tools-2026-08-22.)
+// Noctalia so huu notification, lock, idle, wallpaper (spawn o tren).
 spawn-at-startup "noctalia-shell"
 spawn-sh-at-startup "wl-paste --watch cliphist store"
 
-// kanshi da goi (2026-08-22). Sua comment cu o day da bao "Noctalia qua
-// wlr-output-management dam nhan monitor profile" — SAI voi ban nixpkgs dang
-// chay (v4.7.7 khong co service nao dung protocol do, kiem trong source).
-// Quan ly output thu cong: `niri msg output` (native), GUI: wdisplays
-// (rog/home.nix). Muon profile tu dong theo cam/rut thi phai mang kanshi ve.
-// Neu can mode cung: `output "HDMI-A-1" { mode "3840x2160@60"; scale 2; }`,
-// va nho `off` la TINH, y het bay cua hyprland.
+// Noctalia v4.7.7 KHONG co output management (kiem trong source) — quan ly
+// man hinh bang `niri msg output` hoac wdisplays (rog/home.nix). `off` la
+// TINH, y het bay cua hyprland. Muon profile tu dong thi mang kanshi ve.
 
-// Idle timers + lock screen thuoc Noctalia (spawn o tren). Niri tu bat lai
-// man hinh khi co input nen khong con `resume` gi can lam.
+// Man 4K noi HDMI (cung output ma hyprland.lua do scale 2): scale nguyen 2
+// nen khong gian 1920x1080 van net. Live-reload an ngay khi luu file.
+// eDP-1 tat TINH nhu hyprland.lua — rut HDMI la mo phiên, phuc hoi qua SSH
+// hoac login GNOME.
+output "HDMI-A-1" {
+    mode "3840x2160@60"
+    scale 2
+}
 
-// -----------------------------------------------------------------------------
-// Nap lung — sway dung `bindswitch lid:on`, hyprland dung `bindl switch:on:...`
-// (ten thiet bi phai khop may). niri co section rieng va khong can ten thiet bi.
-// Rang buoc cua niri: switch-events CHI nhan action `spawn`.
-// -----------------------------------------------------------------------------
+output "eDP-1" {
+    off
+}
+
+// switch-events CHI nhan action `spawn`; khong can ten thiet bi nhu sway/hyprland.
 switch-events {
     lid-close { spawn "systemctl" "suspend"; }
 }
 
-// -----------------------------------------------------------------------------
-// Nguon may — cung dong rofi Yes/No voi system.conf/system.lua.
-// -----------------------------------------------------------------------------
 binds {
     Mod+Alt+Shift+L hotkey-overlay-title="Thoát phiên niri?" { spawn-sh "echo -e 'Yes\\nNo' | rofi -dmenu -p 'Exit niri session?' | grep -q Yes && niri msg action quit"; }
     Mod+Alt+Shift+R hotkey-overlay-title="Khởi động lại?" { spawn-sh "echo -e 'Yes\\nNo' | rofi -dmenu -p 'Reboot the system?' | grep -q Yes && systemctl reboot"; }
@@ -125,31 +96,14 @@ binds {
     Mod+Alt+Shift+H hotkey-overlay-title="Hibernate?" { spawn-sh "echo -e 'Yes\\nNo' | rofi -dmenu -p 'Hibernate the system?' | grep -q Yes && systemctl hibernate"; }
 }
 
-// -----------------------------------------------------------------------------
-// GPU render -- cung mot benh da sua cho Hyprland ngay 19/08/2026, xem
-// hosts/rog/nvidia.nix va hypr.d/hyprland.conf.
+// GPU: HDMI noi vao NVIDIA, smithay chon GPU chinh theo `boot_vga` (Intel)
+// nen mac dinh ve tren iGPU roi copy sang — dung duong da lam Hyprland giat
+// chuot. niri khong co bien moi truong cho viec nay, va nhan RENDER node chu
+// khong phai card node. `/dev/dri/nvidia-render` la symlink cua udev
+// (hosts/rog/nvidia.nix) — dung no, khong dung `renderD129` (so vo tinh).
 //
-// HDMI cua rog noi vao NVIDIA, con Intel chi giu eDP-1 (da tat). Nhung ca
-// wlroots lan smithay deu chon GPU chinh theo `boot_vga`, ma do tren may:
-//   0000:00:02.0 (Intel)  boot_vga=1
-//   0000:01:00.0 (NVIDIA) boot_vga=0
-// nen mac dinh niri se ve tren Intel roi chep sang NVIDIA de xuat hinh -- dung
-// duong da lam Hyprland giat chuot.
-//
-// niri KHONG co bien moi truong cho viec nay (quet chuoi trong binary 26.04:
-// chi co NIRI_CONFIG / NIRI_SOCKET / SMITHAY_USE_LEGACY), nen phai khai o day.
-// Va no nhan RENDER node chu khong phai card node -- khac AQ_DRM_DEVICES cua
-// Hyprland va WLR_DRM_DEVICES cua sway, ca hai deu nhan card node.
-//
-// `/dev/dri/nvidia-render` la symlink do udev sinh (hosts/rog/nvidia.nix).
-// Dung ten do chu khong dung `/dev/dri/renderD129`: so do la vo tinh.
-//
-// CANH BAO: `debug` la bac API thap nhat cua niri -- wiki ghi ro no "khong
-// duoc bao ve boi chinh sach breaking change" va "co the doi hoac ngung chay
-// bat cu luc nao". Neu mot ban niri moi lam phien khong len, day la cho dau
-// tien can xem. CHUA AI VAO PHIEN NIRI TREN MAY NAY, nen khoi duoi day chua
-// duoc kiem tren thuc te -- khac hai session kia.
-// -----------------------------------------------------------------------------
+// `debug` la bac API thap nhat, khong duoc bao ve breaking-change policy:
+// niri moi len phien khong len thi xem cho nay dau tien.
 debug {
     render-drm-device "/dev/dri/nvidia-render"
 }

@@ -2,29 +2,22 @@ local vars = require("vars")
 local mod, alt = vars.mod, vars.alt
 local modAlt = mod .. " + " .. alt
 
--- `hyprland.start` is exec-once: `hyprctl reload` re-registers the callback but
--- does not re-fire it. There is deliberately no `exec` equivalent — Tab+r is a
--- frequent key, and re-running would stack a second cliphist and fcitx5.
--- `hl.exec_cmd` runs now; `hl.dsp.exec_cmd` only builds a closure for a keybind,
--- so using it here would silently do nothing.
--- Noctalia owns idle timers, lock screen, notifications, wallpaper and
--- monitor profiles in both sessions; the autostart below starts it.
--- (dms ran here 2026-08-22 only -- see shell/dms for a one-line revert.)
+-- `hyprland.start` is exec-once: `hyprctl reload` re-registers the callback
+-- but does not re-fire it (deliberate — re-running would stack a second
+-- cliphist and fcitx5). `hl.exec_cmd` runs now; `hl.dsp.exec_cmd` only builds
+-- a closure for a keybind and would silently do nothing here.
 hl.on("hyprland.start", function()
 	hl.exec_cmd("noctalia-shell")
 	hl.exec_cmd("wl-paste --watch cliphist store")
 	hl.exec_cmd("fcitx5 -rd")
 end)
 
--- Device name must match `hyprctl devices` on rog itself. `switch:` is a special
--- sym, so the space in "Lid Switch" stays literal instead of becoming a keysym.
--- rog deliberately never suspends on idle (2026-08-20); `logind.conf` leaves
--- `IdleAction=ignore`, so this switch is the only path into suspend — keep
--- DMS's own idle auto-suspend OFF in its settings.
+-- Device name must match `hyprctl devices` on rog. rog never suspends on idle
+-- (logind IdleAction=ignore), so this switch is the only path into suspend.
 hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend"), { locked = true })
 
--- Target `lockScreen`, function `lock`: calling the target alone answers
--- "Function required to send message." and still exits 0.
+-- Target `lockScreen`, function `lock`: the target alone answers "Function
+-- required to send message." and still exits 0.
 hl.bind(modAlt .. " + L", hl.dsp.exec_cmd("noctalia-shell ipc call lockScreen lock"))
 hl.bind(
 	modAlt .. " + SHIFT + L",
@@ -45,11 +38,9 @@ hl.bind(
 	hl.dsp.exec_cmd([[echo -e 'Yes\nNo' | rofi -dmenu -p 'Hibernate the system?' | grep -q Yes && systemctl hibernate]])
 )
 
--- Lua config renames every key `:`->`.` and `-`->`_`, so hyprlang's
--- `tap-to-click` is `tap_to_click` here; a wrong name lands in
--- `hyprctl configerrors` rather than breaking the config.
--- sway split accel between touchpad (-0.3) and pointer (-0.2); one shared
--- `sensitivity` until someone splits it with `hl.device({ name = ... })`.
+-- Lua renames hyprlang keys `:`->`.` and `-`->`_`; a wrong name lands in
+-- `hyprctl configerrors`, not a broken config. One shared `sensitivity` here
+-- vs sway's touchpad/pointer split.
 hl.config({
 	input = {
 		repeat_rate = 30,

@@ -1,28 +1,18 @@
 # Generates sway launcher bindings from configs/shortcuts/launch-app.toml.
 # READ AT EVAL, so editing that file needs a switch plus a reload (Tab+r).
 #
-# Returns { conf, script }: conf holds one bindsym per shortcut calling the
-# generated script with the candidate names, then the whole chain. The script
-# asks `beckon resolve` (~4 ms) whether any candidate is RUNNING: yes -> plain
-# beckon focus. No -> jump to the lowest empty workspace on the CURRENT output
-# (`workspace number N` creates N when nothing uses it -- measured headless)
-# and launch there. Windows opened by anything else stay put -- the old global
-# new-workspace.sh moved EVERY new window and was removed for exactly that.
-#
-# TOML names are FRIENDLY ("Claude"), while live windows carry raw ids
-# ("brave-<ext>-Default"); only beckon knows that mapping, hence resolve here.
-# The launch leg passes the WHOLE chain so beckon keeps its own left-to-right
-# resolution.
+# Returns { conf, script }: one bindsym per shortcut calling the script with
+# candidate names, then the whole chain. The script asks `beckon resolve`
+# whether any candidate is RUNNING: yes -> beckon focus. No -> jump to the
+# lowest empty workspace on the CURRENT output (`workspace number N` creates
+# N when nothing uses it -- measured headless) and launch there. TOML names
+# are FRIENDLY ("Claude") while live windows carry raw ids ("brave-<ext>-Default"),
+# so only beckon can map them; the launch leg passes the WHOLE chain.
 #
 # Workspace scan, measured against a real headless sway tree: every workspace
-# node carries `.output`, so scoping by output needs no parent walk. A
-# workspace counts as busy when its subtree holds any process-bearing node,
-# and a number that exists ONLY empty on another output is skipped -- using it
-# would steal focus across outputs. No focused workspace -> falls through to
-# creating the lowest fresh number.
-#
-# Both files land in ~/.config/sway-nix/ because ~/.config/sway is a
-# whole-directory symlink into the repo.
+# node carries `.output`, a workspace is busy when its subtree holds any
+# process-bearing node, and a number that exists ONLY empty on another output
+# is skipped -- using it would steal focus across outputs.
 {lib}: let
   data = builtins.fromTOML (builtins.readFile ../../../../configs/shortcuts/launch-app.toml);
 

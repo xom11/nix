@@ -2,8 +2,7 @@
 
 local tab = require("vars").tab
 
--- The sway version hardcoded a Snapdragon battery name, which does not exist on
--- this machine, so the key printed nothing. `upower -e` is host-independent.
+-- Battery: `upower -e`, not a hardcoded device name (sway's version broke on this).
 hl.bind(
 	tab .. " + P",
 	hl.dsp.exec_cmd(
@@ -13,19 +12,15 @@ hl.bind(
 
 hl.bind(tab .. " + T", hl.dsp.exec_cmd([[notify-send -t 2000 "$(date +'%H:%M:%S - %d/%m/%Y')"]]))
 
--- `hyprctl reload` is its own command, not a `dispatch`, so the Lua switch did
--- not change its syntax -- unlike the dispatch calls in system.lua.
+-- `hyprctl reload` is its own command, so the Lua switch did not change it.
 hl.bind(tab .. " + R", hl.dsp.exec_cmd([[hyprctl reload && notify-send -t 2000 "Hyprland config reloaded"]]))
 
 -- IME: Vietnamese (lotus) / English (keyboard-us)
 hl.bind(tab .. " + W", hl.dsp.exec_cmd([[fcitx5-remote -s lotus && notify-send -t 2000 "Tiếng Việt"]]))
 hl.bind(tab .. " + E", hl.dsp.exec_cmd([[fcitx5-remote -s keyboard-us && notify-send -t 2000 "English"]]))
 
--- The sway version prefixed `echo -n /tmp/ss.png | wl-copy`, which copied the
--- PATH only to be overwritten by the IMAGE a moment later. hyprlang repeated this
--- command verbatim in both bindings because its variable substitution against
--- `$(slurp)` was never measured; a Lua local is just a variable, so it can be
--- shared.
+-- One Lua local for both keys; sway's version copied the PATH first and had it
+-- overwritten by the image a moment later.
 local screenshot =
 	[[grim -g "$(slurp)" /tmp/ss.png && wl-copy < /tmp/ss.png && notify-send -t 2000 "Screenshot copied to clipboard"]]
 

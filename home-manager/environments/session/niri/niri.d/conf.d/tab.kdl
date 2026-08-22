@@ -1,7 +1,4 @@
-// =============================================================================
-// tab.kdl — doi ung sway.d/conf.d/tab.conf / hypr.d/conf.d/tab.lua.
-// To hop `$tab` = Mod4+Ctrl+Shift: bo goc, gio/pin, reload.
-// =============================================================================
+// $tab = Mod4+Ctrl+Shift: bo goc, gio/pin, IME.
 binds {
     Mod+Ctrl+Shift+W hotkey-overlay-title="Bộ gõ: Tiếng Việt" { spawn-sh "fcitx5-remote -s lotus && notify-send -t 2000 'Tiếng Việt'"; }
     Mod+Ctrl+Shift+E hotkey-overlay-title="Bộ gõ: English" { spawn-sh "fcitx5-remote -s keyboard-us && notify-send -t 2000 'English'"; }
@@ -9,8 +6,7 @@ binds {
     Mod+Ctrl+Shift+T hotkey-overlay-title="Giờ" { spawn-sh "notify-send -t 2000 \"$(date +'%H:%M:%S - %d/%m/%Y')\""; }
     Mod+Ctrl+Shift+P hotkey-overlay-title="Pin" { spawn-sh "notify-send -t 2000 \"$(upower -i /org/freedesktop/UPower/devices/battery_qcom_battmgr_bat | awk '/state:/{s=$2} /percentage:/{p=$2} /energy-rate:/{w=$2} END{printf \"%s %s %.1fW\", s, p, w}')\""; }
 
-    // Tab+r cua sway.d/hypr.d. niri khong co action reload (tu live-reload khi
-    // luu file), nen day chi con thong bao + giu co bap tay. Gia phai tra: mat
-    // bind mac dinh switch-preset-window-height.
+    // niri tu live-reload nen khong co reload; bind nay chi con thong bao, va
+    // gia phai tra la mat bind mac dinh switch-preset-window-height.
     Mod+Ctrl+Shift+R hotkey-overlay-title="Reload config" { spawn-sh "notify-send -t 2000 'niri tu live-reload khi luu file -- khong can bam'"; }
 }
