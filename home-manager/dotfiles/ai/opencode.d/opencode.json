@@ -55,7 +55,8 @@
     "max_bytes": 16384
   },
   "plugin": [
-    "superpowers@git+https://github.com/obra/superpowers.git"
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "./plugin/auto-continue.mjs"
   ],
   "agent": {
     "explorer": {
