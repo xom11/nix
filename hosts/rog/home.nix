@@ -22,6 +22,10 @@
       rofi.enable = true;
     };
     environments = {
+      # Since 2026-08-22: DMS owns notifications, lock, idle, wallpaper and
+      # monitor profiles in BOTH sway and hyprland here. It regenerates
+      # hypr.d/dms/ through the config symlink on every run (gitignored).
+      dms.enable = true;
       fonts.enable = true;
       # gnome dropped 2026-08-19 with the GNOME desktop itself: the module only
       # writes dconf keybindings and Shell extensions, so with no GNOME session

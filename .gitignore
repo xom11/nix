@@ -36,3 +36,8 @@ docs/superpowers/
 # ca hai nua cua ranh gioi do.
 home-manager/dotfiles/windows/dotpkg/pkg.lock.bak
 home-manager/dotfiles/windows/dotpkg/state.json
+
+# DMS tu sinh hai file layout.lua/windowrules.lua qua chuoi symlink
+# ~/.config/hypr -> repo, nen chung dot trong repo tree. Sinh lai deterministic
+# moi lan chay (do 22/08/2026), commit chi tao drift.
+home-manager/environments/hyprland/hypr.d/dms/

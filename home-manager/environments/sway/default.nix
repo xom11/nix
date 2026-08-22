@@ -9,8 +9,9 @@
   pwd = getPath ./.;
 in
   mkModule config ./. {
-    # NEEDS environments/wayland alongside it, which holds mako, kanshi, swaylock
-    # and the shared Wayland packages. This module owns only sway's own files.
+    # NEEDS environments/wayland alongside it for the shared Wayland packages,
+    # and the `dms` module for notifications, lock, idle and wallpaper.
+    # This module owns only sway's own files.
     home.file = {
       ".config/sway" = {
         source = config.lib.file.mkOutOfStoreSymlink "${pwd}/sway.d";
