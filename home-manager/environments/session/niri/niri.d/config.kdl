@@ -84,47 +84,22 @@ layout {
 // `autotiling` khong co o day: no la cong cu rieng cua sway (goi khai trong
 // sway/default.nix), va niri tu xep cot nen khong co viec gi de lam.
 // =============================================================================
-spawn-at-startup "mako"
-// `spawn-sh` chu KHONG phai `spawn`: `spawn` goi execve thang, khong qua shell,
-// nen `~` se den chuong trinh nguyen van la mot ky tu ngã chu khong no thanh
-// thu muc nha. Duong dan tuyet doi thi phai chon cung ten nguoi dung vao file
-// nay. Di qua `sh -c` la tranh duoc ca hai.
-spawn-sh-at-startup "swaybg -i ~/.nix/home-manager/dotfiles/images/nix-waifu.png -m fill"
+// Noctalia so huu notification daemon, lock screen, idle, wallpaper va
+// monitor profile -- dung chung voi sway.d va hyprland.d tu 22/08/2026.
+// (truoc do la mako/kanshi/swayidle/swaylock/swaybg -- da goi khoi
+// shared/wayland, xem attic/wayland-legacy-tools-2026-08-22.)
+spawn-at-startup "noctalia-shell"
 spawn-sh-at-startup "wl-paste --watch cliphist store"
 
-// CO Y GIU kanshi, va CO Y KHONG co khoi `output` nao trong file nay --
-// nguoc han quyet dinh vua ra cho hyprland. Ly do:
-//
-// hypr.d/hyprland.conf phai khai `monitor =` native vi kanshi KHONG lai duoc
-// Hyprland (da do tren rog 14/08/2026: kanshi bao "applying profile" con
-// `hyprctl monitors` khong doi gi -- xanh gia). niri thi FAQ THUONG NGUON
-// khuyen dung dung kanshi va noi ro no lai qua IPC, kem vi du
-// `spawn-at-startup "kanshi"`. Dung mot ho compositor Wayland nhung hai ket
-// qua nguoc nhau -- day dung cho khong duoc suy tu cai nay sang cai kia.
-//
-// CHUA DO tren may that. Neu kanshi that su lai duoc niri thi profile `docked`
-// san co (wayland/kanshi.d/kanshi.conf: HDMI-A-1 3840x2160@60 scale 2, eDP-1
-// disable) tu ap dung, va con AN TOAN HON ban hyprland: rut day HDMI ra thi
-// khong profile nao khop, kanshi khong lam gi, niri giu man may bat theo mac
-// dinh -- khong co man hinh den. Neu kanshi KHONG lai duoc, cai gia phai tra
-// chi la hai man cung bat o scale 1, van dung duoc de sua tiep.
-//
-// Neu do ra la khong an: them vao day
-//     output "HDMI-A-1" { mode "3840x2160@60"; scale 2; position x=0 y=0; }
-//     output "eDP-1" { off; }
-// va nho rang `off` la TINH, y het bay cua hyprland.
-spawn-at-startup "kanshi"
+// kanshi da goi (2026-08-22) -- Noctalia qua wlr-output-management dam nhan
+// monitor profile. Bai do kanshi-lai-duoc-niri chua bao gio duoc thuc hien;
+// neu can lai: `output "HDMI-A-1" { mode "3840x2160@60"; scale 2; }` o day,
+// va nho `off` la TINH, y het bay cua hyprland.
 
 spawn-at-startup "fcitx5" "-rd"
 
-// Giu swayidle/swaylock cua ban sway (quyet dinh 14/08/2026: KHONG dung
-// hypridle/hyprlock, va cung khong dung thu tuong duong nao cua niri).
-//
-// KHAC ban hyprland o mot cho: hypr.d co cap `timeout ... dpms off` /
-// `resume ... dpms on`. O day chi con ve `timeout` — niri tu bat lai man hinh
-// khi co bat ky input nao, nen `resume` khong co lenh tuong ung va cung khong
-// can.
-spawn-sh-at-startup "swayidle -w timeout 900 'swaylock -f' timeout 1800 'niri msg action power-off-monitors' before-sleep 'swaylock -f'"
+// Idle timers + lock screen thuoc Noctalia (spawn o tren). Niri tu bat lai
+// man hinh khi co input nen khong con `resume` gi can lam.
 
 // =============================================================================
 // Nap lung — sway dung `bindswitch lid:on`, hyprland dung `bindl switch:on:...`
@@ -155,7 +130,7 @@ binds {
 
     Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-normal-window" "-show" "drun"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: noctalia" { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
 
     // allow-when-locked=true de van chinh duoc khi da khoa man hinh.
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
