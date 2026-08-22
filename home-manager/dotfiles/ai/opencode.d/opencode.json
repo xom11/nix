@@ -23,7 +23,7 @@
       "headers": {
         "Authorization": "Bearer {env:PIXELLAB_TOKEN}"
       },
-      "enabled": true
+      "enabled": false
     }
   },
   "provider": {
