@@ -56,6 +56,12 @@ hl.config({
 	xwayland = {
 		enabled = true,
 	},
+
+	-- Default false: activate requests are ignored, so a link clicked in kitty
+	-- opens a Brave tab without moving focus. Verified live 2026-08-22.
+	misc = {
+		focus_on_activate = true,
+	},
 })
 
 -- Before editing files under `~/.config/hypr`, turn off autoreload — deleting
